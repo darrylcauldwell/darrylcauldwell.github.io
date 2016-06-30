@@ -76,11 +76,9 @@ Goto Tools>Export to Jekyll and download as a zip file.
 cd *yourproject*
 jekyll build
 git add .
-git commit -m "changed theme to lanyon"
+git commit -m "imports old blog posts"
 git push -u origin master
 
 <H1>Redirect URL</H1>
 Once your happy that your website is fully funcional on the URL *yourproject*.github.io you can then add a DNS alias to point your domain
 name to the new site.  After a few days if your still happy you can then remove your account from previous hosting company.
-
-
