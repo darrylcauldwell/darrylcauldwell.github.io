@@ -2,6 +2,7 @@
 layout: post
 title:  "Wordpress to Google Pages!"
 date:   2016-06-28 21:40:56 +0100
+permalink: wordpress-to-google-pages
 ---
 With this post I will try and describe the steps I used to migrate my blog from Wordpress to Google Pages,  first I will try and
 describe why I am doing this.
