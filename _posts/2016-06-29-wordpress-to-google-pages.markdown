@@ -67,43 +67,18 @@ git push -u origin master
 By performing this commit should trigger the creation of your SSL secured GitHub Pages website in my example the URL is.
 https://darrylcauldwell.github.io
 
-<H1>Change From Default Layout</H1>
-The layout of your Jekyll based website is defined by its *Theme*,  [many themes are available](https://github.com/jekyll/jekyll/wiki/Themes)
-It is very much personal preference but the Lanyon theme works well on mobile devices.
-
-{% highlight bash %}
-cd *yourproject*
-git clone https://github.com/poole/lanyon.git
-/bin/cp -rf /lanyon .
-{% endhighlight bash %}
-
-Unfortunatly the lanyon theme doesn't work out of the box with Jekyll 3.0 so we need to make a couple of small changes.
-{% highlight bash %}
-echo "gems: [jekyll-paginate]" >> _config.yml
-sed -i "s/relative_permalinks:/# relative_permalinks:/g" _config.yml
-{% endhighlight bash %}
-
-We can now test this locally
-{% highlight bash %}
-jekyll serve
-{% endhighlight bash %}
-
-If all works well we then edit the contents as needed, remove the original lanyon files and then commit this to github pages.
-{% highlight bash %}
-cd *yourproject*
-rm -y lanyon
-jekyll build
-git add .
-git commit -m "changed theme to lanyon"
-git push -u origin master
-{% endhighlight bash %}
-
 <H1>Export Wordpress posts as Jekyll</H1>
 So by this stage we have the website running with our chosen theme and we're now ready to migrate across all old posts from wordpress.
 
 Install *WordPress to Jekyll Exporter*
 
 Goto Tools>Export to Jekyll and download as a zip file.
+
+cd *yourproject*
+jekyll build
+git add .
+git commit -m "changed theme to lanyon"
+git push -u origin master
 
 <H1>Redirect URL</H1>
 Once your happy that your website is fully funcional on the URL *yourproject*.github.io you can then add a DNS alias to point your domain
