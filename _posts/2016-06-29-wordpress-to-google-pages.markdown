@@ -27,7 +27,6 @@ While working with Ansible I use YAML formatted files, using Jeykll and passing 
 Install Jekyll
 Create new Jekyll project
 Create GitHub Pages site
-Change from default layout
 Export Wordpress posts as Jekyll
 Test posts on Jekyll (Local)
 Commit exported posts to GitHub Pages
