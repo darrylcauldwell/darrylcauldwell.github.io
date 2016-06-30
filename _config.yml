@@ -6,8 +6,8 @@ relative_permalinks: true
 
 # Setup
 title:               darrylcauldwell.com
-tagline:             'A journey around the datacenter and public cloud.'
-description:         'A journey around the datacenter and public cloud.'
+tagline:             'On a journey around the datacenter and public cloud.'
+description:         'On a journey around the datacenter and public cloud.'
 url:                 http://darrylcauldwell.com
 baseurl:             ''
 paginate:            5

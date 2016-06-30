@@ -2,12 +2,14 @@
 layout: post
 title:  "Wordpress to Google Pages!"
 date:   2016-06-28 21:40:56 +0100
+tags:
+    - Blogging
 permalink: wordpress-to-google-pages
 ---
 With this post I will try and describe the steps I used to migrate my blog from Wordpress to Google Pages,  first I will try and
 describe why I am doing this.
 
-<H1> Migrate To Learn </H1>
+<H3> Migrate To Learn </H3>
 Learning new technical skills is straight forwards but while building any new skill building a muscle memory for command syntax 
 is only achieved by taking as many opportunities to exercise the muscle as possible.
 
@@ -23,7 +25,7 @@ me with this.
 
 While working with Ansible I use YAML formatted files, using Jeykll and passing variables seems a great way to keep using and learning.
 
-<H1> Migration Procedure </H1>
+<H3> Migration Procedure </H3>
 Install Jekyll
 Create new Jekyll project
 Create GitHub Pages site
@@ -31,7 +33,7 @@ Export Wordpress posts as Jekyll
 Test posts on Jekyll (Local)
 Commit exported posts to GitHub Pages
 
-<H1>Install Jekyll</H1>
+<H3>Install Jekyll</H3>
 The [Jekyll install](https://jekyllrb.com/docs/installation) requires Ruby and Ruby Gems be in place before starting. 
 These are included with OS X so we can just pen terminal and run the following to install.
 {% highlight bash %}
@@ -39,7 +41,7 @@ sudo gem install jekyll
 sudo gem install jekyll-paginate
 {% endhighlight %}
 
-<H1>Create new Jekyll project</H1>
+<H3>Create new Jekyll project</H3>
 A Jekyll project is just a collection of files so first its worth creating a folder to house the project then running a Jekyll command 
 to create the framework files.
 {% highlight bash %}
@@ -48,7 +50,7 @@ cd Website/
 jekyll new darrylcauldwell.com
 {% endhighlight %}
 
-<H1>Create GitHub Pages site</H1>
+<H3>Create GitHub Pages site</H3>
 Create a personal GitHub repository called *projectname*.github.io,  for example <*>darrylcaudwell.github.io<*>.
 
 Initialise your Jekyll website project folder as a local git repository, add all the files to the local repository, link the local 
@@ -66,7 +68,7 @@ git push -u origin master
 By performing this commit should trigger the creation of your SSL secured GitHub Pages website in my example the URL is.
 https://darrylcauldwell.github.io
 
-<H1>Export Wordpress posts as Jekyll</H1>
+<H3>Export Wordpress posts as Jekyll</H3>
 So by this stage we have the website running with our chosen theme and we're now ready to migrate across all old posts from wordpress.
 
 Within existing wordpress site install the ['WordPress2Jekyll'](https://wordpress.org/plugins/wp2jekyll/) plugin and use this to export the site as a zip file.
@@ -79,6 +81,6 @@ git commit -m "imports old blog posts"
 git push -u origin master
 {% endhighlight bash %}
 
-<H1>Redirect URL</H1>
+<H3>Redirect URL</H3>
 Once your happy that your website is fully funcional on the URL *yourproject*.github.io you can then add a DNS alias to point your domain
 name to the new site.  After a few days if your still happy you can then remove your account from previous hosting company.
