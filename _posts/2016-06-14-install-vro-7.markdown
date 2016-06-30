@@ -16,6 +16,9 @@ record are created for the vRealize Orchestrator appliance.  The Orchestrator cl
 while OVA deploys its a good time to install this if its not already.
 
 Once deployed the various interfaces to vRO can be accessed from the main menu screen https://<fqdn>:8281/vco/.
+
+![vRealize Orchestrator Main Menu]({{ site.url }}/images/VROstartPage.jpg)
+
 From the menu select 'Orchestrator Control Center' from the start menu and authenticate with the account named 
 root with the password you specified during OVA deployment.
 
