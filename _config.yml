@@ -1,11 +1,24 @@
-# Site settings
-title: darrylcauldwell.com
-email: darryl.cauldwell@gmail.com
-description: A collection of blog posts based around virtualising the datacenter and leveraging the public cloud.
-baseurl: ""
-url: "http://darrylcauldwell.com"
-twitter_username: potato_heads
-github_username:  darrylcauldwell
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+relative_permalinks: true
 
-# Build settings
-markdown: kramdown
+# Setup
+title:               darrylcauldwell.com
+tagline:             'A journey around the datacenter and public cloud.'
+description:         'A journey around the datacenter and public cloud.'
+url:                 http://darrylcauldwell.com
+baseurl:             ''
+paginate:            5
+
+# About/contact
+author:
+  name:              Darryl Cauldwell
+  url:               https://twitter.com/potato_heads
+  email:             darryl_cauldwell@gmail.com
+
+# Custom vars
+version:             1.0.0
+gems: [jekyll-paginate]
+relative_permalinks: false

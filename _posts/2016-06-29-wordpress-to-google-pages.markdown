@@ -69,15 +69,15 @@ https://darrylcauldwell.github.io
 <H1>Export Wordpress posts as Jekyll</H1>
 So by this stage we have the website running with our chosen theme and we're now ready to migrate across all old posts from wordpress.
 
-Install *WordPress to Jekyll Exporter*
+Within existing wordpress site install the ['WordPress2Jekyll'](https://wordpress.org/plugins/wp2jekyll/) plugin and use this to export the site as a zip file.
 
-Goto Tools>Export to Jekyll and download as a zip file.
-
-cd *yourproject*
+{% highlight bash %}
+cd yourproject
 jekyll build
 git add .
 git commit -m "imports old blog posts"
 git push -u origin master
+{% endhighlight bash %}
 
 <H1>Redirect URL</H1>
 Once your happy that your website is fully funcional on the URL *yourproject*.github.io you can then add a DNS alias to point your domain

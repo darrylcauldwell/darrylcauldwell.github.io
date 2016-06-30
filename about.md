@@ -1,7 +1,8 @@
 ---
 layout: page
 title: About
-permalink: /about/
 ---
 
-This is the personal blog site of Darryl Cauldwell.
+<p class="message">
+  The is the personal blog of Darryl Cauldwell.
+</p>
