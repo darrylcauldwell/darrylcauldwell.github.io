@@ -19,7 +19,7 @@ Once deployed the various interfaces to vRO can be accessed from the main menu s
 From the menu select 'Orchestrator Control Center' from the start menu and authenticate with the account named 
 root with the password you specified during OVA deployment.
 
-<H3>Configure vCenter Connection
+<H3>Configure vCenter Connection</H3>
 The first thing to do once vRealize Orchestrator is deployed is to import the vCenter SSL certitificate. 
 Select the Control Center 'Manage \ Certificates' menu item.  Within trusted certificates tab click 
 'Import \ Import from URL'. Within this wizard enter the FQDN of your vCenter and at next wizard screen 
