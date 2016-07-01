@@ -6,7 +6,7 @@ tags:
     - Blogging
 permalink: wordpress-to-google-pages
 ---
-With this post I will try and describe the steps I used to migrate my blog from Wordpress to Google Pages,  first I will try and
+Here I will try and describe the steps I used to migrate my blog from Wordpress to Google Pages,  first I will try and
 describe why I am doing this.
 
 <H3> Migrate To Learn </H3>
