@@ -17,7 +17,7 @@ while OVA deploys its a good time to install this if its not already.
 
 Once deployed the various interfaces to vRO can be accessed from the main menu screen https://<fqdn>:8281/vco/.
 
-![vRealize Orchestrator Main Menu]({{ site.url }}/images/vROstartPage.jpg)
+<center><img src="/images/vROstartPage.jpg" width="40%"></center>
 
 From the menu select 'Orchestrator Control Center' from the start menu and authenticate with the account named 
 root with the password you specified during OVA deployment.
