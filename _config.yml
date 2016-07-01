@@ -8,7 +8,7 @@ relative_permalinks: true
 title:               darrylcauldwell.com
 tagline:             'On a journey around the datacenter and public cloud.'
 description:         'On a journey around the datacenter and public cloud.'
-url:                 http://darrylcauldwell.com
+url:                 https://darrylcauldwell.github.io
 baseurl:             ''
 paginate:            5
 
