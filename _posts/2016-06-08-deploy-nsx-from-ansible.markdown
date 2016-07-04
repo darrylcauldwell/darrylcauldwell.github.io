@@ -74,6 +74,8 @@ you can then see the session by running the following command in python session
 client_session
 {% endhighlight %}
 
+<center><img src="/images/nsxRAMLclient.jpg" width="50%"></center>
+
 <H3>VMware vSphere API Python Bindings</H3>
 As well as the NSX Python client the Ansible NSX Module also depends on the VMware vSphere API Python Bindings 
 (pyVmomi. pyVmomi is the Python SDK for the VMware vSphere API that allows you to manage ESX, ESXi, and vCenter. 
@@ -97,8 +99,12 @@ chmod +x VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
 ./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
 {% endhighlight %}
 
+<center><img src="/images/ovftool.jpg" width="50%"></center>
+
 Once the install is running you have to agree to EULA, to get to the end of the text, hold down the Space bar.
 When prompted *Do you agree?* type yes.
+
+<center><img src="/images/ovftool2.jpg" width="50%"></center>
 
 Once OVF Tool is installed we can use SCP to copy the NSX OVA, VMware-NSX-Manager-6.2.2-3604087.ova, to Ansible 
 server I placed this in folder named /OVAs.
@@ -124,10 +130,24 @@ We can then edit the contents to match the variables we plan to deploy in enviro
 contents are environmental specific varibles its worth noting that we run this module against the Ansible server 
 itself as this is where the OVA and ovftool are located so hosts: value will always be localhost.
 
+<center><img src="/images/deployNSXmgr.jpg" width="50%"></center>
+
 Once we have our environmental specific entries set we can execute the playbook with Ansible.
 
 {% highlight bash %}
 ansible-playbook darryl_deploynsxova.yml
 {% endhighlight %}
 
+<center><img src="/images/nsxDeployPlaybook.jpg" width="50%"></center>
+
 We see this deploys ‘NSX Manager’ and configures the setting specified in the playbook.
+
+<H3>Deploy NSX Manager and register with vCenter and SSO</H3>
+As with any Ansible playbook we can put common variables in a central location and call these from 
+playbooks. An example is provided called answerfile-deployLab.yml. Variable names are overlapped between 
+parts of the NSX Modules, in order that they are unique in the central answer file the names vary but 
+its very easy to match these.
+
+An example of my playbook to deploy NSX Manager and then register this with vCenter and SSO.
+
+<center><img src="/images/nsxMgrDeployConfigure.jpg" width="50%"></center>
