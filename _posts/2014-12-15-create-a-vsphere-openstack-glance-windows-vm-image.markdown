@@ -46,7 +46,7 @@ created you can cross ref the file UID with the OpenStack Console.
 	<li>Click Launch</li>
 </ul>
 
-<H3>VSAN Abnomaly</H3>
+<H3>VSAN Abnormality</H3>
 If your Image is to go to a VSAN datastore and your using OpenStack Havana the above method will fail, this is because 
 VSAN introduces a new disk type [streamOptimized] (http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html) 
 which the UI is not aware of (this is fixed in Icehouse and later).
@@ -71,45 +71,6 @@ glance --insecure --os-endpoint-type internalURL image-create \
 --container-format=bare --disk-format=vmdk \
 --is-public=True \
 --file=/var/tmp/Windows2008R2-VM10-disk1.vmdk</code>
-{% endhighlight %}
-
-You should get output like
-
-<a href="http://darrylcauldwell.com/wp-content/uploads/2014/12/streamOptimized2.png"><img class="aligncenter size-medium wp-image-1235" src="http://darrylcauldwell.com/wp-content/uploads/2014/12/streamOptimized2-300x179.png" alt="streamOptimized" width="300" height="179" /></a>
-
-If you have uploaded an image already and found that its not streamOptimized you can change the attribute.
-
-<ul>
-	<li>Ensure correct Security Group selected on Access &amp; Security Tab</li>
-	<li>Ensure correct Network is selected on Networking tab</li>
-	<li>Click Launch</li>
-</ul>
-
-<H3>VSAN Abnomaly</H3>
-If your Image is to go to a VSAN datastore and your using OpenStack Havana the above method will fail,  this 
-is because <a href="http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html" target="_blank">
-VSAN introduces a new disk type streamOptimized which the UI is not aware of</a> (this is fixed in Icehouse 
-and newer UI).
-
-In order to import these images you would need to use the OpenStack command line interface.  First open 
-WebUI then  "Project -&gt; Manage Compute -&gt; Access &amp; Security" and click Download OpenStack RC File.
-
-SCP the RC file to your Linux jump box /var/tmp and then use
-
-source /var/tmp/&lt;filename&gt;.rc
-
-Enter password when prompted.
-
-Once you have authenticated,  run script like (substituting name and filename as required.
-
-{% highlight bash %}
-glance --insecure --os-endpoint-type internalURL image-create \
---name Windows2008R2-VM10 \
---property vmware_disktype=streamOptimized \
---property vmware_adaptertype=lsiLogic \
---container-format=bare --disk-format=vmdk \
---is-public=True \
---file=/var/tmp/Windows2008R2-VM10-disk1.vmdk
 {% endhighlight %}
 
 You should get output like
