@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "VMware VCA-NV Study Resources"
-date:   2016-01-15 16:59:56 +0100
+date:   2015-01-15 16:59:56 +0100
 tags:
     - Software Defined Networking
 permalink: vmware-vca-nv-nsx-study-resources
