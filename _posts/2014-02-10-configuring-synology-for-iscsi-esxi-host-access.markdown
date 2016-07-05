@@ -30,6 +30,4 @@ to ESXi.
 <center><img src="/images/SynologyISCSI4.png" width="50%"></center>
 
 If you now create a iSCSI adapater and point it to the Synology IP to dynamically discover the LUNs 
-as shown here.
-
-<iframe width="400" height="250" align="middle" src="http://www.youtube.com/embed/xAxE5LOAXSE" frameborder="0" allowfullscreen></iframe>
+as shown [here.](https://www.youtube.com/v/xAxE5LOAXSE)
