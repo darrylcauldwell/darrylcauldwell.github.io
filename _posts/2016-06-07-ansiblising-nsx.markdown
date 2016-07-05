@@ -32,4 +32,4 @@ form by way of an [NSX Ansible module.](https://github.com/vmware/nsxansible)  T
 configure NSX to vCenter integration, configure VXLAN, deploy NSX Controllers and then deploy some logical 
 switches.
 
-For more info on How To Deploy The NSX Ansible Module, see the follow up post.
+I explorered this capability in [this follow up post.]({{ site.url }}/deploy-nsx-from-ansible)
