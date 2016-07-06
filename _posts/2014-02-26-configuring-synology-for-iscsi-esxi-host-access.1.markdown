@@ -4,6 +4,7 @@ title:  "Configuring Synology iSCSI For ESXi"
 date:   2014-02-26 16:59:56 +0100
 tags:
     - Homelab
+    - Storage
 permalink: configuring-synology-for-iscsi-esxi-host-access
 ---
 To configure a Synology disk station to present LUNs as iSCSI for ESXi hosts is straight forwards. 

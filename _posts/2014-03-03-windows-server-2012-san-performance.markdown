@@ -28,12 +28,12 @@ within the HyperV communities and found
 which suggested some scheduled tasks are now enabled by default within Windows Server 2012.  On 
 looking there appear two 
 
-{% highlight bash %}
+{% highlight cmd %}
 \Microsoft\Windows\TaskScheduler\Regular Maintenance
 {% endhighlight %}
 which has a Trigger Daily At 03:00 (if 2012 R2 this would be 2am as the default time changed) and 
 
-{% highlight bash %}
+{% highlight cmd %}
 \Microsoft\Windows\TaskScheduler\Maintenance Configurator
 {% endhighlight %}
 
@@ -51,7 +51,7 @@ Run Time.
 I then manually worked through each Windows task in Task Scheduler and took note of which Tasks 
 had Last Run Time which matched that of “Regular Maintenance”.
 
-{% highlight bash %}
+{% highlight cmd %}
 \Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
 \Microsoft\Windows\.NET Framework.Net Framework NGEN v4.0.30319 64
 \Microsoft\Windows\Application Experience\AitAgent
