@@ -3,7 +3,6 @@ layout: post
 title:  "Ansibilising NSX Configuration - Infrastructure As Code"
 date:   2016-06-07 16:59:56 +0100
 tags:
-    - DevOps
     - Ansible
     - Software Defined Networking
 permalink: ansiblising-nsx-configuration-infrastructure-as-code
