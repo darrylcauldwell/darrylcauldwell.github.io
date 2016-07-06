@@ -4,7 +4,6 @@ title:  "NSX Backup and Restore"
 date:   2016-05-20 16:59:56 +0100
 tags:
     - Software Defined Networking
-    - VCIX-NV
 permalink: nsx-backup-restore
 ---
 As part of study for VCIX-NV I've given myself task of exploring in my new home lab all parts of 
