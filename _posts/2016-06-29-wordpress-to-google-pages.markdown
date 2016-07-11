@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Wordpress to Google Pages!"
-date:   2016-06-28 21:40:56 +0100
+date:   2016-06-29 21:40:56 +0100
 tags:
     - Blogging
 permalink: wordpress-to-google-pages

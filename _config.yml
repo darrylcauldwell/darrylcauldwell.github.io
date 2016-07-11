@@ -23,5 +23,8 @@ author:
 
 # Custom vars
 version:             1.0.0
-gems: [jekyll-paginate]
+gems: 
+  - jekyll-paginate
+  - jekyll-sitemap
+
 relative_permalinks: false
