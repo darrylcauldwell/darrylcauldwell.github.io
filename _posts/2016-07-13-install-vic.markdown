@@ -25,7 +25,7 @@ download the latest package which contains installers to be run from different o
 
 My homelab is vCenter, single cluster of two ESX hosts, storage VSAN and networking NSX. Security is not important in 
 my homelab and TLS adds complication so I chose not to add this.  There are great syntaxt examples to follow in the 
-documentation, but here are options I used from Mac.
+documentation, but here are options I used.
 
     ./vic-machine-darwin create --target 192.168.1.13 --user Administrator@vsphere.local --password VMware1! --compute-resource ElectricChair --image-datastore vsanDatastore --bridge-network DPortGroup --name vch
 
@@ -62,8 +62,8 @@ So now we're running and can access logs the next thing to do is pull a containe
 
 Once its local we can start it up,  we'll start it in the background and put a port mapping of port 80 in place and then view it.
 
-    docker -H paddress-vch:2375 run -d -p 80:80 vmwarecna/nginx
-    docker -H paddress-vch:2375 ps
+    docker -H ipaddress-vch:2375 run -d -p 80:80 vmwarecna/nginx
+    docker -H ipaddress-vch:2375 ps
 
 <center><img src="/images/vic-nginx-go.jpg" width="50%"></center>
 
@@ -73,8 +73,8 @@ We can then also see that a new VM has been created in vCenter with VM name matc
 
 We can then stop this and tidy up our test container
 
-    docker -H paddress-vch:2375 stop container-id
-    docker -H paddress-vch:2375 rm container-id
+    docker -H ipaddress-vch:2375 stop container-id
+    docker -H ipaddress-vch:2375 rm container-id
 
 As its so easy to install and configure its probably worth while removing VCH and when you come to use it pull the latest 
 to remove is as easy as installing.
