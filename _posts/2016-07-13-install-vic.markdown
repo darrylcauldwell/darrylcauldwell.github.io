@@ -4,7 +4,7 @@ title:  "Installing vSphere Integrated Containers In Five Minutes"
 date:   2016-07-13 27:40:56 +0100
 tags:
     - Docker
-permalink: install-vic
+permalink: install-vic/
 ---
 As it looks like vSphere Integrated Containers will feature a lot at the upcoming VMworld I took the chance 
 to install this and find out more.
