@@ -4,7 +4,7 @@ title:  "How To Calculate Optimal TCP Window Size For Long Distance WAN Link"
 date:   2014-07-24 16:59:56 +0100
 tags:
     - Networking
-permalink: how-to-calculate-optimal-tcp-window-size-for-long-distance-wan-link
+permalink: how-to-calculate-optimal-tcp-window-size-for-long-distance-wan-link/
 ---
 If you have a requirement to copy large amounts of data along way around the world 
 you may find that despite your link being 60Mb/s if its 5,000 miles away you only 

@@ -4,7 +4,7 @@ title:  "What is Virtustream xStream Cloud"
 date:   2015-06-24 16:59:56 +0100
 tags:
     - Public Cloud
-permalink: what-is-virtustream-xstream-cloud
+permalink: what-is-virtustream-xstream-cloud/
 ---
 If you are an IT consumer with Enterprise workload it is a risk moving this workload to the cloud,  how can you 
 guarantee your potential future cloud provider is delivering you the service you require and once there how can 

@@ -4,7 +4,7 @@ title:  "Configuring Project Hanlon On CentOS 6.5"
 date:   2014-04-04 16:59:56 +0100
 tags:
     - DevOps
-permalink: setting-up-project-hanlon
+permalink: setting-up-project-hanlon/
 ---
 Since the company I work for CSC got a new CEO then CTO its changed direction and the latest change has been 
 to <a href="http://www.vdatacloud.com/blogs/2014/05/22/finding-value-in-opensource/" target="_blank">full 

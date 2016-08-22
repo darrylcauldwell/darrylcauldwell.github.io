@@ -4,7 +4,7 @@ title:  "NSX Distributed Firewall Under The Covers"
 date:   2015-07-21 16:59:56 +0100
 tags:
     - Software Defined Networking
-permalink: nsx-distributed-firewall-under-the-covers
+permalink: nsx-distributed-firewall-under-the-covers/
 ---
 An NSX distributed firewall (dFW) runs as an ESXi host as a kernel module added as a VMware Installation Bundle 
 (VIB). The dFW rules operate on Layer 2 through Layer 4; although this can be extended through Layer 7 by 

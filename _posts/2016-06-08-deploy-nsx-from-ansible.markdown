@@ -6,7 +6,7 @@ tags:
     - VMware
     - Ansible
     - Software Defined Networking
-permalink: deploy-nsx-from-ansible
+permalink: deploy-nsx-from-ansible/
 ---
 Here I will describe the steps taken to deploy NSX Manager using the 
 [Ansible NSX Module](https://github.com/vmware/nsxansible). The NSX Ansible module is written by 

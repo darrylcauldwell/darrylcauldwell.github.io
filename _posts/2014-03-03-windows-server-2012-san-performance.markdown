@@ -5,7 +5,7 @@ date:   2014-03-03 16:59:56 +0100
 tags:
     - Windows
     - Storage
-permalink: windows-server-2012-san-performance
+permalink: windows-server-2012-san-performance/
 ---
 In a newly deployed Windows Server 2012 HyperV environment with around sixty nodes, running a 
 couple of hundred Windows Server 2012 virtual machines running various applications.  We found t

@@ -4,7 +4,7 @@ title:  "Jira Overview - Terminology Demystified"
 date:   2014-08-22 16:59:56 +0100
 tags:
     - DevOps
-permalink: devops-and-scrumming-down-with-jira-an-overview-and-its-terminology-demystified-2
+permalink: devops-and-scrumming-down-with-jira-an-overview-and-its-terminology-demystified-2/
 ---
 While I worked with Agile as a software tester when the concept first came out in 2002 shortly afterwards I joined a new company in a new role in Infrastructure, IT operations if you will. My recollection of Agile is that it was not a process at all; rather, it’s a set of principles summarized by the Agile Manifesto.
 

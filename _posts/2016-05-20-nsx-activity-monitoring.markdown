@@ -4,7 +4,7 @@ title:  "NSX Activity Monitoring"
 date:   2016-05-20 16:59:56 +0100
 tags:
     - Software Defined Networking
-permalink: nsx-activity-monitoring
+permalink: nsx-activity-monitoring/
 ---
 As part of study for VCIX-NV I've given myself task of exploring all parts of NSX which I don't use at work. One of 
 these things is NSX Activity Monitoring,  to investigate this I came up with a test scenario and then worked through 

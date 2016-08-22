@@ -4,7 +4,7 @@ title:  "How To Setup An Ansible Test Lab For Windows Managed Nodes & Custom Win
 date:   2015-01-27 16:59:56 +0100
 tags:
     - Ansible
-permalink: how-to-setup-an-ansible-test-lab-for-windows-managed-nodes-custom-windows-modules
+permalink: how-to-setup-an-ansible-test-lab-for-windows-managed-nodes-custom-windows-modules/
 ---
 
 On starting to look at learning using Ansible to manage Windows hosts, first step was to setup a test lab.

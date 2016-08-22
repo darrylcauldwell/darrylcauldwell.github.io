@@ -4,7 +4,7 @@ title:  "Querying vCloud Director REST API"
 date:   2015-01-16 16:59:56 +0100
 tags:
     - VMware
-permalink: querying-vcloud-director-rest-api
+permalink: querying-vcloud-director-rest-api/
 ---
 If you find the vCloud Director GUI a little annoying a nice way to get the information you need is via 
 the REST API. Using the REST API you can gather information (GET), update information (PUT) and call 

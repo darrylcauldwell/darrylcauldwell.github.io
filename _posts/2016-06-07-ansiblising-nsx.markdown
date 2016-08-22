@@ -5,7 +5,7 @@ date:   2016-06-07 16:59:56 +0100
 tags:
     - Ansible
     - Software Defined Networking
-permalink: ansiblising-nsx-configuration-infrastructure-as-code
+permalink: ansiblising-nsx-configuration-infrastructure-as-code/
 ---
 With the rise of DevOps culture and the ethos of automate all the things. Using test driven development 
 techniques to apply application configuration declaratively has become widespread. The ever closer working 

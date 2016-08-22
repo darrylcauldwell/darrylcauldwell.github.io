@@ -4,7 +4,7 @@ title:  "Project Bonneville - vSphere Integrated Containers"
 date:   2015-10-06 16:59:56 +0100
 tags:
     - Docker
-permalink: project-bonneville
+permalink: project-bonneville/
 ---
 Working for a company which develops software for business I've been keen on following the story of containers unfold. The explosion of containers and microservices in the software development space has been a revolution in the way applications can be architected and deployed. This has put a great deal of power in the hands of the developer but with great power comes great responsibility for operational management.
 

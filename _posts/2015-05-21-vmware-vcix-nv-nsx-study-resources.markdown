@@ -4,7 +4,7 @@ title:  "VMware VCIX-NV Study Resources"
 date:   2015-05-21 16:59:56 +0100
 tags:
     - Software Defined Networking
-permalink: vmware-vcix-nv-nsx-study-resources
+permalink: vmware-vcix-nv-nsx-study-resources/
 ---
 Since successfully passing VCP-NV and working more and more with NSX I've been looking at VCIX-NV.
 

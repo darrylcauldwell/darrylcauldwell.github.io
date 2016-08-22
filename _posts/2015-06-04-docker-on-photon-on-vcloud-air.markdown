@@ -5,7 +5,7 @@ date:   2015-06-04 16:59:56 +0100
 tags:
     - Docker
     - Public Cloud
-permalink: docker-on-photon-on-vcloud-air
+permalink: docker-on-photon-on-vcloud-air/
 ---
 There has been a lot of industry noise around Docker and VMware project Photon so these have been on the agenda to explore as well.  I generally perform my little research projects running nested ESXi on VMware Fusion on my laptop, but VMware are <a href="http://vcloud.vmware.com/uk/service-offering/virtual-private-cloud-ondemand?src=vmw_so_vex_dcaul_99" target="_blank">offering £300 of free service credits</a> for trialing vCloud Air OnDemand.  Here is my how to guide of the steps I used.
 

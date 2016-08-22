@@ -4,7 +4,7 @@ title:  "VMware Visio Stencils"
 date:   2014-04-04 16:59:56 +0100
 tags:
     - VMware
-permalink: free-vsphere-visio-stencils
+permalink: free-vsphere-visio-stencils/
 ---
 When writing a VMware design just writing can be dry and simple messages get hard to convey that is why its always 
 nice to add diagrams.  Unfortunately VMware don't seem to prepare any Visio stencils,  but luckily Maish Saidel-Keesing 

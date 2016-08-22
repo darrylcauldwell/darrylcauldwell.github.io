@@ -4,7 +4,7 @@ title:  "DevOps != Products"
 date:   2015-10-06 16:59:56 +0100
 tags:
     - DevOps
-permalink: devops-isnt-about-products
+permalink: devops-isnt-about-products/
 ---
 The last 10 to 20 years in the enterprise has been defined by increasing capital spending on fixed assets (CapEx) while reducing the cost of staffing and operations (OpEx).  Gartner report the growth of spend on enterprise application software (EAS) is continuing to grow and in 2015 will grow at <a href="http://www.gartner.com/newsroom/id/3119717" target="_blank">7.5% to $149.9 Billion</a>.  According to the <a href="https://hbr.org/2011/09/why-your-it-project-may-be-riskier-than-you-think/ar/1" target="_blank">Hardware Business Review in 2011</a> one in six IT projects had an average cost overrun of 200% and a schedule overrun of 70%.
 

@@ -4,7 +4,7 @@ title:  "Microsoft WSUS No Internet Connectivity"
 date:   2014-04-04 16:59:56 +0100
 tags:
     - Windows
-permalink: microsoft-wsus-no-internet-connectivity
+permalink: microsoft-wsus-no-internet-connectivity/
 ---
 
 On our team4tech.org project in rural Tanzania we are planning to use Windows 7 and 8 devices running 

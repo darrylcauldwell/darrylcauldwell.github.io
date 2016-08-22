@@ -4,7 +4,7 @@ title:  "Configuring NSX Edge to DLR OSPF"
 date:   2016-05-23 16:59:56 +0100
 tags:
     - Software Defined Networking
-permalink: configuring-nsx-edge-to-dlr-ospf
+permalink: configuring-nsx-edge-to-dlr-ospf/
 ---
 As part of study for VCIX-NV I’ve given myself task of exploring in my new home lab all parts of NSX which 
 I'm still not fully comfortable.  One of these things is OSPF,  to investigate this I came up with a test 

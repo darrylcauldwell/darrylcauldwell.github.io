@@ -4,7 +4,7 @@ title:  "Is the future of sysadmin to be an SRE?"
 date:   2015-01-22 16:59:56 +0100
 tags:
     - Public Cloud
-permalink: sysadmin-or-sre
+permalink: sysadmin-or-sre/
 ---
 I recently came across the role SRE, I didn't know what this was so researched it a little and found that 
 it refers to Site Reliability Engineers after reading around the subject here is my considered opinion.

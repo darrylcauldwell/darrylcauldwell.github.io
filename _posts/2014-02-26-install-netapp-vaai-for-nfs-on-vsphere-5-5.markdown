@@ -4,7 +4,7 @@ title:  "Install NetApp VAAI For NFX On vSphere 5.5"
 date:   2014-02-26 16:59:56 +0100
 tags:
     - Storage
-permalink: install-netapp-vaai-for-nfs-on-vsphere-5-5
+permalink: install-netapp-vaai-for-nfs-on-vsphere-5-5/
 ---
 
 Data ONTAP 8.0.1 and later supports certain VMware vStorage APIs for Array Integration (VAAI) 

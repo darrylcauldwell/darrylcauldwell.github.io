@@ -5,7 +5,7 @@ date:   2014-12-12 16:59:56 +0100
 tags:
     - Storage
     - Public Cloud
-permalink: netapp-cloud-ontap-for-aws
+permalink: netapp-cloud-ontap-for-aws/
 ---
 NetApp has often been a pioneer of bleeding edge concepts in storage. When designing data ONTAP and the 
 WAFL file system they were the first to look at creating a virtual control plane for data. They also 

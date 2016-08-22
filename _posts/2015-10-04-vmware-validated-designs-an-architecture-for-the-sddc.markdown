@@ -4,7 +4,7 @@ title:  "VMware Validated Design for SDDC"
 date:   2015-10-04 16:59:56 +0100
 tags:
     - VMware
-permalink: vmware-validated-designs-an-architecture-for-the-sddc
+permalink: vmware-validated-designs-an-architecture-for-the-sddc/
 ---
 Historically VMware engineers and architects produce best practice documentation by way of reference architectures and whitepapers which are product and product version focused. As the VMware product portfolio is expanding to more of a suite of products under the banner Software-Defined Data Centre (SDDC) interoperability becomes more important and the best practice settings, testing and supportability becomes more complex.
 

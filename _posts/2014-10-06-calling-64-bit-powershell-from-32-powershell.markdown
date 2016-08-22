@@ -4,7 +4,7 @@ title:  "Calling 64bit Powershell From 32bit Powershell"
 date:   2014-10-06 16:59:56 +0100
 tags:
     - Powershell
-permalink: calling-64-bit-powershell-from-32-powershell
+permalink: calling-64-bit-powershell-from-32-powershell/
 ---
 The %windir%\System32 directory is reserved for 64-bit applications. Most file names were not changed when 64-bit versions of the DLLs were created, so 32-bit versions are stored in a different directory. WOW64 hides this difference by using a <em>file system redirector</em>. As such whenever a 32-bit application attempts to access %windir%\System32, the access is redirected to %windir%\SysWOW64.
 

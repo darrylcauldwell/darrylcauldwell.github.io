@@ -4,7 +4,7 @@ title:  "vSphere Best Practice"
 date:   2014-07-23 16:59:56 +0100
 tags:
     - VMware
-permalink: vsphere-best-practice
+permalink: vsphere-best-practice/
 ---
 I often get asked the question,  what is the best general configuration for private VMware hosting. Typically this is when an engineer or architect has been reading the multiple best practices and has become confused as much best practice advise is conditional. They just want to stand something up quickly with little detail on what the requirements are and then as solution gets used evolve the configuration based on the requirements which come through usage. Its certainly not ideal but does seem to happen a lot.
 

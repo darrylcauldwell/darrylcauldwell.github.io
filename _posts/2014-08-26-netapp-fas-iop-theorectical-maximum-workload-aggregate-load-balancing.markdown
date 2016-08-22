@@ -4,7 +4,7 @@ title:  "NetApp FAS IOPS Theoretical Maximum & Workload Aggregate Load Balancing
 date:   2014-08-26 16:59:56 +0100
 tags:
     - Storage
-permalink: netapp-fas-iop-theorectical-maximum-workload-aggregate-load-balancing
+permalink: netapp-fas-iop-theorectical-maximum-workload-aggregate-load-balancing/
 ---
 To achieve good performance for a virtualized workload your Storage Area Network (SAN) 
 should deliver high IOps with a predictable low latency. If you are using a good flash 

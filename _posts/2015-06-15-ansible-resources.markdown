@@ -4,7 +4,7 @@ title:  "Ansible Learning Resources"
 date:   2015-06-12 16:59:56 +0100
 tags:
     - Ansible
-permalink: ansible-resources
+permalink: ansible-resources/
 ---
 Some links to Ansible useful resources,  I aim to keep up to date with links as I find them,
 

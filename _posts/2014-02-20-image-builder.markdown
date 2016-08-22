@@ -4,7 +4,7 @@ title:  "Image Builder: Create A Custom ESXi ISO"
 date:   2014-02-26 16:59:56 +0100
 tags:
     - Powershell
-permalink: image-builder
+permalink: image-builder/
 ---
 If you find an occasion where some drivers you need are missing from the VMware provided ISO for installing
 ESXi you can use Image Builder to create your own custom ISO file.

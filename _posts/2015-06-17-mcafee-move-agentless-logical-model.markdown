@@ -4,7 +4,7 @@ title:  "McAfee MOVE Agentless Logical Model"
 date:   2015-06-17 16:59:56 +0100
 tags:
     - VMware
-permalink: mcafee-move-agentless-logical-model
+permalink: mcafee-move-agentless-logical-model/
 ---
 McAfee Management for Optimized Virtual Environments AntiVirus (McAfee MOVE AntiVirus) is an anti-virus solution 
 for virtual environments. It removes the need to install an anti-virus application on every virtual machine (VM), 

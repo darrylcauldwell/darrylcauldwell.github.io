@@ -4,7 +4,7 @@ title:  "Log Insight for VMware Integrated OpenStack"
 date:   2015-04-23 16:59:56 +0100
 tags:
     - VMware Integrated OpenStack
-permalink: vrealize-log-insight-for-vmware-integrated-openstack
+permalink: vrealize-log-insight-for-vmware-integrated-openstack/
 ---
 vRealize Log Insight is not a product I have had much to do with up to now,  but that changed a few days ago when 
 I was asked to perform an evaluation of how Log Insight might help with the management and administration of VMware 

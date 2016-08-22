@@ -5,7 +5,7 @@ date:   2014-02-26 16:59:56 +0100
 tags:
     - Homelab
     - Storage
-permalink: configuring-synology-for-nfs-esxi-host-access
+permalink: configuring-synology-for-nfs-esxi-host-access/
 ---
 The function of my NAS within homelab is to provide shared storage for my ESXi hosts, as I'm studying for VCAP it 
 would be great to use both iSCSI and NFS. By default NFS is disabled on the DS213J,  first step is to enable it.

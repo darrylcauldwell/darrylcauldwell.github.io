@@ -4,7 +4,7 @@ title:  "Create VMware Virtual Machine Templates"
 date:   2016-05-17 16:59:56 +0100
 tags:
     - VMware
-permalink: create-vmware-virtual-machine-templates
+permalink: create-vmware-virtual-machine-templates/
 ---
 When creating virtual machine templates I'd like to do this consistently as such I'll try and keep this post 
 up to date with the settings I am including.

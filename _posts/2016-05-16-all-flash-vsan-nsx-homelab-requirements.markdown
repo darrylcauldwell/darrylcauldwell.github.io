@@ -6,7 +6,7 @@ tags:
     - Storage
     - Homelab
     - Software Defined Networking
-permalink: all-flash-vsan-homelab
+permalink: all-flash-vsan-homelab/
 ---
 
 As VMware add more products to its suite its more difficult to run a suitable homelab to host them. 

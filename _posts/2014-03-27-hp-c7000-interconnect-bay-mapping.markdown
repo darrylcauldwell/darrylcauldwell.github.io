@@ -4,7 +4,7 @@ title:  "HP C7000 Interconnect Bay Mapping"
 date:   2014-03-27 16:59:56 +0100
 tags:
     - Hardware
-permalink: hp-c7000-interconnect-bay-mapping
+permalink: hp-c7000-interconnect-bay-mapping/
 ---
 Here I address the most common query people have when using HP C7000 chassis, namely how do the bay 
 mappings work.

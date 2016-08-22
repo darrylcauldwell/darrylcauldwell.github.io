@@ -4,7 +4,7 @@ title:  "VMware Virtual Volumes Deep Dive"
 date:   2014-10-24 16:59:56 +0100
 tags:
     - Storage
-permalink: virtual-volumes-overview-deep-dive
+permalink: virtual-volumes-overview-deep-dive/
 ---
 <H3>How vVols Will Help</H3> 
 The constraints and issues which VVOLs address include, LUNs introduce constrains such as the quantity of 

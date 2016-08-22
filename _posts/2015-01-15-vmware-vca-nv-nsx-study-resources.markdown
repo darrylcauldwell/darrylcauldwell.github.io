@@ -4,7 +4,7 @@ title:  "VMware VCA-NV Study Resources"
 date:   2015-01-15 16:59:56 +0100
 tags:
     - Software Defined Networking
-permalink: vmware-vca-nv-nsx-study-resources
+permalink: vmware-vca-nv-nsx-study-resources/
 ---
 While studying for VCA-NV I found a few study resources online which I found and used to help me 
 pass the VCA-NV.

@@ -4,7 +4,7 @@ title:  "Advanced vSphere 5.x Storage - Masking, Multipathing & Filtering"
 date:   2014-07-21 16:59:56 +0100
 tags:
     - Storage
-permalink: advanced-vsphere-5-x-storage-masking-multipathing-filtering
+permalink: advanced-vsphere-5-x-storage-masking-multipathing-filtering/
 ---
 The relationship between a <a href="http://www.vmware.com/products/esxi-and-esx/?src=vmw_so_vex_dcaul_99" target="_blank">vSphere ESXi</a> host and its shared storage is very important for the solution to work effectively. The storage architecture within <a href="http://www.vmware.com/products/vsphere/?src=vmw_so_vex_dcaul_99" target="_blank">vSphere </a>is extensible and this extensibility is known as the <a href="http://kb.vmware.com/kb/1011375/?src=vmw_so_vex_dcaul_99" target="_blank">Pluggable Storage Architecture</a> often abbreviated to <a href="http://kb.vmware.com/kb/1011375/?src=vmw_so_vex_dcaul_99" target="_blank">PSA</a>.
 

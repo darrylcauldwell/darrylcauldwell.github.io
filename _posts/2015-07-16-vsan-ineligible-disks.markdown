@@ -4,7 +4,7 @@ title:  "Handling VSAN Ineligible Disks"
 date:   2015-07-16 16:59:56 +0100
 tags:
     - Storage
-permalink: vsan-ineligible-disks
+permalink: vsan-ineligible-disks/
 ---
 If you are reusing a server and \ or disks which will become a VSAN cluster you may find some of 
 your disks show as ineligible. In the Cluster,  Manage tab,  Virtual SAN,  Disk Management section.

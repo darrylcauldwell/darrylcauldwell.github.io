@@ -4,7 +4,7 @@ title:  "vSphere 6, VSAN & NSX 6.2 Homelab In The Public Cloud"
 date:   2016-04-16 16:59:56 +0100
 tags:
     - Homelab
-permalink: vsphere-6-vsan-nsx-6-2-homelab-in-the-public-cloud
+permalink: vsphere-6-vsan-nsx-6-2-homelab-in-the-public-cloud/
 ---
 Over the last few years the suite of products which VMware offer has grown its made it less practical to obtain 
 and run enough hardware for a home learning lab. At the same time the cloud promises access to resources on demand 

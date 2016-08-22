@@ -4,7 +4,7 @@ title:  "Microsoft Azure Training, Support and Technical Resources"
 date:   2014-12-06 16:59:56 +0100
 tags:
     - Public Cloud
-permalink: microsoft-azure-training-support-and-technical-resources
+permalink: microsoft-azure-training-support-and-technical-resources/
 ---
 <b>Free </b><b>Azure eBooks:</b>
 <ul>

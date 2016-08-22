@@ -4,7 +4,7 @@ title:  "Post To Slack From Powershell"
 date:   2015-04-09 16:59:56 +0100
 tags:
     - Powershell
-permalink: post-to-slack-from-powershell
+permalink: post-to-slack-from-powershell/
 ---
 Working in a technical team distributed across multiple time zones makes it difficult to collaborate 
 and keep everyone on the same page. I’ve used various communications tools to try and help with this 

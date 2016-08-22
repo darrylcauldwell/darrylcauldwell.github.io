@@ -4,7 +4,7 @@ title:  "PowerCLI 6.0 R1 Module Path Issue"
 date:   2015-06-17 16:59:56 +0100
 tags:
     - Powershell
-permalink: powercli-6-0-r1-module-path
+permalink: powercli-6-0-r1-module-path/
 ---
 The install for PowerCLI 6.0 R1 sets the module path for the logged on user but no one else,  
 on a shared machine the other users get a module path error when PowerCLI launches and it tries 

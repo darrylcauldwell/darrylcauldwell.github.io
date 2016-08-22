@@ -4,7 +4,7 @@ title:  "VMware VCP-NV Study Resources"
 date:   2014-12-22 16:59:56 +0100
 tags:
     - Software Defined Networking
-permalink: vmware-vcp-nv-nsx-study-resources
+permalink: vmware-vcp-nv-nsx-study-resources/
 ---
 While studying for VCP-NV I found a lot of study resources online which were in varying stages of completion.   Here are the resources I've found and how they map to each blueprint objective.
 

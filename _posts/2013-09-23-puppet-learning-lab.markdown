@@ -4,7 +4,7 @@ title:  "Configuring Puppet In Homelab"
 date:   2013-09-23 16:59:56 +0100
 tags:
     - Homelab
-permalink: puppet-learning-lab
+permalink: puppet-learning-lab/
 ---
 
 I'm a traditional wintel vmware engineer working in the UK in a team focusing on platform configuration automation 

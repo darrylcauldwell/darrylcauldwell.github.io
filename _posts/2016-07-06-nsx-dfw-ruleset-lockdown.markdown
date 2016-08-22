@@ -4,7 +4,7 @@ title:  "NSX dFW Ruleset Lockdown"
 date:   2016-07-05 21:40:56 +0100
 tags:
     - Software Defined Networking
-permalink: nsx-dfw-ruleset-lockdown
+permalink: nsx-dfw-ruleset-lockdown/
 ---
 A common dilemma when developing a solution with firewall is whether to change the Default rule to Deny at the start 
 and develop the ruleset as part of development or leave the Default rule to Allow and secure it later. In modern agile 

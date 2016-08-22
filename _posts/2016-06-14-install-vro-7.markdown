@@ -4,7 +4,7 @@ title:  "Installing vRealize Orchestrator 7"
 date:   2016-06-14 16:59:56 +0100
 tags:
     - VMware
-permalink: install-vro-7
+permalink: install-vro-7/
 ---
 While attempting to setup vRealize Orchestrator 7 at home it soon became clear the documentation isn't great
 after much flipping between documents and blog posts I got this installed and working. Here I are the steps

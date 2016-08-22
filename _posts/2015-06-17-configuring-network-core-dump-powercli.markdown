@@ -4,7 +4,7 @@ title:  "Configuring Network Core Dump With PowerCLI"
 date:   2015-06-17 16:59:56 +0100
 tags:
     - Powershell
-permalink: configuring-network-core-dump-powercli
+permalink: configuring-network-core-dump-powercli/
 ---
 The VMware vSphere Network Dump Collector service enables a host to transmit diagnostic information via the 
 network to a remote netdump service, which stores it on disk. Network-based coredump collection can be configured 

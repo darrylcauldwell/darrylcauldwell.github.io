@@ -5,7 +5,7 @@ date:   2015-06-12 16:59:56 +0100
 tags:
     - VMware
     - Software Defined Networking
-permalink: nsx-with-host-profiles
+permalink: nsx-with-host-profiles/
 ---
 When trying to use Host Profiles in NSX-V you find that taking configuration from Reference Host captures some NSX specific configuration which is not appropriate to be applied to other hosts.  To get around this once you have captured your host profile from reference host,  select the profile and click to Enable\Disable Profile Configuration.
 

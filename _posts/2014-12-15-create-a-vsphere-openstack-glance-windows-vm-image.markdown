@@ -4,7 +4,7 @@ title:  "Create A VMware Integrated OpenStack Glance Windows VM Image"
 date:   2014-12-15 16:59:56 +0100
 tags:
     - VMware Integrated OpenStack
-permalink: create-a-vsphere-openstack-glance-windows-vm-image
+permalink: create-a-vsphere-openstack-glance-windows-vm-image/
 ---
 While looking at OpenStack as the control plane for vSphere it appears there isn't too much detail and I 
 found it tricky to create my first OpenStack image.  Here are the steps I followed.

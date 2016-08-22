@@ -4,7 +4,7 @@ title:  "VMware Projects Fargo (VMFork) & Meteor"
 date:   2014-08-26 16:59:56 +0100
 tags:
     - Docker
-permalink: vmware-projects-fargo-vmfork-meteor
+permalink: vmware-projects-fargo-vmfork-meteor/
 ---
 There was announced during VMworld a technology preview for Project Fargo (formerly VMFork) it is likely this will be launched with vSphere6. The aim of Fargo is to provides a fast, scalable differential clone of a running VM.  I see this as very similar to Redirect-on-Write (RoW) methodology used by NetApp snapshots where at the point of snap the existing blocks are frozen and any writes (creations/changes/deletions) are redirected to new blocks. However with Fargo rather than than a snapshot we are creating a Copy-on-Write(CoW) the difference being that with CoW the original data that is being written to is copied into a new file that is set aside for the snapshot before original data is overwritten. So before a write is allowed to a block, copy-on-write moves the original data block to the snapshot storage.
 

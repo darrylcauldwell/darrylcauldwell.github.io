@@ -4,7 +4,7 @@ title:  "Troubleshooting ESXi HBA Fibre Connectivity"
 date:   2015-04-23 16:59:56 +0100
 tags:
     - Storage
-permalink: troubleshooting-esxi-hba-fibre-connectivity
+permalink: troubleshooting-esxi-hba-fibre-connectivity/
 ---
 To see physical NIC connectivity in vSphere is nice and easy as its displayed in 
 vCenter console.  I found however checking the link state of fibre channel HBAs 

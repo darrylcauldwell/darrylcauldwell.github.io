@@ -5,7 +5,7 @@ date:   2015-06-11 16:59:56 +0100
 tags:
     - VMware
     - Software Defined Networking
-permalink: configuring-nsx-v-syslog-for-vrealize-log-insight
+permalink: configuring-nsx-v-syslog-for-vrealize-log-insight/
 ---
 I find myself with the need to configure Log Insight to manage an NSX-V installation. With how simple configuring 
 the vSphere components with Log Insight it was a surprise to find the rather less simple steps needed for NSX-V.

@@ -4,7 +4,7 @@ title:  "NSX Load Balancer As A Service LBaaS"
 date:   2016-05-20 16:59:56 +0100
 tags:
     - Software Defined Networking
-permalink: nsxvlbaas
+permalink: nsxvlbaas/
 ---
 As part of study for VCIX-NV I've given myself task of exploring in my homelab all parts of NSX which I don't use 
 at work. One of these things is NSX Load Balancer as a Service (LBaaS), to investigate this I came up with a test 

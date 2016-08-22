@@ -4,7 +4,7 @@ title:  "VSAN On Array Not Support Pass Through Mode – Dell Perc 710P Mini"
 date:   2015-07-16 16:59:56 +0100
 tags:
     - Storage
-permalink: vsan-on-array-not-support-pass-through-mode-dell-perc-710p-mini
+permalink: vsan-on-array-not-support-pass-through-mode-dell-perc-710p-mini/
 ---
 Several array controllers do not support pass through mode,  as such to use this will VSAN, 
 we need to create a single disk RAID0 group for every SSD and HDD.
