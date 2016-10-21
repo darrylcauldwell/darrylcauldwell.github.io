@@ -199,7 +199,6 @@ AWS Core Knowledge
 All re:invent 2016 Sessions are available on [AWS YouTube Plalist](https://www.youtube.com/playlist?list=PLhr1KZpdzukdGa7Gqu4bdql4KH7sL3mhf). All slides used at re:Invent, Summit, DevDay are all available on [AWS SlideShare](http://www.slideshare.net/AmazonWebServices).
 
 The User \ Developer and FAQs Are Useful
-----------------------------------------
 [CloudFront Developer Guide](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)  
 [CloudFront FAQs](https://aws.amazon.com/cloudfront/faqs/)  
 [CloudFormations User Guide](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html)  
@@ -242,8 +241,8 @@ The User \ Developer and FAQs Are Useful
 [VPC User Guide](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html)  
 [VPC FAQ](https://aws.amazon.com/vpc/faqs)  
 
-Blog Posts About Their Certification Journey
-============================================
+Certification Journey Blog Posts
+================================
 As well as technical study its always good to hear the personal experience stories of people who have studied for and successfully passed.  
 [Nick Triantafillou](http://ozaws.com/2015/09/17/aws-professional-solution-architect-certification-tips/)  
 [Jason Oliver](https://cloudninjablog.wordpress.com/2015/07/22/aws-certified-solutions-architect-professional-certification-the-road-to-success/)  
