@@ -93,6 +93,9 @@ At a command prompt, go to the directory where you stored the two JSON policy fi
 Once the vCenter Server Inventory is imported to AWS SMS, and the role is created we can create our first replication job.
 <center><img src="/images/aws-sms-replication.jpeg" width="50%"></center>
 
+Seed Upload Issue
+=================
+
 In theory this should run the initial seed replication, I started my first replication of a small CentOS7 VM at around 5pm and left it running all night,  on checking at 9am it still had not completed.
 <center><img src="/images/aws-sma-import-status.jpeg" width="50%"></center>
 
