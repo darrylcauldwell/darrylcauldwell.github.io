@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "AWS Server Migration Services (SMS) - Seed Upload Issue"
+title:  "AWS Server Migration Services (SMS)"
 date:   2016-11-01 15:40:56 +0100
 tags:
     - Public Cloud
@@ -88,19 +88,24 @@ At a command prompt, go to the directory where you stored the two JSON policy fi
     aws iam create-role --role-name sms --assume-role-policy-document file://trust-policy.json
     aws iam put-role-policy --role-name sms --policy-name sms --policy-document file:/
 
-<center><img src="/images/aws-policy-create.jpeg" width="50%"></center>
+Once the vCenter Server Inventory is imported to AWS SMS, and the role is created we can create our first replication job. The first task the initial replication performs is to create a persistent VMware snapshot, it's important to remember to have enough disk capacity to hold snapshots.
+<center><img src="/images/aws-sms-seed-snapshot.jpeg" width="50%"></center>
 
-Once the vCenter Server Inventory is imported to AWS SMS, and the role is created we can create our first replication job.
+After a little while we can check the Run History and see that it completes and has created an AMI in this example ami-73d68300.
 <center><img src="/images/aws-sms-replication.jpeg" width="50%"></center>
 
-Seed Upload Issue
-=================
+This newly created AMI can then be launched at any time from this in ec2.
 
-In theory this should run the initial seed replication, I started my first replication of a small CentOS7 VM at around 5pm and left it running all night,  on checking at 9am it still had not completed.
+Performing the initial 'seed' replication copy of a server can take a while, during this time changes are likely to have been made to the source virtual machine. Therefore delta replications can be taken, if you recall the seeding process creates a persistent snapshot, a delta replication therefore contains only the changes between the point seed was taken and now.
+
+Its worth mentioning that taking VMware snapshots of running virtual machines works well, but are very slow due to the active memory, for example taking a delta snapshot of a 13byte change on a running VM took 43minutes. Prior to performing a migration you would want to shutdown the source,  force a delta replication and then power on in EC2.  This would not only be much quicker,  but it would be essential to ensure changes not made after taking the delta.
+
+AWS Console - SMS Console Status Issue
+======================================
+During my first seed replication,  I used a small CentOS7 VM at (1GB OS 2GB swap) I started this around 5pm and left it running all night,  on checking the AWS Console at 9am it still had not completed.
 <center><img src="/images/aws-sma-import-status.jpeg" width="50%"></center>
 
 While I don't have the worlds fastest internet upload connection this should have completed in 16hrs so I went in search of the log files.  Usefully if you connect to the web UI of the SMS Connector there is a 'Support Link' one of which is 'Download Log Bundle'. Clicking this downloads connector-debug.tar.gz after a lot of trial and error looking through the various files within I found,
-
     /connector-debug/var/log/connector/sms-replications-poller.log
 
 The SMS Connector replication poller appears to be a Java application which performs the inventory and upload services. The output is left quite verbose so its fairly easy to following the upload process in summary it flows like this,  
@@ -166,6 +171,10 @@ The java job sms-job-75a5401c:sms-run-04a4416d:UploadBaseSnapshot then appears t
 2016-11-01 18:15:49.590 [INFO ] [sms-job-75a5401c:sms-run-04a4416d:UploadBaseSnapshot] ReplicationTaskPoller:252 - ---------------------------------------------------------------
 ``` 
 
+This appears bad, not because the upload failed as uploads do fail, but bad that as the AWS Console SMS Service shows that the upload is progressing without error when actually the Connector has failed and is not uploading.
 
+For when the console does not work as expected, its always useful to check via the AWS CLI, the documentation shows using the 'sms' command with aws. I had initially AWS CLI version 1.11.1 installed but as SMS was new I looked and noticed 1.12.1 had been released the official documentation doesnn't describe this very well but to do this on Mac you just use pip to perform the upgrade.
 
-This appears bad,  not because the upload failed as uploads do fail,  but bad that as the AWS Console SMS Service shows that the upload is progressing without error when actually the Connector has failed and is not uploading.
+    pip install --upgrade awscli
+
+Once I had 1.12.1 installed I tried again but still the sms command was not available :-(
