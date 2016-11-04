@@ -14,7 +14,7 @@ The size of virtual machine images is such that the upload process might well ta
 
 How To: Configure Server Migration Services (SMS)
 ------------------------------------------------
-The process is pretty straight forwards,  first task is to download the AWS Server Migration Connector from [S3](https://s3.amazonaws.com/sms-connector/AWS-SMS-Connector.ova), then hen deploy the OVA.  
+The process is pretty straight forwards,  first task is to download the AWS Server Migration Connector from [S3](https://s3.amazonaws.com/sms-connector/AWS-SMS-Connector.ova), then deploy the OVA.  
 <center><img src="/images/aws-sms-ova-deploy.jpeg" width="50%"></center>
 
 <center><img src="/images/aws-sms-ova-deploy-final.jpeg" width="50%"></center>
