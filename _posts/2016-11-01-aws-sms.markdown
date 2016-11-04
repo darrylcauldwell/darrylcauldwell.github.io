@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "AWS Server Migration Services (SMS)"
+title:  "Migrate VMware VMs to AWS using Server Migration Services (SMS)"
 date:   2016-11-01 15:40:56 +0100
 tags:
     - Public Cloud
