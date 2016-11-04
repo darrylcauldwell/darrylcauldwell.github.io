@@ -10,6 +10,8 @@ While studying to become a [AWS Certified Solutions Architect - Professional](ht
 
 After each knowledge domain is covered I've placed links to the base knowledge covered in Associate level exams.  Finally there is a section of the blog posts from people who have taken the exam and there experience of the process.
 
+[A series of video's for AWS Solutions Architecture Professional training.](https://www.youtube.com/playlist?list=PL_RVC-cMNyYTz8zlxq117O1bfji-knooI)
+
 High Availability and Business Continuity (15%)
 -----------------------------------------------
 [Backup and Recovery Approaches Using AWS](https://d0.awsstatic.com/whitepapers/Storage/Backup_and_Recovery_Approaches_Using_AWS.pdf)  
