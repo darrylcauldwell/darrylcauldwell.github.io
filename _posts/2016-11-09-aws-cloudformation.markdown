@@ -79,4 +79,42 @@ I included the example Ansible playbook above in the github repository with the 
 
     ansible-playbook /home/ec2-user/aws-ansible/my-other-test-play.yml
 
+    PLAY [localhost] ***************************************************************
+    TASK [Run my CloudFormation stack] *********************************************
+    changed: [localhost]
+    TASK [debug] *******************************************************************
+    ok: [localhost] => {
+        "msg": [
+            {
+                "last_updated_time": null, 
+                "logical_resource_id": "EC2Instance", 
+                "physical_resource_id": "i-040228bd8fcb5c81a", 
+                "resource_type": "AWS::EC2::Instance", 
+                "status": "CREATE_COMPLETE", 
+                "status_reason": null
+            }, 
+            {
+                "last_updated_time": null, 
+                "logical_resource_id": "InstanceSecurityGroup", 
+                "physical_resource_id": "MyEC2Stack-InstanceSecurityGroup-3YAAZV42DEPF", 
+                "resource_type": "AWS::EC2::SecurityGroup", 
+                "status": "CREATE_COMPLETE", 
+                "status_reason": null
+            }
+        ]
+    }
+    TASK [debug] *******************************************************************
+    ok: [localhost] => {
+        "msg": {
+            "AZ": "eu-west-1a", 
+            "InstanceId": "i-040228bd8fcb5c81a", 
+            "PublicDNS": "ec2-54-171-78-90.eu-west-1.compute.amazonaws.com", 
+            "PublicIP": "54.171.78.90"
+        }
+    }
+    PLAY RECAP *********************************************************************
+    localhost                  : ok=3    changed=1    unreachable=0    failed=0   
+
 You will see that if we run this it creates the stack with parameters we defined as variables.  Notice at the end of the first task we register the output as an object. For the example we output this to the screen by using a debug task, and it includes the EC2 instance details. You could just as easily use this to continue configuration of the EC2 instance guest operating system.
+
+The Ansible playbook is idempotent so if you re-run the playbook whith state attribute as 'present' it checks it is in place and makes no changes. If you would like to remove the CloudFormation Stack then you can change the state attribute to 'absent' and when you re-run the playbook the CloudFormation Stack will be removed.
