@@ -72,6 +72,11 @@ Taking the scenrio one step further we'd like to drive the deployment of AWS inf
             env: "test"
         register: my_ec2_stack
 
-I included the example Ansible playbook in the github repository with the example files in which we pulled in previous step.
+        - debug: msg="{{ my_ec2_stack.stack_resources}}"
+        - debug: msg="{{ my_ec2_stack.stack_outputs}}"
+
+I included the example Ansible playbook above in the github repository with the example files in which we pulled in previous step.
 
     ansible-playbook /home/ec2-user/aws-ansible/my-other-test-play.yml
+
+You will see that if we run this it creates the stack with parameters we defined as variables.  Notice at the end of the first task we register the output as an object. For the example we output this to the screen by using a debug task, and it includes the EC2 instance details. You could just as easily use this to continue configuration of the EC2 instance guest operating system.
