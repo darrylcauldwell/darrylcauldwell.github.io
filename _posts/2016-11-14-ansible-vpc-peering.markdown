@@ -7,10 +7,7 @@ tags:
     - Public Cloud
 permalink: ansible-vpc-peering/
 ---
-In this post I look at setting up AWS VPC peering using Ansible.
-
-http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/vpc-peering-overview.html
-
+In this post I look at setting up [AWS VPC peering](http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/vpc-peering-overview.html) using Ansible. To do this we will start simple and add complexity to our configuration, we will start with peering within a single account and then move to script across accounts.
 
 Local Peering
 -------------
