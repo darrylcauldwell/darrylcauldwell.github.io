@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "How To Get & Put Items Into dynamoDB With Powershell"
-date:   2016-11-14 14:40:56 +0100
+date:   2016-12-20 14:40:56 +0100
 tags:
     - Powershell
     - Public Cloud
