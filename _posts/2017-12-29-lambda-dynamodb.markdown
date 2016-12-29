@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Microservice HTTP Endpoint For DynamoDB"
+title:  "Simple REST API For DynamoDB Using Lambda"
 date:   2016-12-29 11:20:56 +0100
 tags:
     - Public Cloud
