@@ -69,3 +69,4 @@ To do a table scan rather than targetted get,
         "payload": { "TableName": "MyTable"}
     }
 
+The query can be adjusted to perform any operation on the database.
