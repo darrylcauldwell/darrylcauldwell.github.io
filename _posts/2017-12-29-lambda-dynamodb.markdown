@@ -60,3 +60,12 @@ By clicking Test we can do an internal test of the function and pull back the Dy
         "Name": "Brian"
     }
     }
+
+To do a table scan rather than targetted get,
+
+    {
+        "operation": "list",
+        "tableName": "MyTable",
+        "payload": { "TableName": "MyTable"}
+    }
+
