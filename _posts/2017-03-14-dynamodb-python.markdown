@@ -6,7 +6,6 @@ tags:
     - Public Cloud
 permalink: dynamodb-python/
 ---
-# Goal
 The goal of this post is to walk through the creation of a AWS test environment which I use to explore the Python SDK interactions with DyanmoDB. For learning I use the free tier and so used to create the environment as needed manually. After doing this once I decided to encapsulate the configuration in a Cloud Formations template and then deploy the stack when I needed it.
 
 # Environment Configuration
