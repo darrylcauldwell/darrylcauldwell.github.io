@@ -10,20 +10,16 @@ I am tasked with working with VMware again for now, it seems like a good opportu
 
 I am performing this learning exercise in my home lab  using is vSphere 6.5, vSAN 6.5, with Python 2.7.10, although this should work the same with other versions.
 
-# Install pyVmomi and open vCenter connection
-Initiate an interactive python environment
+Install pyVmomi and open vCenter connection and then initiate an interactive python environment
 
 ```bash
 git clone https://github.com/vmware/pyvmomi.git
 sudo pip install -r ~/pyvmomi/requirements.txt
-```
-
-```bash
 cd ~/pyvmomi
 python
 ```
 
-Import the library to connect to vCenter
+Import the pyVim, pyVmomi & SSL libraries we are using,
 
 ```python
 import ssl
@@ -31,7 +27,7 @@ from pyVim import connect
 from pyVmomi import vim, vmodl
 ```
 
-Open connection to vCenter then gather contents
+Open connection to vCenter then gather contents as an object
 
 ```python
 vcenter = connect.SmartConnect(
@@ -44,16 +40,16 @@ vcenter = connect.SmartConnect(
 content = vcenter.RetrieveContent()
 ```
 
-Once we have vCenter Object Model as contents we can output a part of this
+# Basic get of information
+
+Once we have vCenter Object Model as content object we can output any part of this data
 
 ```bash
 content.about.fullName
 'VMware vCenter Server 6.5.0 build-5178943'
 ```
 
-# Basic get of information
-
-With our connection we can look for syntax in [vSphere WS SDK API Docs](http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html)and we can perform any operation the account we have connected with has rights to perform, like get lists of virtual machines.
+We can also explore the Object Model which is well descrived here in the [vSphere SDK API Docs](http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html) and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.
 
 ```python
 objView = content.viewManager.CreateContainerView(content.rootFolder,[vim.VirtualMachine],True)
@@ -65,7 +61,7 @@ for  vm in vmList:
 
 # Basic put of configuration information
 
-Once we have the objects we want identified we can perform operations on them,  for example if we gather the list of hosts.
+As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.
 
 ```python
 objView = content.viewManager.CreateContainerView(content.rootFolder,[vim.HostSystem],True)
@@ -77,4 +73,4 @@ for host in hostList:
     optionManager.UpdateOptions(changedValue=[option])
 ```
 
-With this in our Python toolkit we can easily create and deploy a configuration.
+It looks like with our new found friend the Python toolkit we can easily create and deploy a configuration.
