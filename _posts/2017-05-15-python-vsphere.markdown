@@ -6,10 +6,9 @@ tags:
     - VMware
 permalink: vsphere-python/
 ---
-# Background
-I am tasked with working with VMware again for now, it seems like a good opportunity to try and manage the configuration as code as we do with AWS. My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere.
+I am tasked with working with VMware again for now, it seems like a good opportunity to try and manage the infrastructrure configuration as code as we do with AWS. My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere, so its here I shall start.
 
-I am performing this learning excersize in my home lab  using is vSphere 6.5, vSAN 6.5, the client is MacOS running Python 2.7.10.
+I am performing this learning exercise in my home lab  using is vSphere 6.5, vSAN 6.5, with Python 2.7.10, although this should work the same with other versions.
 
 # Install pyVmomi and open vCenter connection
 Initiate an interactive python environment
