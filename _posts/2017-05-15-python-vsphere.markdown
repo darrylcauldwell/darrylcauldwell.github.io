@@ -113,7 +113,7 @@ new_ls['virtualWireCreateSpec']['controlPlaneMode'] = 'UNICAST_MODE'
 nsx_manager_session.view_body_dict(new_ls)
 ```
 
-Once we have out body template correctly describing what we want we an paste this and create a new Logical Switch.
+Once we have out body template correctly describing what we want we can post this and if all goes to plan create a new Logical Switch. In this example I am passing in the scopeId (transport zone) manually to keep it a simple example.
 
 ```python
 new_ls_response = nsx_manager_session.create('logicalSwitches', uri_parameters={'scopeId': 'vdnscope-1'}, request_body_dict=new_ls)
