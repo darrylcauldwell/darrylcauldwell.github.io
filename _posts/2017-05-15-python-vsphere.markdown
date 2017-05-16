@@ -74,7 +74,7 @@ for host in hostList:
 # NSX for vSphere
 So we have the pyVmomi library for vSphere, in addition to this VMware have provided open source library for [NSX for vSphere](https://github.com/vmware/nsxramlclient).
 
-We'll first make sure the packages are installed along with some other pack
+We'll first make sure the packages are installed along with the additional packages for managing NSX.
 
 ```bash
 sudo pip install nsxramlclient pyvim pyvmomi lxml requests
@@ -101,7 +101,7 @@ nsx_controllers = nsx_manager_session.read('nsxControllers', 'read')
 nsx_controllers
 ```
 
-When it comes to putting and posting information getting the formatting right can be a challenge. To this end with the library it is possible to create a template python dictionary using extract_resource_body_example.  Once we have this we can display the output structure and substitute into template.
+When it comes to putting and posting information getting the formatting right can be a challenge. To this end with the library it is possible to create a template python dictionary using extract_resource_body_example.  Once we have this we can display the output structure but more usefully we can also substitute values into the template.
 
 ```python
 new_ls = nsx_manager_session.extract_resource_body_example('logicalSwitches', 'create')
