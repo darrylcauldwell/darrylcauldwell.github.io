@@ -17,7 +17,7 @@ Our goal here is to deploy NSX Manager, an NSX Controller and get a functioning 
 ## Step 1 - Deploy NSX-T Manager
 The NSX-T Manager is a VM sized 16GB vRAM, 2x vCPU and 140GB of vHDD.
 
-I connect its single vNIC to an the same existing dvPortgroup on the existing dvSwitch as which vCenter and AD(DNS and NTP) are connected. I configure the appliance to use the IP of AD for DNS and NTP.
+I connect its single vNIC to an the same existing dvPortgroup on the existing dvSwitch as which vCenter and AD (DNS and NTP) are connected. I configure the appliance to use the IP of AD for DNS and NTP.
 
 As I will be connecting to the API I ensure A and PTR records are in place for NSX Manager.
 
@@ -44,7 +44,7 @@ initialize control-cluster
 ```
 
 ## Step 4 - Deploy NSX-T Transport Zone
-Open a web browser to https://<nsx-mgr>, navigate menu to Select Fabric > Nodes > Hosts and click Add.
+Open a web browser to https://(nsx-mgr), navigate menu to Select Fabric > Nodes > Hosts and click Add.
 
 Add both ESXi hosts accepting SSL thumprints when prompted that they invalid.
 
