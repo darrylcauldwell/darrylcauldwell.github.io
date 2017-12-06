@@ -48,7 +48,7 @@ Open a web browser to https://(nsx-mgr), navigate menu to select Compute Manager
 
 Enter details for vCenter
 
-center><img src="/images/NSX-T-Homelab-Compute-Manager.jpeg" width="50%"></center>
+<center><img src="/images/NSX-T-Homelab-Compute-Manager.jpeg" width="50%"></center>
 
 ## Step 4 - Configure A NSX-T Fabric
 Open a web browser to https://(nsx-mgr), navigate menu to select Fabric > Nodes > Hosts and click Add,  enter details for both hosts.
