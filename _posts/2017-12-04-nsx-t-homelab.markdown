@@ -86,6 +86,14 @@ We can then build some test VMs and join VMs to these two networks.
 
 <center><img src="/images/NSX-T-Homelab-VM-Logical-Switch.jpeg" width="50%"></center>
 
+If all has gone to plan these can ping each other between Distributed Logical Switeches across the Distributed Router.
+
+<center><img src="/images/NSX-T-Homelab-VM-Pings.jpeg" width="50%"></center>
+
+These VMs are now consuming the Transport Node (Hostswith) on each host and seemlessly communicating across the overlay network.
+
+<center><img src="/images/NSX-T-Homelab-Inter-Logical.jpeg" width="50%"></center>
+
 ## Step 5 - Deploy Edge
 Open a web browser to https://(nsx-mgr), navigate menu to select Fabric > Edges > and click Add Edge VM
 * Specify name and FQDN of the appliance, select small form factor,  and click Next
