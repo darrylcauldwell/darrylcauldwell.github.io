@@ -92,7 +92,7 @@ If all has gone to plan these can ping each other between Distributed Logical Sw
 
 These VMs are now consuming the Transport Node (Hostswith) on each host and seemlessly communicating across the overlay network.
 
-<center><img src="/images/NSX-T-Homelab-Inter-VM-Logical.jpeg" width="50%"></center>
+<center><img src="/images/NSX-T-Homelab-Inter-VM-Logical-.jpeg" width="50%"></center>
 
 ## Step 5 - Deploy Edge
 Open a web browser to https://(nsx-mgr), navigate menu to select Fabric > Edges > and click Add Edge VM
