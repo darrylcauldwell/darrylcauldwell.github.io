@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "VMware NSX-T 2.0 Homelab"
-date:   2017-12-04 22:20:56 +0100
+title:  "vRealize Orchestrator NSX Plug-in Troubleshooting"
+date:   2018-02-06 22:20:56 +0100
 tags:
     - VMware
     - Software Defined Networking
