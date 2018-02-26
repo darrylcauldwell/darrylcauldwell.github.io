@@ -7,7 +7,7 @@ tags:
     - Software Defined Networking
 permalink: nsx-t-homelab/
 ---
-NSX-T that can provide network virtualization for a multi-cloud and multi-hypervisor environment. NSX-V (NSX for vSphere) Manager integrates into vCenter and leverages the vSphere dvSwitch. NSX-T Manager can be used with vSphere but does not integrate with vCenter or dvSwitch, instead NSX Manager is managed its API and the Transport Zone creates a  hostswitch on each host.
+NSX-T that can provide network virtualization for a multi-cloud and multi-hypervisor environment. NSX-V (NSX for vSphere) Manager integrates into vCenter and leverages the vSphere dvSwitch. NSX-T Manager can be used with vSphere but does not integrate with vCenter or dvSwitch, instead NSX Manager is managed its API and the Transport Zone creates an Open vSwitch on each host.
 
 Current homelab, 2x Intel NUC running ESXi, All-Flash VSAN, VCSA deployed, each NUC has 2x pNIC a single pNIC from each host is connected to a dvSwitch the other is available for use with NSX-T Hostswitch.
 
