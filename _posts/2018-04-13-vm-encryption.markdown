@@ -41,7 +41,8 @@ Thie data encyption at rest method is a cluster wide option, which means that ev
 
 <center><img src="https://blogs.vmware.com/vsphere/files/2015/03/VSAN-Hytrust.png" width="50%"></center>
 
-## Key Management Server (KMS) Topologies
+<h2>Key Management Server (KMS) Topologies</h2>
+
 Key Management Server (KMS) availability is a critical component when deploying encryption as without it all data access is not allowed. If you lose the keys, you’ve lost the data (unless you’ve backed it up).
 
 Key Managers today are usually set up in a way that they replicate keys to one another. If I have three instances of a key manager, KMS-A, KMS-B and KMS-C, they replicate the keys between them. If I create a key on KMS-A it will show up in KMS-B & KMS-C at some point. Using this example, in vCenter I would create a key manager cluster/alias. In this example I’ll call it “KMSCluster” and add KMS-A, KMS-B and KMS-C into that KMS Cluster. I would then establish a trust with each of the key managers.
