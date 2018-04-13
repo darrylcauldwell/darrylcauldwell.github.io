@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "VSAN Data Encryption At Rest"
+title:  "VMware Data Encryption At Rest"
 date:   2018-04-13 22:20:56 +0100
 tags:
     - VMware
