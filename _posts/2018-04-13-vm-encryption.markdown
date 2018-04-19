@@ -7,7 +7,7 @@ tags:
     - Storage
 permalink: vm-encryption/
 ---
-Encryption of data at rest is a requirement for many customers,  with VMware hosted Virtual Machines (VMs) there are two ways to achieve this. VM data can be encrypted using vSAN whole-datastore encryption or using Storage Policy (VMcrypt). Both VM Encryption and vSAN Encryption require a Key Management Interoperability Protocol (KMIP) 1.1 compliant Key Management Server (KMS), the same KMS provider can be used for both types of encryption.
+Encryption of data at rest is a requirement for many customers,  with VMware hosted Virtual Machines (VMs) there are two ways to achieve this. VM data can be encrypted using vSAN whole-datastore encryption or using Storage Policy (VMcrypt). Both VM Encryption and vSAN Encryption require a Key Management Interoperability Protocol (KMIP) 1.1 compliant Key Management Server (KMS), the same KMS provider can be used for both types of encryption. 
 
 There are important differences between these two encryption methods.
 
