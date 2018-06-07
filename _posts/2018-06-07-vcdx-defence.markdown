@@ -22,7 +22,7 @@ I'd made presentations of the design before to various people within a work cont
 
 * Mistake Two - Even if design is customer agnositc, present in context of a customer story.
 
-I spent the evenings of the next week, updating slide deck based on 1st mock. Had regular dialogue with [Bilal Ahmed VCDX-251](https://twitter.com/Dark_KnightUK) was was giving me montorship, as my design was DCV it also included a chunk of NV so he put me in touch with [Shady ElMalatawey VCDX-249](https://twitter.com/ShadyMalatawey) and they both provided great mentorship.
+I spent the evenings of the next week, updating slide deck based on 1st mock. Had regular dialogue with [Bilal Ahmed VCDX-251](https://twitter.com/Dark_KnightUK) was was giving me mentorship, as my design was DCV it also included a chunk of NV so he put me in touch with [Shady ElMalatawey VCDX-249](https://twitter.com/ShadyMalatawey) and they both provided great mentorship.
 
 * Tip One - Mentorship helps enorously, from the very basics like where to park grab luch etc, to the mental coaching and encouragement. Bilal was first person to say I was there on merit, and indeed the last person to remind me prior to entering room. There is a mental hurdle as well as technical, and personal coaching helps this side .. a lot.
 
