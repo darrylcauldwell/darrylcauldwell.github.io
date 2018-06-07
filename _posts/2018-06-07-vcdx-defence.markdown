@@ -42,19 +42,19 @@ During next two weeks I had a lot on at work, I held no more mocks, I barely man
 
 A few days prior to defence I had two emails, one with address to attend in Frimley and one with address to attend in Staines. I was pretty sure the Frimley office closed a year or two ago, but I never visit so couldn't be sure. Quick phone call to reception at Staines office confirmed I was booked and had parking space on site.
 
-* Tip Four - Parking in Staines can be problematic, a call to reception got me an on-site space
+* Tip Five - Parking in Staines can be problematic, a call to reception got me an on-site space
 
 The day of defence, I was up at 4am fussing about powerpoint, its a long drive for me so set off early and arrived two and half hours early for my 2pm slot. This time turned out to be very useful to reset the mind, had a walk by river, grabbed a leisurely lunch and forgot about the carnage of M25 traffic. VMware have great offices with large public spaces.
 
-* Tip Five - Arrive early and reset the mind
+* Tip Six - Arrive early and reset the mind
 
 The defence itself, nice well appointed room, four whiteboards each large, relatively new Windows laptop with USB-A ports only. I've been USB-C only for a while, but had guessed the supplied laptop might not be so had brought both USB-A and USB-C. On entering I was very nervous, the panelists could have taken advantage of this but let me get into a rhythm before asking questions. Joe Silvagi had said during VCDX workshop that the panelists asked questions to help you score points in areas they see weakness. This was really proved to be the case, the questions were asked in a way which seemed encouraging rather than confrontational. I made one possibly one possibly two assertions where they had asked a very technical question, I explained up to the point I was confident, then made caveate that next part I was relatively confident in but we should research the explicit detail around this. This is how I would approached with a customer and then followed up with detailed research, I expect same applies to this scenario. In hindsight this could be incorrect approach and better to speak up to point of explicit knowledge. I had mixed feelings about the backup slides through out, people had said they created but a waste of time, other people that they a great asset. I had created backup slides covering most areas of the design, the mock teams had said best layout for them a diagram on right and bullets on left. I spend a lot ... a very lot, of time creating these, in the end I used maybe 10-15 of them to help answer questions, if I was doing again I'd drop the text and have bigger pictures from backups.
 
-* Tip Six - Attend the vcdx workshop, listen to Joe
+* Tip Seven - Attend the vcdx workshop, listen to Joe
 
-* Tip Seven - Pictures tell a thousand words, backup slides less text more diagrams, no pre-written text can cover the question
+* Tip Eight - Pictures tell a thousand words, backup slides less text more diagrams, no pre-written text can cover the question
 
-* Tip Eight - Pictures tell a thousand words but, presenting can be nervous having bulleted text can help you ensure you cover all the points you want to on that topic.
+* Tip Nine - Pictures tell a thousand words but, presenting can be nervous having bulleted text can help you ensure you cover all the points you want to on that topic.
 
 After defence and prior to design workshop I felt good, I love talking about my work, the team made me comfortable. I felt I gave a good account of design and business reasons behind, all in all it was a pleasant experience.
 
@@ -62,9 +62,9 @@ So the workshop, in VCDX workshop Joe had explicitly said you get to see the sce
 
 However, moderator stopped speaking then bang they started timer, this panicked me and I had a time limit to read which put me well and truely on the back foot from being relaxed. As such I forgot my planned approach and this became hinderance very soon as I wrote my requirements and constraints too close together and was hard to write, putting me further onto the back foot. It took me 5min or so to get back to where I wanted to start, and all because of incosistency in what I told prior and actions of moderator on the day (sigh). I never really got into a rhythm and just when I was starting to the moderator began laughing uncontrallably which made panelist laugh too, and me also, moderator left room to compose himself. This whole episode really made me loose my train of thought.
 
-* Tip Nine - Attend the vcdx workshop, listen to Joe but don't expect the moderator to play by the rules
+* Tip Ten - Attend the vcdx workshop, listen to Joe but don't expect the moderator to play by the rules
 
-* Tip Ten - Formulate a strategy and carry it out, don't allow yourself be distracted
+* Tip Elephen - Formulate a strategy and carry it out, don't allow yourself be distracted
 
 On returning home late that night, my wife asked how did it go?  I said I enjoy talking about a design I'd invested so much in and which I was very proud of to a bunch of inteligent people.
 
