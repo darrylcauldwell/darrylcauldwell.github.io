@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "vRealize Orchestrator (vRO) Calling NSX REST and Navigating XML"
-date:   2018-06-20 22:20:56 +0100
+date:   2018-06-20 07:20:56 +0100
 tags:
     - VMware
     - DevOps
