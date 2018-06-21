@@ -7,9 +7,7 @@ tags:
     - DevOps
 permalink: vro-rest/
 ---
-While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations.
-
-For example when creating an NSX Edge Services Gateway we use this method.
+While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations. For example when creating an NSX Edge Services Gateway we use this method.
 
     NSXEdgeTrinityBasicController.createEdgeV4
 
