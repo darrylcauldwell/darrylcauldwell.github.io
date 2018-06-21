@@ -13,17 +13,15 @@ For example when creating an NSX Edge Services Gateway we use this method.
 
     NSXEdgeTrinityBasicController.createEdgeV4
 
-That method returns void,  so we then use a second method using filter by name to get the object,  so we use this to obtain object ID which is needed by other functions.
+That method returns void,  so next you need to make a second method call using filter by name to get the object and obtain object ID which is typically the input to other methods.
 
     NSXEdgeTrinityBasicController.getAllEdgeSummariesV4
 
-When creating NSX Distributed Logical Router we use same method to create. However when we try and use the second method to get the object it fails. It looks like the DLR object contains an additional property LogicalRouterScope, which it seems like NSX plugin cannot handle and throws an error.
+When creating NSX Distributed Logical Router it is the same method to create. However the second method to get the object fails as it cannot handle the additional property LogicalRouterScope which DLRs have, so throws an error.
 
      java.lang.NoSuchMethodException:com.vmware.vshield.edge.dto.trinity.LogicalRouterScope.<init>()
 
-After trying various other NSX plugin methods, NSX offers all its capabilities via [REST API](https://docs.vmware.com/en/VMware-NSX-for-vSphere/6.4/nsx_64_api.pdf). vRealize Orchestrator comes with a HTTP-REST plugin, we can add NSX Managers as vRO managed servers programatically using [RESTHostManager](http://www.vroapi.com/Class/REST/2.2.2/RESTHostManager) or as this is a one off task you can do via the built in workflow.
-
-    HTTP-REST -> Configuration -> Add a REST host
+After trying various other NSX plugin methods all have same issue so I changed approach. NSX offers all its capabilities via [REST API](https://docs.vmware.com/en/VMware-NSX-for-vSphere/6.4/nsx_64_api.pdf). vRealize Orchestrator comes with a HTTP-REST plugin, so in theory we can add NSX Managers as HTTP-REST endpoint and call everything direct.
 
 If you have multiple REST HTTP hosts added you would want to bring back a list of these.
 
