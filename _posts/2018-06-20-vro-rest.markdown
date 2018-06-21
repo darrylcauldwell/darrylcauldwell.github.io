@@ -41,7 +41,7 @@ This returns a [RESTResponse](http://www.vroapi.com/Class/REST/2.2.2/RESTRespons
 
     responseXml = XMLManager.fromString(responseStr.contentAsString);
 
-If we look inside of the XML which is returned from /api/4.0/edges we can see each the hierachy that
+If we look inside of the XML which is returned from /api/4.0/edges we can see each the hierachy that each NSX Edge is a XML Node called edgeSummary and within that Node are child nodes for all of its attributes.
 
     <pagedEdgeList>
         <edgePage>
@@ -68,7 +68,7 @@ So we need to bring back all the edgeSummary Nodes and create a [XMLNodeList](ht
 
     edgeNodeList = responseXml.getElementsByTagName("edgeSummary");
 
-Once we have this we can loop around the children of this and find the correct Edge entry and then get the objectId.
+Once we have this we can loop around the children of this and find the correct Edge entry and then get the objectId. We know the child order is always the same so we can choose data from positon in list and output the text content of Node.
 
     for (var i = 0 ; i < edgeNodeList.length ; i++) {
         var node = edgeNodeList.item(i) ;
@@ -78,3 +78,5 @@ Once we have this we can loop around the children of this and find the correct E
             System.log("Edge named " + edgeName + " has objectId " + objectId) ;
         }
     }
+
+With this technique we should be able to get around any vRealize Orchestrator NSX Plugin limitation. This would also be useful for calling other RESTful APIs in absence of a specific vRealize Orchestrator plugin.
