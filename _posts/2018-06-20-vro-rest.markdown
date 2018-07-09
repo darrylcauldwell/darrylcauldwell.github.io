@@ -5,6 +5,7 @@ date:   2018-06-20 07:20:56 +0100
 tags:
     - VMware
     - DevOps
+    - Software Defined Networking
 permalink: vro-rest/
 ---
 While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations. For example when creating an NSX Edge Services Gateway we use this method.
