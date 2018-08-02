@@ -7,6 +7,7 @@ tags:
     - Software Defined Networking
 permalink: nsx-openshift/
 ---
+While looking at the various documentation sets I found it difficult to understand the NSX-T and OpenShift integration. A lot was masked by configuration performed by Ansible scripts. Here I try and record my understanding of the technology and then work through getting this running in a capacity constrained lab environment.
 
 ## NSX T
 
