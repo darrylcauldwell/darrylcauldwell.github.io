@@ -4,6 +4,7 @@ title:  "Controlling vSphere & NSX With Python"
 date:   2017-05-15 22:20:56 +0100
 tags:
     - VMware
+    - Software Defined Networking
 permalink: vsphere-python/
 ---
 I am tasked with working with VMware again for now, it seems like a good opportunity to try and manage the infrastructrure configuration as code as we do with AWS. My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere, so its here I shall start. Since then NSX for vSphere has also an open source library NSX RAML Client provided by VMware so I'll then move to that.
