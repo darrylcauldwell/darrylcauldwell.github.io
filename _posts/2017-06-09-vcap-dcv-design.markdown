@@ -15,7 +15,8 @@ Luckily on readin the score report it highlights the blueprint objectives relati
 
 Here I focus on these three objectives, and how I revisited my study and revision to fill my knowledge gap.
 
-## Objective 1.2 - Gather and Analyze Application Requirements
+# Objective 1.2 - Gather and Analyze Application Requirements
+
 Blueprint Defined Skills and Abilities
 
 * Gather and analyze application requirements for a given scenario.
@@ -27,7 +28,8 @@ Resources I used
 
 [vBrownBag VCAP6-DCV Design Objective 1.2 with Mark Gabryjelski](https://www.youtube.com/watch?v=ilUrNRY_foI)
 
-## Objective 1.3 - Determine risks, requirements, constraints and assumptions
+# Objective 1.3 - Determine risks, requirements, constraints and assumptions
+
 Blueprint Defined Skills and Abilities
 
 * Differentiate between the concepts of risks, requirements, constraints, and assumptions.
@@ -38,30 +40,31 @@ Resources I used
 
 [vBrownBag VCAP6-DCV Design Objective 1.3 with Rebecca Fitzhugh](https://www.youtube.com/watch?v=S_9Al_Tvm5U)
 
-## Objective 3.4 - Determine Appropriate Compute Resources for a vSphere 6.x Physical Design
+# Objective 3.4 - Determine Appropriate Compute Resources for a vSphere 6.x Physical Design
+
 Blueprint Defined Skills and Abilities
 
 * Analyze best practices with respect to CPU family choices.
 * Evaluate NUMA and vNUMA with ESXi hosts and Virtual machines in a given design.
 * Analyze the following in a vSphere design:
-    * Enhanced vMotion compatibility
-    * Implications of vSMP in virtual machines
-    * Transparent Page Sharing (TPS) and large pages
-    * Resource overcommitment
+  * Enhanced vMotion compatibility
+  * Implications of vSMP in virtual machines
+  * Transparent Page Sharing (TPS) and large pages
+  * Resource overcommitment
 * Based on the service catalog and given functional requirements:
-    * Determine the most appropriate compute technologies for the design
-    * Implement the service based on the required infrastructure qualities.
+  * Determine the most appropriate compute technologies for the design
+  * Implement the service based on the required infrastructure qualities.
 * Determine the impact of a technical design on the choice of server density:
-    * Scale Up/Out
-    * Auto Deploy
+  * Scale Up/Out
+  * Auto Deploy
 * Calculate the required number of nodes in an HA cluster based upon host failures and resource guarantees
 * Evaluate the implications of using reservations, limits, and shares on the physical design.
 * Specify the resource pool and vApp configuration based upon resource requirements.
 * Size the following resources appropriately:
-    * Memory
-    * CPU
-    * I/O devices
-    * Internal storage
+  * Memory
+  * CPU
+  * I/O devices
+  * Internal storage
 * Given a constraint to use existing hardware, determine suitability of the hardware for the design.
 
 Resources I used  
@@ -70,5 +73,6 @@ Resources I used
 [vSphere Flash Read Cache aka vFlash - FAQs](http://www.yellow-bricks.com/2013/09/11/frequently-asked-questions-vsphere-flash-read-cache/)
 [VMware Infrastructure Architecitecture Overview](https://www.vmware.com/pdf/vi_architecture_wp.pdf)
 
-## General
+# General
+
 [Site Recovery Manager Maximums](https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2105500)
