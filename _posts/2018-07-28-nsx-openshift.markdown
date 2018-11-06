@@ -4,6 +4,7 @@ title:  "VMware NSX-T for OpenShift"
 date:   2018-07-28 22:20:56 +0100
 tags:
     - Homelab
+    - Docker
     - Software Defined Networking
 permalink: nsx-openshift/
 ---
@@ -446,3 +447,15 @@ We should also be able to see all of the OpenShift pods listed including our two
 | openshift-controller-manager | openshift-controller-manager-vg7gm | 1/1 | Running | 0 | 1h |
 | openshift-core-operators | openshift-web-console-operator-78ddf7cbb7-r8dhd | 1/1 | Running | 0 | 1h |
 | openshift-web-console | webconsole-847bc4ccc4-hgsv4 | 1/1 | Running | 0 | 1h |
+
+## Testing
+
+oc create namespace my-first
+
+oc logs nsx-ncp-9m2jl | grep ERROR
+
+nsx_ujo.k8s.ns_watcher Failed to create NSX topology for project my-first: Unexpected error from backend manager (['192.168.1.15']) for Allocate subnet from IP block
+
+more commands for working OpenShift here
+
+https://static.rainfocus.com/vmware/vmworldus17/sess/148924638739800152Do/finalpresentationPDF/NET1522BU_FORMATTED_FINAL_1507910147966001nlDx.pdf
