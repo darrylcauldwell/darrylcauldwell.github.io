@@ -60,8 +60,8 @@ provider "nsxt" {
 }
 
 resource "nsxt_ip_set" "ip_set1" {
-  description  = "IS provisioned by Terraform"
-  display_name = "IS"
+  description  = "IP Set provisioned by Terraform"
+  display_name = "IP Set"
 
   tag {
     scope = "color"
