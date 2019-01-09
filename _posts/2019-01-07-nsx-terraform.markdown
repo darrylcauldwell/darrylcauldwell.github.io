@@ -107,7 +107,7 @@ Once ran successfully we can then check in NSX GUI and confirm the IP Set is cre
 
 <center><img src="/images/nsxt-terraform-confirm.png" width="50%"></center>
 
-We would like to launch and destroy application specific NSX network infrastructure when we deploy our application. We would do this with a CI/CD pipeline tool like Jenkins. If starting from scratch [install a simple jenkins server](https://wiki.jenkins.io/display/JENKINS/Installing+Jenkins+on+Red+Hat+distributions), on CentOS / RHEL you would use these commands.
+If we would like to launch and destroy application specific NSX network infrastructure when we deploy our application. We would do this with a CI/CD pipeline tool like Jenkins will walk through this. If starting from scratch [install a simple jenkins server](https://wiki.jenkins.io/display/JENKINS/Installing+Jenkins+on+Red+Hat+distributions), on CentOS / RHEL you would use these commands.
 
 ```bash
 yum update -y
@@ -119,9 +119,9 @@ service jenkins start
 chkconfig jenkins on
 ```
 
-Once installed and running would load the [Terraform plugin](https://wiki.jenkins.io/display/JENKINS/Terraform+Plugin),  however this does not presently work as Terraform prompts for confirmation.  There is a [pending pull request to fix this](https://github.com/jenkinsci/terraform-plugin/pull/4/commits/47d6d3da54dd2cc437c1efb5df89cdccdb0f3eb0) until this gets merged we need a workaround.
+Once installed and running we would normally load the [Terraform plugin](https://wiki.jenkins.io/display/JENKINS/Terraform+Plugin),  however this does not presently work as Terraform prompts for confirmation.  There is a [pending pull request to fix this](https://github.com/jenkinsci/terraform-plugin/pull/4/commits/47d6d3da54dd2cc437c1efb5df89cdccdb0f3eb0) until this gets merged we need a workaround.
 
-To workaround this issue we can call a shell script from within Jenkins to control Terraform.  To do this we will create a folder and give Jenkins user account permissions by running following.
+To workaround this issue we can still control Terraform with Jenkins by calling a shell script from within Jenkins job.  To do this we will create a folder and give Jenkins user account permissions by running following.
 
 ```
 mkdir /terraform
@@ -166,3 +166,4 @@ __EOF__
 ./terraform apply -auto-approve
 
 rm -f nsx.tf
+```
