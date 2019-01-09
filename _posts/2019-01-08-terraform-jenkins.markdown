@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Controlling NSX with Terraform with Jenkins"
+title:  "Controlling NSX-T with Terraform with Jenkins"
 date:   2019-01-08 22:20:56 +0100
 tags:
     - DevOps
