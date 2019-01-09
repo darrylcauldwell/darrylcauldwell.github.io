@@ -23,7 +23,7 @@ chkconfig jenkins on
 
 Once installed and running would load the [Terraform plugin](https://wiki.jenkins.io/display/JENKINS/Terraform+Plugin),  however this does not presently work as Terraform prompts for confirmation.  There is a [pending pull request to fix this](https://github.com/jenkinsci/terraform-plugin/pull/4/commits/47d6d3da54dd2cc437c1efb5df89cdccdb0f3eb0) until this gets merged we need a workaround.
 
-We will be calling a shell script from within Jenkins we'll create a folder and give Jenkins user account permissions by running following.
+To workaround this issue we can call a shell script from within Jenkins to control Terraform.  To do this we will create a folder and give Jenkins user account permissions by running following.
 
 ```
 mkdir /terraform
