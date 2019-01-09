@@ -123,7 +123,7 @@ Once installed and running we would normally load the [Terraform plugin](https:/
 
 To workaround this issue we can still control Terraform with Jenkins by calling a shell script from within Jenkins job.  To do this we will create a folder and give Jenkins user account permissions by running following.
 
-```
+```bash
 mkdir /terraform
 sudo usermod -a -G root jenkins
 chmod -R g+w /terraform
@@ -133,7 +133,7 @@ We can then create a Jenkins job with Build contents which creates a Terraform f
 
 <center><img src="/images/nsxt-terraform-jenkins.png" width="50%"></center>
 
-```
+```bash
 cd /terraform
 
 cat > /terraform/nsx.tf << '__EOF__'
@@ -167,3 +167,5 @@ __EOF__
 
 rm -f nsx.tf
 ```
+
+This is an overly simple example and more likely we would pull a config file from distributed source control such as github.
