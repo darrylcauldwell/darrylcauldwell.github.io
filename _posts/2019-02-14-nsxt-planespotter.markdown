@@ -18,7 +18,7 @@ My homelab networking is very simple, I have a domestic BT broadband router, thi
 
 Connected to this are a pair of Intel NUCs each has onboard 1GB NIC and two USB 1GB NICs.  The lab is used for other things so the on-board vmnic0 NIC is assigned to a VSS which has default 'VM Network' portgroup. This leaves both vusb0 and vusb1 free to be used for N-VDS.
 
-<img src="/images/planespotter-esxi.png" width="50%">
+<img src="/images/planespotter-esxi.png">
 
 The NUCs are single socket, dual core i5s running at 1.8GHz and each has only 32GB of RAM, these currently run vSphere 6.7 Update 1 and shared storage is all-flash VSAN with no data protection.
 
@@ -26,19 +26,19 @@ The NUCs are single socket, dual core i5s running at 1.8GHz and each has only 32
 
 Download OVA's and perform initial deployment of NSX Manager,  NSX Controller and NSX Edge.  As lab only has a single L2 all get deployed with all vNICs connected to the portgroup 'VM Network'.
 
-<img src="/images/planespotter-edge.png" width="50%">
+<img src="/images/planespotter-edge.png">
 
 ## NSX-T Routing
 
 One of the biggest differences between NSX for vSphere and NSX-T is the routing architecture. The services are split between service router (SR) and distributed router (DR), the service router functions are run on the NSX edge and the distributed router (DR) is a kernel module running on the ESXi hosts. My lab setup uses defaults for all transit switches, it is importanrt to understand the relationship when we look at packets flow through these various hops.
 
-<img src="/images/planespotter-edge-arch.png" width="50%">
+<img src="/images/planespotter-edge-arch.png">
 
 ## Planespotter
 
 The planespotter application is made up of various microservices and database. For this NSX-T setup each is installed on a VM. The application can be installed by following [this guide](https://github.com/darrylcauldwell/planespotter/blob/master/docs/vm_deployment/README.md).
 
-<img src="/images/planespotter-logical-switches.png" width="50%">
+<img src="/images/planespotter-logical-switches.png">
 
 ## Planespotter FE to API Traceflow
 
@@ -46,4 +46,4 @@ One neat feature of NSX-T and geneve is to inject data into the header and use t
 
 So if we select the port connected to planespotter frontend and port connected to planespotter api, we get a nice visual represenation of the path.
 
-<img src="/images/planespotter-traceflow.png" width="50%">
+<img src="/images/planespotter-traceflow.png">
