@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "NSX-T for Planespotter"
-date:   2019-01-07 22:20:56 +0100
+date:   2019-02-14 22:20:56 +0100
 tags:
     - Software Defined Networking
     - DevOps
