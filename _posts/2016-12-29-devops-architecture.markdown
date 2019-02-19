@@ -28,6 +28,7 @@ When architectcure design is designed and delivered in small units, the feedback
 
 References
 ----------
+[Agile Vs Kanban: What’s the Difference?](https://www.guru99.com/agile-vs-kanban.html)
 [Agile Architect: Role](http://www.agilearchitect.org/agile/role.htm)  
 [Martin Fowler: YAGNI](http://martinfowler.com/bliki/Yagni.html)  
 [Agile Modeling: Agile Architecture](http://agilemodeling.com/essays/agileArchitecture.htm)  
