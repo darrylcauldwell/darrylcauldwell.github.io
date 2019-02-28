@@ -37,7 +37,7 @@ VMware provide an [NSX Container Plugin package](https://my.vmware.com/group/vmw
 * NSX Container Network Interface (CNI) - is an executable which allow the integration of NSX into Kubernetes.
 * Open vSwitch
 
-<center><img src="/images/nsx-k8s.jpeg" width="50%"></center>
+<img src="/images/nsx-k8s.jpeg" alt="NSX and Kubernetes Integration" class="inline">
 
 ## NSX For OpenShift
 
