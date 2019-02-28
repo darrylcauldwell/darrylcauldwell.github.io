@@ -54,7 +54,7 @@ For the rest of this blog post I am aiming to create a NSX OpenShift integration
 * 1GbE Switch (Layer 2 only)
   * VLAN 0 - CIDR 192.168.1.0/24
 * vSphere vCenter Appliance 6.7
-* 2x vSphere ESXi 6.7 hosts (Intel NUC - 2x 1.8GHz CPU & 32GB RAM)
+* 3x vSphere ESXi 6.7 Update 1 hosts (Intel NUC - 3x 1.8GHz CPU & 32GB RAM)
   * Onboard NIC is connected to a vSphere Standard Switch
   * USB3 NIC is unused and will be used for NSX
 * VSAN
@@ -69,17 +69,17 @@ The following resources are required
 
 Deploy a small NSX unifed appliance specifying the nsx-manager role. Once deployed link this to vCenter, to do this add vCenter in 'Fabric / Compute Manager'.
 
-<center><img src="/images/nsx-compute-manager.jpeg" width="50%"></center>
+<img src="/images/nsx-compute-manager.jpeg" alt="NSX-T Management Plane" class="inline"/>
 
 With the manager in place we now need to create the management plane, to do this we need to install the management plane agent (MPA) on each host so they are added as usable Fabric Nodes.
 
-<center><img src="/images/nsx-nodes.jpeg" width="50%"></center>
+<img src="/images/nsx-nodes.jpeg" alt="NSX-T Management Plane Agent" class="inline"/>
 
-## IP Pool
+## Tunnel Endpoint IP Pool
 
-We create an IP pool one for the Transort Nodes to communicate for my scenario the two ESXi hosts and tier-0 router will all participate so I create an IP Pool with three addresses. Navigate to Inventory > Groups > IP Pools and click add.
+We create an IP pool one for the Transort Nodes to communicate for my scenario the three ESXi hosts and an edge will all participate so I create an IP Pool with four addresses. Navigate to Inventory > Groups > IP Pools and click add.
 
-<center><img src="/images/nsx-ip-pool.jpeg" width="50%"></center>
+<img src="/images/nsx-ip-pool.jpeg" alt="NSX-T IP Pool" class="inline"/>
 
 ## NSX Control Plane
 
@@ -103,37 +103,33 @@ set control-cluster security-model shared-secret
 initialize control-cluster
 ```
 
-<center><img src="/images/nsx-mgr-ctrl-thumb.jpeg" width="50%"></center>
+<img src="/images/nsx-mgr-ctrl-thumb.jpeg" alt="NSX-T Control Plane" class="inline"/>
 
 This should then be viewable in NSX Manager
 
-<center><img src="/images/nsx-control-cluster.jpeg" width="50%"></center>
+<img src="/images/nsx-control-cluster.jpeg" alt="NSX-T Controller Cluster" class="inline"/>
 
-To build out this topology resources that you need to configure include an overlay transport zone (created eralier), a tier-0 logical router, a logical switch, IP blocks for Kubernetes nodes, and an IP pool for SNAT. In order that the NSX Container Plugin can find the correct NSX objects all of the NSX objects created require a tag applying. For this lab build I am using tag dc-openshift.
+## Overlay Transport Zone
 
-So now we have our controller our next task is to form the local control plane (LCP). First step is to create a Transport Zone.
+All the virtual network objects will need to communicate across an overlay network. To faciliate this the three esxi hosts and edges need to be part of an Overlay Transport Zone.
 
-<center><img src="/images/nsx-transport.jpeg" width="50%"></center>
+So now we have our controller our next task is to form the local control plane (LCP). First step is to create an overlay Transport Zone.
 
-Navigate within NSX Manager to Fabric > Transport Zones, select overlay network then Actions > Manage Tags and apply tag.
-
-    Scope = ncp/cluster and Tag = dc-openshift
-
-<center><img src="/images/ncp-tags.jpeg" width="50%"></center>
+<img src="/images/nsx-transport.jpeg" alt="NSX-T Transport Zone" class="inline"/>
 
 Once we have a Transport Zone we can add our NSX fabric nodes as transport nodes. Navigate menu to Select Fabric > Transport Nodes and click Add.  A wizard will open on the general tab select first Node (host), give appropriate name for that host and select the openshift transport zone.
 
-<center><img src="/images/nsx-transport-node.jpeg" width="50%"></center>
+<img src="/images/nsx-transport-node.jpeg" alt="NSX-T Add Transport Zone" class="inline"/>
 
 Change to N-VDS tab, create N-VDS for openshift, select default NIOC, select default hostswitch Uplink profile, select transport IP Pool and enter Physical NIC identifier for Uplink-1.
 
-<center><img src="/images/nsx-host-vds.jpeg" width="50%"></center>
+<img src="/images/nsx-host-vds.jpeg" alt="NSX-T Add Transport Zone N-VDS" class="inline"/>
 
-The Transport Nodes will be used by OpenShift as such they need a tag applying, navigate to Actions > Manage Tags and apply tag for each.
+In order that the NSX Container Plugin can find the correct NSX objects all of the NSX objects created require a tag applying. For this lab build I am using tag dc-openshift. Navigate within NSX Manager to Fabric > Transport Zones, select overlay network then Actions > Manage Tags and apply tag.
 
     Scope = ncp/cluster and Tag = dc-openshift
 
-<center><img src="/images/ncp-tags.jpeg" width="50%"></center>
+<img src="/images/ncp-tags.jpeg" alt="NSX-T OpenShift Tags" class="inline"/>
 
 ## Tier-0 Router
 
@@ -148,7 +144,7 @@ We are going to be using the Management and for it to participate in the Overlay
 | Datapath #2 | Network adapter 3 | Overlay |
 | Datapath #3 | Network adapter 4 | Unused |
 
-<center><img src="/images/nsx-edge.jpeg" width="50%"></center>
+<img src="/images/nsx-edge.jpeg" alt="NSX-T Add Edge" class="inline"/>
 
 In the same way as esx hosts added we can now add the Edge as a Transport Nodes, this is the same but on N-VDS tab select edge-vm Uplink profile and for Physical NIC select fp-eth1.
 
@@ -156,19 +152,19 @@ This will be used by OpenShift to once created navigate to Actions > Manage Tags
 
     Scope = ncp/cluster and Tag = dc-openshift
 
-<center><img src="/images/ncp-tags.jpeg" width="50%"></center>
+<img src="/images/ncp-tags.jpeg" alt="NSX-T OpenShift Tags" class="inline"/>
 
 We now move the Edge to be a member of an Edge Cluster.
 
-<center><img src="/images/nsx-edge-cluster.jpeg" width="50%"></center>
+<img src="/images/nsx-edge-cluster.jpeg" alt="NSX-T Add Edge Cluster" class="inline"/>
 
 Once the Edge Cluster is created we can create the tier-0 router,  as we are using NAT which is a stateful service we need to configure this as Active-Passive.
 
-<center><img src="/images/nsx-tier0.jpeg" width="50%"></center>
+<img src="/images/nsx-tier0.jpeg" alt="NSX-T Add Edge Tier-0 Router" class="inline"/>
 
 Add a new redistribution criteria of type Tier-0 NAT.
 
-<center><img src="/images/nsx-tier0-route-redist.jpeg" width="50%"></center>
+<img src="/images/nsx-tier0-route-redist.jpeg" width="50%"></center>
 
 The next step requires an NSX Logical Switch so we create that.
 
