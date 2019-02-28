@@ -24,7 +24,7 @@ OpenShift helps you to develop, deploy, and manage container-based applications.
 
 [Container Network Interface](https://github.com/containernetworking/cni) (CNI), consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins. Container Network Interface (CNI) supports integration with any container runtime.
 
-<img src="/images/nsx-cni.jpeg">
+![Container Network Interface (CNI) Integration](img src="/images/nsx-cni.jpeg")
 
 ## VMware NSX and Kubernetes Integration
 
