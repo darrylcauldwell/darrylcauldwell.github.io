@@ -250,6 +250,7 @@ To setup our environment we can configure the Docker daemon with an insecure reg
     systemctl restart docker
 
 # Add OpenShift Client
+
 The OpenShift client is used to manage the OpenShift installation and configuration it is supplied as a package. Download this, unpack and add to runtime path.
 
     cd /tmp
@@ -261,6 +262,7 @@ The OpenShift client is used to manage the OpenShift installation and configurat
     . /etc/profile
 
 ## Start OpenShift Origin as all-in-one Cluster
+
 For next steps we need a basic OpenShift stack. Rather than build something custom we can simply start a local OpenShift all-in-one cluster with a configured registry, router, image streams, and default templates, by running the following command (where openshift.darrylcauldwell.com is the FQDN which points to IP address of management interface of your VM),
 
     oc cluster up --public-hostname=openshift.darrylcauldwell.com
@@ -336,11 +338,13 @@ Ensure has a line reading,
     ONBOOT=yes
 
 ## NSX-T Container Network Interface (CNI)
+
 The NSX-T Container Plug-in (NCP) provides integration between NSX-T and container orchestrators such as Kubernetes. The installation files are in same package as the NSX Open vSwitch (OVS). Install using command.
 
     yum install -y /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-cni-2.2.0.8740202-1.x86_64.rpm
 
 ## NSX-T Container Plug-in (NCP) ReplicationController (RC)
+
 There are a few accounts used for rights assignments, the project, users and roles are defined in NCP RBAC file. To create the users within the project run,
 
     oc login -u system:admin
@@ -417,7 +421,7 @@ Ensure the following is set,
 
 Once updated create the Node Agent Daemonset (DS),
 
-    oc login -u system:admin 
+    oc login -u system:admin
     oc apply -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-node-agent-ds.yml
 
 Check the Node Agent Daemonset is there,
