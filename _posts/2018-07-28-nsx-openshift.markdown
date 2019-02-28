@@ -79,7 +79,7 @@ With the manager in place we now need to create the management plane, to do this
 
 We create an IP pool one for the Transort Nodes to communicate for my scenario the three ESXi hosts and an edge will all participate so I create an IP Pool with four addresses. Navigate to Inventory > Groups > IP Pools and click add.
 
-<img src="/images/nsx-ip-pool.jpeg" alt="NSX-T IP Pool" class="inline"/>
+<img src="/images/nsx-ip-pool.png" alt="NSX-T IP Pool" class="inline"/>
 
 ## NSX Control Plane
 
@@ -113,8 +113,6 @@ This should then be viewable in NSX Manager
 
 All the virtual network objects will need to communicate across an overlay network. To faciliate this the three esxi hosts and edges need to be part of an Overlay Transport Zone.
 
-So now we have our controller our next task is to form the local control plane (LCP). First step is to create an overlay Transport Zone.
-
 <img src="/images/nsx-transport.jpeg" alt="NSX-T Transport Zone" class="inline"/>
 
 Once we have a Transport Zone we can add our NSX fabric nodes as transport nodes. Navigate menu to Select Fabric > Transport Nodes and click Add.  A wizard will open on the general tab select first Node (host), give appropriate name for that host and select the openshift transport zone.
@@ -131,40 +129,44 @@ In order that the NSX Container Plugin can find the correct NSX objects all of t
 
 <img src="/images/ncp-tags.jpeg" alt="NSX-T OpenShift Tags" class="inline"/>
 
-## Tier-0 Router
+## VLAN Transport Zone
 
-We need some way for the logical container overlay network to communicate with the physical network. A tier-0 logical router provides an on and off gateway service between the logical and physical network. The tier-0 logical router function is offered by the NSX Edge, the Edge will have 4 network adapters. The first of these is used by the management network, the other 3 interfaces (fp-eth0, fp-eth1 and fp-eth2) can then be used for connecting to overlay networks or for routing.
+As well as connecting to the overlay network the Edges running Tier-0 routing functions also needs to be able to connect to the physical network. This connectivity is achieved by using a Transport Zone of type VLAN.
 
-We are going to be using the Management and for it to participate in the Overlay, in my homelab both of these reside on VLAN. If you did want to separate these functions the mapping is.
+<img src="/images/nsx-vlan-transport.png" alt="NSX-T VLAN Transport Zone" class="inline"/>
 
-| GUI Reference | VM vNIC | Function |
+## NSX Edge
+
+We need some way for the logical container overlay network to communicate with the physical network. AN NSX Edge can host services which provide this connectivity.
+
+The NSX Edge has 4 network adapters, the first is used by the management network, the other 3 interfaces (fp-eth0, fp-eth1 and fp-eth2) can then be used for connecting to overlay networks or for routing. Within my lab I have a single flat physical network so all NSX Edge interfaces connect to the same Port Group.
+
+| GUI Reference | VM vNIC | NIC | Lab Function |
 | ----- | ---- | ----- |
-| Managewment | Network adapter 1 | Management |
-| Datapath #1 | Network adapter 2 | Routing |
-| Datapath #2 | Network adapter 3 | Overlay |
-| Datapath #3 | Network adapter 4 | Unused |
+| Managewment | Network adapter 1 | eth0 | Management |
+| Datapath #1 | Network adapter 2 | fp-eth0 | Overlay |
+| Datapath #2 | Network adapter 3 | fp-eth1 | Uplink |
+| Datapath #3 | Network adapter 4 | fp-eth2 | Unused |
 
 <img src="/images/nsx-edge.jpeg" alt="NSX-T Add Edge" class="inline"/>
 
-In the same way as esx hosts added we can now add the Edge as a Transport Nodes, this is the same but on N-VDS tab select edge-vm Uplink profile and for Physical NIC select fp-eth1.
+The NSX Edge needs to participate in the Overlay Transport Zone so we need to first configure this as Transport Node.  This is very similar process to how we setup ESXi hosts as Transport Nodes except on N-VDS tab we add to both overlay and vlan transport zones,  we use the edge-vm Uplink profile and for Virtual NIC select appropriate NIC as per table above.
 
-This will be used by OpenShift to once created navigate to Actions > Manage Tags and apply tag.
+<img src="/images/nsx-edge-n-vdss.png" alt="NSX-T Edge N-VDS" class="inline"/>
 
-    Scope = ncp/cluster and Tag = dc-openshift
-
-<img src="/images/ncp-tags.jpeg" alt="NSX-T OpenShift Tags" class="inline"/>
-
-We now move the Edge to be a member of an Edge Cluster.
+In order we can deploy Tier-0 router the Edge needs to be a member of an Edge Cluster.
 
 <img src="/images/nsx-edge-cluster.jpeg" alt="NSX-T Add Edge Cluster" class="inline"/>
 
-Once the Edge Cluster is created we can create the tier-0 router,  as we are using NAT which is a stateful service we need to configure this as Active-Passive.
+## Tier-0 Router
+
+Once the Edge Cluster is created we can create the tier-0 router.
 
 <img src="/images/nsx-tier0.jpeg" alt="NSX-T Add Edge Tier-0 Router" class="inline"/>
 
-Add a new redistribution criteria of type Tier-0 NAT.
+In my lab I have 192.168.1.0 /24 and will be using the 172.16.0.0 /16 address space for NSX. I would like to use network address translation (NAT) and allocate a separate SNAT IP on the 192.168.1.0 network for each OpenShift namespace on the 172.16.0.0 network.  To achieve this I need to configure a redistribution criteria of type Tier-0 NAT.
 
-<img src="/images/nsx-tier0-route-redist.jpeg" width="50%"></center>
+<img src="/images/nsx-tier0-route-redist.jpeg" alt="NSX-T Tier-0 NAT" class="inline"/>
 
 The next step requires an NSX Logical Switch so we create that.
 
