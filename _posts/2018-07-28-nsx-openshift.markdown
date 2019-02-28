@@ -37,7 +37,7 @@ VMware provide an [NSX Container Plugin package](https://my.vmware.com/group/vmw
 * NSX Container Network Interface (CNI) - is an executable which allow the integration of NSX into Kubernetes.
 * Open vSwitch
 
-<img src="/images/nsx-k8s.jpeg" alt="NSX and Kubernetes Integration" class="inline">
+<img src="/images/nsx-k8s.jpeg" alt="NSX and Kubernetes Integration" class="inline"/>
 
 ## NSX For OpenShift
 
@@ -47,7 +47,7 @@ NSX implements a discreet network topology per Kubernetes namespace. NSX maps lo
 
 For the rest of this blog post I am aiming to create a NSX OpenShift integration. I aiming for two namespaces, each with a logical router and three subnets. The namespaces will use private address ranges and the tier-0 router will provide SNAT connectivity to the routed network.
 
-<center><img src="/images/nsx-lab-topology.jpeg" width="50%"></center>
+<img src="/images/nsx-lab-topology.jpeg" alt="OpenShift NSX Environment" class="inline"/>
 
 ## Starting point homelab configuration
 
