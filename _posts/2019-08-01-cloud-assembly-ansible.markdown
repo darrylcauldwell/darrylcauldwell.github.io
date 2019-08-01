@@ -27,4 +27,4 @@ Typical factors which would drive a deployment architecture with a central manag
 * Windows guests as Ansible engine only runs on Linux
 * Large deployments require centralized control for day two operations
 
-An simplified example of how to deploy an application using this deployment architecture using Cloud Assembly is described [here](https://github.com/darrylcauldwell/titoAnsible).
+An simplified example of how to deploy an application using this deployment architecture using Cloud Assembly is described [here](https://github.com/darrylcauldwell/titoAnsible).  This also includes a simplified example of how Ansible server can be used for day two operations for servers of a specific type.
