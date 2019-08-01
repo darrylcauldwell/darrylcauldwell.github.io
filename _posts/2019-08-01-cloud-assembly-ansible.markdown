@@ -17,6 +17,8 @@ In this blog post I am going to focus on Ansible.  The Ansible engine is [fully 
 ## Ansible Headless
 Ansible does not require a single controlling machine, any Linux machine can run Ansible. The absence of a central management server requirement can greatly increase availability, simplify disaster-recovery planning and increased security (no single point of control).
 
+When we use this deployment model each server has Ansible installed and has inventory file with a single entry namely localhost. We create a Cloud Assembly blueprint which includes cloud-init configuration to pull an Ansible playbook from a repository and execute it locally. Here the Ansible playbook is specific to the server role on which it will be ran.
+
 An simplified example of how to deploy an application using this deployment architecture using Cloud Assembly is described [here](https://github.com/darrylcauldwell/titoAnsibleHeadless).
 
 ## Ansible Server
@@ -26,5 +28,7 @@ Typical factors which would drive a deployment architecture with a central manag
 
 * Windows guests as Ansible engine only runs on Linux
 * Large deployments require centralized control for day two operations
+
+When we use this deployment model we deploy an Ansible central management server and this we create SSH authorization private public key pair. We then configure this to be intregrated with Cloud Assembly. We create a Cloud Assembly blueprint which includes on each VM resource cloud-init configuration to create a local account named ansible which can be accessed using the public authorization key. The Cloud Assembly blueprint then has Ansible resource added with details of which playbook to execute which are linked to the VM resources. When the blueprint is deployed the VM resources get added dynamically to the Ansible server inventory file and then the playbooks executed.
 
 An simplified example of how to deploy an application using this deployment architecture using Cloud Assembly is described [here](https://github.com/darrylcauldwell/titoAnsible).  This also includes a simplified example of how Ansible server can be used for day two operations for servers of a specific type.
