@@ -11,7 +11,7 @@ I recently began looking more closely at cloud-init for customizing VMware guest
 
 ## Why Guest OS Customization Is Needed
 
-When you clone a virtual machine or deploy a virtual machine from a template it clones the virtual hard disk and all guest operating system settings. In many deployment scenarios if virtual machines with identical settings are deployed conflicts can occur, such as duplicate computer names. Typically for this deployment scenario during deployment guest operating system customization is required to be performed.
+When you clone a virtual machine or deploy a virtual machine from a template it clones the virtual hard disk and all guest operating system settings. In many deployment scenarios if virtual machines with identical settings are deployed conflicts can occur, such as duplicate computer names. Typically for this deployment scenario during deployment guest operating system customization is required to be performed to give them uniqueness.
 
 ## VM Guest OS Customization Approach
 
