@@ -5,7 +5,7 @@ date:   2019-09-11 22:20:56 +0100
 tags:
     - DevOps
     - VMware
-permalink: vmare-cloud-init/
+permalink: vmware-cloud-init/
 ---
 I recently began looking more closely at cloud-init for customizing VMware guest VMs. This caused me some heachaches! I took various notes while troubleshooting and researching around this.
 
