@@ -121,6 +121,7 @@ Other VMware products such as Cloud Assembly can utilize open-vm-tools and cloud
 
 ```
 https://docs.vmware.com/en/VMware-Cloud-Assembly/services/Using-and-Managing/GUID-70EA052D-FABF-4CE5-875D-9B52FED08AA3.html
-
+```
+```
 https://blogs.vmware.com/management/2018/11/customizing-cloud-assembly-deployments-with-cloud-init.html
 ```
