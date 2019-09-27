@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Cloudbased-init For vSphere"
-date:   2019-09-17 22:20:56 +0100
+date:   2019-09-26 22:20:56 +0100
 tags:
     - DevOps
     - VMware
@@ -35,29 +35,27 @@ Cloud-init runs on startup but appears to fail to do what it is asked, Cloudbase
 ```
  
 ## Adding OVF 
-Looking at the error suggested to me that Cloudbase-Init was not looking on the CDROM. I read through some of the Cloudbase-Init documentation and found that metadata service configuration was specified in,
+Looking at the error suggested to me that Cloudbase-Init was not finding the OVF and file. I read through some of the Cloudbase-Init documentation and found that metadata service configuration was specified in,
 
 ```
 C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf
 ```
 
-Checking the default configuration it does not include the [OvfService metadata service](https://cloudbase-init.readthedocs.io/en/latest/services.html):
+Checking the default configuration file does not include the [OvfService metadata service](https://cloudbase-init.readthedocs.io/en/latest/services.html):
 
 ```
 metadata_services=cloudbaseinit.metadata.services.configdrive.ConfigDriveService,cloudbaseinit.metadata.services.httpservice.HttpService,cloudbaseinit.metadata.services.ec2service.EC2Service,cloudbaseinit.metadata.services.maasservice.MaaSHttpService
 ```
 
-If I follow similar steps to before and install Cloudbase-init but DO NOT chose wizard options to 'Run Sysprep to create a generalized image' and 'Shutdown when Sysprep terminates'.  Instead I update entry in the cloudbase-init-unattend.conf file include OvfService like:
+If I follow similar steps to before to creeate templat but during install of Cloudbase-init but DO NOT chose wizard options 'Sysprep and Shutdown'.  Instead I update the metadata_services entry in the cloudbase-init-unattend.conf file include OvfService like:
 
 ```
 metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService,cloudbaseinit.metadata.services.configdrive.ConfigDriveService,cloudbaseinit.metadata.services.httpservice.HttpService,cloudbaseinit.metadata.services.ec2service.EC2Service,cloudbaseinit.metadata.services.maasservice.MaaSHttpService
 ```
 
-Then manually run sysprep calling the Cloudbase-Init unattend files:
+Then execute sysprep passing the same parameters as the Cloudbase-Init installer wizard would:
 
 ```
 cd “C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\”
 C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unattend:unattend.xml
 ```
-
-When I now deploy it finds the OVF mounted as CDROM and file upon it.
