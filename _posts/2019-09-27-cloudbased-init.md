@@ -34,7 +34,7 @@ Cloud-init runs on startup but appears to fail to do what it is asked, Cloudbase
 2019-09-26 16:00:15.041 4360 ERROR cloudbaseinit.metadata.services.base [-] HTTPConnectionPool(host='169.254.169.254', port=80): Max retries exceeded with url: /openstack/latest/meta_data.json
 ```
  
-## Adding OVF 
+## Adding OVF Metadata Service
 Looking at the error suggested to me that Cloudbase-Init was not finding the OVF and file. I read through some of the Cloudbase-Init documentation and found that metadata service configuration was specified in,
 
 ```
@@ -50,7 +50,19 @@ metadata_services=cloudbaseinit.metadata.services.configdrive.ConfigDriveService
 If I follow similar steps to before to creeate templat but during install of Cloudbase-init but DO NOT chose wizard options 'Sysprep and Shutdown'.  Instead I update the metadata_services entry in the cloudbase-init-unattend.conf file include OvfService like:
 
 ```
-metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService,cloudbaseinit.metadata.services.configdrive.ConfigDriveService,cloudbaseinit.metadata.services.httpservice.HttpService,cloudbaseinit.metadata.services.ec2service.EC2Service,cloudbaseinit.metadata.services.maasservice.MaaSHttpService
+metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+```
+
+Other Cloudbase-Init [plugins](https://cloudbase-init.readthedocs.io/en/latest/plugins.html#plugins) which require reading metadata, such that which sets the hostname, pickup their configuration from this config file:
+
+```
+C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf
+```
+
+The default installation this does not have a metadata_services entry. To get the other plugins to be capable of reading metadata from OVF source add the entry:
+
+```
+metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
 ```
 
 Then execute sysprep passing the same parameters as the Cloudbase-Init installer wizard would:
@@ -59,3 +71,5 @@ Then execute sysprep passing the same parameters as the Cloudbase-Init installer
 cd “C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\”
 C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unattend:unattend.xml
 ```
+
+Performing a deployment using vRealize Automation Cloud using the blueprint example from earlier the VM gets deployed and its hostname updated.
