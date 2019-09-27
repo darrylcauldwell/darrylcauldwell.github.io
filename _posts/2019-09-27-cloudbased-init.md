@@ -59,17 +59,17 @@ Other Cloudbase-Init [plugins](https://cloudbase-init.readthedocs.io/en/latest/p
 C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf
 ```
 
-The default installation this does not have a metadata_services entry. To get the other plugins to be capable of reading metadata from OVF source add the entry:
+The default installation of cloudbase-init.conf does not have a metadata_services entry at all. To allow the plugins be capable of reading metadata from OVF source add the following line to the file:
 
 ```
 metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
 ```
 
-Then execute sysprep passing the same parameters as the Cloudbase-Init installer wizard would:
+When both files have been updated execute sysprep passing the same parameters as the Cloudbase-Init installer wizard would:
 
 ```
 cd “C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\”
 C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unattend:unattend.xml
 ```
 
-Performing a deployment using vRealize Automation Cloud using the blueprint example from earlier the VM gets deployed and its hostname updated.
+Performing a deployment of thee vRealize Automation Cloud blueprint example from earlier now deploys a VM with its hostname updated.
