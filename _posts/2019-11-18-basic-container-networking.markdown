@@ -171,7 +171,7 @@ docker exec -it my_nodeapp cat /etc/resolv.conf
     options ndots:0
 ```
 
-We can therefore ping the db by container name from the app server.
+We can therefore ping the database container by using its container name from the app server.
 
 ```
 docker exec -it my_nodeapp ping -c 1 my_mongodb
@@ -185,6 +185,8 @@ docker exec -it my_nodeapp ping -c 1 my_mongodb
 ```
 
 It can be a relatively common requirement for me to have different container names for same application function in different environments e.g. dev_mongodb, qa_mongodb, prod_mongodb. While I could configuring connection strings in the app server it might be more useful to give the database a connection alias e.g. mongodb. Docker run command has flag --network-alias so we can use a common alias between environments.
+
+If we run the two containers and specify an alias for the database we can see we can ping the alias name from app container.
 
 ```
 docker run -d --net=my_isolated_network --name my_mongodb --network-alias mongodb mongo 
