@@ -7,13 +7,7 @@ tags:
 permalink: vegetarianuary/
 ---
 
-I changed jobs in July 2019 to join VMware a silicon valley based company which provides cloud computing and virtualization software and services. I accepted the job for the many interesting technology challenges I would be able to work towards solving. The technical aspects of the job do indeed make work fulfilling. An unexpected bonus has been the focus VMware puts on fostering values and a workplace that encourages and supports growth, learning and collaboration.
-
-There are many positive aspects I have taken from the corporate initiatives around the [EPIC2](https://blogs.vmware.com/cfo/epic2-vmware-values/) values. One of the important skills I am begining to learn is [self-reflection](https://en.wikipedia.org/wiki/Self-reflection) another is regular [goal-setting](https://en.wikipedia.org/wiki/Goal_setting). I have under taken my personal challenges over the years and the occasion of a new decade seemed a good reason to undertake another.
-
-## Plant-Based Diet
-
-I was inspired to look at doing this by my daughter who is an avid fan of science and is very data-driven. Last year in the middle of summer at a festival she took the [Oatly ditch-milk](https://www.oatly.com/uk/ditch-milk) pledge and went dairy-free for 72 hours. While playing in the park with all of her friends they all had ice-cream but she stood by her pledge and refused. We spoke around the subject alot at the time and researched some facts and figures. While we as a family didn't ditch dairy altogether it did influence our eating habits and we've moved to regularly use almond milk for cereals alongside cows milk for hot drinks. My goal is that this month encourages discussion within our family about what we eat and the pro's and con's of a plant-based diet.
+I have under taken my personal challenges over the years and the occasion of a new decade seemed a good reason to undertake another. I was inspired to look at doing this by my daughter who is an avid fan of science and is very data-driven. Last year in the middle of summer at a festival she took the [Oatly ditch-milk](https://www.oatly.com/uk/ditch-milk) pledge and went dairy-free for 72 hours. While playing in the park with all of her friends they all had ice-cream but she stood by her pledge and refused. We spoke around the subject alot at the time and researched some facts and figures. While we as a family didn't ditch dairy altogether it did influence our eating habits and we've moved to regularly use almond milk for cereals alongside cows milk for hot drinks. My goal is that this month encourages discussion within our family about what we eat and the pro's and con's of a plant-based diet and we take maintain some aspects of this for the long term.
 
 "In the UK, it is estimated that well-planned completely plant-based, or vegan, diets need just one third of the fertile land, fresh water and energy of the typical British ‘meat-and-dairy’ based diet. With meat and dairy being the leading contributor to greenhouse (GHG) emissions, reducing animal based foods and choosing a wide range of plant foods can be beneficial to the planet and our health." [Quote Source](https://www.bda.uk.com/foodfacts/plant-based_diet)
 
@@ -23,7 +17,7 @@ Types of plant-based diets include:
 * Ovo vegetarians ( plant based but includes eggs )
 * Vegans ( plant based only )
 
-My original thought was to take part in [veganuary](https://uk.veganuary.com/). With any goal-setting the goals have to be specific, measurable, achievable, relavent and time bound. After reading around the full extent of what going vegan means and looking at our current 'normal' lifestyle I am not sure it is achievable to change so much overnight.
+My original thought was to take part in [veganuary](https://uk.veganuary.com/). After reading around the full extent of what going vegan means and looking at our current 'normal' lifestyle I am not sure it is achievable to change so much overnight. With any form of goal-setting the goals have to be specific, measurable, achievable, relavent and time bound.
 
 **Measurable Goal** - Lacto-ovo vegetarian between 1st and 31st January
 
