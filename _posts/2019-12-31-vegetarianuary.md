@@ -33,7 +33,7 @@ I an lucky enough to live in a natually beautiful location. It is easy during th
 
 ## Detoxification
 
-I have tried some very focussed detox programs over the years. I do not intend to follow a particular defined program during January. I do intend to take opportunity to do something in this area. Detoxification is about resting, cleansing and nourishing the body from the inside out. Processing alcohol and cafine puts a strain on the organs. It is easy to increase drinking alcohol and cafine over time and useful every now and then to abstain. Whichever detox program I have followed they all have all included 'lemon water' for helpsing your digestion, flushes out toxins and cleanses the liver. 
+I have tried some very focussed detox programs over the years. I do not intend to follow a particular defined program during January. I do intend to take opportunity to do something in this area. Detoxification is about resting, cleansing and nourishing the body from the inside out. Processing alcohol and cafine puts a strain on the organs. It is easy to increase drinking alcohol and cafine over time and useful every now and then to abstain. Whichever detox program I have followed they all have all included 'lemon water' for helping your digestion, flushes out toxins and cleanses the liver. 
 
 **Measurable Goal** - Zero alcohol per day between 1st and 31st January
 
