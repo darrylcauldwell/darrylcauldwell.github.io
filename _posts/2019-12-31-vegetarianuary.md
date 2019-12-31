@@ -35,6 +35,8 @@ I an lucky enough to live in a natually beautiful location. It is easy during th
 
 **Measurable Goal** - Average 12,000 steps per day between 1st and 31st January
 
+<img src="https://www.quickanddirtytips.com/sites/default/files/styles/article_main_image/public/images/8243/shoes-on-beach.png">
+
 ## Detoxification
 
 I have tried some very focussed detox programs over the years. I do not intend to follow a particular defined program during January. I do intend to take opportunity to do something in this area. Detoxification is about resting, cleansing and nourishing the body from the inside out. Processing alcohol and cafine puts a strain on the organs. It is easy to increase drinking alcohol and cafine over time and useful every now and then to abstain. Whichever detox program I have followed they all have all included 'lemon water' for helpsing your digestion, flushes out toxins and cleanses the liver. 
