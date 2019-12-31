@@ -45,8 +45,12 @@ I have tried some very focussed detox programs over the years. I do not intend t
 
 **Measurable Goal** - Glass of lemon water per day between 1st and 31st January
 
+<img src="https://www.beljanski.org/engl/wp-content/uploads/detox.jpg">
+
 ## Yoga
 
 I tried yoga first while working in India some fifteen years ago. Being on the tall side I've always been conscious of my back health and found yoga helped. I used to regularly attend yoga sessions in evenings. When I joined VMware I was a remote member of a team based in the US and team meetings clashed.  More recently our team has restructured and team now is EMEA based. Since the re-organization I had not got around to re-joining the yoga sessions. 
 
 **Measurable Goal** - Attend at least three of the four weekly yoga sessions
+
+<img src="http://www.compassioninaction.info/wp-content/uploads/2015/10/yoga-logo.png">
