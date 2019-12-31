@@ -57,4 +57,4 @@ I am a member of local gym called [FITISM](http://www.fitism.co.uk/) I have a ba
 
 **Measurable Goal** - Attend at least two FITISM classes per week between 1st and 31st January
 
-<img src="https://www.neurocare.org.uk/wp-content/uploads/2017/03/FITISM-1.jpg">
+<img src="/images/fitism.png">
