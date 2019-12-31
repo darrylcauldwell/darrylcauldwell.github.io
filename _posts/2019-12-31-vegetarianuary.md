@@ -7,17 +7,19 @@ tags:
 permalink: vegetarianuary/
 ---
 
-I have under taken my personal challenges over the years and the occasion of a new decade seemed a good reason to undertake another. I was inspired to look at doing this by my daughter who is an avid fan of science and is very data-driven. Last year in the middle of summer at the Bluedot science and music festival she took the [Oatly ditch-milk](https://www.oatly.com/uk/ditch-milk) pledge and went dairy-free for 72 hours. While playing in the park with all of her friends they all had ice-cream but she stood by her pledge and refused. We spoke around the subject alot at the time and researched some facts and figures. While we as a family didn't ditch dairy altogether it did influence our eating habits and we've moved to regularly use almond milk for cereals alongside cows milk for hot drinks. My goal is that this month encourages discussion within our family about what we eat and the pro's and con's of a plant-based diet and we will hopefully all learn something from this and maintain some aspects for the longer term.
+I have under taken my personal challenges over the years and the occasion of a new decade seemed a good reason to undertake another. I was inspired to look at doing this by my daughter who is an avid fan of science and is very data-driven.
 
-"In the UK, it is estimated that well-planned completely plant-based, or vegan, diets need just one third of the fertile land, fresh water and energy of the typical British ‘meat-and-dairy’ based diet. With meat and dairy being the leading contributor to greenhouse (GHG) emissions, reducing animal based foods and choosing a wide range of plant foods can be beneficial to the planet and our health." [Quote Source](https://www.bda.uk.com/foodfacts/plant-based_diet)
+Last year in the middle of summer at the Bluedot science and music festival we found out about the impact of dairy om the planet and took the [Oatly ditch-milk](https://www.oatly.com/uk/ditch-milk) pledge and both went dairy-free for 72 hours.
 
-Types of plant-based diets include:
+A day or so later while playing in the park with all of her friends they all had ice-cream but she stood by her pledge and refused, I was very proud. As a family we spoke around the subject alot at the time and researched some facts and figures. While we as a family didn't ditch dairy altogether it did influence our eating habits and we've moved to regularly use almond milk for cereals alongside cows milk for hot drinks.
+
+My goal is to move to a plant-based diet for January to encourages further discussion within our family about what we eat and the pro's and con's of a plant-based diet. We will hopefully all learn something from this and will maintain some aspects for the longer term. Types of plant-based diets include:
 
 * Lacto-ovo vegetarians ( plant based but includes dairy foods and eggs )
 * Ovo vegetarians ( plant based but includes eggs )
 * Vegans ( plant based only )
 
-My original thought was to take part in [veganuary](https://uk.veganuary.com/). After reading around the full extent of what going vegan means and looking at our current 'normal' lifestyle I am not sure it is achievable to change so much overnight. With any form of goal-setting the goals have to be specific, measurable, achievable, relavent and time bound.
+My original thought was to take part in [veganuary](https://uk.veganuary.com/). After reading around the full extent of what going vegan means and looking at our current 'normal' lifestyle. With any form of goal-setting the goals have to be specific, measurable, achievable, relavent and time bound. I am not sure it is achievable to change so much overnight to become vegan, but maybe this experience will better equip for a future endeavour.
 
 **Measurable Goal** - Lacto-ovo vegetarian between 1st and 31st January
 
