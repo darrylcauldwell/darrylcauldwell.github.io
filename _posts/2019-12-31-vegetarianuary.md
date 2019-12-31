@@ -11,9 +11,11 @@ I have under taken my personal challenges over the years and the occasion of a n
 
 Last year in the middle of summer at the Bluedot science and music festival we found out about the impact of dairy om the planet and took the [Oatly ditch-milk](https://www.oatly.com/uk/ditch-milk) pledge and both went dairy-free for 72 hours. A day or so later while playing in the park with all of her friends they all had ice-cream but she stood by her pledge and refused, I was very proud.
 
-The experienc of going dairy-free led to us as a family spoking around the subject alot and researched some facts and figures. Ultimatley we as a family didn't ditch dairy altogether. It did influence us and we moved to regularly use almond milk for cereals albeit maintaining a smaller supply of cows milk for hot drinks.
+The experienc of going dairy-free led to us as a family spoking around the subject alot and researched some facts and figures. Ultimatley we as a family didn't 'ditch dairy'. It did influence us and we moved to regularly use almond milk for cereals albeit maintaining a smaller supply of cows milk for hot drinks.
 
-My goal is to move to a plant-based diet for January to encourages further discussion within our family about what we eat and the pro's and con's of a plant-based diet. We will hopefully all learn something from this and will maintain some aspects for the longer term. Types of plant-based diets include:
+My goal is to move to a plant-based diet for January to encourages further discussion within our family about what we eat and the pro's and con's of a plant-based diet. We will hopefully all learn something from this and will maintain some aspects for the longer term.
+
+Types of plant-based diets include:
 
 * Lacto-ovo vegetarians ( plant based but includes dairy foods and eggs )
 * Ovo vegetarians ( plant based but includes eggs )
