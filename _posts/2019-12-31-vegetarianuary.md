@@ -50,3 +50,11 @@ I tried yoga first while working in India some fifteen years ago. Being on the t
 **Measurable Goal** - Attend at least three of the four weekly yoga sessions between 1st and 31st January
 
 <img src="http://www.compassioninaction.info/wp-content/uploads/2015/10/yoga-logo.png">
+
+## FITISM
+
+I am a member of local gym called [FITISM](http://www.fitism.co.uk/) I have a balanced membership focussing on [classes](http://www.fitism.co.uk/classes) and [nutrition](http://www.fitism.co.uk/blog/nutrition). I focussed on high intensity circuit type training classes. Three weeks ago I slipped on some ince and fell down some steps cracking a rib and a tooth. Soft tissue damage to the chest meant it was painful to do any classes. As the soft tissue has repaired I have been able to progress from walking to light jogging. I am now mostly comfortable but the cracked rib still makes me aware of its displeasure if I laugh, sneeze, cough or over extend a twist. One of the class types offered is RIDE which looks to be essentially spinning, I am hopeful this class type should be achievable in January. I am lucky to train in such a fun, energetic, competitive, yet encouraging environment, I feel confident we will find a suitable class I can regularly attend.
+
+**Measurable Goal** - Attend at least two FITISM classes per week between 1st and 31st January
+
+<img src="https://www.neurocare.org.uk/wp-content/uploads/2017/03/FITISM-1.jpg">
