@@ -10,8 +10,8 @@ vRealize Operations Manager (vROps) exposes some of its configuration via RESTfu
 
 Performing any REST configuration in vRealize Operations Manager requires at least two steps:
 
-1) Authenticate
-2) Perform action, like configure a new vCenter adapter
+* Authenticate
+* Perform action, like configure a new vCenter adapter
 
 To faciliate running a sequence of actions I start by creating a POSTMAN collection. Requests stored within the collection can be played in sequence. Using the example of configuring a new vCenter adapter we might create a collection called 'vROps - New vCenter Adapter'.
 
