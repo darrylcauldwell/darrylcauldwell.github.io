@@ -22,7 +22,7 @@ vRealize Operations Manager REST API documentation describes how we can [aquire 
 Create new reques in Postman with name 'Aquire token', set the request method to POST and set URL to use environment variable like:
 
 ```
-https://{{ "{%vrops-fqdn"}}%}/suite-api/api/auth/token/acquire
+https://"{{vrops-fqdn}}"/suite-api/api/auth/token/acquire
 ```
 
 The documentation shows that two headers are required to be supplied so we must configure our request to pass these:
@@ -53,7 +53,7 @@ We can now look at the next step in our example is to add a vCenter adapter whic
 Create new reques in Postman with name 'Aquire token', set the request method to POST and set URL to use environment variable like:
 
 ```
-https://{{vrops-fqdn}}/suite-api/api/adapters
+https://"{{vrops-fqdn}}"/suite-api/api/adapters
 ```
 
 We require to apply three headers to this request, the ones to describe payload is in JSON format and an authentication header which passes the token value environment variable from previous step.
@@ -61,7 +61,7 @@ We require to apply three headers to this request, the ones to describe payload 
 ```
 Content-Type: application/json
 Accept: application/json
-Authentication: vRealizeOpsToken {{bearerToken}}
+Authentication: vRealizeOpsToken "{{bearerToken}}"
 ```
 
 The documentation supplies an example body to post with some optional parameters. Similar to aquire step we place this in request body tab and ensure raw format is selected (ensuring you set envioronmentally values).
@@ -74,7 +74,7 @@ The documentation supplies an example body to post with some optional parameters
   "resourceIdentifiers" : [ 
     {
       "name" : "VCURL",
-      "value" : "https://vcenter.example.locak"
+      "value" : "https://vcenter.example.local"
     } 
   ],
   "credential" : {
