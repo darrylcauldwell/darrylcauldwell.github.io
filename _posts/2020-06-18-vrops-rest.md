@@ -23,7 +23,7 @@ Create new reques in Postman with name 'Aquire token', set the request method to
 
 ```
 {% raw %}
-https://{{vrops-fqdn"}}/suite-api/api/auth/token/acquire
+https://{{vrops-fqdn}}/suite-api/api/auth/token/acquire
 {% endraw %}
 ```
 
@@ -55,15 +55,19 @@ We can now look at the next step in our example is to add a vCenter adapter whic
 Create new reques in Postman with name 'Aquire token', set the request method to POST and set URL to use environment variable like:
 
 ```
-https://{{{{vrops-fqdn}}}}/suite-api/api/adapters
+{% raw %}
+https://{{vrops-fqdn}}/suite-api/api/adapters
+{% endraw %}
 ```
 
 We require to apply three headers to this request, the ones to describe payload is in JSON format and an authentication header which passes the token value environment variable from previous step.
 
 ```
+{% raw %}
 Content-Type: application/json
 Accept: application/json
-Authentication: vRealizeOpsToken {{{{bearerToken}}}}
+Authentication: vRealizeOpsToken {{bearerToken}}
+{% endraw %}
 ```
 
 The documentation supplies an example body to post with some optional parameters. Similar to aquire step we place this in request body tab and ensure raw format is selected (ensuring you set envioronmentally values).
