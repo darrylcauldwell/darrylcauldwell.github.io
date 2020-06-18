@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "vRealize Operations Manager (vROps) - REST API"
-date:   2020-04-29 20:20:56 +0100
+date:   2020-06-18 20:20:56 +0100
 tags:
     - DevOps
 permalink: vrops-rest/
