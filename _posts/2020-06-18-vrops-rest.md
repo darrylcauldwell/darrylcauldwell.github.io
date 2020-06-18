@@ -22,7 +22,7 @@ vRealize Operations Manager REST API documentation describes how we can [aquire 
 Create new reques in Postman with name 'Aquire token', set the request method to POST and set URL to use environment variable like:
 
 ```
-https://{{vrops-fqdn}}/suite-api/api/auth/token/acquire
+https://{{ "{%vrops-fqdn"}}%}/suite-api/api/auth/token/acquire
 ```
 
 The documentation shows that two headers are required to be supplied so we must configure our request to pass these:
