@@ -27,6 +27,10 @@ While there are some options for sustainable shopping local to where I live ther
 
 When its not possible to shop locally rather than travel to a city I generally turn to the internet. While investigating sustainable living I've collected a series of bookmarks as I've shopped.
 
+[Fair trader](https://www.fairtrader.info/) is a volunteer-run co-operative shop in Holmfirth, West Yorkshire. They stock an exciting range of fashion accessories, jewellery, food and drink, clothing, homewares, toiletries, greetings cards and toys.
+
+[Mi Terro](https://www.miterro.com/) re-engineers food waste into sustainable materials for example waste milk into t-shirts.
+
 [Ethical Superstore](https://www.ethicalsuperstore.com/) offers products across multiple product categories.
 
 [Bamboo Clothing](https://bambooclothing.co.uk) offers clothing made from bamboo really good for yoga and gym wear.
