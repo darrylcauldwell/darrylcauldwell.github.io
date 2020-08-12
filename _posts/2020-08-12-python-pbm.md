@@ -17,7 +17,7 @@ pyVim is a client-side Python API which wraps pvVmomi these are made available a
 pip install --upgrade pyvmomi
 ```
 
-It we look at [pyVmomi in PyDoc](https://pydoc.net/pyvmomi/) we can see that pyVim.connect is a function SmartConnect which can be used to form connection to the vSphere Web Services API.
+It we look at pyVmomi in GitHub we can see that [pyVim.connect](https://github.com/vmware/pyvmomi/blob/master/pyVim/connect.py) defines a function SmartConnect which can be used to form connection to the vSphere Web Services API.
 
 ```
 #!/usr/bin/env python3
@@ -77,7 +77,7 @@ def main():
     atexit.register(Disconnect, serviceInstance)
 ```
 
-To connect to the VMware Storage Policy API we need to get the session cookie. The VmomiSupport provides us helper functions to do things like gather the context which includes session cookie details. With this we can form a stub session to the Storage Policy API.
+To connect to the VMware Storage Policy API we need to get the session cookie. The [VmomiSupport](https://github.com/vmware/pyvmomi/blob/master/pyVmomi/VmomiSupport.py) provides us helper functions to do things like gather the context which includes session cookie details. With this we can form a stub session to the Storage Policy API.
 
 ```
     """ connect to pbm service instance """
