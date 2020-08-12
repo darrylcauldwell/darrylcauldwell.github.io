@@ -63,4 +63,6 @@ When its not possible to shop locally rather than travel to a city I generally t
 
 [thought](https://www.wearethought.com) offers sustainable clothing range.
 
+[William Lennon](https://williamlennon.co.uk/) englands last working boot maker.
+
 These are not endorsements, just a collection of online stores I have either bought or considered buying something from.  If you have any recomendations of good places to shop online for delivery to UK do let me know.
