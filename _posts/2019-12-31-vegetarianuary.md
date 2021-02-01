@@ -25,7 +25,7 @@ My original thought was to take part in [veganuary](https://uk.veganuary.com/). 
 
 **Measurable Goal** - Lacto-ovo vegetarian between 1st and 31st January
 
-<img src="https://imgix.bustle.com/uploads/image/2019/2/27/44d8cc0b-6796-4172-8a49-4ab2ac985084-shutterstock_688650544.jpg">
+<img src="/images/veg-family.jpg">
 
 ## 12,000 Steps Daily Average
 
@@ -33,7 +33,7 @@ I an lucky enough to live in a natually beautiful location. It is easy during th
 
 **Measurable Goal** - Average 12,000 steps per day between 1st and 31st January
 
-<img src="https://www.quickanddirtytips.com/sites/default/files/styles/article_main_image/public/images/8243/shoes-on-beach.png">
+<img src="/images/12k-steps.jpg">
 
 ## Detoxification
 
@@ -45,7 +45,7 @@ I have tried some very focussed detox programs over the years. I do not intend t
 
 **Measurable Goal** - Glass of lemon water per day between 1st and 31st January
 
-<img src="https://www.beljanski.org/engl/wp-content/uploads/detox.jpg">
+<img src="/images/detox.jpg">
 
 ## Yoga
 
@@ -53,7 +53,7 @@ I tried yoga first while working in India some fifteen years ago. Being on the t
 
 **Measurable Goal** - Attend at least three of the four weekly yoga sessions between 1st and 31st January
 
-<img src="http://www.compassioninaction.info/wp-content/uploads/2015/10/yoga-logo.png">
+<img src="/images/yoga.png">
 
 ## FITISM
 
