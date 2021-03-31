@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hanlon on </title>
+    <link>https://darrylcauldwell.com/tags/hanlon/</link>
+    <description>Recent content in hanlon on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 04 Apr 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/hanlon/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Setup Hanlon</title>
+      <link>https://darrylcauldwell.com/post/hanlon/</link>
+      <pubDate>Fri, 04 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/hanlon/</guid>
+      <description>
+        
+          &lt;p&gt;Since the company I work for CSC got a new CEO then CTO its changed direction and the latest change has been to &lt;a href=&#34;http://www.vdatacloud.com/blogs/2014/05/22/finding-value-in-opensource/&#34;&gt;participate with the Open Source community&lt;/a&gt;.  With this news shortly followed an updated version of a tool our new CTO &lt;a href=&#34;https://twitter.com/DanHushon&#34;&gt;Dan Hushon&lt;/a&gt; worked on at EMC with &lt;a href=&#34;https://twitter.com/lynxbat&#34;&gt;Nicholas Weaver&lt;/a&gt; it was formerly called &lt;a href=&#34;https://github.com/puppetlabs/Razor%22&#34;&gt;Razor&lt;/a&gt; and the new fork is &lt;a href=&#34;https://github.com/csc/Hanlon&#34;&gt;Hanlon&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I chose CentOS 6.5 64bit to host Hanlon and configured this as a VM with two vNICs one normal internet facing and one on a new private vSwitch with no uplinks,  the private is where DHCP\PXE\TFTP will be setup on and where the ESXi VMs will hopefully get built.  All these sit on an nested ESXi 5.0 configured with 12GB of vRAM and access to 1TB of NFS disk running inside VMware Fusion 6 on a Mac.&lt;/p&gt;
+&lt;p&gt;I don&amp;rsquo;t work with Linux so some of my commands might be sub optimal, I&amp;rsquo;ll try and record all I use here for reference, and if you see anything I&amp;rsquo;m doing badly please do say.&lt;/p&gt;
+&lt;p&gt;First task to the new VM is to start VMware tools installer which mounts the correct ISO,  then install the tools via putty session (or via console).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum -y install perl
+mkdir /mnt/cdrom
+mount /dev/cdrom /mnt/cdrom
+cp /mnt/cdrom/VMwareTools-*.tar.gz /tmp
+tar -zxf /tmp/VMwareTools-*.tar.gz -C /tmp
+cd /tmp/vmware-tools-distrib/
+./vmware-install.pl --default
+rm -f /tmp/VMwareTools-*.tar.gz
+rm -rf /tmp/vmware-tools-distrib
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# I then changed from DHCP to static IP addressing,  to note shown here are only the lines I changed or added the rest I left as they populated by OS&lt;/span&gt;
+
+vi /etc/sysconfig/network-scripts/ifcfg-eth0
+BOOTPROTO&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;none
+NETWORK&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;amp;lt;Internet Facing Network Address&amp;amp;gt;
+NETMASK&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;amp;lt;Internet Facing Subnet Mask&amp;amp;gt;
+IPADDR&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;amp;lt;Internet Facing IP Address&amp;amp;gt;
+vi /etc/sysconfig/network-scripts/ifcfg-eth1
+BOOTPROTO&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;none
+NETWORK&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;amp;lt;Private Network Address&amp;amp;gt;
+NETMASK&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;amp;lt;Private Subnet Mask&amp;amp;gt;
+IPADDR&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;amp;lt;Private IP Address&amp;amp;gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# My next port of call was to add a DHCP server to the VM, I chose ISC as that was recommended for Razor and appeared simple and well [documented](http://prefetch.net/articles/iscdhcpd.html).&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Install DHCP&lt;/span&gt;
+yum install dhcp
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Change DHCP that to listen on eth1&lt;/span&gt;
+vi /etc/sysconfig/dhcpd
+
+DHCPDARGS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;eth1
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Create a new config file&lt;/span&gt;
+vi /etc/dhcp/dhcpd.conf
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Populate with following (altering with your ID address ranges)&lt;/span&gt;
+subnet 172.25.1.0 netmask 255.255.255.0 &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+range 172.25.1.20 172.25.1.50;
+option tftp-server-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.25.1.10&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; exists user-class and option user-class &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;iPXE&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+filename &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hanlon.ipxe&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+filename &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;undionly.kpxe&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+next-server 172.25.1.10;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Start DHCP using&lt;/span&gt;
+/etc/init.d/dhcpd start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Test ISC DHCP and option by creating a VM with no OS,  and with only a NIC on the
+private network and it should now pickup a PXE address.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/hanlon-PXE-Boot.gif&#34; alt=&#34;Hanlon PXE Boot&#34;&gt;&lt;/p&gt;
+&lt;p&gt;It will fail as there is no PXE or TFTP server setup yet on the Hanlon server. So next step is to add a PXE and TFTP server,  so first task is to install it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum -y install tftp-server tftp
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Enable TFTP&lt;/span&gt;
+sed -i &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/disable\t\t\t= yes/disable\t\t\t= no/g&amp;#39;&lt;/span&gt; /etc/xinetd.d/tftp
+service xinetd restart
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Install Java&lt;/span&gt;
+yum -y install java-1.7.0-openjdk
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Create MongoDB Repo config file&lt;/span&gt;
+vi /etc/yum.repos.d/mongodb.repo
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Then populate new file with&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mongodb&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MongoDB Repository
+baseurl&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+gpgcheck&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+enabled&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Install MongoDB from repo&lt;/span&gt;
+yum -y install mongodb-org
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Install Torquebox Ruby Application Platform&lt;/span&gt;
+curl -L -O http://torquebox.org/release/org/torquebox/torquebox-dist/3.0.1/torquebox-dist-3.0.1-bin.zip
+yum -y install unzip
+unzip torquebox-dist-3.0.1-bin.zip -d $HOME
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;export TORQUEBOX_HOME=$HOME/torquebox-3.0.1&amp;#39;&lt;/span&gt; &amp;amp;gt;&amp;amp;gt; ~/.bashrc
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;export JBOSS_HOME=$TORQUEBOX_HOME/jboss&amp;#39;&lt;/span&gt; &amp;amp;gt;&amp;amp;gt; ~/.bashrc
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;export JRUBY_HOME=$TORQUEBOX_HOME/jruby&amp;#39;&lt;/span&gt; &amp;amp;gt;&amp;amp;gt; ~/.bashrc
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;export PATH=$JRUBY_HOME/bin:$PATH&amp;#39;&lt;/span&gt; &amp;amp;gt;&amp;amp;gt; ~/.bashrc
+exec $SHELL -l
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Download Hanlon&lt;/span&gt;
+mkdir /opt/hanlon
+cd /opt/hanlon
+yum -y install git
+git clone https://github.com/csc/Hanlon.git
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Install Requisite Ruby Gems for Hanlon&lt;/span&gt;
+cd /opt/hanlon/Hanlon
+bundle install
+gem update --system
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Just need now to finalise the configuration of the Hanlon Microkernel, configure TFTP and  iPXE.&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Install GCC&lt;/span&gt;
+yum -y install gcc gcc-c++
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Download iPXE &amp;amp; Make Files&lt;/span&gt;
+git clone https://github.com/ipxe/ipxe.git
+curl -O https://gist.githubusercontent.com/jcpowermac/7cc13ce51816ce5222f4/raw/4384911a921a732e0b85d28ff3485fe18c092ffd/image_comboot.patch
+yum -y install patch genisoimage
+patch -p0 &amp;lt; image_comboot.patch
+cd ipxe/src
+make
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Move new iPXE files to correct place for TFTP&lt;/span&gt;
+cd bin
+cp undionly.kpxe /var/lib/tftpboot/undionly.kpxe
+cp ipxe.pxe /var/lib/tftpboot/ipxe.kpxe
+cp ipxe.iso /var/lib/tftpboot/ipxe.iso
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Get Syslinux files and move to correct place&lt;/span&gt;
+curl -O https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.02.tar.gz
+tar -zxvf syslinux-6.02.tar.gz --strip-components &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; -C /var/lib/tftpboot syslinux-6.02/bios/core/pxelinux.0
+tar -zxvf syslinux-6.02.tar.gz --strip-components &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; -C /var/lib/tftpboot syslinux-6.02/bios/com32/menu/menu.c32
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Create Hanlon.pxe&lt;/span&gt;
+yum -y install wget
+wget https://github.com/csc/Hanlon-Microkernel/releases/download/v1.0/hnl_mk_prod-image.1.0.iso&amp;lt;
+/opt/hanlon/Hanlon/cli/hanlon image add -t mk -p hnl_mk_prod-image.1.0.iso
+/opt/hanlon/Hanlon/cli/hanlon config ipxe &amp;gt; /var/lib/tftpboot/hanlon.ipxe
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Configure TFTBoot&lt;/span&gt;
+mkdir /var/lib/tftpboot/pxelinux.cfg
+cat &amp;gt; /var/lib/tftpboot/pxelinux.cfg/default &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;default menu.c32
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;prompt 0
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;menu title Hanlon Boot Menu
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;timeout 50
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;f1 help.txt
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;f2 version.txt
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;label hanlon-boot
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;menu label Automatic hanlon Node Boot
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;kernel ipxe.lkrn
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;append initrd=hanlon.ipxe
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;label boot-else
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;menu label Bypass hanlon
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;localboot 1
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;&amp;gt;&amp;gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Bind TFTP to eth1&lt;/span&gt;
+vi /etc/xinetd.d/tftp
+add bind &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;ipaddress&amp;gt; of eth1
+chkconfig dhcpd on
+service xinetd restart
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Test TFTP is working&lt;/span&gt;
+tftp localhost4
+get hanlon.ipxe
+quit
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## If TFTP Times Out Try Disable Firewall&lt;/span&gt;
+service iptables stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At this point you should be able to create a test VM bound to same Host Only network and it should pick up a DHCP address then connect to TFTP server and download and boot an image.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

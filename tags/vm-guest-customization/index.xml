@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vm guest customization on </title>
+    <link>https://darrylcauldwell.com/tags/vm-guest-customization/</link>
+    <description>Recent content in vm guest customization on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/vm-guest-customization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cloudbased-init For vSphere</title>
+      <link>https://darrylcauldwell.com/post/cloudbased-init/</link>
+      <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/cloudbased-init/</guid>
+      <description>
+        
+          &lt;p&gt;vRealize Automation Cloud and 8.x allows you to deploy and configure cloud agnostic virtual machines. To achieve agnostic in-guest OS customization capability across for on-premises vSphere, AWS, GCP and Azure endpoints &lt;a href=&#34;https://cloud-init.io/&#34;&gt;cloud-init&lt;/a&gt; is used for Linux guests and &lt;a href=&#34;https://cloudbase.it/cloudbase-init/&#34;&gt;cloudbase-init&lt;/a&gt; is used for Windows guests.&lt;/p&gt;
+&lt;h2 id=&#34;inital-attempt-all-defaults&#34;&gt;Inital Attempt All Defaults&lt;/h2&gt;
+&lt;p&gt;In vSphere I created a Windows 2019 VM with defaults except for mapping ISO as CD/ROM. I then ran through installer to install Standard edition with Desktop experience, installed VMware Tools, disabled firewall and enabled Remote Desktop. I installed Cloudbased- init 0.9.12.dev76 and optional Carbon PowerShell module to default location. For configuration options I left the default Admin user be created into Administrators group, in addition I selected option to ‘Run Cloudbased-Init service as LocalSystem’. I chose options to &amp;lsquo;Run Sysprep to create a generalized image&amp;rsquo; and &amp;lsquo;Shutdown when Sysprep terminates&amp;rsquo;. When complete I change virtual machine to be a virtual machine template.&lt;/p&gt;
+&lt;p&gt;I connect to vRealize Automation Cloud &amp;gt; Infrastructure &amp;gt; Cloud Accounts &amp;gt; {my account} and run &amp;lsquo;Sync Images&amp;rsquo;.  Once image sync is completed vRealize Automation Cloud &amp;gt; Infrastructure &amp;gt; Image Mappings and create &amp;lsquo;New Image Mapping&amp;rsquo;. Create a Blueprint with single Cloud Agnostic Machine linked to the image mapping.&lt;/p&gt;
+&lt;p&gt;When I provision a vRA Cloud blueprint to deploy a VM&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;formatVersion: 1
+inputs: {}
+resources:
+Cloud_Machine_1:
+    type: Cloud.Machine
+    properties:
+    image: dc-win2019
+    flavor: small
+    cloudConfig: |
+        #cloud-config
+        hostname: i-got-a-new-name
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The VM powers on and cloud-data gets passed by vRealize Automation Cloud as an OVF which is mounted as CDROM with CDROM contents ovf-env.xml in its root.&lt;/p&gt;
+&lt;p&gt;Cloud-init runs on startup but appears to fail to do what it is asked, Cloudbase-init.log contains error.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;2019-09-26 16:00:15.041 4360 ERROR cloudbaseinit.metadata.services.base [-] HTTPConnectionPool(host=&#39;169.254.169.254&#39;, port=80): Max retries exceeded with url: /openstack/latest/meta_data.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;adding-ovf-metadata-service&#34;&gt;Adding OVF Metadata Service&lt;/h2&gt;
+&lt;p&gt;Looking at the error suggested to me that Cloudbase-Init was not finding the OVF and file. I read through some of the Cloudbase-Init documentation and found that metadata service configuration was specified in,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Checking the default configuration file does not include the &lt;a href=&#34;https://cloudbase-init.readthedocs.io/en/latest/services.html&#34;&gt;OvfService metadata service&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;metadata_services=cloudbaseinit.metadata.services.configdrive.ConfigDriveService,cloudbaseinit.metadata.services.httpservice.HttpService,cloudbaseinit.metadata.services.ec2service.EC2Service,cloudbaseinit.metadata.services.maasservice.MaaSHttpService
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If I follow similar steps to before to creeate templat but during install of Cloudbase-init but DO NOT chose wizard options &amp;lsquo;Sysprep and Shutdown&amp;rsquo;.  Instead I update the metadata_services entry in the cloudbase-init-unattend.conf file include OvfService like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Other Cloudbase-Init &lt;a href=&#34;https://cloudbase-init.readthedocs.io/en/latest/plugins.html#plugins&#34;&gt;plugins&lt;/a&gt; which require reading metadata, such that which sets the hostname, pickup their configuration from this config file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The default installation of cloudbase-init.conf does not have a metadata_services entry at all. To allow the plugins be capable of reading metadata from OVF source add the following line to the file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When both files have been updated execute sysprep passing the same parameters as the Cloudbase-Init installer wizard would:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd “C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\”
+C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unattend:unattend.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Performing a deployment of thee vRealize Automation Cloud blueprint example from earlier now deploys a VM with its hostname updated.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Understanding VMware Guest OS Customization</title>
+      <link>https://darrylcauldwell.com/post/guest-customization/</link>
+      <pubDate>Wed, 11 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/guest-customization/</guid>
+      <description>
+        
+          &lt;p&gt;I recently began looking more closely at cloud-init for customizing VMware guest VMs. This caused me some heachaches! I took various notes while troubleshooting and researching around this.&lt;/p&gt;
+&lt;h2 id=&#34;why-guest-os-customization-is-needed&#34;&gt;Why Guest OS Customization Is Needed&lt;/h2&gt;
+&lt;p&gt;When you clone a virtual machine or deploy a virtual machine from a template it clones the virtual hard disk and all guest operating system settings. In many deployment scenarios if virtual machines with identical settings are deployed conflicts can occur, such as duplicate computer names. Typically for this deployment scenario during deployment guest operating system customization is required to be performed to give them uniqueness.&lt;/p&gt;
+&lt;h2 id=&#34;vm-guest-os-customization-approach&#34;&gt;VM Guest OS Customization Approach&lt;/h2&gt;
+&lt;p&gt;VMware has long provided the facility to perform guest operating system customization through a combination of vCenter Server and VMware Tools. This gives the option to choose to launch the Guest Customization wizard during the cloning or deployment process,  or can create standard customization specifications and apply these during the cloning or deployment process.&lt;/p&gt;
+&lt;p&gt;When the virtual machine template is Linux the VMware guest operating system customization is performed using a combination of cloud-init and a collection of perl scripts packaged with open-vm-tools.&lt;/p&gt;
+&lt;h2 id=&#34;logfiles-and-log-configuration&#34;&gt;Logfiles and Log Configuration&lt;/h2&gt;
+&lt;p&gt;Guest OS can be complex and things can go wrong during guest OS customization. When they do its useful to understand where to look for clues as to cause.&lt;/p&gt;
+&lt;p&gt;If there were any problems with the extraction and deployment of the customization package onto the guest operating system these are written to:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/var/log/vmware-imc/toolsDeployPkg.log
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;VMware guest operating system customization steps performed using the perl scripts output to default location of /var/log/messages. There are many other things in this log file so can use grep to view only the customization steps:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;grep &amp;quot;customize-guest&amp;quot; /var/log/messages 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There are many options for configuring cloud-init logging. These can be configured these within your template virtual machine. The configuration settings are stored in:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/etc/cloud/cloud.cfg.d/05_logging.cfg
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Within this configuration file we can identify that by default cloud-init directs the main handler output to a file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/var/log/cloud-init.log
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can also see that by default the stdout and stderr of the specific we tell it to perform is written to:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/var/log/cloud-init-output.log
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;customization-guest-customatization-configuration&#34;&gt;Customization Guest Customatization Configuration&lt;/h2&gt;
+&lt;p&gt;There are many options which cloud-init can be configured with. These can be configured these within your template virtual machine. The configuration settings are stored in:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/etc/cloud/cloud.cfg
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;One of the options which can be configured is whether VMware tools perl scripts are ran. How to enable or disable this is documented in this article:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://kb.vmware.com/s/article/59557
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It is useful to note here that there is currently a known issue when cloud-init calls the open-vm-tools perl scripts for &amp;lsquo;Ubuntu 18.04&amp;rsquo;. The boot sequence and bring up order can cause the perl scripts to fail. A high level cause and workaround are described here:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://kb.vmware.com/s/article/56409 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A more detailed description of the bug including some very interesting detail about how cloud-init and open-vm-tools perl scripts are called is described here:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://bugs.launchpad.net/ubuntu/+source/open-vm-tools/+bug/1793715
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;cloud-init-user-data&#34;&gt;Cloud-Init User-Data&lt;/h2&gt;
+&lt;p&gt;One of the more useful enhancements of using cloud-init is the ability to instruct the guest operating system to run things such as custom scripts during boot.&lt;/p&gt;
+&lt;p&gt;User-Data content supports the following types of content &amp;lsquo;gzip compressed&amp;rsquo; or &amp;lsquo;mime multi-part archive&amp;rsquo;. With a mime multi-part file, the user can specify more than one type of data within the content.  For full details on the User-Data content format see here:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://cloudinit.readthedocs.io/en/latest/topics/format.html
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The two most common data types I use at the moment are Cloud Config Data or simple shell scripts. To differentiate sections when using a &amp;lsquo;mime multi-part archive&amp;rsquo; begin each section with data type for example  &lt;code&gt;#!&lt;/code&gt; for shell script or &lt;code&gt;#cloud-config&lt;/code&gt; for cloud config data.&lt;/p&gt;
+&lt;p&gt;Cloud-init can be fussy about syntax of the file contents once created you can validate the syntaxt using a command like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cloud-init devel schema --config-file /tmp/user-data
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;vcenter-deploy-ova-import&#34;&gt;vCenter Deploy OVA Import&lt;/h2&gt;
+&lt;p&gt;Some operating systems packages which include cloud-init expose options to confiure during deployment.  For example Ubuntu which can be found here:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://cloud-images.ubuntu.com/releases/18.04/release/ubuntu-18.04-server-cloudimg-amd64.ova
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The Ubunutu image includes property &amp;lsquo;Encoded user-data&amp;rsquo; this has property description &lt;em&gt;&amp;ldquo;In order to fit into a xml attribute, this value is base64 encoded . It will be decoded, and then processed normally as user-data&amp;rdquo;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;I like to keep a file copy of the un-encoded and encoded user-data. To do this I use text editior to create a file with the required cloud-init user-data contents.  I then use &lt;a href=&#34;https://linux.die.net/man/1/base64&#34;&gt;base64&lt;/a&gt; to output contents into a file appended with .b64.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;base64 --input /tmp/user-data --output /tmp/user-data.b64
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If encoded user-data is passed during deployment of OVA file in this way this will run when the VM boots.&lt;/p&gt;
+&lt;h2 id=&#34;cloud-assembly&#34;&gt;Cloud Assembly&lt;/h2&gt;
+&lt;p&gt;Other VMware products such as Cloud Assembly can utilize open-vm-tools and cloud-init to perform guest customization.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://docs.vmware.com/en/VMware-Cloud-Assembly/services/Using-and-Managing/GUID-70EA052D-FABF-4CE5-875D-9B52FED08AA3.html
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;https://blogs.vmware.com/management/2018/11/customizing-cloud-assembly-deployments-with-cloud-init.html
+&lt;/code&gt;&lt;/pre&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Create VMware Virtual Machine Templates</title>
+      <link>https://darrylcauldwell.com/post/vsphere-vm-templates/</link>
+      <pubDate>Tue, 17 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vsphere-vm-templates/</guid>
+      <description>
+        
+          &lt;p&gt;When creating virtual machine templates I&amp;rsquo;d like to do this consistently as such I&amp;rsquo;ll try and keep this post up to date with the settings I am including.&lt;/p&gt;
+&lt;h2 id=&#34;centos-7&#34;&gt;CentOS 7&lt;/h2&gt;
+&lt;p&gt;New custom VM named CentOS7, hardware version 11, guest operating system Linux version &amp;lsquo;CentOS 4/5/6/7 (64-bit)&amp;rsquo;. We&amp;rsquo;d like a small template which we expand if required, so single virtual socket with single core, 2GB virtual memory, one VMXNET3 NIC, default LSI Logic Parallel SCSI controller with a thin 16GB hard disk and mount CentOS7 ISO as CD-ROM.&lt;/p&gt;
+&lt;p&gt;Power on VM and open console, ensure you change NIC to connected and enter password otherwise leave all as default and install. Now I install common tools to use within lab, so once installed reboot and logon still using remote console.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum install open-vm-tools net-tools epel-release gcc git
+yum update
+cp -f /etc/sysconfig/network-scripts/ifcfg-eth0 /tmp/eth0
+sed &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/^HWADDR/d&amp;#34;&lt;/span&gt; /tmp/eth0 &amp;amp;gt; /etc/sysconfig/network-scripts/ifcfg-eth0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Shutdown the virtual machine and convert to template using vCenter.&lt;/p&gt;
+&lt;h2 id=&#34;windows-2012-r2&#34;&gt;Windows 2012 R2&lt;/h2&gt;
+&lt;p&gt;New custom VM named Win2012R2, hardware version 11, guest operating system Windows version &amp;lsquo;Microsoft Windows Server 2012 (64-bit)&amp;rsquo;. We&amp;rsquo;d like a small template which we expand if required, so single virtual socket with single core, 4GB virtual memory, one VMXNET3 NIC, default LSI Logic SAS SCSI controller with a thin 40GB hard disk and mount Windows 2012 R2 ISO as CD-ROM.&lt;/p&gt;
+&lt;p&gt;Power on VM and open console, select Datacenter Edition with GUI and enter password otherwise leave all as default and install. Once installed rebooted logon and perform Typical VMware tools install.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Apply MSDN License Key and Active Windows&lt;/li&gt;
+&lt;li&gt;Disable IE Enhanced Security&lt;/li&gt;
+&lt;li&gt;Use Windows Update to apply all current patches, repeat until all dependant patches are installed.&lt;/li&gt;
+&lt;li&gt;Copy \Sources\SxS folder from CD-ROM to C:\&lt;/li&gt;
+&lt;li&gt;As some Updates will update .net we should force the Assemblies to get updated&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;windir%\Microsoft.NET\Framework\v4.0.30319\ngen.exe update /force
+&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;windir%\Microsoft.NET\Framework64\v4.0.30319\ngen.exe update /force&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Shutdown the virtual machine and convert to template using vCenter.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>OpenStack Windows Image</title>
+      <link>https://darrylcauldwell.com/post/openstack-glance-win/</link>
+      <pubDate>Thu, 23 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/openstack-glance-win/</guid>
+      <description>
+        
+          &lt;p&gt;While looking at OpenStack as the control plane for vSphere it appears there isn&amp;rsquo;t too much detail and I found it tricky to create my first OpenStack image.  Here are the steps I followed.&lt;/p&gt;
+&lt;h2 id=&#34;create-vsphere-donor-windows-virtual-machine&#34;&gt;Create vSphere Donor Windows Virtual Machine&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Use vSphere web client wizard to create new hardware v10 virtual machine in vSphere with Thin vHDD&lt;/li&gt;
+&lt;li&gt;Attach Windows DVD ISO&lt;/li&gt;
+&lt;li&gt;Install Windows to virtual machine&lt;/li&gt;
+&lt;li&gt;Disconnect DVD ISO&lt;/li&gt;
+&lt;li&gt;Install VMware Tools&lt;/li&gt;
+&lt;li&gt;Complete VMware Tools Reboot&lt;/li&gt;
+&lt;li&gt;Power Down VM&lt;/li&gt;
+&lt;li&gt;Export VM as OVF&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;create-openstack-image&#34;&gt;Create OpenStack Image&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Open OpenStack Console&lt;/li&gt;
+&lt;li&gt;Change to your Project in left pane&lt;/li&gt;
+&lt;li&gt;Select Manage Compute, Images and Snapshots&lt;/li&gt;
+&lt;li&gt;Click Create Image&lt;/li&gt;
+&lt;li&gt;Complete form using this as an example,  for Image File,  open the OVF file and select the VMDK you exported earlier&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-Image-Create.png&#34; alt=&#34;Openstack Image&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;Click Create Image&lt;/li&gt;
+&lt;li&gt;Wait while file uploads, it takes a while, you&amp;rsquo;ll be returned to console when it completes&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Note: this updates the file to folder glance_openstack on the datastore glance is configured to use. Once created you can cross ref the file UID with the OpenStack Console.&lt;/p&gt;
+&lt;h2 id=&#34;test-openstack-image-works-as-instance&#34;&gt;Test OpenStack Image Works As Instance&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Open OpenStack Console&lt;/li&gt;
+&lt;li&gt;Change to your Project in left pane&lt;/li&gt;
+&lt;li&gt;Select Manage Compute Instances&lt;/li&gt;
+&lt;li&gt;Click Launch Instance in right pane&lt;/li&gt;
+&lt;li&gt;Complete Details Form&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-InstanceLaunch.png&#34; alt=&#34;Openstack Instance Launch&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;Ensure correct Security Group selected on Access and Security Tab&lt;/li&gt;
+&lt;li&gt;Ensure correct Network is selected on Networking tab&lt;/li&gt;
+&lt;li&gt;Click Launch&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;vsan-abnormality&#34;&gt;VSAN Abnormality&lt;/h2&gt;
+&lt;p&gt;If your Image is to go to a VSAN datastore and your using OpenStack Havana the above method will fail, this is because VSAN introduces a new disk type [streamOptimized] (&lt;a href=&#34;http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html&#34;&gt;http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html&lt;/a&gt;) which the UI is not aware of (this is fixed in Icehouse and later).&lt;/p&gt;
+&lt;p&gt;In order to import these images you would need to use the OpenStack command line interface.  First open WebUI then  &amp;ldquo;Project -&amp;gt; Manage Compute -&amp;gt; Access &amp;amp; Security&amp;rdquo; and click Download OpenStack RC File.&lt;/p&gt;
+&lt;p&gt;SCP the RC file to your Linux jump box /var/tmp and then use&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;source /var/tmp/&amp;lt;filename&amp;gt;.rc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enter password when prompted.&lt;/p&gt;
+&lt;p&gt;Once you have authenticated,  run script like (substituting name and filename as required.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glance --insecure --os-endpoint-type internalURL image-create &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--name Windows2008R2-VM10 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_adaptertype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;lsiLogic &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--container-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;bare --disk-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;vmdk &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--is-public&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;True &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/var/tmp/Windows2008R2-VM10-disk1.vmdk&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should get output like&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-streamOptimized2.png&#34; alt=&#34;Stream Optimized&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If you have uploaded an image already and found that its not streamOptimized you can change the attribute.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glance image-update &amp;lt;image_name or uuid&amp;gt; --property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

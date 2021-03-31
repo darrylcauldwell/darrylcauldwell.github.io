@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>powershell on </title>
+    <link>https://darrylcauldwell.com/tags/powershell/</link>
+    <description>Recent content in powershell on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 20 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DynamoDB With Powershell</title>
+      <link>https://darrylcauldwell.com/post/dynamodb-powershell/</link>
+      <pubDate>Tue, 20 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/dynamodb-powershell/</guid>
+      <description>
+        
+          &lt;p&gt;AWS dynamoDB is a really useful key-value store which is really easy to consume from scripts. However while the AWS Powershell module contains functions for &amp;lsquo;Managing Tables&amp;rsquo; it does not contain functions for &amp;lsquo;Reading Data&amp;rsquo; or &amp;lsquo;Modifying Data&amp;rsquo;.  I had found Julian Biddle had written a &lt;a href=&#34;https://anoriginalidea.wordpress.com/2015/01/20/using-amazon-aws-dynamodb-from-powershell/&#34;&gt;blog post&lt;/a&gt; about how this might be done by making direct calls to AWS AmazonDynamoDBClient SDK for .net. While this was a useful starting point I had to read around this alot to get it to work how I needed, this post is an explaination of my understanding.&lt;/p&gt;
+&lt;p&gt;The script this blog post documents is stored &lt;a href=&#34;https://github.com/darrylcauldwell/dynamoDB-powershell/blob/master/dynamoDB.ps1&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The first thing to do is setup your Powershell session with credentials which have permissions to Read and Write AWS dynamoDB. Here we create a profile and then set this as the default profile to be used.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Import-Module AWSPowershell
+Set-AWSCredentials -AccessKey &amp;lt;my-access-key&amp;gt; -SecretKey &amp;lt;my-access-key-secret&amp;gt; -StoreAs DynamoDB
+Initialize-AWSDefaults -ProfileName DynamoDB -Region eu-west-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then use the AWS cmdlets to create a test dynamoDB table.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$exampleSchema = New-DDBTableSchema | Add-DDBKeySchema -KeyName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt; -KeyDataType &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;S&amp;#34;&lt;/span&gt;
+$exampleTable = New-DDBTable &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;myExample&amp;#34;&lt;/span&gt; -Schema $exampleSchema -ReadCapacity 5 -WriteCapacity 5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then within our script we add the AmazonDynamoDB .net framework class.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Add-Type -Path (${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;ProgramFiles(x86)}+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\AWS SDK for .NET\bin\Net45\AWSSDK.DynamoDBv2.dll&amp;#34;&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We then create a session to dynamoDB, in this example script we are running from within a Powershell session which already has permissions to DynamoDB. As such we need to specify which region our tables are in so we form a RegionEndpoint object for Ireland and pass this to form a session to that region.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$regionName = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;eu-west-1&amp;#39;&lt;/span&gt;
+$regionEndpoint=&lt;span style=&#34;color:#66d9ef&#34;&gt;[Amazon.RegionEndPoint]&lt;/span&gt;::GetBySystemName($regionName)
+$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($regionEndpoint)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we wanted to authenticate within script we would form a credential object and pass that to the command to create the session for example.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($creds, $regionEndpoint).
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we would typically make various put operations to DynamoDB we create a reuable function which takes parameters. In this example we have a function creating a single Item with two key-value pairs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; putDDBItem{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt; (
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$tableName,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$key,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$val,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$key1,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$val1
+        )
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We create an object for the PutItemRequest operation, we then assign our tableName parameter as the string value for the TableName property.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$req = New-Object Amazon.DynamoDBv2.Model.PutItemRequest
+$req.TableName = $tableName
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We also need to populate the Item property, this is a dictionary which requires both a string value for the key name and an AttributeValue object. Here we add two key-value pairs to the item object request.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$req.Item = New-Object &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&amp;#39;&lt;/span&gt;
+$valObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+$valObj.S = $val
+$req.Item.Add($key, $valObj)
+$val1Obj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+$val1Obj.S = $val1
+$req.Item.Add($key1, $val1Obj)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once our object item request is formed we run this against the PutItem method of our dynamoDB database connection&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$dbClient.PutItem($req)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we would typically make various read operations to DynamoDB we create a reuable function which takes parameters.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; getDDBItem{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt; (
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$tableName,
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$key,
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$keyAttrStr
+            )
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## We create an object for the GetItemRequest operation, we then assign our tableName parameter as the string value for the TableName property. &lt;/span&gt;
+
+$req = New-Object Amazon.DynamoDBv2.Model.GetItemRequest
+$req.TableName = $tableName
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## We also need to populate the Key property, this is a dictionary which requires both a string value for the key name and an AttributeValue object for the value matching the Item we want to extract. The full command syntax can be found [here](http://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/DynamoDBv2/TDynamoDBv2GetItemRequest.html).&lt;/span&gt;
+
+$req.Key = New-Object &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&amp;#39;&lt;/span&gt;
+$keyAttrObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+$keyAttrObj.S = $keyAttrStr
+$req.Key.Add($key, $keyAttrObj.S)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Once we have our request object populated we then run the GetItem method and pass it the object we have formed. Here I adjust the scope of the object to script so this can be used within the script outside of the function.&lt;/span&gt;
+
+$script:resp = $dbClient.GetItem($req)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we now call the set function and ask it to create an item,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -val &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bob&amp;#39;&lt;/span&gt; -key1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt; -val1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;21&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can repeat this to populate a little more data into the table.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -val &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bert&amp;#39;&lt;/span&gt; -key1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt; -val1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;22&amp;#39;&lt;/span&gt;
+putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -val &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Sid&amp;#39;&lt;/span&gt; -key1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt; -val1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;23&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Oncew we have some data in we can then call the query function to pull back the the Item where Name matches Bob.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;getDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -keyAttrStr &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bob&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The item is returned as an object, we can then display the contents of any key value pair such as Hugh&amp;rsquo;s age,  note the key value pair are also objects so we view the .S string attribute.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$script:resp.Item.&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt;.S
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As for this example I scoped the object to script it will not be cleaned so we reset this to $null once we have consumed it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$script:resp = $null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Configuring Network Core Dump With PowerCLI</title>
+      <link>https://darrylcauldwell.com/post/core-dump/</link>
+      <pubDate>Wed, 17 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/core-dump/</guid>
+      <description>
+        
+          &lt;p&gt;The VMware vSphere Network Dump Collector service enables a host to transmit diagnostic information via the network to a remote netdump service, which stores it on disk. Network-based coredump collection can be configured in addition to or instead of disk-based coredump collection. This may be useful in stateless environments with no local disk usable for a diagnostic partition.&lt;/p&gt;
+&lt;p&gt;vSphere ESXi Dump Collector service pre-packaged with the vSphere vCenter Server Virtual Appliance, and if vCenter on Windows vSphere ESXi Dump Collector typically is installed on same server.&lt;/p&gt;
+&lt;p&gt;It is a little bit of a pain to configure this on every server, so I wrote this little script to get all hosts and then configure each ESXi host registered with vCenter to point its core dumps to the vCenter.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Add-PSSnapin VMware.VimAutomation.Core
+$vcenter = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+Connect-VIServer $vcenter
+&lt;span style=&#34;color:#66d9ef&#34;&gt;foreach&lt;/span&gt;($vmhost &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; Get-VMHost){
+$esxcli = Get-EsxCli -VMHost $vmhost.Name
+$esxcli.system.coredump.network.set($null,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vmk0&amp;#34;&lt;/span&gt;,$vcenter,6500)
+$esxcli.system.coredump.network.set(1)
+$esxcli.system.coredump.network.get()
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Post To Slack From Powershell</title>
+      <link>https://darrylcauldwell.com/post/slack-powershell/</link>
+      <pubDate>Thu, 09 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/slack-powershell/</guid>
+      <description>
+        
+          &lt;p&gt;Working in a technical team distributed across multiple time zones makes it difficult to collaborate and keep everyone on the same page. I’ve used various communications tools to try and help with this and today the team I am working with started to look at Slack.  Slack seems ideal for our needs as it provides easily searchable discussion forums and has apps available for Mac, Windows, iOS and Android, it has a free usage model with limitations which won’t effect our working and if we grow we can extend to a paid license.&lt;/p&gt;
+&lt;p&gt;The other really neat thing is that all its features are fully exposed by its API and it integrates via webhooks with many other applications including GitHub, GoogleDrive and Jira. As we added integrations and started to look at the API documentation as a trial I explored posting messages using the REST api from Powershell. It turned out to be really easy to do,  here are my notes on how you can.&lt;/p&gt;
+&lt;h2 id=&#34;how-to&#34;&gt;How To&lt;/h2&gt;
+&lt;p&gt;While logged into slack use the following URL &lt;a href=&#34;https://api.slack.com/web#authentication&#34;&gt;https://api.slack.com/web#authentication&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This should take you to screen to issue a OAuth2 token.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/slack-powershell-token.png&#34; alt=&#34;Slack OAuth2 Token&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click Create token and copy the text string for the token. We then need to format the message and call postMessage method with Powershell.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$postSlackMessage = @{token=&amp;quot;&amp;lt;your-token&amp;gt;&amp;quot;;channel=&amp;quot;#general&amp;quot;;txt=&amp;quot;Hello from PowerShell!&amp;quot;;username=&amp;quot;via API&amp;quot;}
+Invoke-RestMethod -Uri https://slack.com/api/chat.postMessage -Body $postSlackMessage
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This should return a message like&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ok   channel   ts                message
+--   -------   --                -------
+True C04BHJ94Z 1428592795.000059 @&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;text&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Hello from PowerShe...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can do everything you want via the API not just post messages,  check out the &lt;a href=&#34;https://api.slack.com/&#34;&gt;API documentation&lt;/a&gt; for the other methods.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

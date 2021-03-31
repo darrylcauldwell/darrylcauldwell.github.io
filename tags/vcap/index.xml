@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vcap on </title>
+    <link>https://darrylcauldwell.com/tags/vcap/</link>
+    <description>Recent content in vcap on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/vcap/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VMware Certified Advanced Professional - Data Center Virtualization Design</title>
+      <link>https://darrylcauldwell.com/post/vcap-dcv-design/</link>
+      <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vcap-dcv-design/</guid>
+      <description>
+        
+          &lt;p&gt;Having passed the VCAP5-DCD exam with little to no studying only eighteen months ago and VCIX6-NV since. All things considered I was pretty confident of doing well in the VCAP6-DCV Design exam, and when I completed exam I was pretty sure I&amp;rsquo;d passed. To my surprise I failed the exam with a 285, to make matters worse during the drive home I couldn&amp;rsquo;t fathom in my mind where it had gone wrong.
+Luckily on readin the score report it highlights the blueprint objectives relating the area&amp;rsquo;s of weakness. For me that was,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Objective 1.2 - Gather and Analyze Application Requirements&lt;/li&gt;
+&lt;li&gt;Objective 1.3 - Determine risks, requirements, constraints and assumptions&lt;/li&gt;
+&lt;li&gt;Objective 3.4 - Determine Appropriate Compute Resources for a vSphere 6.x Physical Design&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here I focus on these three objectives, and how I revisited my study and revision to fill my knowledge gap.&lt;/p&gt;
+&lt;h1 id=&#34;objective-12---gather-and-analyze-application-requirements&#34;&gt;Objective 1.2 - Gather and Analyze Application Requirements&lt;/h1&gt;
+&lt;p&gt;Blueprint Defined Skills and Abilities&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Gather and analyze application requirements for a given scenario.&lt;/li&gt;
+&lt;li&gt;Determine the requirements for a set of applications that will be included in the design.&lt;/li&gt;
+&lt;li&gt;Collect information needed in order to identify application dependencies.&lt;/li&gt;
+&lt;li&gt;Given one or more application requirements, determine the impact of the requirements on the design.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Resources I used&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=ilUrNRY_foI&#34;&gt;vBrownBag VCAP6-DCV Design Objective 1.2 with Mark Gabryjelski&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;objective-13---determine-risks-requirements-constraints-and-assumptions&#34;&gt;Objective 1.3 - Determine risks, requirements, constraints and assumptions&lt;/h1&gt;
+&lt;p&gt;Blueprint Defined Skills and Abilities&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Differentiate between the concepts of risks, requirements, constraints, and assumptions.&lt;/li&gt;
+&lt;li&gt;Given a statement, determine whether it is a risk, requirement, constraint, or an assumption.&lt;/li&gt;
+&lt;li&gt;Analyze impact of VMware best practices to identified risks, constraints, and assumptions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Resources I used&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=S_9Al_Tvm5U&#34;&gt;vBrownBag VCAP6-DCV Design Objective 1.3 with Rebecca Fitzhugh&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;objective-34---determine-appropriate-compute-resources-for-a-vsphere-6x-physical-design&#34;&gt;Objective 3.4 - Determine Appropriate Compute Resources for a vSphere 6.x Physical Design&lt;/h1&gt;
+&lt;p&gt;Blueprint Defined Skills and Abilities&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Analyze best practices with respect to CPU family choices.&lt;/li&gt;
+&lt;li&gt;Evaluate NUMA and vNUMA with ESXi hosts and Virtual machines in a given design.&lt;/li&gt;
+&lt;li&gt;Analyze the following in a vSphere design:
+&lt;ul&gt;
+&lt;li&gt;Enhanced vMotion compatibility&lt;/li&gt;
+&lt;li&gt;Implications of vSMP in virtual machines&lt;/li&gt;
+&lt;li&gt;Transparent Page Sharing (TPS) and large pages&lt;/li&gt;
+&lt;li&gt;Resource overcommitment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Based on the service catalog and given functional requirements:
+&lt;ul&gt;
+&lt;li&gt;Determine the most appropriate compute technologies for the design&lt;/li&gt;
+&lt;li&gt;Implement the service based on the required infrastructure qualities.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Determine the impact of a technical design on the choice of server density:
+&lt;ul&gt;
+&lt;li&gt;Scale Up/Out&lt;/li&gt;
+&lt;li&gt;Auto Deploy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Calculate the required number of nodes in an HA cluster based upon host failures and resource guarantees&lt;/li&gt;
+&lt;li&gt;Evaluate the implications of using reservations, limits, and shares on the physical design.&lt;/li&gt;
+&lt;li&gt;Specify the resource pool and vApp configuration based upon resource requirements.&lt;/li&gt;
+&lt;li&gt;Size the following resources appropriately:
+&lt;ul&gt;
+&lt;li&gt;Memory&lt;/li&gt;
+&lt;li&gt;CPU&lt;/li&gt;
+&lt;li&gt;I/O devices&lt;/li&gt;
+&lt;li&gt;Internal storage&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Given a constraint to use existing hardware, determine suitability of the hardware for the design.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Resources I used&lt;br&gt;
+&lt;a href=&#34;https://www.prepressure.com/library/technology/raid&#34;&gt;RAID&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.yellow-bricks.com/2013/08/26/introduction-to-vsphere-flash-read-cache-aka-vflash/&#34;&gt;vSphere Flash Read Cache aka vFlash&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.yellow-bricks.com/2013/09/11/frequently-asked-questions-vsphere-flash-read-cache/&#34;&gt;vSphere Flash Read Cache aka vFlash - FAQs&lt;/a&gt;
+&lt;a href=&#34;https://www.vmware.com/pdf/vi_architecture_wp.pdf&#34;&gt;VMware Infrastructure Architecitecture Overview&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;general&#34;&gt;General&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;amp;cmd=displayKC&amp;amp;externalId=2105500&#34;&gt;Site Recovery Manager Maximums&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

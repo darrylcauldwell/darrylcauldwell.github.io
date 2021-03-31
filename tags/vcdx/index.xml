@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vcdx on </title>
+    <link>https://darrylcauldwell.com/tags/vcdx/</link>
+    <description>Recent content in vcdx on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/vcdx/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCDX6-DCV Defence Experience</title>
+      <link>https://darrylcauldwell.com/post/vcdx-fail/</link>
+      <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vcdx-fail/</guid>
+      <description>
+        
+          &lt;p&gt;In 2013 I was a systems engineer,  I worked mostly on automation scripting for consistently delivering virtualized infrastructure on VMware. A job I&amp;rsquo;d enjoyed but was ready to move my career forwards, my at the time colleague &lt;a href=&#34;https://twitter.com/virtRich&#34;&gt;Richard Dowling&lt;/a&gt; and I started looked into pursuing advanced VMware certification. In early 2014 we attended a VCDX workshop hosted by &lt;a href=&#34;https://twitter.com/vcdx001&#34;&gt;John Arrasjid&lt;/a&gt; at VMware EMEA HQ in Frimley. Also in the workshop was &lt;a href=&#34;https://twitter.com/pmcsharry&#34;&gt;Paul McSharry&lt;/a&gt; who John knew and who had recently had published &lt;a href=&#34;https://www.amazon.co.uk/VCAP5-DCD-Official-Cert-Guide-Certification/dp/078975018X&#34;&gt;VCAP5-DCD Official Cert Guide&lt;/a&gt;.  I ordered the book that evening and this began my journey from engineer to architect.&lt;/p&gt;
+&lt;p&gt;During the four and a half years since I&amp;rsquo;ve continued with our goal of pursuing advanced VMware certification and passed VCAP5-DCA, VCAP5-DCD, VCAP5-DCV Design and VCIX6-NV. I&amp;rsquo;d also began contributeing much more to architecture design documentation but still had engineering duties. In 2016 I moved jobs to take on a role where I was a dedicated architect and co-authored a complex NSX for vSphere design with &lt;a href=&#34;https://www.linkedin.com/in/kyle-mcmaster-a0995917/&#34;&gt;Kyle McMaster&lt;/a&gt;. I had every intention of submitting this for VCDX6-NV but on delivery of the project, I moved to work on Amazon Web Services and could not dedicate the time the VCDX process needed.&lt;/p&gt;
+&lt;p&gt;I changed job again to take another architect role, which aligned to business transformation program. Moving away from specific technology and closer to using various technologies as business enablers. As part of this I created a vSphere design for un-differentiated configuration, like a VVD but without vRA, smaller starting foootprint and tailed for our specific delivery org.&lt;/p&gt;
+&lt;p&gt;I speculative submitted this design exactly as was written for production with no tailoring for VCDX, and expected that it would be rejected but I would get good feedback on what needed to improve for a actual submission. From point of speculative submission I began writing a VCDX tailed document, after four weeks of working on new document set I got a surprise email reading, &lt;strong&gt;&amp;ldquo;We are happy to inform you that you achieved a high enough score to allow you to proceed to the defence stage of the process.&amp;quot;&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mistake One  - Never assume failure, and begin work not required. As with &lt;a href=&#34;http://darrylcauldwell.com/devops-architecture/&#34;&gt;Lean Architecture&lt;/a&gt; design only what is needed, enough but never more.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;My acceptance letter arrived on Wedneday 9th May, defence day Wednesday 6th June, so exactly four weeks to prepare. Called out to the community, &lt;a href=&#34;https://twitter.com/matjovanovic&#34;&gt;Mat Jovanovic&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/Dark_KnightUK&#34;&gt;Bilal Ahmed VCDX-251&lt;/a&gt; both pointed me to &lt;a href=&#34;xhttps://twitter.com/GreggRobertson5&#34;&gt;Gregg Robertson VCDX-205&lt;/a&gt; who runs the &lt;a href=&#34;https://vcdxprepgroup.slack.com&#34;&gt;VCDX Prep Slack Group&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;d made presentations of the design before to various people within a work context so had a lot of slides already. The community rallied and setup a mock defence for Monday 14th May. Albeit a short time , I had the whole weekend to refactor the slides&amp;hellip; how hard could it be&amp;hellip; oh it was my daughters 6th birthday on the Saturday and her party on Sunday. This is the point time became my greatest enemy, it all of course stemed from &amp;lsquo;Mistake One&amp;rsquo;. The mock got completed, but I had planned to spend first 10-15m providing the C-level overview of the visio, conceptual design and then to logical. Then move on to questions, however as the mock panelists hadn&amp;rsquo;t seen my design we somewhat deviated to a general technology walkthrough. My design is by its nature a re-usable design agnostic of a specific customer, my biggest takeaway was despite this I had to present from a customer context.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mistake Two - Even if design is customer agnositc, present in context of a customer story.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I spent the evenings of the next week, updating slide deck based on 1st mock. Had regular dialogue with &lt;a href=&#34;https://twitter.com/Dark_KnightUK&#34;&gt;Bilal Ahmed VCDX-251&lt;/a&gt; was was giving me mentorship, as my design was DCV it also included a chunk of NV so he put me in touch with &lt;a href=&#34;https://twitter.com/ShadyMalatawey&#34;&gt;Shady ElMalatawey VCDX-249&lt;/a&gt; and they both provided great mentorship.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Tip One - Mentorship helps enorously, from the very basics like where to park grab luch etc, to the mental coaching and encouragement. Bilal was first person to say I was there on merit, and indeed the last person to remind me prior to entering room. There is a mental hurdle as well as technical, and personal coaching helps this side .. a lot.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Two - I am a naturally talkative guy, I love my design I have a lot invested in it, I naturally want to talk about technology when given chance. Bilal was very frank with me, and said basically &lt;strong&gt;don&amp;rsquo;t ramble&lt;/strong&gt;, aim for a 30s answer focussed on business aspects Recoverability, Aavailability, Managemability, Performance, Security and Cost. If they want more detail, they will ask,  answer succictly and move on.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The week 21-25th I arranged a mock defence with people internal to company I work for, I got six people to spend four hours and read design docs as submitted and held three mocks each with two panelists. I was very lucky to have lots of people who would spend time to help and so get very different feedback types, a three of deeply technical, a product manager, and two service architects. As well as answering their questions during session I noted these in an issues log, as I revised the presentation I closed out issues. Prior to defence I went back over the issues log as a whole to understand balance of areas people touched upon.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Three - Record all feedback and notes, its a great asset to review, conversations can be lost in the moment so having text reference help.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There was a 4hr &lt;a href=&#34;https://www.youtube.com/watch?v=Llty1D1yFII&amp;amp;t=1728s&#34;&gt;VCDX workshop&lt;/a&gt; on 25th, this is a relatively standard workshop which I had attended before. However the work I was doing meant I could listen in as I worked so I did. During this it became clear that a week after acceptance I should have had a &amp;lsquo;Candidate Prep Call&amp;rsquo;, this had never been scheduled. I mentioned on call and &lt;a href=&#34;https://twitter.com/VMPrime&#34;&gt;Joe Silvagi&lt;/a&gt; the workshop presenter setup a call directly after workshop (6pm Friday), I had personal engagement so spend a very few minutes on call where Joe made himself avbailable for any questions. I&amp;rsquo;ve no idea what is covered in a &amp;lsquo;Candidate Prep Call&amp;rsquo; but would guess its useful.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Four - Make sure Candidate Prep Call gets scheduled within one week of acceptance, chase up if it doesn&amp;rsquo;t.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;During next two weeks I had a lot on at work, I held no more mocks, I barely managed to complete the slide deck up at 4am on day of defence updating.  I had no time to work at all on design workshop. This was a choice of course, I could have spent less time on defence and made sometime, I just couldn&amp;rsquo;t see how this could be rehearsed effectively.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mistake Three - Don&amp;rsquo;t be like Darryl, spend some time thinking and planning for design workshop&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A few days prior to defence I had two emails, one with address to attend in Frimley and one with address to attend in Staines. I was pretty sure the Frimley office closed a year or two ago, but I never visit so couldn&amp;rsquo;t be sure. Quick phone call to reception at Staines office confirmed I was booked and had parking space on site.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Five - Parking in Staines can be problematic, a call to reception got me an on-site space&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The day of defence, I was up at 4am fussing about powerpoint, its a long drive for me so set off early and arrived two and half hours early for my 2pm slot. This time turned out to be very useful to reset the mind, had a walk by river, grabbed a leisurely lunch and forgot about the carnage of M25 traffic. VMware have great offices with large public spaces.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Six - Arrive early and reset the mind&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The defence itself, nice well appointed room, four whiteboards each large, relatively new Windows laptop with USB-A ports only. I&amp;rsquo;ve been USB-C only for a while, but had guessed the supplied laptop might not be so had brought both USB-A and USB-C. On entering I was very nervous, the panelists could have taken advantage of this but let me get into a rhythm before asking questions. Joe Silvagi had said during VCDX workshop that the panelists asked questions to help you score points in areas they see weakness. This was really proved to be the case, the questions were asked in a way which seemed encouraging rather than confrontational. I made one possibly one possibly two assertions where they had asked a very technical question, I explained up to the point I was confident, then made caveate that next part I was relatively confident in but we should research the explicit detail around this. This is how I would approached with a customer and then followed up with detailed research, I expect same applies to this scenario. In hindsight this could be incorrect approach and better to speak up to point of explicit knowledge. I had mixed feelings about the backup slides through out, people had said they created but a waste of time, other people that they a great asset. I had created backup slides covering most areas of the design, the mock teams had said best layout for them a diagram on right and bullets on left. I spend a lot &amp;hellip; a very lot, of time creating these, in the end I used maybe 10-15 of them to help answer questions, if I was doing again I&amp;rsquo;d drop the text and have bigger pictures from backups.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Seven - Attend the vcdx workshop, listen to Joe&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Eight - Pictures tell a thousand words, backup slides less text more diagrams, no pre-written text can cover the question&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Nine - Pictures tell a thousand words but, presenting can be nervous having bulleted text can help you ensure you cover all the points you want to on that topic.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After defence and prior to design workshop I felt good, I love talking about my work, the team made me comfortable. I felt I gave a good account of design and business reasons behind, all in all it was a pleasant experience.&lt;/p&gt;
+&lt;p&gt;So the workshop, in VCDX workshop Joe had explicitly said you get to see the scenario slides, then when you start writting or ask first question the timer begins. As such I bearly listened as moderator read slides as I believed I had time to read at leisure, digest then, compose myself and then begin.  I had planned to create four large sections for Requiremnt, Assumption, Risk and Constraint,  and draw out the common parts of conceptual vSphere design while talking about establishing first requirement.&lt;/p&gt;
+&lt;p&gt;However, moderator stopped speaking then bang they started timer, this panicked me and I had a time limit to read which put me well and truely on the back foot from being relaxed. As such I forgot my planned approach and this became hinderance very soon as I wrote my requirements and constraints too close together and was hard to write, putting me further onto the back foot. It took me 5min or so to get back to where I wanted to start, and all because of incosistency in what I told prior and actions of moderator on the day (sigh). I never really got into a rhythm and just when I was starting to the moderator began laughing uncontrallably which made panelist laugh too, and me also, moderator left room to compose himself. This whole episode really made me loose my train of thought.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Ten - Attend the vcdx workshop, listen to Joe but don&amp;rsquo;t expect the moderator to play by the rules&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Elephen - Formulate a strategy and carry it out, don&amp;rsquo;t allow yourself be distracted&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;On returning home late that night, my wife asked how did it go?  I said I enjoy talking about a design I&amp;rsquo;d invested so much in and which I was very proud of to a bunch of inteligent people.&lt;/p&gt;
+&lt;p&gt;She then asked do you think you&amp;rsquo;ll pass? I thought about this, then said I&amp;rsquo;ve very little interest in the outcome. I set off on a journey four and a half years ago to transition to a new career, I now work in a team who design and engineer solutions which made a direct contribution to the success of my company. Obviously it would be the icing to the cake to get the certification, but whatever the outcome the vcdx journey itself has already given me all that I set out to achieve.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve heard all leading up to this the failure rate extremely high, people even said close to 90%, so probability says that this my first attempt will be failure. So question is would I submit a 2nd, well I guess this is architecture so we could say what would ROI be, on the investment side it would cost $4000 + VAT in application fees, it would cost probably 30-40 hours of my time to prepare and a 10 hour day of defense. The interesting aspect now is what tangible return would I get over and above what I have today.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

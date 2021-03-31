@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>planespotter on </title>
+    <link>https://darrylcauldwell.com/tags/planespotter/</link>
+    <description>Recent content in planespotter on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 14 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/planespotter/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NSX-T for Planespotter</title>
+      <link>https://darrylcauldwell.com/post/nsx-planespotter/</link>
+      <pubDate>Thu, 14 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-planespotter/</guid>
+      <description>
+        
+          &lt;p&gt;Moving towards application centric infrastructure suitable for microservices applications requires a good example application to work with.  I saw an NSX demo presented by &lt;a href=&#34;https://github.com/yfauser&#34;&gt;Yves Fauser&lt;/a&gt; where he used just such an application called planespotter.&lt;/p&gt;
+&lt;p&gt;My first task towards understanding this more was to get this setup in my homelab and look at it in context of NSX-T.&lt;/p&gt;
+&lt;h2 id=&#34;homelab-core&#34;&gt;Homelab Core&lt;/h2&gt;
+&lt;p&gt;My homelab networking is very simple, I have a domestic BT broadband router, this connects a Cisco SB200 8-port L2 only switch. Each port connected to ESXi is configured with MTU 9216 and has the VLAN passed untagged.&lt;/p&gt;
+&lt;p&gt;Connected to this are a pair of Intel NUCs each has onboard 1GB NIC and two USB 1GB NICs.  The lab is used for other things so the on-board vmnic0 NIC is assigned to a VSS which has default &amp;lsquo;VM Network&amp;rsquo; portgroup. This leaves both vusb0 and vusb1 free to be used for N-VDS.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-esxi.png&#34; alt=&#34;ESXi Networking&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The NUCs are single socket, dual core i5s running at 1.8GHz and each has only 32GB of RAM, these currently run vSphere 6.7 Update 1 and shared storage is all-flash VSAN with no data protection.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-t-base&#34;&gt;NSX-T Base&lt;/h2&gt;
+&lt;p&gt;Download OVA&amp;rsquo;s and perform initial deployment of NSX Manager,  NSX Controller and NSX Edge.  As lab only has a single L2 all get deployed with all vNICs connected to the portgroup &amp;lsquo;VM Network&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-edge.png&#34; alt=&#34;NSX-T Base&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-t-routing&#34;&gt;NSX-T Routing&lt;/h2&gt;
+&lt;p&gt;One of the biggest differences between NSX for vSphere and NSX-T is the routing architecture. The services are split between service router (SR) and distributed router (DR), the service router functions are run on the NSX edge and the distributed router (DR) is a kernel module running on the ESXi hosts. My lab setup uses defaults for all transit switches, it is importanrt to understand the relationship when we look at packets flow through these various hops.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-edge-arch.png&#34; alt=&#34;NSX-T Routing&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;planespotter&#34;&gt;Planespotter&lt;/h2&gt;
+&lt;p&gt;The planespotter application is made up of various microservices and database. For this NSX-T setup each is installed on a VM. The application can be installed by following &lt;a href=&#34;https://github.com/darrylcauldwell/planespotter/blob/master/docs/vm_deployment/README.md&#34;&gt;this guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-logical-switches.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;planespotter-fe-to-api-traceflow&#34;&gt;Planespotter FE to API Traceflow&lt;/h2&gt;
+&lt;p&gt;One neat feature of NSX-T and geneve is to inject data into the header and use this to trace flows. The traceflow feature helps inspect the path of a packet as it travels from one logical port to a single or multiple logical ports.&lt;/p&gt;
+&lt;p&gt;So if we select the port connected to planespotter frontend and port connected to planespotter api, we get a nice visual represenation of the path.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-traceflow.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

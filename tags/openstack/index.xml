@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>openstack on </title>
+    <link>https://darrylcauldwell.com/tags/openstack/</link>
+    <description>Recent content in openstack on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 23 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/openstack/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Log Insight for VMware Integrated OpenStack</title>
+      <link>https://darrylcauldwell.com/post/vrli-openstack/</link>
+      <pubDate>Thu, 23 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vrli-openstack/</guid>
+      <description>
+        
+          &lt;p&gt;vRealize Log Insight is not a product I have had much to do with up to now,  but that changed a few days ago when I was asked to perform an evaluation of how Log Insight might help with the management and administration of VMware Integrated OpenStack environment.&lt;/p&gt;
+&lt;p&gt;So lets start what is vRealize Log Insight, in essence it is a tool for aggregating the viewing of all the log files from all aspects of your infrastructure. It delivers real-time log management, with machine learning-based Intelligent Grouping, and high performance search. While it is a VMware product it is fully extensible and can receive log files from any product,  the product vendor then writes a Log Insight content pack to give the intelligence to identify good and problem states.&lt;/p&gt;
+&lt;p&gt;The environment I was given already had Log Insight 2.0A deployed, some of the content packs I was exploring for VMware Integrated OpenStack required the latest Log Insight 2.5.  Here I detail the &amp;lsquo;how to&amp;rsquo; steps I followed for upgrading Log Insight and then adding the content packs.&lt;/p&gt;
+&lt;h2 id=&#34;log-insight-20a-to-25-upgrade&#34;&gt;Log Insight 2.0A to 2.5 Upgrade&lt;/h2&gt;
+&lt;p&gt;The OpenStack content pack only supports Log Insight 2.5,  so to install this my first task is to upgrade Log Insight
+itself,  this is is surprisingly easy.  Simply obtain a copy of the vRealize Log Insight upgrade bundle .pak file from &lt;a href=&#34;https://my.vmware.com/web/vmware/downloads&#34;&gt;VMware Downloads&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Connect to Log Insight as admin,  once connected select &amp;lsquo;Administration&amp;rsquo; from the menu icon in very top right corner, upload PAK file,  click Upgrade.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/vrli-openstack-LogInsightUpgrade.jpg&#34; alt=&#34;Log Insight Upgrade&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;installing-openstack-log-insight-content-pack&#34;&gt;Installing OpenStack Log Insight Content Pack&lt;/h2&gt;
+&lt;p&gt;There are two methods for installing content packs,  the first is via the Log Insight itself,  it has a market place feature which connects to the internet to get the list of available Content Packs you then click install and the tool does the rest.  While my test environment had internet access I could have used this,  but as most production workload is isolated from internet instead I opted for the offline method. The OpenStack content pack is downloadable from &lt;a href=&#34;https://solutionexchange.vmware.com/store/products/openstack-content-pack&#34;&gt;Solutions Exchange&lt;/a&gt;. It comes as a small zip file,  within the zip is a vlcp file,  extract this.&lt;/p&gt;
+&lt;p&gt;Connect to Log Insight as admin,  once connected select &amp;lsquo;Content Packs&amp;rsquo; from menu icon in very top right corner,  select &amp;lsquo;Import Content Pack&amp;rsquo;,  you get the option now to install as a content pack (available to all) or into my content (available only to user importing).  Click Browse and find the extracted OpenStack vlcp file and click Import.&lt;/p&gt;
+&lt;p&gt;I was surprised to find that the content pack did not require configuring with keystone location or credentials, I assume it picks these up from something VIO adds to vCenter, but it just worked which is great.&lt;/p&gt;
+&lt;h2 id=&#34;installing-nsx-log-insight-content-pack&#34;&gt;Installing NSX Log Insight Content Pack&lt;/h2&gt;
+&lt;p&gt;VMware Integrated Openstack uses NSX-MH,  so I installed NSX content pack,  it didn&amp;rsquo;t appear to get any data,  I was surprised to find when looking a little closer and speaking to our TAM that the current version of the content pack (v1.0) is NSX-V only.&lt;/p&gt;
+&lt;h2 id=&#34;installing-arista-eos-switch-log-insight-content-pack&#34;&gt;Installing Arista-EOS Switch Log Insight Content Pack&lt;/h2&gt;
+&lt;p&gt;Our VMware Integrated Openstack uses Arista EOS switches,  these integrate with NSX,  and Arista provide Content Pack, I used the same method as above to add the content pack to Log Insight.&lt;/p&gt;
+&lt;p&gt;The Arista EOS switches don&amp;rsquo;t support Log Insight by default but they are extensible and Arista provide a Log Insight agent by way of an rpm file,  this is copied and installed to all of the switch&amp;rsquo;s and the loginsight.yaml file is then updated with the IP address of Log Insight server and the level of logging to perform.&lt;/p&gt;
+&lt;h2 id=&#34;exploring-log-insight&#34;&gt;Exploring Log Insight&lt;/h2&gt;
+&lt;p&gt;Having the power to look across every log file in the estate from a single pane of glass is hard to quantify until you start to work through an issue. The thing VMware have succeeded in doing with this product is keeping the view as clean and uncluttered as possible but still giving all and more of the required functionality.  All content packs provide a default dashboard view constructed to highlight the areas of there product which they believe would be of interest. Navigation in the dashboard view between content packs is via a menu at the top of the left pane,  once selected the left pane gives all of the sub dashboards you can see here OpenStack provides eleven dashboards one for each project.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/vrli-openstack-LI_OS.png&#34; alt=&#34;Log Insight OpenStack&#34;&gt;&lt;/p&gt;
+&lt;p&gt;You can use these dashboards to get a general idea about health,  but also you&amp;rsquo;ll have occurrences where users report an issue and you need to investigate.  Maybe a incident ticket got logged and it took a day or so to come through to you,  the dashboards show default last five minutes,  these can be set to show last hour,  last six hours or last twenty four hours,  but the most useful might be a custom time window.  The custom time window could be used to pick the day the issue occurred and it would update the dashboard to show what was going on in the log files at that time.  Here you might see a spike in events and want to drill in to the detail,  so you can just click on the spike and change to interactive view and it will display all the log entries for all components being managed which relating to that spike.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/vrli-openstack-LI_IV.jpg&#34; alt=&#34;Log Insight Interactive View&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once in the interactive view you have several options in the bottom pane to adjust the view,  the default view is &amp;lsquo;Events&amp;rsquo; as name suggests this lists all event entries.  If you change to &amp;lsquo;Field Table&amp;rsquo; this gives a little more structure to the view by separating out each part into a column.  The &amp;lsquo;Event Types&amp;rsquo; view collapses the Events by Type so if you have like 100 errors,  this view might show that there are only 3x types of error and that 70 are of type 1, 20 type 2 and 10 of type 3.  The &amp;lsquo;Event Trends&amp;rsquo; is as a progression from &amp;lsquo;Events by Type&amp;rsquo; and shows the collapsed view but shows which are trending into decline and which are trending up in occurrence.&lt;/p&gt;
+&lt;h2 id=&#34;real-life-usage&#34;&gt;Real Life Usage&lt;/h2&gt;
+&lt;p&gt;Its hard to quantify how useful Log Insight can be until you have to work through a proper issue.  Luckily (well maybe not lucky to get a fault) while looking at Log Insight a fault manifested itself to users in OpenStack Horizon that they could not deploy new VM instances.  I opened the Log Insight OpenStack content pack and without any awareness of the components of openstack could see nova had been reporting issues at the time the issues reported. The error messages were very generic and not leading to pointing to the fault so I went to the vSphere content pack and found messages which correlated to the time in nova which showed a ESXi host was having issues with clomd and suggested it needed restarting. CLOMD (Cluster Level Object Manager Daemon) plays a key role in the operation of a VSAN cluster so I checked VSAN dashboard in the content pack and could see other issues.  I then connected to the ESX host restarted clomd and the issue went away,  all this took about 5 minutes.  When I took a step back to think about this,  I had queries the log files of about 20-30 servers and was able to stay focused on the issue and the pattern of the fault rather than on logging on to the servers and finding the log files.  Bear in mind I&amp;rsquo;m not Log Insight expert this was my first day using it and its ease of use coupled with its power makes it a truly wonderful tool for the administrator.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>OpenStack Windows Image</title>
+      <link>https://darrylcauldwell.com/post/openstack-glance-win/</link>
+      <pubDate>Thu, 23 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/openstack-glance-win/</guid>
+      <description>
+        
+          &lt;p&gt;While looking at OpenStack as the control plane for vSphere it appears there isn&amp;rsquo;t too much detail and I found it tricky to create my first OpenStack image.  Here are the steps I followed.&lt;/p&gt;
+&lt;h2 id=&#34;create-vsphere-donor-windows-virtual-machine&#34;&gt;Create vSphere Donor Windows Virtual Machine&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Use vSphere web client wizard to create new hardware v10 virtual machine in vSphere with Thin vHDD&lt;/li&gt;
+&lt;li&gt;Attach Windows DVD ISO&lt;/li&gt;
+&lt;li&gt;Install Windows to virtual machine&lt;/li&gt;
+&lt;li&gt;Disconnect DVD ISO&lt;/li&gt;
+&lt;li&gt;Install VMware Tools&lt;/li&gt;
+&lt;li&gt;Complete VMware Tools Reboot&lt;/li&gt;
+&lt;li&gt;Power Down VM&lt;/li&gt;
+&lt;li&gt;Export VM as OVF&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;create-openstack-image&#34;&gt;Create OpenStack Image&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Open OpenStack Console&lt;/li&gt;
+&lt;li&gt;Change to your Project in left pane&lt;/li&gt;
+&lt;li&gt;Select Manage Compute, Images and Snapshots&lt;/li&gt;
+&lt;li&gt;Click Create Image&lt;/li&gt;
+&lt;li&gt;Complete form using this as an example,  for Image File,  open the OVF file and select the VMDK you exported earlier&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-Image-Create.png&#34; alt=&#34;Openstack Image&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;Click Create Image&lt;/li&gt;
+&lt;li&gt;Wait while file uploads, it takes a while, you&amp;rsquo;ll be returned to console when it completes&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Note: this updates the file to folder glance_openstack on the datastore glance is configured to use. Once created you can cross ref the file UID with the OpenStack Console.&lt;/p&gt;
+&lt;h2 id=&#34;test-openstack-image-works-as-instance&#34;&gt;Test OpenStack Image Works As Instance&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Open OpenStack Console&lt;/li&gt;
+&lt;li&gt;Change to your Project in left pane&lt;/li&gt;
+&lt;li&gt;Select Manage Compute Instances&lt;/li&gt;
+&lt;li&gt;Click Launch Instance in right pane&lt;/li&gt;
+&lt;li&gt;Complete Details Form&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-InstanceLaunch.png&#34; alt=&#34;Openstack Instance Launch&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;Ensure correct Security Group selected on Access and Security Tab&lt;/li&gt;
+&lt;li&gt;Ensure correct Network is selected on Networking tab&lt;/li&gt;
+&lt;li&gt;Click Launch&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;vsan-abnormality&#34;&gt;VSAN Abnormality&lt;/h2&gt;
+&lt;p&gt;If your Image is to go to a VSAN datastore and your using OpenStack Havana the above method will fail, this is because VSAN introduces a new disk type [streamOptimized] (&lt;a href=&#34;http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html&#34;&gt;http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html&lt;/a&gt;) which the UI is not aware of (this is fixed in Icehouse and later).&lt;/p&gt;
+&lt;p&gt;In order to import these images you would need to use the OpenStack command line interface.  First open WebUI then  &amp;ldquo;Project -&amp;gt; Manage Compute -&amp;gt; Access &amp;amp; Security&amp;rdquo; and click Download OpenStack RC File.&lt;/p&gt;
+&lt;p&gt;SCP the RC file to your Linux jump box /var/tmp and then use&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;source /var/tmp/&amp;lt;filename&amp;gt;.rc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enter password when prompted.&lt;/p&gt;
+&lt;p&gt;Once you have authenticated,  run script like (substituting name and filename as required.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glance --insecure --os-endpoint-type internalURL image-create &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--name Windows2008R2-VM10 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_adaptertype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;lsiLogic &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--container-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;bare --disk-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;vmdk &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--is-public&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;True &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/var/tmp/Windows2008R2-VM10-disk1.vmdk&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should get output like&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-streamOptimized2.png&#34; alt=&#34;Stream Optimized&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If you have uploaded an image already and found that its not streamOptimized you can change the attribute.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glance image-update &amp;lt;image_name or uuid&amp;gt; --property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

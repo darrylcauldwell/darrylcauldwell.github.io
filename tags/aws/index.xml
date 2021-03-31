@@ -1,0 +1,1021 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>aws on </title>
+    <link>https://darrylcauldwell.com/tags/aws/</link>
+    <description>Recent content in aws on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 31 Mar 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DynamoDB Python Test Environment with Cloud Formations</title>
+      <link>https://darrylcauldwell.com/post/dynamodb-python/</link>
+      <pubDate>Fri, 31 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/dynamodb-python/</guid>
+      <description>
+        
+          &lt;p&gt;The goal of this post is to walk through the creation of a AWS test environment which I use to explore the Python SDK interactions with DyanmoDB. For learning I use the free tier and so used to create the environment as needed manually. After doing this once I decided to encapsulate the configuration in a Cloud Formations template and then deploy the stack when I needed it.&lt;/p&gt;
+&lt;h1 id=&#34;environment-configuration&#34;&gt;Environment Configuration&lt;/h1&gt;
+&lt;p&gt;The resources I require the Cloud Formation template to create&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DynamoDB Table&lt;/li&gt;
+&lt;li&gt;Identify Access Management Policy Documents with rights to Put items into DDB and Scan items in DDB&lt;/li&gt;
+&lt;li&gt;Identify Access Management Role linked to the policy document&lt;/li&gt;
+&lt;li&gt;EC2 Security Group allowing SSH inbound from any IP address&lt;/li&gt;
+&lt;li&gt;EC2 Instance with the IAM Role and EC2 Security Group attached, which on boot performs a yum update and installs the AWS Python SDK&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Cloud Formation template I created to meet this requirement is &lt;a href=&#34;https://s3-eu-west-1.amazonaws.com/cfpythdynamo/PythonDynamoDict.json&#34;&gt;here on s3&lt;/a&gt;,  so we can first get this.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl https://s3-eu-west-1.amazonaws.com/cfpythdynamo/PythonDynamoDict.json -o PythonDynamoDict.json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To note in order to use this CF template it requires an EC2 access key,  if you pull down the json then search and replace &amp;ldquo;MyEC2&amp;rdquo; with the name of your EC2 access key before creating a stack. Assuming your laptop has AWS credentials configured to allow you rights to deploy Cloud Formation templates and create IAM.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws cloudformation deploy --template-file PythonDynamoDict.json --stack-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PythonDDB&amp;#34;&lt;/span&gt; --capabilities &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CAPABILITY_IAM&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This should take less than five minutes and output&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Waiting &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; changeset to be created..
+Waiting &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; stack create/update to complete
+Successfully created/updated stack - PythonDDB
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;connect-python-session-to-ddb&#34;&gt;Connect Python session to DDB&lt;/h1&gt;
+&lt;p&gt;Open an SSD session to the EC2 instance, once session is open,  open a interactive python session&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then within the python session we can connect to and do stuff with DDB, I&amp;rsquo;ve included some simple transactions.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Import the boto3 and json library&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; boto3&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; json
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Create an object to DynamoDB created by Cloud Formations in Ireland&lt;/span&gt;
+
+dynamodb &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; boto3&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;resource(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;dynamodb&amp;#39;&lt;/span&gt;, region_name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;eu-west-1&amp;#39;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Create an object to the DDB Table created by Cloud Formations&lt;/span&gt;
+
+table &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dynamodb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Table(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myTestDB&amp;#39;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Clear any previously created values from items object&lt;/span&gt;
+
+items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+item_dict &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dict()
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Define a helper class to convert a DynamoDB item to JSON&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DecimalEncoder&lt;/span&gt;(json&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;JSONEncoder):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;default&lt;/span&gt;(self, o):
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; isinstance(o, decimal&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Decimal):
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; o &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; float(o)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; int(o)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; super(DecimalEncoder, self)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;default(o)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Create some DDB Table items&lt;/span&gt;
+
+table&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;put_item(
+   Item&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ForeName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bobby&amp;#39;&lt;/span&gt;,
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;FamilyName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Johnson&amp;#39;&lt;/span&gt;,
+    },
+)
+table&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;put_item(
+    Item&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ForeName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Sam&amp;#39;&lt;/span&gt;,
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;FamilyName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Smith&amp;#39;&lt;/span&gt;,
+    }
+)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Perform a table scan to return all items&lt;/span&gt;
+
+response &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; table&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;scan()
+items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; response[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Items&amp;#39;&lt;/span&gt;]
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Cycle through item decobe the json and store the decoded item in a python dictionary named item_dict&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# here also updating formatting so only the values are stored.&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; item &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; items:
+    decoded_item &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (json&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;dumps(item, cls&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;DecimalEncoder))
+    item_part_format &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; decoded_item&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#34;FamilyName&amp;#34;: &amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+    item_str_formatted &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; item_part_format&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;, &amp;#34;ForeName&amp;#34;: &amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+    item_dict&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;update(json&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;loads(item_str_formatted))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# If we print the dictionary we get the two key pairs&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; item_dict
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Simple REST API For DynamoDB Using Lambda</title>
+      <link>https://darrylcauldwell.com/post/lambda-dynamodb/</link>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/lambda-dynamodb/</guid>
+      <description>
+        
+          &lt;p&gt;My goal here is to setup a simple RESTful API which accepts GET and POST methods to trigger a Lambda Function to read and put information into DynamoDB.&lt;/p&gt;
+&lt;p&gt;First we&amp;rsquo;ll create a test DynamoDB table and put some items into it,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws dynamodb create-table --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --attribute-definitions &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[{&amp;#34;AttributeName&amp;#34;: &amp;#34;Name&amp;#34;, &amp;#34;AttributeType&amp;#34;: &amp;#34;S&amp;#34;}]&amp;#39;&lt;/span&gt; --key-schema &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[{&amp;#34;AttributeName&amp;#34;: &amp;#34;Name&amp;#34;, &amp;#34;KeyType&amp;#34;: &amp;#34;HASH&amp;#34;}]&amp;#39;&lt;/span&gt; --provisioned-throughput &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;ReadCapacityUnits&amp;#34;: &amp;#39;&lt;/span&gt;5&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;, &amp;#34;WriteCapacityUnits&amp;#34;: &amp;#39;&lt;/span&gt;5&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;}&amp;#39;&lt;/span&gt;
+
+aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --item &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Name&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;David&amp;#34;},&amp;#34;Age&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;42&amp;#34;}}&amp;#39;&lt;/span&gt;
+
+aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --item &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Name&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;Brian&amp;#34;},&amp;#34;Age&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;22&amp;#34;}}&amp;#39;&lt;/span&gt;
+
+aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --item &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Name&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;Sean&amp;#34;},&amp;#34;Age&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;35&amp;#34;}}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then if we select Lambda in AWS console, and create a new function, then at &amp;lsquo;Select blueprint&amp;rsquo; select the blueprint named &amp;lsquo;Blank Function&amp;rsquo;. At next page click dashed box to configure a API Gateway trigger and change it to have Open security. Specify the name as &amp;lsquo;myTestLambda&amp;rsquo;, the runtime as &amp;lsquo;Python 2.7&amp;rsquo;, the Role as &amp;lsquo;Create new role from template(s), the role name as &amp;lsquo;myTestLambdaRole&amp;rsquo;, the Policy template as &amp;lsquo;Simple Microservice permissions&amp;rsquo; and the handler as &amp;lsquo;lambda_function.handler&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;Paste the following as Lambda code&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; __future__ &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; print_function
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; boto3
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; json
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(event, context):
+    operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;operation&amp;#39;&lt;/span&gt;]
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tableName&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; event:
+        dynamo &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; boto3&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;resource(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;dynamodb&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Table(event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tableName&amp;#39;&lt;/span&gt;])
+    operations &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;create&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;put_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;read&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;update&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;update_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;delete&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;delete_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;list&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;scan(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;echo&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: x,
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ping&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pong&amp;#39;&lt;/span&gt;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; operation &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; operations:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; operations[operation](event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;payload&amp;#39;&lt;/span&gt;))
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ValueError&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Unrecognized operation &amp;#34;{}&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(operation))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then test that we can pull back a specific database item for example the Brian record, select &amp;lsquo;Action \ Configure test event&amp;rsquo; and paste in the following.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;operation&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;read&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;tableName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyTable&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;payload&amp;#34;&lt;/span&gt;: { &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Key&amp;#34;&lt;/span&gt;: {&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Brian&amp;#34;&lt;/span&gt;}}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By clicking Test we can do an internal test of the function and pull back the DynamoDB item.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Item&amp;#34;&lt;/span&gt;: {
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Age&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;22&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Brian&amp;#34;&lt;/span&gt;
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To do a table scan rather than targetted get,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;operation&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;list&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;tableName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyTable&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;payload&amp;#34;&lt;/span&gt;: { &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;TableName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyTable&amp;#34;&lt;/span&gt;}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The query can be adjusted to perform any operation on the database.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Patching Windows EC2 Instances</title>
+      <link>https://darrylcauldwell.com/post/ec2-win-patching/</link>
+      <pubDate>Wed, 28 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/ec2-win-patching/</guid>
+      <description>
+        
+          &lt;p&gt;Amazon EC2 Systems Manager is a collection of capabilities that helps you automate management tasks such as collecting system inventory, applying operating system (OS) patches, automating the creation of Amazon Machine Images (AMIs), and configuring operating systems (OSs) and applications at scale.&lt;/p&gt;
+&lt;p&gt;Amazon EC2 Systems Manager relies on the Amazon Simple Systems Management Service (SSM) agent being installed on the guests. The SSM agent is pre-installed on Windows Server 2016 instances or Windows Server 2003-2012 R2 instances created from AMI&amp;rsquo;s published after November 2016, if you created your own or used earlier AMI you&amp;rsquo;ll need to install. The SSM agent can be installed on other instances by following this &lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/sysman-install-ssm-win.html&#34;&gt;install guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Patch Management is always an operational pain point so its welcome that AWS offers a solution. You create groups of computers to patch by applying a tag &amp;lsquo;Patch Group&amp;rsquo; and specifying a group name as the value. You create a group of patches by forming a patch baseline containing and excluding the patches you require. You then specify a maintenance window and specify task like patch this group of servers to this patch baseline.&lt;/p&gt;
+&lt;h2 id=&#34;how-to&#34;&gt;How To&lt;/h2&gt;
+&lt;p&gt;The guest agent requires permissions to connect to EC2 Systems Manager, we give these rights by create an EC2 Service role with the policy document &amp;lsquo;AmazonEC2RoleforSSM&amp;rsquo; attached. We then provision the EC2 instance to be patched with this role attached. If you have instance already deployed you can add the policy document to a role which is added already,  or clone the instance to a new AMI attach role and power on.&lt;/p&gt;
+&lt;p&gt;Here I create a new role named &amp;lsquo;EC2-Systems-Manager-Role&amp;rsquo; with the policy document &amp;lsquo;AmazonEC2RoleforSSM&amp;rsquo; attached, attached it to a new test Windows 2016 EC2 instance.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-role --role-name EC2-Systems-Manager-Role --assume-role-policy-document &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Version&amp;#34;:&amp;#34;2012-10-17&amp;#34;,&amp;#34;Statement&amp;#34;:[{&amp;#34;Effect&amp;#34;:&amp;#34;Allow&amp;#34;,&amp;#34;Principal&amp;#34;:{&amp;#34;Service&amp;#34;:[&amp;#34;ssm.amazonaws.com&amp;#34;]},&amp;#34;Action&amp;#34;:[&amp;#34;sts:AssumeRole&amp;#34;]}]}&amp;#39;&lt;/span&gt;
+
+aws iam create-instance-profile --instance-profile-name EC2-Systems-Manager-Profile
+
+aws iam add-role-to-instance-profile --instance-profile-name EC2-Systems-Manager-Profile --role-name EC2-Systems-Manager-Role
+
+aws ec2 create-security-group --group-name systemsManagerTest --description &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EC2 Systems Manager Test Security Group&amp;#34;&lt;/span&gt;
+
+aws ec2 run-instances --image-id ami-771b4504 --count &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --instance-type t2.micro --key-name MyEC2 --security-groups systemsManagerTest --iam-instance-profile Name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;EC2-Systems-Manager-Profile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &amp;lsquo;Systems Manager Service&amp;rsquo; requires a Patch Group tag adding to the EC2 instances to patch,  so here we add a tag to the instance we just created.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ec2 create-tags --resources &amp;lt;ec2-instance-id&amp;gt; --tags Key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Patch Group&amp;#39;&lt;/span&gt;,Value&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Test-Patch&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &amp;lsquo;Systems Manager Service - Maintenance Window&amp;rsquo; task requires rights on the EC2 instances to apply patches and also to task to the &amp;lsquo;Systems Manager Service&amp;rsquo;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-user --user-name ssmPatchUser
+aws iam create-policy --policy-name ssmPassRole --policy-document &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Version&amp;#34;: &amp;#34;2012-10-17&amp;#34;,&amp;#34;Statement&amp;#34;: [{&amp;#34;Effect&amp;#34;: &amp;#34;Allow&amp;#34;,&amp;#34;Action&amp;#34;: [&amp;#34;iam:PassRole&amp;#34;],&amp;#34;Resource&amp;#34;: &amp;#34;*&amp;#34;}]}&amp;#39;&lt;/span&gt;
+aws iam attach-user-policy --policy-arn arn:aws:iam::&amp;lt;your-acc-number&amp;gt;:policy/ssmPassRole  --user-name ssmPatchUser
+aws iam attach-user-policy --policy-arn arn:aws:iam::aws:policy/AmazonSSMFullAccess --user-name ssmPatchUser
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then setup a patch baseline, this baseline auto approves all Critical, Important and Moderate patches of all classifications to be deployed seven days after they released.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ssm create-patch-baseline --name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;testBaseline&amp;#34;&lt;/span&gt; --approval-rules &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PatchRules=[{PatchFilterGroup={PatchFilters=[{Key=MSRC_SEVERITY,Values=[Critical,Important,Moderate]},{Key=CLASSIFICATION,Values=[SecurityUpdates,Updates,UpdateRollups,CriticalUpdates]}]},ApproveAfterDays=7}]&amp;#34;&lt;/span&gt; --description &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;myBaseline&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We then take the baseline ID output and link the patch baseline with the patch group.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ssm register-patch-baseline-for-patch-group --baseline-id &amp;lt;baseline-id&amp;gt; --patch-group &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Test-Patch&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the baseline and patch groups are created and linked,  we create a SSM Maintenance Window with a task to deploy.  Here we create a schedule which starts every week day 6pm to midnight and stops scheduling tasks at 11pm. To format the cron expression is a little complex but its documented &lt;a href=&#34;https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sysman-maintenance-cron.html?icmpid=docs_ec2_console&#34;&gt;here&lt;/a&gt; in my example we have a window at 6pm for six hours Monday through Friday.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ssm create-maintenance-window --name myFirstMaintenanceWindow --schedule &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cron(0 00 18 ? * MON-FRI)&amp;#34;&lt;/span&gt; --duration &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; --cutoff &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --allow-unassociated-targets
+aws ssm register-target-with-maintenance-window --window-id &amp;lt;maint-window-id&amp;gt; --targets &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Key=tag:Patch Group,Values=Test-Patch&amp;#34;&lt;/span&gt; --owner-information &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Test server&amp;#34;&lt;/span&gt; --resource-type &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INSTANCE&amp;#34;&lt;/span&gt; 
+aws ssm register-task-with-maintenance-window --window-id &amp;lt;your-maintenance-window-id&amp;gt; --targets &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Key=WindowTargetIds,Values=&amp;lt;your-target-group-id&amp;gt;&amp;#34;&lt;/span&gt; --task-arn &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AWS-ApplyPatchBaseline&amp;#34;&lt;/span&gt; --service-role-arn &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;arn:aws:iam::&amp;lt;your-acc-id&amp;gt;:policy/ssmPassRole&amp;#34;&lt;/span&gt; --task-type &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RUN_COMMAND&amp;#34;&lt;/span&gt; --max-concurrency &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; --max-errors &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --priority &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --task-parameters &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{\&amp;#34;Operation\&amp;#34;:{\&amp;#34;Values\&amp;#34;:[\&amp;#34;Install\&amp;#34;]}}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another useful little tool for making operating EC2 instances that little bit easier.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>DynamoDB With Powershell</title>
+      <link>https://darrylcauldwell.com/post/dynamodb-powershell/</link>
+      <pubDate>Tue, 20 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/dynamodb-powershell/</guid>
+      <description>
+        
+          &lt;p&gt;AWS dynamoDB is a really useful key-value store which is really easy to consume from scripts. However while the AWS Powershell module contains functions for &amp;lsquo;Managing Tables&amp;rsquo; it does not contain functions for &amp;lsquo;Reading Data&amp;rsquo; or &amp;lsquo;Modifying Data&amp;rsquo;.  I had found Julian Biddle had written a &lt;a href=&#34;https://anoriginalidea.wordpress.com/2015/01/20/using-amazon-aws-dynamodb-from-powershell/&#34;&gt;blog post&lt;/a&gt; about how this might be done by making direct calls to AWS AmazonDynamoDBClient SDK for .net. While this was a useful starting point I had to read around this alot to get it to work how I needed, this post is an explaination of my understanding.&lt;/p&gt;
+&lt;p&gt;The script this blog post documents is stored &lt;a href=&#34;https://github.com/darrylcauldwell/dynamoDB-powershell/blob/master/dynamoDB.ps1&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The first thing to do is setup your Powershell session with credentials which have permissions to Read and Write AWS dynamoDB. Here we create a profile and then set this as the default profile to be used.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Import-Module AWSPowershell
+Set-AWSCredentials -AccessKey &amp;lt;my-access-key&amp;gt; -SecretKey &amp;lt;my-access-key-secret&amp;gt; -StoreAs DynamoDB
+Initialize-AWSDefaults -ProfileName DynamoDB -Region eu-west-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then use the AWS cmdlets to create a test dynamoDB table.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$exampleSchema = New-DDBTableSchema | Add-DDBKeySchema -KeyName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt; -KeyDataType &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;S&amp;#34;&lt;/span&gt;
+$exampleTable = New-DDBTable &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;myExample&amp;#34;&lt;/span&gt; -Schema $exampleSchema -ReadCapacity 5 -WriteCapacity 5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then within our script we add the AmazonDynamoDB .net framework class.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;Add-Type -Path (${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;ProgramFiles(x86)}+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\AWS SDK for .NET\bin\Net45\AWSSDK.DynamoDBv2.dll&amp;#34;&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We then create a session to dynamoDB, in this example script we are running from within a Powershell session which already has permissions to DynamoDB. As such we need to specify which region our tables are in so we form a RegionEndpoint object for Ireland and pass this to form a session to that region.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$regionName = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;eu-west-1&amp;#39;&lt;/span&gt;
+$regionEndpoint=&lt;span style=&#34;color:#66d9ef&#34;&gt;[Amazon.RegionEndPoint]&lt;/span&gt;::GetBySystemName($regionName)
+$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($regionEndpoint)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we wanted to authenticate within script we would form a credential object and pass that to the command to create the session for example.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($creds, $regionEndpoint).
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we would typically make various put operations to DynamoDB we create a reuable function which takes parameters. In this example we have a function creating a single Item with two key-value pairs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; putDDBItem{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt; (
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$tableName,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$key,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$val,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$key1,
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$val1
+        )
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We create an object for the PutItemRequest operation, we then assign our tableName parameter as the string value for the TableName property.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$req = New-Object Amazon.DynamoDBv2.Model.PutItemRequest
+$req.TableName = $tableName
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We also need to populate the Item property, this is a dictionary which requires both a string value for the key name and an AttributeValue object. Here we add two key-value pairs to the item object request.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$req.Item = New-Object &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&amp;#39;&lt;/span&gt;
+$valObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+$valObj.S = $val
+$req.Item.Add($key, $valObj)
+$val1Obj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+$val1Obj.S = $val1
+$req.Item.Add($key1, $val1Obj)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once our object item request is formed we run this against the PutItem method of our dynamoDB database connection&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$dbClient.PutItem($req)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we would typically make various read operations to DynamoDB we create a reuable function which takes parameters.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; getDDBItem{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt; (
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$tableName,
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$key,
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;[string]&lt;/span&gt;$keyAttrStr
+            )
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## We create an object for the GetItemRequest operation, we then assign our tableName parameter as the string value for the TableName property. &lt;/span&gt;
+
+$req = New-Object Amazon.DynamoDBv2.Model.GetItemRequest
+$req.TableName = $tableName
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## We also need to populate the Key property, this is a dictionary which requires both a string value for the key name and an AttributeValue object for the value matching the Item we want to extract. The full command syntax can be found [here](http://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/DynamoDBv2/TDynamoDBv2GetItemRequest.html).&lt;/span&gt;
+
+$req.Key = New-Object &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&amp;#39;&lt;/span&gt;
+$keyAttrObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+$keyAttrObj.S = $keyAttrStr
+$req.Key.Add($key, $keyAttrObj.S)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Once we have our request object populated we then run the GetItem method and pass it the object we have formed. Here I adjust the scope of the object to script so this can be used within the script outside of the function.&lt;/span&gt;
+
+$script:resp = $dbClient.GetItem($req)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we now call the set function and ask it to create an item,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -val &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bob&amp;#39;&lt;/span&gt; -key1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt; -val1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;21&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can repeat this to populate a little more data into the table.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -val &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bert&amp;#39;&lt;/span&gt; -key1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt; -val1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;22&amp;#39;&lt;/span&gt;
+putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -val &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Sid&amp;#39;&lt;/span&gt; -key1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt; -val1 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;23&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Oncew we have some data in we can then call the query function to pull back the the Item where Name matches Bob.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;getDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExample&amp;#39;&lt;/span&gt; -key &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt; -keyAttrStr &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bob&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The item is returned as an object, we can then display the contents of any key value pair such as Hugh&amp;rsquo;s age,  note the key value pair are also objects so we view the .S string attribute.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$script:resp.Item.&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Age&amp;#39;&lt;/span&gt;.S
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As for this example I scoped the object to script it will not be cleaned so we reset this to $null once we have consumed it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;$script:resp = $null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Setup VPC Peering With Ansible</title>
+      <link>https://darrylcauldwell.com/post/vpc-ansible/</link>
+      <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vpc-ansible/</guid>
+      <description>
+        
+          &lt;p&gt;In this post I look at setting up &lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/vpc-peering-overview.html&#34;&gt;AWS VPC peering&lt;/a&gt; using Ansible. To do this we will start simple and add complexity to our configuration, we will start with peering within a single account and then move to script across accounts.&lt;/p&gt;
+&lt;h2 id=&#34;local-peering&#34;&gt;Local Peering&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ll start by configuring two VPCs within the same account a single account, and configure peering between them. The Ansible host will sit within the same account which we create the new VPCs and peering. In order that Ansible can manage the AWS VPC services create an IAM Role named Ansible and assign it to the AdmistratorAccess policy. Once the IAM role is created we can then create a RHEL7 EC2 instance with this IAM role attached.&lt;/p&gt;
+&lt;p&gt;The Ansible AWS modules manages AWS via the API by use of the &lt;a href=&#34;http://boto.cloudhackers.com/&#34;&gt;Python boto library&lt;/a&gt;, presently the boto project is migrating from v2 to v3, the Ansible VPC module relies on both versions.  In order for boto to function correctly we also need locally installed AWSCLI. Once the RHEL instance is running connect and run the following commands to install Ansible and the boto and AWS CLI python library.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo yum install wget -y
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+sudo rpm -ivh epel-release-7-8.noarch.rpm
+sudo yum install ansible git python python-devel python-pip -y
+sudo pip install boto boto3 awscli
+sudo yum update -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What we&amp;rsquo;ll do is use the &lt;a href=&#34;http://docs.ansible.com/ansible/ec2_vpc_module.html&#34;&gt;ec2_vpc module&lt;/a&gt; to create two new VPCs and capture the output of these as variables.  We can then use pass the output from VPC creation into the &lt;a href=&#34;http://docs.ansible.com/ansible/ec2_vpc_peer_module.html&#34;&gt;ec2_vpc_peer module&lt;/a&gt; to configure peering.&lt;/p&gt;
+&lt;p&gt;Once Ansible is installed you can clone example repository.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+cd aws-ansible
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inside the repository is an example playbook.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;local-vpc-peering.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The contents of which are shown here.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
+- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
+
+   &lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
+   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt; }
+       &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;first_vpc&lt;/span&gt;
+
+   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ first_vpc }}&amp;#34; &lt;/span&gt;
+
+   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt; }
+       &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;second_vpc&lt;/span&gt;
+
+   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ second_vpc }}&amp;#34; &lt;/span&gt;
+
+   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Create local VPC peering connection&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ first_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;peer_vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ second_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vpc_peer&lt;/span&gt;
+
+   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ vpc_peer }}&amp;#34;&lt;/span&gt;
+
+   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept local VPC peering connection&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;peering_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ vpc_peer.peering_id }}&amp;#34;&lt;/span&gt;
+       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept&lt;/span&gt;
+   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept_peer&lt;/span&gt;
+
+   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ accept_peer }}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ve added debugging of output, if you run this you will see the two VPCs get created and then the peering configured between them.&lt;/p&gt;
+&lt;p&gt;## Cross Account VPC Peering Using Access Keys&lt;/p&gt;
+&lt;p&gt;As well as confguring peering within a single account, we can also use Ansible across AWS accounts. The steps we use are very similar but we begin to use &lt;a href=&#34;http://boto.cloudhackers.com/en/latest/boto_config_tut.html&#34;&gt;boto configuration profiles&lt;/a&gt; once we have a configuration profile for each account in place we can then target each task in the play to a different account. As we are using boto we&amp;rsquo;ll authenticate using AWS Access Key and Secret rather than role based permissions applied to the EC2 instance, we cannot remove a role from a EC2 instance so terminate the old Ansible server and create a new one as above but without the IAM Role attached.&lt;/p&gt;
+&lt;p&gt;Within each account your managing create an IAM User called AnsibleAdministratorAccess and attach the AdmistratorAccess policy, add the Access Key ID and Secret Access Key to the boto2 and boto3 configuration files. I create a profile for each account named the account number.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vi /etc/boto.cfg
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+
+mkdir ~/.aws/
+cp /etc/boto.cfg ~/.aws/config
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once Ansible and boto are installed and configured you can clone example repository.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+cd aws-ansible
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Inside the repository is an example playbook.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cross-account-vpc-peering.yml 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You&amp;rsquo;ll notice this playbook looks very similar to the one for local peering. The key differences are the addition of the profile parameter for the ec2_vpc and ec2_vpc_peer tasks, and the addition of account number hosting VPCs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
+- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;843555617105&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt; }
+        &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;first_vpc&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ first_vpc }}&amp;#34; &lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt; }
+        &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;second_vpc&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ second_vpc }}&amp;#34; &lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Create local VPC peering connection&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;843555617105&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ first_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;peer_vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ second_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;peer_owner_id&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vpc_peer&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ vpc_peer }}&amp;#34;&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept local VPC peering connection&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;peering_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ vpc_peer.peering_id }}&amp;#34;&lt;/span&gt; 
+        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept_peer&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ accept_peer }}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ve added debugging of output, if you run this&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook aws-ansible/cross-account-vpc-peering.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will see the two VPCs in different accounts and get created and then the peering configured between them.&lt;/p&gt;
+&lt;h2 id=&#34;cross-account-vpc-peering-using-iam-assume-role-provider&#34;&gt;Cross Account VPC Peering Using IAM Assume Role Provider&lt;/h2&gt;
+&lt;p&gt;It is Amazon best practise is to &lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#delegate-using-roles&#34;&gt;delegate access using roles instead of sharing credentials.&lt;/a&gt; You can define a role that specifies what permissions the IAM users in the other account are allowed, and from which AWS accounts the IAM users are allowed to assume the role. Up to now we&amp;rsquo;ve used IAM User and Access Keys to authenticate across multiple accounts, here we will look at configuring Ansible using AssumeRole.&lt;/p&gt;
+&lt;p&gt;Unfortunatly ec2_vpc does not yet support boto3 and this is required to use AssumeRole, ec2_vpc_peer however does support this. What this means though is we need to configure boto2 config file with access key in both accounts.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vi /etc/boto.cfg
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In order to configure boto3 to use AssumeRole we first, create an IAM User called AnsibleAdminUser in your first account. Then create an IAM Role your second account called &amp;lsquo;AnsibleAdministrator&amp;rsquo; for role type select &amp;lsquo;Role for Cross-Account Access \ Provide access between AWS accounts you own&amp;rsquo; then enter the Account ID of your first account and attach policy AdmistratorAccess. Once created view your new role in IAM and copy the Role ARN eg arn:aws:iam::664710917345:role/AnsibleAdministrator&lt;/p&gt;
+&lt;p&gt;Configure boto3 credentials&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir ~/.aws
+sudo vi ~/.aws/credentials 
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;664710917345-AnsibleAdminUser&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+
+sudo vi ~/.aws/config
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; 
+role_arn&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arn:aws:iam::843555617105:role/AnsibleAdministrator
+source_profile&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;664710917345-AnsibleAdminUser
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the credentials files are completed we can clone the example git repo and run the playbook.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+ansible-playbook aws-ansible/cross-account-vpc-peering.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should see the same behaviour where two VPCs are created and VPC Peering is established between them.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>How To Use AWS CloudFormation With Ansible</title>
+      <link>https://darrylcauldwell.com/post/ansible-clouformation/</link>
+      <pubDate>Wed, 09 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/ansible-clouformation/</guid>
+      <description>
+        
+          &lt;p&gt;AWS CloudFormation gives developers and systems administrators an easy way to create and manage a collection of related AWS resources, provisioning and updating them in an orderly and predictable fashion. Ansible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs. Ansible uses no agents and no additional custom security infrastructure, so it&amp;rsquo;s easy to deploy, it uses a very simple language which allows you to describe your automation jobs in a way that approaches plain English.&lt;/p&gt;
+&lt;h2 id=&#34;install-ansible-for-aws-management&#34;&gt;Install Ansible For AWS Management&lt;/h2&gt;
+&lt;p&gt;In order that Ansible can manage AWS services create an IAM Role named Ansible and assign it to the AdmistratorAccess policy, then create a RHEL7 EC2 instance with this IAM role attached. The Ansible AWS modules manages AWS via the API by use of the &lt;a href=&#34;http://boto.cloudhackers.com/&#34;&gt;Python boto library&lt;/a&gt; and locally installed AWSCLI. Once the RHEL instance is running connect and run the following commands to install Ansible and the boto and AWS CLI python library.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo yum install wget -y
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+sudo rpm -ivh epel-release-7-8.noarch.rpm
+sudo yum install ansible git python python-devel python-pip -y
+sudo pip install boto awscli
+sudo yum update -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deploy-an-ec2-instance-using-ansible&#34;&gt;Deploy An EC2 Instance Using Ansible&lt;/h2&gt;
+&lt;p&gt;Once installed we can test Ansible can communicate correctly with AWS by creating a security group and EC2 instance. I&amp;rsquo;ve prepared a short playbook for my AWS account, in order to use yourself modify the five variables at the top of the playbook.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+ansible-playbook /home/ec2-user/aws-ansible/my-test-play.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deploy-an-ec2-instance-using-cloudformation&#34;&gt;Deploy An EC2 Instance Using CloudFormation&lt;/h2&gt;
+&lt;p&gt;Amazon provide various &lt;a href=&#34;http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-sample-templates.html&#34;&gt;CloudFormation Sample Templates&lt;/a&gt;. In this example I&amp;rsquo;ll use the sample template EC2InstanceWithSecurityGroupSample: this creates an Amazon EC2 instance and a security group.&lt;/p&gt;
+&lt;p&gt;I included the template file in the github repository with the example files in which we pulled in previous step. The sample template takes upto three parameters,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;KeyName : Name of an existing EC2 KeyPair to enable SSH access to the instance&lt;/li&gt;
+&lt;li&gt;InstanceType (Optional) : The size of EC2 instance if not specified defaults to t2.small&lt;/li&gt;
+&lt;li&gt;SSHLocation (Optional) : The range of IP addresses which is allowed to connect to SSH defaults to 0.0.0.0/0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The example AWS provide requires a default region to be set on the AWS CLI, to do this use &lt;a href=&#34;http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html&#34;&gt;AWS Configure&lt;/a&gt;. We can then ask CloudFormations to deploy the template and include the parameters we want.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws configure
+aws cloudformation create-stack --stack-name startmyinstance --template-body file:///home/ec2-user/aws-ansible/EC2InstanceWithSecurityGroupSample.template --parameters  ParameterKey&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;KeyName,ParameterValue&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MyEC2 ParameterKey&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;InstanceType,ParameterValue&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;t1.micro 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deploy-an-ec2-instance-using-ansible--cloudformation&#34;&gt;Deploy An EC2 Instance Using Ansible &amp;amp; CloudFormation&lt;/h2&gt;
+&lt;p&gt;Taking the scenrio one step further we&amp;rsquo;d like to drive the deployment of AWS infrastructure from Ansible therefore the parameters required by the CloudFormation templates we should use Ansible CloudFormation module and variables.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
+- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;gather_facts&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;vars&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;KeyName&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyEC2&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;InstanceType&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;t2.micro&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;SSHLocation&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0.0.0.0/0&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Run my CloudFormation stack&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;cloudformation&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;stack_name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyEC2Stack&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eu-west-1&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;present&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EC2InstanceWithSecurityGroupSample.template&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;template_parameters&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;KeyName&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ KeyName }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;InstanceType&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ InstanceType }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;SSHLocation&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ SSHLocation }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;tags&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;tool&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ansible&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;env&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;my_ec2_stack&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ my_ec2_stack.stack_resources}}&amp;#34;&lt;/span&gt;
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ my_ec2_stack.stack_outputs}}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I included the example Ansible playbook above in the github repository with the example files in which we pulled in previous step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook /home/ec2-user/aws-ansible/my-other-test-play.yml
+
+PLAY &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; ***************************************************************
+TASK &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Run my CloudFormation stack&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; *********************************************
+changed: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+TASK &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;debug&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; *******************************************************************
+ok: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;last_updated_time&amp;#34;&lt;/span&gt;: null, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;logical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EC2Instance&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;physical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;i-040228bd8fcb5c81a&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;resource_type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AWS::EC2::Instance&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status_reason&amp;#34;&lt;/span&gt;: null
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;, 
+        &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;last_updated_time&amp;#34;&lt;/span&gt;: null, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;logical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;InstanceSecurityGroup&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;physical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyEC2Stack-InstanceSecurityGroup-3YAAZV42DEPF&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;resource_type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AWS::EC2::SecurityGroup&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status_reason&amp;#34;&lt;/span&gt;: null
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+TASK &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;debug&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; *******************************************************************
+ok: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AZ&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eu-west-1a&amp;#34;&lt;/span&gt;, 
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;InstanceId&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;i-040228bd8fcb5c81a&amp;#34;&lt;/span&gt;, 
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PublicDNS&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ec2-54-171-78-90.eu-west-1.compute.amazonaws.com&amp;#34;&lt;/span&gt;, 
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PublicIP&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;54.171.78.90&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+PLAY RECAP *********************************************************************
+localhost                  : ok&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;    changed&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;    unreachable&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;    failed&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;   
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will see that if we run this it creates the stack with parameters we defined as variables.  Notice at the end of the first task we register the output as an object. For the example we output this to the screen by using a debug task, and it includes the EC2 instance details. You could just as easily use this to continue configuration of the EC2 instance guest operating system.&lt;/p&gt;
+&lt;p&gt;The Ansible playbook is idempotent so if you re-run the playbook whith state attribute as &amp;lsquo;present&amp;rsquo; it checks it is in place and makes no changes. If you would like to remove the CloudFormation Stack then you can change the state attribute to &amp;lsquo;absent&amp;rsquo; and when you re-run the playbook the CloudFormation Stack will be removed.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Migrate VMware VMs to AWS EC2 using Server Migration Services (SMS)</title>
+      <link>https://darrylcauldwell.com/post/aws-sms/</link>
+      <pubDate>Tue, 01 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-sms/</guid>
+      <description>
+        
+          &lt;p&gt;The &lt;a href=&#34;https://aws.amazon.com/server-migration-service/&#34;&gt;AWS Server Migration Service&lt;/a&gt; simplifies and streamlines the process of migrating existing virtualized applications to Amazon EC2. AWS SMS allows you to automate, schedule, and track incremental replications of live server volumes, making it easier for you to coordinate large-scale server migrations. Presently this only supports migrating from VMware with support for other hypervisors and physical servers is coming soon.&lt;/p&gt;
+&lt;p&gt;Amazon provide a virtual appliance (OVA) which can be imported into your existing vCenter, once booted this is configured to connect to vCenter and your AWS account. Once configured this appliance is controlled by the AWS SMS service to take a snapshot of VMware virtual machines and facilitate the upload of the snapshot copy into an S3 bucket.  Once the VMware snapshot is uploaded into the S3 bucket the SMS service then updates the disk format and then prepare this as an AMI.&lt;/p&gt;
+&lt;p&gt;The size of virtual machine images is such that the upload process might well take a long time, and during this time you might well want to keep the virtual machine running. The changes made during this time therefore will not be reflected in the initial AMI created. As such AWS SMS offers the option of running the replication job again, but rather than the job creating a full new virtual machine it takes an incremental snapshot.  Once the upload of this is completed the SMS service processes the initial upload with the incremental to form a new AMI.&lt;/p&gt;
+&lt;h2 id=&#34;how-to-configure-server-migration-services-sms&#34;&gt;How To: Configure Server Migration Services (SMS)&lt;/h2&gt;
+&lt;p&gt;The process is pretty straight forwards,  first task is to download the AWS Server Migration Connector from &lt;a href=&#34;https://s3.amazonaws.com/sms-connector/AWS-SMS-Connector.ova&#34;&gt;S3&lt;/a&gt;, then deploy the OVA.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-ova-deploy.jpeg&#34; alt=&#34;Deploy OVF Template&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-ova-deploy-final.jpeg&#34; alt=&#34;Deploy OVF Ready to complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The SMS Connector needst to connect to your AWS account and therefore we need to create a user with the &amp;ldquo;ServerMigrationConnector&amp;rdquo; role attached.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-account.jpeg&#34; alt=&#34;MigrationUser Role Mapping&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once the SMS connector appliance is deployed connect to the web UI by opening the browser to https://dhcp-addr&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-wiz.jpeg&#34; alt=&#34;AWS Server Migration Service Splash&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Work through the wizard to configure all,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: License Agreement&lt;/li&gt;
+&lt;li&gt;Step 2: Create a Password&lt;/li&gt;
+&lt;li&gt;Step 3: Network Info&lt;/li&gt;
+&lt;li&gt;Step 4: Log Uploads and Upgrades&lt;/li&gt;
+&lt;li&gt;Step 5: Server Migration Service&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once configuration is complete the connection to AWS and vCenter should show good in the connector configuration.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-complete.jpeg&#34; alt=&#34;AWS Server Migration Service Configuration Complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If we then connect to AWS we can see the connector.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-complete-console.jpeg&#34; alt=&#34;AWS Server Migration Service Complete Console&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In order to create the first replication job we need to import the list of vCenter VMs by using the &amp;lsquo;Import server catalog&amp;rsquo; function.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-import.jpeg&#34; alt=&#34;AWS Server Migration Service Import Server Catalog&#34;&gt;&lt;/p&gt;
+&lt;p&gt;There is not a default role supplied which the SMS services can use to form AMI&amp;rsquo;s from the uploaded VMware snapshots. To do this download this file &lt;a href=&#34;https://darrylcauldwell.com/attachments/trust-policy.json&#34;&gt;trust-policy.json&lt;/a&gt; and this file &lt;a href=&#34;https://darrylcauldwell.com/attachments/role-policy.json&#34;&gt;role-policy.json&lt;/a&gt;. Then at a command prompt, go to the directory where you stored the two JSON files, and run the following commands to create the SMS service role:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-role --role-name sms --assume-role-policy-document file://trust-policy.json
+aws iam put-role-policy --role-name sms --policy-name sms --policy-document file://role-policy.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;how-to-migrate-virtual-machine&#34;&gt;How To: Migrate Virtual Machine&lt;/h2&gt;
+&lt;p&gt;Once the vCenter Server Inventory is imported to AWS SMS, and the role is created we can create our first replication job by using the SMS service wizard.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: Select the servers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Select the virtual machine(s) you would like to migrate.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 2: Configure server-specific settings&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Select the license type for the guest operating system of the virtual server(s) being migrated.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 3: Configure replication job settings&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Schedule the replication job, assuming you used the two files about to create the SMS role for IAM service role leave as default &amp;lsquo;sms&amp;rsquo;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 4: Review&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once the job schedules,  the first task the job performs is to create a VMware snapshot, it&amp;rsquo;s important to remember to have enough disk capacity to hold snapshots.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-seed-snapshot.jpeg&#34; alt=&#34;AWS Server Migration Service Seeding Snapshot&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The AWS console doesn&amp;rsquo;t update very well, so its best to view the progress via the AWS CLI. First list all of the replication jobs and from this you can find the JobID then to make it easier to read target the output to the specific JobID.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-jobs  
+aws sms get-replication-jobs --replication-job-id sms-job-2ca54045  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A replication job refers to the server being migrated,  as we mentioned earlier multiple replications can occur for example the initial seed and an incremental.  Therefore within a replication job there might be various replication runs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-runs --replication-job-id sms-job-2ca54045  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following example we can see this has three runs in the runlist, the initial seed which has completed, an incrememental which has completed, it also has a pending job as I had left the default replication job values to schedule a daily incremental.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-repl-runs.jpeg&#34; alt=&#34;AWS Server Migration Service Replication Runs&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When a job is running you would see the state roll through the various stages&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pending&lt;/li&gt;
+&lt;li&gt;Active&lt;/li&gt;
+&lt;li&gt;Complete&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While the job state is in the Active state the statusMessage rolls through the various stages&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Uploading&lt;/li&gt;
+&lt;li&gt;Converting&lt;/li&gt;
+&lt;li&gt;Preparing&lt;/li&gt;
+&lt;li&gt;Completed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each run forms a new AMI, each newly created AMIs can then be launched in ec2, so you can for example start from the initial seed replication, one containing all the incrementals or anywhere in between.&lt;/p&gt;
+&lt;h2 id=&#34;offical-sms-documentation-links&#34;&gt;Offical SMS Documentation Links&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/server-migration-service/&#34;&gt;Marketing Page&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/blogs/aws/new-aws-server-migration-service/&#34;&gt;AWS Blog&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://docs.aws.amazon.com/ServerMigration/latest/userguide/server-migration.html&#34;&gt;Tech Documentation&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>AWS Certified Solutions Architect Professional - Study Link O&#39;Rama</title>
+      <link>https://darrylcauldwell.com/post/aws-sa-study/</link>
+      <pubDate>Wed, 19 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-sa-study/</guid>
+      <description>
+        
+          &lt;p&gt;While studying to become a &lt;a href=&#34;https://aws.amazon.com/certification/certified-solutions-architect-professional/&#34;&gt;AWS Certified Solutions Architect - Professional&lt;/a&gt; I have been passed and found lots of resources, in this post I am trying to store the links which are useful. I started my journey with the &lt;a href=&#34;https://d0.awsstatic.com/training-and-certification/docs-sa-pro/AWS_certified_solutions_architect_professional_blueprint.pdf&#34;&gt;AWS exam blueprint&lt;/a&gt;. This is I believe the perfect place to start to study as it describes when exactly is covered by the exam and the weighted value of each skill being measured. I&amp;rsquo;ve then categorised the many study links I have been passed under each knowledge domain.&lt;/p&gt;
+&lt;p&gt;After each knowledge domain is covered I&amp;rsquo;ve placed links to the base knowledge covered in Associate level exams.  Finally there is a section of the blog posts from people who have taken the exam and there experience of the process.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PL_RVC-cMNyYTz8zlxq117O1bfji-knooI&#34;&gt;A series of video&amp;rsquo;s for AWS Solutions Architecture Professional training.&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;high-availability-and-business-continuity-15&#34;&gt;High Availability and Business Continuity (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Storage/Backup_and_Recovery_Approaches_Using_AWS.pdf&#34;&gt;Backup and Recovery Approaches Using AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/best-practices-for-backup-and-recovery-on-prem-to-aws.pdf&#34;&gt;Enterprise Backup and Recovery&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/implementing-windows-file-server-disaster-recovery.pdf&#34;&gt;Using Amazon Web Services and DFS Replication for Disaster Recovery of File Servers&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Backup_Archive_and_Restore_Approaches_Using_AWS.pdf&#34;&gt;Backup and Recovery Approaches Using AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-disaster-recovery.pdf&#34;&gt;Using AWS for Disaster Recovery&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-migrate-resources-to-new-region.pdf&#34;&gt;Migrating AWS Resources to a New Region&lt;/a&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html&#34;&gt;Using OpsWorks Auto Healing&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/NoSwvJ18tMM&#34;&gt;How to Enable Disaster Recovery and Migrate to AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bXrGUlgbl-s&#34;&gt;Deploying a Disaster Recovery Site on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5hCAwEQpWNc&#34;&gt;Rapid Recovery Solution for Disaster Recovery (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/xA97GUzLAls&#34;&gt;Multi-Region Application Using Amazon VPC (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XU6KDBQiwEM&#34;&gt;Deploy High Availability &amp;amp; Disaster Recovery Architectures with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zYI4Gx0D54U&#34;&gt;Introducing AWS Solutions for Backup and Archiving (Video)&lt;/a&gt;
+&lt;a href=&#34;https://youtu.be/VmjDfz-MIZE&#34;&gt;AWS Storage Gateway: Secure, Cost-Effective Backup &amp;amp; Archive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.zerto.com/disaster-recovery-for-vmware-hyper-v-and-aws-that-actually-works/&#34;&gt;Disaster Recovery for VMware, Hyper-V, and AWS&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;costing-6&#34;&gt;Costing (6%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws_pricing_overview.pdf&#34;&gt;How AWS Pricing Works&lt;/a&gt;
+&lt;a href=&#34;https://youtu.be/kId90Q7b6kY&#34;&gt;Cost Optimisation on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/i1Uq8_gt2p4&#34;&gt;Cost Optimization at Scale (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/R_0BQIeRNHw&#34;&gt;The Science of Saving with AWS Reserved Instances (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/SG1DsYgeGEk&#34;&gt;Running Lean Architectures: Optimizing for Cost Efficiency (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/LZwlkqERv2g&#34;&gt;Cloud-Native Cost Optimization (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/rnL9Raf5shM&#34;&gt;Strategies to Quantify TCO and Optimize Costs using AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/lVOw1u_UaDE&#34;&gt;EC2 Dedicated Hosts: Save Money, Use Your Software Licenses (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://connect.awswebcasts.com/p2lkwv8o9rs/&#34;&gt;Save Up to 90% on your Amazon EC2 Bill with Spot Instances&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.cloudability.com/aws-101-reserved-instances/&#34;&gt;Reserved Instances 101&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://visit.cloudability.com/ReservedInstanceGuide&#34;&gt;Complete Guide to AWS Reserved Instances&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/fLex8Qgzvpk&#34;&gt;Advanced Strategies for AWS Cost Allocation with Tags and Linked Accounts (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.rightscale.com/webinars/lp/10-ways-optimize-public-private-cloud-costs-webinar&#34;&gt;10 Ways to Optimize Public and Private Cloud Costs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://support.cloudability.com/hc/en-us/articles/205014127-Webinar-Mastering-the-fundamentals-of-AWS-cost-management&#34;&gt;Mastering the fundamentals of AWS cost management&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.cloudability.com/aws-enterprise-cost-management-webinar/&#34;&gt;Managing enterprise AWS costs at scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://support.cloudability.com/hc/en-us/articles/205034237-Webinar-Using-Cloudability-to-reduce-AWS-costs&#34;&gt;Using Cloudability to reduce AWS costs&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;deployment-management-10&#34;&gt;Deployment Management (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://d0.awsstatic.com/whitepapers/overview-of-deployment-options-on-aws.pdf&#34;&gt;Deployment Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-multi-tiered-web-applications-with-opsworks.pdf&#34;&gt;Managing Multi-Tiered Applications with AWS OpsWorks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/overview-of-deployment-options-on-aws.pdf&#34;&gt;Overview of Deployment Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-multi-tiered-web-applications-with-opsworks.pdf&#34;&gt;Managing Multi-Tiered Web Applications with OpsWorks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-your-aws-infrastructure-at-scale.pdf&#34;&gt;Managing your AWS Infrastructure at Scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS_DevOps.pdf&#34;&gt;Introduction to DevOps on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WL2xSMVXy5w&#34;&gt;Infrastructure as Code (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/1QCXABOIcuc&#34;&gt;Managing Your Infrastructure as Code (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/-0ELfN-kb7g&#34;&gt;Zero to Sixty: AWS CloudFormation (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/6R44BADNJA8&#34;&gt;CloudFormation Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Wk-tOPicq78&#34;&gt;Using AWS CloudFormation for Deployment and Management at Scale (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/fVMlxJJNmyA&#34;&gt;CloudFormation Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ZhGMaw67Yu0&#34;&gt;CloudFormation under the Hood (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WNLIsqjkvu8&#34;&gt;Deploy, Manage, and Scale Your Apps with OpsWorks and Elastic Beanstalk (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/A4NSyUbAEkw&#34;&gt;CodeDeploy: Automating Your Software Deployments (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5xlqk9bFkYM&#34;&gt;Introducing AWS OpsWorks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/AQWl5jLtsTc&#34;&gt;Getting Started with AWS OpsWorks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WxSu015Zgak&#34;&gt;AWS OpsWorks Under the Hood (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OJVLYPo2T4Y&#34;&gt;Going Zero to Sixty with AWS Elastic Beanstalk (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nkj0GXgaRv8&#34;&gt;Scaling Your Web Applications with AWS Elastic Beanstalk (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;network-design-10&#34;&gt;Network Design (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-amazon-vpc-connectivity-options.pdf&#34;&gt;Amazon VPC Network Connectivity Options&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5_bQ6Dgk6k8&#34;&gt;VPC Fundamentals and Connectivity Options (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/SMvom9QjkPk&#34;&gt;Deep Dive: AWS Direct Connect and VPNs (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ykmqjgLdmL4&#34;&gt;From One to Many: Evolving VPC Design (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/3qln2u1Vr2E&#34;&gt;Another Day, Another Billion Packets (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/DVywbZdzW4c&#34;&gt;New Capabilities for Amazon Virtual Private Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/EqVpsnAen5I&#34;&gt;Build a Remote Access VPN Solution on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/f9y-T7mQVxs&#34;&gt;Amazon Route 53 Deep Dive: Delivering Resiliency, Minimizing Latency (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XXUYbdbCb6Q&#34;&gt;Consolidating DNS Data in the Cloud with Amazon Route 53 (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/MKn_PQtRcl8&#34;&gt;Implementing Microsoft DirectAccess and NAT in the AWS Cloud (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;data-storage-15&#34;&gt;Data Storage (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=gUYa7RzrNhM&#34;&gt;Maximizing EC2 and EBS Performance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMFADelete.html&#34;&gt;S3 MFA Delete&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Big_Data_Analytics_Options_on_AWS.pdf&#34;&gt;Big Data Analytics Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS%20Storage%20Services%20Whitepaper-v9.pdf&#34;&gt;Cloud Storage Services Overview&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/rdbms-in-the-cloud-sql-server-on-aws.pdf&#34;&gt;RDBMS in the Cloud: Deploying SQL Server on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Z5vNK6U2HKA&#34;&gt;Understand AWS Storage Options (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/3HDQsW_r1DM&#34;&gt;State of the Union: AWS Storage Services (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/VC0k-noNwOU&#34;&gt;S3 Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OuyUbvtgfDk&#34;&gt;EBS Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/2wKgha8CZ_w&#34;&gt;Amazon EBS: Designing for Performance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OvoTPdm9cck&#34;&gt;Storage Management &amp;amp; Backup Using Amazon S3 &amp;amp; Amazon Glacier (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/PmPriuFEz1k&#34;&gt;How Electronic Arts, State of Texas, &amp;amp; H3 Biomedicine Use AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://connect.awswebcasts.com/p1fr4f2iitu/&#34;&gt;Amazon S3 Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/1TvJCLl9NNg&#34;&gt;Amazon S3 Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/P0pKdy_Y0CM&#34;&gt;New Storage Class for Amazon S3: Standard-Infrequent Access (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eKyS9rvbj40&#34;&gt;Intro to AWS: Database Services (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eHg8LD5KNC0&#34;&gt;Amazon RDS for MySQL: Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/AtASjS0hVDA&#34;&gt;Best Practices: SQL Server on Amazon RDS and EC2 (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WnFYoiRqEHw&#34;&gt;A Technical Introduction to Amazon Elastic MapReduce (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zc1_Rfb_txQ&#34;&gt;EMR Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4HseALaLllc&#34;&gt;EMR Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/lMRVg2f380Y&#34;&gt;EFS Update (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/tDqLwzQEOmM&#34;&gt;From Zero to NoSQL Hero: Amazon DynamoDB Tutorial (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ggDIat_FZtA&#34;&gt;Amazon DynamoDB Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/VuKu23oZp9Q&#34;&gt;Deep Dive: Amazon DynamoDB (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;security-19&#34;&gt;Security (19%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/DDoS_White_Paper_June2015.pdf&#34;&gt;AWS Best Practises for DDoS Resiliency&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-securing-data-at-rest-with-encryption.pdf&#34;&gt;Securing Data at Rest with Encryption&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html&#34;&gt;IAM Best Practise&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/blogs/security/enabling-federation-to-aws-using-windows-active-directory-adfs-and-saml-2-0/&#34;&gt;SAML Federation with ADFS and AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/code/1288653099190193&#34;&gt;Identity Broker Sample For Active Directory&lt;/a&gt;
+&lt;a href=&#34;https://web-identity-federation-playground.s3.amazonaws.com/index.html&#34;&gt;IAM Federation Playground&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html&#34;&gt;Delegate Access Across AWS Accounts Using IAM Roles&lt;/a&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-security-best-practices.pdf&#34;&gt;AWS Security Best Practices&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/training/course-descriptions/security-fundamentals/&#34;&gt;Amazon Web Services Security Fundamentals&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Security/Intro_to_AWS_Security.pdf&#34;&gt;Introduction to AWS Security&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Security/AWS%20Security%20Whitepaper.pdf&#34;&gt;Overview of Security Processes&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/compliance/AWS_Risk_and_Compliance_Whitepaper.pdf&#34;&gt;AWS Risk and Compliance&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/DDoS_White_Paper_June2015.pdf&#34;&gt;AWS DDoS Whitepaper&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-whitepaper-single-sign-on-integrating-aws-open-ldap-and-shibboleth.pdf&#34;&gt;Single Sign-On: Integrating AWS, OpenLDAP, and Shibboleth&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS_Securing_Data_at_Rest_with_Encryption.pdf&#34;&gt;Securing Data at Rest with Encryption&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/compliance/AWS_Security_at_Scale_Logging_in_AWS_Whitepaper.pdf&#34;&gt;Security at Scale: Logging in AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html&#34;&gt;Identity Providers and Federation&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/yVWHNJel7Qs&#34;&gt;Understanding The AWS Security Model (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/suOObEz_2Fc&#34;&gt;Getting Started with AWS Identity and Access Management (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/_wiGpBQGCjU&#34;&gt;IAM Best Practices to Live By (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Du478i9O_mc&#34;&gt;How to Become an IAM Policy Ninja in 60 Minutes or Less (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/0WI5sirOvco&#34;&gt;Mastering Access Control Policies (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/rXPyGDWKHIo&#34;&gt;Security Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zU1x5SfKEzs&#34;&gt;Advanced Security Best Practices Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/DykPS2gvDeo&#34;&gt;Architecting for Greater Security on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Ys0gG1koqJA&#34;&gt;Defending Against DDoS Attacks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/NL3sDn92NuU&#34;&gt;Practical Steps to Hack-Proofing AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nqaL5zJqFuo&#34;&gt;Architecting for End-to-End Security in the Enterprise (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ZaOR-ybLJF0&#34;&gt;Log, Monitor and Analyze your IT with Amazon CloudWatch (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/jX6pEWf344I&#34;&gt;Mobile Identity Management &amp;amp; Data Sync Using Amazon Cognito (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/KtMANvC7_n8&#34;&gt;Reliable Design and Deployment of Security and Compliance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/On9NoUwj-Os&#34;&gt;Strategies for Protecting Data Using Encryption in AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bqIYI3mDsd4&#34;&gt;Encryption and Key Management in AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/0kWpm1FyG_Q&#34;&gt;Secure Applications with AWS Key Management Service (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/pi4HTSrmzis&#34;&gt;Encryption Key Storage with AWS KMS at Okta (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WUQNeMhkaco&#34;&gt;Intrusion Detection in the Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nzSrRvADh6g&#34;&gt;Incident Response in the Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/8AODa_AazY4&#34;&gt;SSL with Amazon Web Services (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;scalability--elasticity-15&#34;&gt;Scalability &amp;amp; Elasticity (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/blogs/aws/auto-scale-dynamodb-with-dynamic-dynamodb/&#34;&gt;AutoScaling for DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://nineofclouds.blogspot.com.au/2013/01/vpc-migration-nats-bandwidth-bottleneck.html&#34;&gt;VPC Migration: NATs &amp;amp; Bandwidth Bottleneck&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-your-aws-infrastructure-at-scale.pdf&#34;&gt;Managing Your AWS Infrastructure at Scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/performance-at-scale-with-amazon-elasticache.pdf&#34;&gt;Performance at Scale with Amazon ElastiCache&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/gUAuhdtHacI&#34;&gt;Using Amazon CloudFront For Your Websites &amp;amp; Apps (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/s9Xt1qzD6SA&#34;&gt;Best Practices for Content Delivery using Amazon CloudFront (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eorGJL-LkJc&#34;&gt;Secure Content Delivery Using Amazon CloudFront (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/91TAx4fmcxk&#34;&gt;Elastic Load Balancing Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/vg5onp8TU6Q&#34;&gt;Scaling Up to Your First 10 Million Users (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bSa_byGRGR4&#34;&gt;Scaling Infrastructure Operations with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4trGuelatMI&#34;&gt;All You Need To Know About Auto Scaling (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/FxCF34txNfk&#34;&gt;Introduction to Amazon Kinesis (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XFHtsUgH-L8&#34;&gt;Streaming Data Processing with Amazon Kinesis and AWS Lambda (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/JFfvD2cw2IE&#34;&gt;Building Real-time Streaming Applications with Amazon Kinesis (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/8u9wIC1xNt8&#34;&gt;Kinesis Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4VfIINg9DYI&#34;&gt;ElastiCache: Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zc1_Rfb_txQ&#34;&gt;EMR Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4HseALaLllc&#34;&gt;EMR Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cloud-migration--hybrid-architecture-10&#34;&gt;Cloud Migration &amp;amp; Hybrid Architecture (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/ec2/vm-import/&#34;&gt;Existing vSphere, Hyper-V and Xen VM Import&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;AWS Management Portal for vCenter&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;vCenter Portal&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/migration-best-practices-rdbms-to-dynamodb.pdf&#34;&gt;Best Practices for Migrating from RDBMS to Amazon DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/the-path-to-the-cloud-dec2015.pdf&#34;&gt;A Practical Guide to Cloud Migration&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/migration-best-practices-rdbms-to-dynamodb.pdf&#34;&gt;Migration Best Practices – RDBMS to DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/strategies-for-migrating-oracle-database-to-aws.pdf&#34;&gt;Strategies for Migrating Oracle Database to AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;AWS Management Portal for vCenter&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/we4dcxIDKJo&#34;&gt;Enable &amp;amp; Secure Your Business Apps via the Hybrid Cloud on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/kgp8jjO6O6Y&#34;&gt;Preparing for Migration: A Roadmap to AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/kn4bETDe5gk&#34;&gt;Migrating Fox’s Media Supply Chains to the Cloud with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XKkYY_FCiQ4&#34;&gt;How Delaware North Migrated 90+ Apps in Four Months (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/pBIbsofLQ3w&#34;&gt;Acceleration of AWS Enterprise Adoption in GE (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.rightscale.com/webinars/lp/aws-vmware-architect-hybid-environments-webinar&#34;&gt;AWS and VMware: How to Architect Hybrid Environments&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;aws-core-knowledge&#34;&gt;AWS Core Knowledge&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;http://aws.amazon.com/architecture/&#34;&gt;AWS Architecture Center&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf&#34;&gt;AWS Well‐Architected Framework&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://media.amazonwebservices.com/AWS_Cloud_Best_Practices.pdf&#34;&gt;Architecting for the Cloud: Best Practices&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;All re:invent 2016 Sessions are available on &lt;a href=&#34;https://www.youtube.com/playlist?list=PLhr1KZpdzukdGa7Gqu4bdql4KH7sL3mhf&#34;&gt;AWS YouTube Playlist&lt;/a&gt;. All slides used at re:Invent, Summit, DevDay are all available on &lt;a href=&#34;http://www.slideshare.net/AmazonWebServices&#34;&gt;AWS SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The User \ Developer and FAQs Are Useful
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html&#34;&gt;CloudFront Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudfront/faqs/&#34;&gt;CloudFront FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html&#34;&gt;CloudFormations User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudformation/faqs/&#34;&gt;CloudFormations FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudhsm/faqs/&#34;&gt;CloudHSM FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudwatch/faqs/&#34;&gt;CloudWatch FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/config/faq/&#34;&gt;Config FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/datapipeline/faqs/&#34;&gt;Data Pipeline FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html&#34;&gt;Direct Connect User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/directconnect/faqs/&#34;&gt;Direct Connect FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html&#34;&gt;DynamoDB Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/dynamodb/faqs/&#34;&gt;DynamoDB FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html&#34;&gt;EBS User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ebs/faqs/&#34;&gt;EBS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html&#34;&gt;EC2 User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/instance-types/&#34;&gt;EC2 Instance Types&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/faqs/&#34;&gt;EC2 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/jLVPqoV4YjU&#34;&gt;EC2 Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html&#34;&gt;Elastic BeanStalk Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/elasticache/faqs/&#34;&gt;ElasticCache FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/elasticloadbalancing/faqs/&#34;&gt;Elastic LoadBalancer FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WnFYoiRqEHw&#34;&gt;Elastic MapReduce : A Technical Introduction (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/glacier/faqs/&#34;&gt;Glacier FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html&#34;&gt;IAM User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/iam/faqs/&#34;&gt;IAM FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/importexport/&#34;&gt;Import Export Snowball&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/importexport/faqs/&#34;&gt;Import Export FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.youtube.com/watch?v=8u9wIC1xNt8&#34;&gt;Kinesis Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/streams/latest/dev/introduction.html&#34;&gt;Kenesis Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/kinesis/streams/faqs/&#34;&gt;Kenesis FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/kms/faqs/&#34;&gt;KMS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/opsworks/faqs/&#34;&gt;OpsWorks FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/rds/faqs/&#34;&gt;RDS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/redshift/faqs/&#34;&gt;Redshift FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/route53/faqs/&#34;&gt;Route 53 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/sns/latest/dg/welcome.html&#34;&gt;SNS Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/sns/faqs/&#34;&gt;SNS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/storagegateway/faqs/&#34;&gt;Storage Gateway FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/s3/faqs/&#34;&gt;S3 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html&#34;&gt;VPC User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/vpc/faqs&#34;&gt;VPC FAQ&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;certification-journey-blog-posts&#34;&gt;Certification Journey Blog Posts&lt;/h1&gt;
+&lt;p&gt;As well as technical study its always good to hear the personal experience stories of people who have studied for and successfully passed.&lt;br&gt;
+&lt;a href=&#34;http://ozaws.com/2015/09/17/aws-professional-solution-architect-certification-tips/&#34;&gt;Nick Triantafillou&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://cloudninjablog.wordpress.com/2015/07/22/aws-certified-solutions-architect-professional-certification-the-road-to-success/&#34;&gt;Jason Oliver&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@anything_cloud/how-to-pass-aws-certified-professional-solutions-architect-exam-5bbb44c04fda&#34;&gt;Frank van der Meer&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@anything_cloud/aws-certified-solutions-architect-professional-level-sample-exam-questions-and-answers-with-dd7df8984a8c#.gxz682t78&#34;&gt;Frank van der Meer - Sample Exam Questions&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://cantrill.io/certification/aws/2015/10/04/passing-the-aws-solutions-architect-professional-exam.html&#34;&gt;Adrian Cantrill&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@jcutting/preparing-for-the-aws-architect-professional-exam-cf54acc1fb2a#.5a5sk5clx&#34;&gt;Jeremiah Cutting&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://hydrasit.com/passed-aws-solutions-architect-professional-exam/&#34;&gt;Stephen Wilding&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://blog.henrik.org/2016/04/how-i-studied-for-aws-certified.html&#34;&gt;Henrik Johnson&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.michaelwittig.info/aws-certified-solutions-architect-professional-level/&#34;&gt;Michael Wittig&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.mitchyb.com/2015/10/aws-certified-solutions-architect.html&#34;&gt;Mitch Beaumont&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>AWSome Day - AWS Roadshow - Leeds 2016</title>
+      <link>https://darrylcauldwell.com/post/aws-awesome/</link>
+      <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-awesome/</guid>
+      <description>
+        
+          &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-awsome-day-logo.jpeg&#34; alt=&#34;AWS Awesome Day Logo&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The &amp;lsquo;AWSome Day&amp;rsquo; is a roadshow for people new to Amazon Web Services Cloud. I am about to change roles to work with customer solutions
+leveraging Amazon Web Services Cloud rather than VMware private cloud. I&amp;rsquo;ve just passed the entry level &amp;lsquo;AWS Business Professional&amp;rsquo; and
+&amp;lsquo;AWS Technology Professional&amp;rsquo; partner accreditations. I am presently self studying towards the associate level &amp;lsquo;Certified Solutions Archiect&amp;rsquo;.
+Certification self study is good but can be a little dry so the offer of having some &amp;lsquo;free&amp;rsquo; training and access to some expert solutions architects was
+very welcome. Having been to various VMware roadshow type events they are also generally a great place to meet similar interested people in
+the ecosystem.&lt;/p&gt;
+&lt;p&gt;The day started with a session highlighting how and why customers are using AWS to develop, deploy and operate secure applications and IT services.
+This session gave various real world customer use case examples and how they have used the AWS services to transform their business. The event then
+broke into a two tracks one technical and the other business track. I followed the technical track. The technical had various sessions covering the AWS foundational
+services, EC2, S3, EBS, Glacier, Kinesis, VPC, IAM, RDS and DynamoDB. Once the foundational services had been covered there more sessions covering
+Elastic Beanstalk, Auto Scaling, Load Balancing, CloudWatch and Trusted Advisor. The sessions were delivered by two AWS technical trainers who
+were supported by two AWS solutions architects to answer questions. The breadth of topics meant the sessions were not deep dives, however the Q&amp;amp;A
+was lively and it teased out a lot of technical detail. The technical level of the sessions was close to the training materials I have been following
+for ‘AWS Solutions Architecture – Associate’ certification although not a substitute to my self-study it was useful to take the information from a
+real trainer and be able to ask questions.&lt;/p&gt;
+&lt;p&gt;There were vendors sponsoring the day, Alert Logic, Xen, QA and Global Knowledge, I took chance to speak to them all during the time between sessions.
+Alert Logic provide a managed security operations center type service, we had a great discussion about the different threat vectors used by attackers
+of AWS solutions and some of the AWS services which provide analytics.  Xen are a UK solutions provider who offer Solutions Architect consultancy for
+businesses moving to AWS, we had a great discussion on the challenges enterprise business face when moving to AWS.  QA &amp;amp; Global Knowledge are both
+training providers who I spoke to about the AWS certification path, most of which I had already found from the AWS website but it was encouraging to
+hear of the training options available.&lt;/p&gt;
+&lt;p&gt;In summary the AWSome Day was valuable to me to support my study for upcoming exam but also start exploring the current actual business use cases to AWS
+service mappings and have dialog with vendors in and around the AWS space. I had a great day at the AWSome Day 2016 and would recomend to anyone starting
+or thinking about going on an AWS journey.&lt;/p&gt;
+&lt;h2 id=&#34;links-to-the-days-slides&#34;&gt;Links to the days slides&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.slideshare.net/IanMassingham/aws-awsome-day-roadshow-intro&#34;&gt;Introduction &amp;amp; Closing AWSome Day Slides&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.slideshare.net/AmazonWebServices/awsome-day-leeds&#34;&gt;AWSome Day Technical Track Slides&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.slideshare.net/IanMassingham/tag/jan-16-awsomeday&#34;&gt;AWSome Day Business Track Slides&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NetApp Cloud OnTap For AWS</title>
+      <link>https://darrylcauldwell.com/post/aws-ontap/</link>
+      <pubDate>Fri, 12 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-ontap/</guid>
+      <description>
+        
+          &lt;p&gt;NetApp has often been a pioneer of bleeding edge concepts in storage. When designing data ONTAP and the WAFL file system they were the first to look at creating a virtual control plane for data. They also pioneered fully non disruptive upgrades when the introduced clustered data ONTAP.  They then introduced ONTAP Edge for providing the really cool features of data ONTAP for non NetApp SANs. Recently the pioneering spirit has been continuing with the launch of Cloud ONTAP for AWS which takes the clustered data ONTAP features to overlay Amazon EC2 storage.&lt;/p&gt;
+&lt;p&gt;There are hundreds of business use cases which spring to mind when you begin to consider what this offers, however the total killer feature for this is using snap mirror to extend your data between private cloud and public cloud.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Using the public cloud makes great sense for standing up solutions quickly and without the up front capital expenditure and instead the operational usage charging. As your new product grows and becomes more popular it maybe your operational charges out weight the cost savings and you then want to bring it to private cloud.&lt;/p&gt;
+&lt;p&gt;Most applications have great agility for the application, simply stand up a new OS in other cloud provider and install application.  However application data agility is, until now, much harder to manage.&lt;/p&gt;
+&lt;p&gt;In this example you would simply build your private cloud and new application tier and use snap mirror to bring your data to your datacenter and keep it in sync with the application still running.  When all sync&amp;rsquo;d you would cutover by breaking the mirror all could be seam less to your customers.&lt;/p&gt;
+&lt;p&gt;I expect as well that while currently this is only for EC2 storage, if it was to also interface into S3 and glacier you could also move your data tiering&lt;/p&gt;
+&lt;p&gt;While I love NetApp I&amp;rsquo;m not a storage admin,  and while the ONTAP simulator is useful at $1.50 per hour if I ever wanted to exercise my skills I could just spin up a clustered ONTAP AMI and away I would go then release it to save the recurring charge.&lt;/p&gt;
+&lt;p&gt;While there is more detailed info on the &lt;a href=&#34;http://www.netapp.com/us/system/pdf-reader.aspx?cc=us&amp;amp;m=ds-3618.pdf&amp;amp;pdfUri=tcm:10-127470&#34;&gt;NetApp website&lt;/a&gt;, a superb way to see this in action is to sign up for free and look at &lt;a href=&#34;https://poc.netapp.com/cloud/testdrive/&#34;&gt;test drive&lt;/a&gt;where you get to spin up a AMI on NetApp&amp;rsquo;s AWS account and look around.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

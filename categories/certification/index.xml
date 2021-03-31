@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>certification on </title>
+    <link>https://darrylcauldwell.com/categories/certification/</link>
+    <description>Recent content in certification on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/categories/certification/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VCDX6-DCV Defence Experience</title>
+      <link>https://darrylcauldwell.com/post/vcdx-fail/</link>
+      <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vcdx-fail/</guid>
+      <description>
+        
+          &lt;p&gt;In 2013 I was a systems engineer,  I worked mostly on automation scripting for consistently delivering virtualized infrastructure on VMware. A job I&amp;rsquo;d enjoyed but was ready to move my career forwards, my at the time colleague &lt;a href=&#34;https://twitter.com/virtRich&#34;&gt;Richard Dowling&lt;/a&gt; and I started looked into pursuing advanced VMware certification. In early 2014 we attended a VCDX workshop hosted by &lt;a href=&#34;https://twitter.com/vcdx001&#34;&gt;John Arrasjid&lt;/a&gt; at VMware EMEA HQ in Frimley. Also in the workshop was &lt;a href=&#34;https://twitter.com/pmcsharry&#34;&gt;Paul McSharry&lt;/a&gt; who John knew and who had recently had published &lt;a href=&#34;https://www.amazon.co.uk/VCAP5-DCD-Official-Cert-Guide-Certification/dp/078975018X&#34;&gt;VCAP5-DCD Official Cert Guide&lt;/a&gt;.  I ordered the book that evening and this began my journey from engineer to architect.&lt;/p&gt;
+&lt;p&gt;During the four and a half years since I&amp;rsquo;ve continued with our goal of pursuing advanced VMware certification and passed VCAP5-DCA, VCAP5-DCD, VCAP5-DCV Design and VCIX6-NV. I&amp;rsquo;d also began contributeing much more to architecture design documentation but still had engineering duties. In 2016 I moved jobs to take on a role where I was a dedicated architect and co-authored a complex NSX for vSphere design with &lt;a href=&#34;https://www.linkedin.com/in/kyle-mcmaster-a0995917/&#34;&gt;Kyle McMaster&lt;/a&gt;. I had every intention of submitting this for VCDX6-NV but on delivery of the project, I moved to work on Amazon Web Services and could not dedicate the time the VCDX process needed.&lt;/p&gt;
+&lt;p&gt;I changed job again to take another architect role, which aligned to business transformation program. Moving away from specific technology and closer to using various technologies as business enablers. As part of this I created a vSphere design for un-differentiated configuration, like a VVD but without vRA, smaller starting foootprint and tailed for our specific delivery org.&lt;/p&gt;
+&lt;p&gt;I speculative submitted this design exactly as was written for production with no tailoring for VCDX, and expected that it would be rejected but I would get good feedback on what needed to improve for a actual submission. From point of speculative submission I began writing a VCDX tailed document, after four weeks of working on new document set I got a surprise email reading, &lt;strong&gt;&amp;ldquo;We are happy to inform you that you achieved a high enough score to allow you to proceed to the defence stage of the process.&amp;quot;&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mistake One  - Never assume failure, and begin work not required. As with &lt;a href=&#34;http://darrylcauldwell.com/devops-architecture/&#34;&gt;Lean Architecture&lt;/a&gt; design only what is needed, enough but never more.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;My acceptance letter arrived on Wedneday 9th May, defence day Wednesday 6th June, so exactly four weeks to prepare. Called out to the community, &lt;a href=&#34;https://twitter.com/matjovanovic&#34;&gt;Mat Jovanovic&lt;/a&gt; and &lt;a href=&#34;https://twitter.com/Dark_KnightUK&#34;&gt;Bilal Ahmed VCDX-251&lt;/a&gt; both pointed me to &lt;a href=&#34;xhttps://twitter.com/GreggRobertson5&#34;&gt;Gregg Robertson VCDX-205&lt;/a&gt; who runs the &lt;a href=&#34;https://vcdxprepgroup.slack.com&#34;&gt;VCDX Prep Slack Group&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;d made presentations of the design before to various people within a work context so had a lot of slides already. The community rallied and setup a mock defence for Monday 14th May. Albeit a short time , I had the whole weekend to refactor the slides&amp;hellip; how hard could it be&amp;hellip; oh it was my daughters 6th birthday on the Saturday and her party on Sunday. This is the point time became my greatest enemy, it all of course stemed from &amp;lsquo;Mistake One&amp;rsquo;. The mock got completed, but I had planned to spend first 10-15m providing the C-level overview of the visio, conceptual design and then to logical. Then move on to questions, however as the mock panelists hadn&amp;rsquo;t seen my design we somewhat deviated to a general technology walkthrough. My design is by its nature a re-usable design agnostic of a specific customer, my biggest takeaway was despite this I had to present from a customer context.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mistake Two - Even if design is customer agnositc, present in context of a customer story.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I spent the evenings of the next week, updating slide deck based on 1st mock. Had regular dialogue with &lt;a href=&#34;https://twitter.com/Dark_KnightUK&#34;&gt;Bilal Ahmed VCDX-251&lt;/a&gt; was was giving me mentorship, as my design was DCV it also included a chunk of NV so he put me in touch with &lt;a href=&#34;https://twitter.com/ShadyMalatawey&#34;&gt;Shady ElMalatawey VCDX-249&lt;/a&gt; and they both provided great mentorship.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Tip One - Mentorship helps enorously, from the very basics like where to park grab luch etc, to the mental coaching and encouragement. Bilal was first person to say I was there on merit, and indeed the last person to remind me prior to entering room. There is a mental hurdle as well as technical, and personal coaching helps this side .. a lot.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Two - I am a naturally talkative guy, I love my design I have a lot invested in it, I naturally want to talk about technology when given chance. Bilal was very frank with me, and said basically &lt;strong&gt;don&amp;rsquo;t ramble&lt;/strong&gt;, aim for a 30s answer focussed on business aspects Recoverability, Aavailability, Managemability, Performance, Security and Cost. If they want more detail, they will ask,  answer succictly and move on.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The week 21-25th I arranged a mock defence with people internal to company I work for, I got six people to spend four hours and read design docs as submitted and held three mocks each with two panelists. I was very lucky to have lots of people who would spend time to help and so get very different feedback types, a three of deeply technical, a product manager, and two service architects. As well as answering their questions during session I noted these in an issues log, as I revised the presentation I closed out issues. Prior to defence I went back over the issues log as a whole to understand balance of areas people touched upon.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Three - Record all feedback and notes, its a great asset to review, conversations can be lost in the moment so having text reference help.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There was a 4hr &lt;a href=&#34;https://www.youtube.com/watch?v=Llty1D1yFII&amp;amp;t=1728s&#34;&gt;VCDX workshop&lt;/a&gt; on 25th, this is a relatively standard workshop which I had attended before. However the work I was doing meant I could listen in as I worked so I did. During this it became clear that a week after acceptance I should have had a &amp;lsquo;Candidate Prep Call&amp;rsquo;, this had never been scheduled. I mentioned on call and &lt;a href=&#34;https://twitter.com/VMPrime&#34;&gt;Joe Silvagi&lt;/a&gt; the workshop presenter setup a call directly after workshop (6pm Friday), I had personal engagement so spend a very few minutes on call where Joe made himself avbailable for any questions. I&amp;rsquo;ve no idea what is covered in a &amp;lsquo;Candidate Prep Call&amp;rsquo; but would guess its useful.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Four - Make sure Candidate Prep Call gets scheduled within one week of acceptance, chase up if it doesn&amp;rsquo;t.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;During next two weeks I had a lot on at work, I held no more mocks, I barely managed to complete the slide deck up at 4am on day of defence updating.  I had no time to work at all on design workshop. This was a choice of course, I could have spent less time on defence and made sometime, I just couldn&amp;rsquo;t see how this could be rehearsed effectively.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mistake Three - Don&amp;rsquo;t be like Darryl, spend some time thinking and planning for design workshop&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A few days prior to defence I had two emails, one with address to attend in Frimley and one with address to attend in Staines. I was pretty sure the Frimley office closed a year or two ago, but I never visit so couldn&amp;rsquo;t be sure. Quick phone call to reception at Staines office confirmed I was booked and had parking space on site.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Five - Parking in Staines can be problematic, a call to reception got me an on-site space&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The day of defence, I was up at 4am fussing about powerpoint, its a long drive for me so set off early and arrived two and half hours early for my 2pm slot. This time turned out to be very useful to reset the mind, had a walk by river, grabbed a leisurely lunch and forgot about the carnage of M25 traffic. VMware have great offices with large public spaces.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tip Six - Arrive early and reset the mind&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The defence itself, nice well appointed room, four whiteboards each large, relatively new Windows laptop with USB-A ports only. I&amp;rsquo;ve been USB-C only for a while, but had guessed the supplied laptop might not be so had brought both USB-A and USB-C. On entering I was very nervous, the panelists could have taken advantage of this but let me get into a rhythm before asking questions. Joe Silvagi had said during VCDX workshop that the panelists asked questions to help you score points in areas they see weakness. This was really proved to be the case, the questions were asked in a way which seemed encouraging rather than confrontational. I made one possibly one possibly two assertions where they had asked a very technical question, I explained up to the point I was confident, then made caveate that next part I was relatively confident in but we should research the explicit detail around this. This is how I would approached with a customer and then followed up with detailed research, I expect same applies to this scenario. In hindsight this could be incorrect approach and better to speak up to point of explicit knowledge. I had mixed feelings about the backup slides through out, people had said they created but a waste of time, other people that they a great asset. I had created backup slides covering most areas of the design, the mock teams had said best layout for them a diagram on right and bullets on left. I spend a lot &amp;hellip; a very lot, of time creating these, in the end I used maybe 10-15 of them to help answer questions, if I was doing again I&amp;rsquo;d drop the text and have bigger pictures from backups.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Seven - Attend the vcdx workshop, listen to Joe&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Eight - Pictures tell a thousand words, backup slides less text more diagrams, no pre-written text can cover the question&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Nine - Pictures tell a thousand words but, presenting can be nervous having bulleted text can help you ensure you cover all the points you want to on that topic.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After defence and prior to design workshop I felt good, I love talking about my work, the team made me comfortable. I felt I gave a good account of design and business reasons behind, all in all it was a pleasant experience.&lt;/p&gt;
+&lt;p&gt;So the workshop, in VCDX workshop Joe had explicitly said you get to see the scenario slides, then when you start writting or ask first question the timer begins. As such I bearly listened as moderator read slides as I believed I had time to read at leisure, digest then, compose myself and then begin.  I had planned to create four large sections for Requiremnt, Assumption, Risk and Constraint,  and draw out the common parts of conceptual vSphere design while talking about establishing first requirement.&lt;/p&gt;
+&lt;p&gt;However, moderator stopped speaking then bang they started timer, this panicked me and I had a time limit to read which put me well and truely on the back foot from being relaxed. As such I forgot my planned approach and this became hinderance very soon as I wrote my requirements and constraints too close together and was hard to write, putting me further onto the back foot. It took me 5min or so to get back to where I wanted to start, and all because of incosistency in what I told prior and actions of moderator on the day (sigh). I never really got into a rhythm and just when I was starting to the moderator began laughing uncontrallably which made panelist laugh too, and me also, moderator left room to compose himself. This whole episode really made me loose my train of thought.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Ten - Attend the vcdx workshop, listen to Joe but don&amp;rsquo;t expect the moderator to play by the rules&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tip Elephen - Formulate a strategy and carry it out, don&amp;rsquo;t allow yourself be distracted&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;On returning home late that night, my wife asked how did it go?  I said I enjoy talking about a design I&amp;rsquo;d invested so much in and which I was very proud of to a bunch of inteligent people.&lt;/p&gt;
+&lt;p&gt;She then asked do you think you&amp;rsquo;ll pass? I thought about this, then said I&amp;rsquo;ve very little interest in the outcome. I set off on a journey four and a half years ago to transition to a new career, I now work in a team who design and engineer solutions which made a direct contribution to the success of my company. Obviously it would be the icing to the cake to get the certification, but whatever the outcome the vcdx journey itself has already given me all that I set out to achieve.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve heard all leading up to this the failure rate extremely high, people even said close to 90%, so probability says that this my first attempt will be failure. So question is would I submit a 2nd, well I guess this is architecture so we could say what would ROI be, on the investment side it would cost $4000 + VAT in application fees, it would cost probably 30-40 hours of my time to prepare and a 10 hour day of defense. The interesting aspect now is what tangible return would I get over and above what I have today.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>VMware Certified Advanced Professional - Data Center Virtualization Design</title>
+      <link>https://darrylcauldwell.com/post/vcap-dcv-design/</link>
+      <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vcap-dcv-design/</guid>
+      <description>
+        
+          &lt;p&gt;Having passed the VCAP5-DCD exam with little to no studying only eighteen months ago and VCIX6-NV since. All things considered I was pretty confident of doing well in the VCAP6-DCV Design exam, and when I completed exam I was pretty sure I&amp;rsquo;d passed. To my surprise I failed the exam with a 285, to make matters worse during the drive home I couldn&amp;rsquo;t fathom in my mind where it had gone wrong.
+Luckily on readin the score report it highlights the blueprint objectives relating the area&amp;rsquo;s of weakness. For me that was,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Objective 1.2 - Gather and Analyze Application Requirements&lt;/li&gt;
+&lt;li&gt;Objective 1.3 - Determine risks, requirements, constraints and assumptions&lt;/li&gt;
+&lt;li&gt;Objective 3.4 - Determine Appropriate Compute Resources for a vSphere 6.x Physical Design&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here I focus on these three objectives, and how I revisited my study and revision to fill my knowledge gap.&lt;/p&gt;
+&lt;h1 id=&#34;objective-12---gather-and-analyze-application-requirements&#34;&gt;Objective 1.2 - Gather and Analyze Application Requirements&lt;/h1&gt;
+&lt;p&gt;Blueprint Defined Skills and Abilities&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Gather and analyze application requirements for a given scenario.&lt;/li&gt;
+&lt;li&gt;Determine the requirements for a set of applications that will be included in the design.&lt;/li&gt;
+&lt;li&gt;Collect information needed in order to identify application dependencies.&lt;/li&gt;
+&lt;li&gt;Given one or more application requirements, determine the impact of the requirements on the design.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Resources I used&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=ilUrNRY_foI&#34;&gt;vBrownBag VCAP6-DCV Design Objective 1.2 with Mark Gabryjelski&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;objective-13---determine-risks-requirements-constraints-and-assumptions&#34;&gt;Objective 1.3 - Determine risks, requirements, constraints and assumptions&lt;/h1&gt;
+&lt;p&gt;Blueprint Defined Skills and Abilities&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Differentiate between the concepts of risks, requirements, constraints, and assumptions.&lt;/li&gt;
+&lt;li&gt;Given a statement, determine whether it is a risk, requirement, constraint, or an assumption.&lt;/li&gt;
+&lt;li&gt;Analyze impact of VMware best practices to identified risks, constraints, and assumptions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Resources I used&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=S_9Al_Tvm5U&#34;&gt;vBrownBag VCAP6-DCV Design Objective 1.3 with Rebecca Fitzhugh&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;objective-34---determine-appropriate-compute-resources-for-a-vsphere-6x-physical-design&#34;&gt;Objective 3.4 - Determine Appropriate Compute Resources for a vSphere 6.x Physical Design&lt;/h1&gt;
+&lt;p&gt;Blueprint Defined Skills and Abilities&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Analyze best practices with respect to CPU family choices.&lt;/li&gt;
+&lt;li&gt;Evaluate NUMA and vNUMA with ESXi hosts and Virtual machines in a given design.&lt;/li&gt;
+&lt;li&gt;Analyze the following in a vSphere design:
+&lt;ul&gt;
+&lt;li&gt;Enhanced vMotion compatibility&lt;/li&gt;
+&lt;li&gt;Implications of vSMP in virtual machines&lt;/li&gt;
+&lt;li&gt;Transparent Page Sharing (TPS) and large pages&lt;/li&gt;
+&lt;li&gt;Resource overcommitment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Based on the service catalog and given functional requirements:
+&lt;ul&gt;
+&lt;li&gt;Determine the most appropriate compute technologies for the design&lt;/li&gt;
+&lt;li&gt;Implement the service based on the required infrastructure qualities.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Determine the impact of a technical design on the choice of server density:
+&lt;ul&gt;
+&lt;li&gt;Scale Up/Out&lt;/li&gt;
+&lt;li&gt;Auto Deploy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Calculate the required number of nodes in an HA cluster based upon host failures and resource guarantees&lt;/li&gt;
+&lt;li&gt;Evaluate the implications of using reservations, limits, and shares on the physical design.&lt;/li&gt;
+&lt;li&gt;Specify the resource pool and vApp configuration based upon resource requirements.&lt;/li&gt;
+&lt;li&gt;Size the following resources appropriately:
+&lt;ul&gt;
+&lt;li&gt;Memory&lt;/li&gt;
+&lt;li&gt;CPU&lt;/li&gt;
+&lt;li&gt;I/O devices&lt;/li&gt;
+&lt;li&gt;Internal storage&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Given a constraint to use existing hardware, determine suitability of the hardware for the design.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Resources I used&lt;br&gt;
+&lt;a href=&#34;https://www.prepressure.com/library/technology/raid&#34;&gt;RAID&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.yellow-bricks.com/2013/08/26/introduction-to-vsphere-flash-read-cache-aka-vflash/&#34;&gt;vSphere Flash Read Cache aka vFlash&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.yellow-bricks.com/2013/09/11/frequently-asked-questions-vsphere-flash-read-cache/&#34;&gt;vSphere Flash Read Cache aka vFlash - FAQs&lt;/a&gt;
+&lt;a href=&#34;https://www.vmware.com/pdf/vi_architecture_wp.pdf&#34;&gt;VMware Infrastructure Architecitecture Overview&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;general&#34;&gt;General&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&amp;amp;cmd=displayKC&amp;amp;externalId=2105500&#34;&gt;Site Recovery Manager Maximums&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>AWS Certified Solutions Architect Professional - Study Link O&#39;Rama</title>
+      <link>https://darrylcauldwell.com/post/aws-sa-study/</link>
+      <pubDate>Wed, 19 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-sa-study/</guid>
+      <description>
+        
+          &lt;p&gt;While studying to become a &lt;a href=&#34;https://aws.amazon.com/certification/certified-solutions-architect-professional/&#34;&gt;AWS Certified Solutions Architect - Professional&lt;/a&gt; I have been passed and found lots of resources, in this post I am trying to store the links which are useful. I started my journey with the &lt;a href=&#34;https://d0.awsstatic.com/training-and-certification/docs-sa-pro/AWS_certified_solutions_architect_professional_blueprint.pdf&#34;&gt;AWS exam blueprint&lt;/a&gt;. This is I believe the perfect place to start to study as it describes when exactly is covered by the exam and the weighted value of each skill being measured. I&amp;rsquo;ve then categorised the many study links I have been passed under each knowledge domain.&lt;/p&gt;
+&lt;p&gt;After each knowledge domain is covered I&amp;rsquo;ve placed links to the base knowledge covered in Associate level exams.  Finally there is a section of the blog posts from people who have taken the exam and there experience of the process.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PL_RVC-cMNyYTz8zlxq117O1bfji-knooI&#34;&gt;A series of video&amp;rsquo;s for AWS Solutions Architecture Professional training.&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;high-availability-and-business-continuity-15&#34;&gt;High Availability and Business Continuity (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Storage/Backup_and_Recovery_Approaches_Using_AWS.pdf&#34;&gt;Backup and Recovery Approaches Using AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/best-practices-for-backup-and-recovery-on-prem-to-aws.pdf&#34;&gt;Enterprise Backup and Recovery&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/implementing-windows-file-server-disaster-recovery.pdf&#34;&gt;Using Amazon Web Services and DFS Replication for Disaster Recovery of File Servers&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Backup_Archive_and_Restore_Approaches_Using_AWS.pdf&#34;&gt;Backup and Recovery Approaches Using AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-disaster-recovery.pdf&#34;&gt;Using AWS for Disaster Recovery&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-migrate-resources-to-new-region.pdf&#34;&gt;Migrating AWS Resources to a New Region&lt;/a&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html&#34;&gt;Using OpsWorks Auto Healing&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/NoSwvJ18tMM&#34;&gt;How to Enable Disaster Recovery and Migrate to AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bXrGUlgbl-s&#34;&gt;Deploying a Disaster Recovery Site on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5hCAwEQpWNc&#34;&gt;Rapid Recovery Solution for Disaster Recovery (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/xA97GUzLAls&#34;&gt;Multi-Region Application Using Amazon VPC (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XU6KDBQiwEM&#34;&gt;Deploy High Availability &amp;amp; Disaster Recovery Architectures with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zYI4Gx0D54U&#34;&gt;Introducing AWS Solutions for Backup and Archiving (Video)&lt;/a&gt;
+&lt;a href=&#34;https://youtu.be/VmjDfz-MIZE&#34;&gt;AWS Storage Gateway: Secure, Cost-Effective Backup &amp;amp; Archive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.zerto.com/disaster-recovery-for-vmware-hyper-v-and-aws-that-actually-works/&#34;&gt;Disaster Recovery for VMware, Hyper-V, and AWS&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;costing-6&#34;&gt;Costing (6%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws_pricing_overview.pdf&#34;&gt;How AWS Pricing Works&lt;/a&gt;
+&lt;a href=&#34;https://youtu.be/kId90Q7b6kY&#34;&gt;Cost Optimisation on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/i1Uq8_gt2p4&#34;&gt;Cost Optimization at Scale (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/R_0BQIeRNHw&#34;&gt;The Science of Saving with AWS Reserved Instances (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/SG1DsYgeGEk&#34;&gt;Running Lean Architectures: Optimizing for Cost Efficiency (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/LZwlkqERv2g&#34;&gt;Cloud-Native Cost Optimization (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/rnL9Raf5shM&#34;&gt;Strategies to Quantify TCO and Optimize Costs using AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/lVOw1u_UaDE&#34;&gt;EC2 Dedicated Hosts: Save Money, Use Your Software Licenses (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://connect.awswebcasts.com/p2lkwv8o9rs/&#34;&gt;Save Up to 90% on your Amazon EC2 Bill with Spot Instances&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.cloudability.com/aws-101-reserved-instances/&#34;&gt;Reserved Instances 101&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://visit.cloudability.com/ReservedInstanceGuide&#34;&gt;Complete Guide to AWS Reserved Instances&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/fLex8Qgzvpk&#34;&gt;Advanced Strategies for AWS Cost Allocation with Tags and Linked Accounts (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.rightscale.com/webinars/lp/10-ways-optimize-public-private-cloud-costs-webinar&#34;&gt;10 Ways to Optimize Public and Private Cloud Costs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://support.cloudability.com/hc/en-us/articles/205014127-Webinar-Mastering-the-fundamentals-of-AWS-cost-management&#34;&gt;Mastering the fundamentals of AWS cost management&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.cloudability.com/aws-enterprise-cost-management-webinar/&#34;&gt;Managing enterprise AWS costs at scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://support.cloudability.com/hc/en-us/articles/205034237-Webinar-Using-Cloudability-to-reduce-AWS-costs&#34;&gt;Using Cloudability to reduce AWS costs&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;deployment-management-10&#34;&gt;Deployment Management (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://d0.awsstatic.com/whitepapers/overview-of-deployment-options-on-aws.pdf&#34;&gt;Deployment Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-multi-tiered-web-applications-with-opsworks.pdf&#34;&gt;Managing Multi-Tiered Applications with AWS OpsWorks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/overview-of-deployment-options-on-aws.pdf&#34;&gt;Overview of Deployment Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-multi-tiered-web-applications-with-opsworks.pdf&#34;&gt;Managing Multi-Tiered Web Applications with OpsWorks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-your-aws-infrastructure-at-scale.pdf&#34;&gt;Managing your AWS Infrastructure at Scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS_DevOps.pdf&#34;&gt;Introduction to DevOps on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WL2xSMVXy5w&#34;&gt;Infrastructure as Code (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/1QCXABOIcuc&#34;&gt;Managing Your Infrastructure as Code (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/-0ELfN-kb7g&#34;&gt;Zero to Sixty: AWS CloudFormation (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/6R44BADNJA8&#34;&gt;CloudFormation Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Wk-tOPicq78&#34;&gt;Using AWS CloudFormation for Deployment and Management at Scale (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/fVMlxJJNmyA&#34;&gt;CloudFormation Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ZhGMaw67Yu0&#34;&gt;CloudFormation under the Hood (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WNLIsqjkvu8&#34;&gt;Deploy, Manage, and Scale Your Apps with OpsWorks and Elastic Beanstalk (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/A4NSyUbAEkw&#34;&gt;CodeDeploy: Automating Your Software Deployments (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5xlqk9bFkYM&#34;&gt;Introducing AWS OpsWorks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/AQWl5jLtsTc&#34;&gt;Getting Started with AWS OpsWorks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WxSu015Zgak&#34;&gt;AWS OpsWorks Under the Hood (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OJVLYPo2T4Y&#34;&gt;Going Zero to Sixty with AWS Elastic Beanstalk (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nkj0GXgaRv8&#34;&gt;Scaling Your Web Applications with AWS Elastic Beanstalk (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;network-design-10&#34;&gt;Network Design (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-amazon-vpc-connectivity-options.pdf&#34;&gt;Amazon VPC Network Connectivity Options&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5_bQ6Dgk6k8&#34;&gt;VPC Fundamentals and Connectivity Options (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/SMvom9QjkPk&#34;&gt;Deep Dive: AWS Direct Connect and VPNs (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ykmqjgLdmL4&#34;&gt;From One to Many: Evolving VPC Design (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/3qln2u1Vr2E&#34;&gt;Another Day, Another Billion Packets (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/DVywbZdzW4c&#34;&gt;New Capabilities for Amazon Virtual Private Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/EqVpsnAen5I&#34;&gt;Build a Remote Access VPN Solution on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/f9y-T7mQVxs&#34;&gt;Amazon Route 53 Deep Dive: Delivering Resiliency, Minimizing Latency (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XXUYbdbCb6Q&#34;&gt;Consolidating DNS Data in the Cloud with Amazon Route 53 (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/MKn_PQtRcl8&#34;&gt;Implementing Microsoft DirectAccess and NAT in the AWS Cloud (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;data-storage-15&#34;&gt;Data Storage (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=gUYa7RzrNhM&#34;&gt;Maximizing EC2 and EBS Performance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMFADelete.html&#34;&gt;S3 MFA Delete&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Big_Data_Analytics_Options_on_AWS.pdf&#34;&gt;Big Data Analytics Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS%20Storage%20Services%20Whitepaper-v9.pdf&#34;&gt;Cloud Storage Services Overview&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/rdbms-in-the-cloud-sql-server-on-aws.pdf&#34;&gt;RDBMS in the Cloud: Deploying SQL Server on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Z5vNK6U2HKA&#34;&gt;Understand AWS Storage Options (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/3HDQsW_r1DM&#34;&gt;State of the Union: AWS Storage Services (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/VC0k-noNwOU&#34;&gt;S3 Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OuyUbvtgfDk&#34;&gt;EBS Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/2wKgha8CZ_w&#34;&gt;Amazon EBS: Designing for Performance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OvoTPdm9cck&#34;&gt;Storage Management &amp;amp; Backup Using Amazon S3 &amp;amp; Amazon Glacier (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/PmPriuFEz1k&#34;&gt;How Electronic Arts, State of Texas, &amp;amp; H3 Biomedicine Use AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://connect.awswebcasts.com/p1fr4f2iitu/&#34;&gt;Amazon S3 Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/1TvJCLl9NNg&#34;&gt;Amazon S3 Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/P0pKdy_Y0CM&#34;&gt;New Storage Class for Amazon S3: Standard-Infrequent Access (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eKyS9rvbj40&#34;&gt;Intro to AWS: Database Services (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eHg8LD5KNC0&#34;&gt;Amazon RDS for MySQL: Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/AtASjS0hVDA&#34;&gt;Best Practices: SQL Server on Amazon RDS and EC2 (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WnFYoiRqEHw&#34;&gt;A Technical Introduction to Amazon Elastic MapReduce (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zc1_Rfb_txQ&#34;&gt;EMR Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4HseALaLllc&#34;&gt;EMR Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/lMRVg2f380Y&#34;&gt;EFS Update (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/tDqLwzQEOmM&#34;&gt;From Zero to NoSQL Hero: Amazon DynamoDB Tutorial (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ggDIat_FZtA&#34;&gt;Amazon DynamoDB Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/VuKu23oZp9Q&#34;&gt;Deep Dive: Amazon DynamoDB (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;security-19&#34;&gt;Security (19%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/DDoS_White_Paper_June2015.pdf&#34;&gt;AWS Best Practises for DDoS Resiliency&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-securing-data-at-rest-with-encryption.pdf&#34;&gt;Securing Data at Rest with Encryption&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html&#34;&gt;IAM Best Practise&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/blogs/security/enabling-federation-to-aws-using-windows-active-directory-adfs-and-saml-2-0/&#34;&gt;SAML Federation with ADFS and AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/code/1288653099190193&#34;&gt;Identity Broker Sample For Active Directory&lt;/a&gt;
+&lt;a href=&#34;https://web-identity-federation-playground.s3.amazonaws.com/index.html&#34;&gt;IAM Federation Playground&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html&#34;&gt;Delegate Access Across AWS Accounts Using IAM Roles&lt;/a&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-security-best-practices.pdf&#34;&gt;AWS Security Best Practices&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/training/course-descriptions/security-fundamentals/&#34;&gt;Amazon Web Services Security Fundamentals&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Security/Intro_to_AWS_Security.pdf&#34;&gt;Introduction to AWS Security&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Security/AWS%20Security%20Whitepaper.pdf&#34;&gt;Overview of Security Processes&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/compliance/AWS_Risk_and_Compliance_Whitepaper.pdf&#34;&gt;AWS Risk and Compliance&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/DDoS_White_Paper_June2015.pdf&#34;&gt;AWS DDoS Whitepaper&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-whitepaper-single-sign-on-integrating-aws-open-ldap-and-shibboleth.pdf&#34;&gt;Single Sign-On: Integrating AWS, OpenLDAP, and Shibboleth&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS_Securing_Data_at_Rest_with_Encryption.pdf&#34;&gt;Securing Data at Rest with Encryption&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/compliance/AWS_Security_at_Scale_Logging_in_AWS_Whitepaper.pdf&#34;&gt;Security at Scale: Logging in AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html&#34;&gt;Identity Providers and Federation&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/yVWHNJel7Qs&#34;&gt;Understanding The AWS Security Model (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/suOObEz_2Fc&#34;&gt;Getting Started with AWS Identity and Access Management (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/_wiGpBQGCjU&#34;&gt;IAM Best Practices to Live By (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Du478i9O_mc&#34;&gt;How to Become an IAM Policy Ninja in 60 Minutes or Less (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/0WI5sirOvco&#34;&gt;Mastering Access Control Policies (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/rXPyGDWKHIo&#34;&gt;Security Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zU1x5SfKEzs&#34;&gt;Advanced Security Best Practices Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/DykPS2gvDeo&#34;&gt;Architecting for Greater Security on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Ys0gG1koqJA&#34;&gt;Defending Against DDoS Attacks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/NL3sDn92NuU&#34;&gt;Practical Steps to Hack-Proofing AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nqaL5zJqFuo&#34;&gt;Architecting for End-to-End Security in the Enterprise (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ZaOR-ybLJF0&#34;&gt;Log, Monitor and Analyze your IT with Amazon CloudWatch (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/jX6pEWf344I&#34;&gt;Mobile Identity Management &amp;amp; Data Sync Using Amazon Cognito (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/KtMANvC7_n8&#34;&gt;Reliable Design and Deployment of Security and Compliance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/On9NoUwj-Os&#34;&gt;Strategies for Protecting Data Using Encryption in AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bqIYI3mDsd4&#34;&gt;Encryption and Key Management in AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/0kWpm1FyG_Q&#34;&gt;Secure Applications with AWS Key Management Service (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/pi4HTSrmzis&#34;&gt;Encryption Key Storage with AWS KMS at Okta (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WUQNeMhkaco&#34;&gt;Intrusion Detection in the Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nzSrRvADh6g&#34;&gt;Incident Response in the Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/8AODa_AazY4&#34;&gt;SSL with Amazon Web Services (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;scalability--elasticity-15&#34;&gt;Scalability &amp;amp; Elasticity (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/blogs/aws/auto-scale-dynamodb-with-dynamic-dynamodb/&#34;&gt;AutoScaling for DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://nineofclouds.blogspot.com.au/2013/01/vpc-migration-nats-bandwidth-bottleneck.html&#34;&gt;VPC Migration: NATs &amp;amp; Bandwidth Bottleneck&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-your-aws-infrastructure-at-scale.pdf&#34;&gt;Managing Your AWS Infrastructure at Scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/performance-at-scale-with-amazon-elasticache.pdf&#34;&gt;Performance at Scale with Amazon ElastiCache&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/gUAuhdtHacI&#34;&gt;Using Amazon CloudFront For Your Websites &amp;amp; Apps (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/s9Xt1qzD6SA&#34;&gt;Best Practices for Content Delivery using Amazon CloudFront (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eorGJL-LkJc&#34;&gt;Secure Content Delivery Using Amazon CloudFront (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/91TAx4fmcxk&#34;&gt;Elastic Load Balancing Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/vg5onp8TU6Q&#34;&gt;Scaling Up to Your First 10 Million Users (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bSa_byGRGR4&#34;&gt;Scaling Infrastructure Operations with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4trGuelatMI&#34;&gt;All You Need To Know About Auto Scaling (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/FxCF34txNfk&#34;&gt;Introduction to Amazon Kinesis (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XFHtsUgH-L8&#34;&gt;Streaming Data Processing with Amazon Kinesis and AWS Lambda (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/JFfvD2cw2IE&#34;&gt;Building Real-time Streaming Applications with Amazon Kinesis (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/8u9wIC1xNt8&#34;&gt;Kinesis Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4VfIINg9DYI&#34;&gt;ElastiCache: Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zc1_Rfb_txQ&#34;&gt;EMR Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4HseALaLllc&#34;&gt;EMR Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cloud-migration--hybrid-architecture-10&#34;&gt;Cloud Migration &amp;amp; Hybrid Architecture (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/ec2/vm-import/&#34;&gt;Existing vSphere, Hyper-V and Xen VM Import&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;AWS Management Portal for vCenter&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;vCenter Portal&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/migration-best-practices-rdbms-to-dynamodb.pdf&#34;&gt;Best Practices for Migrating from RDBMS to Amazon DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/the-path-to-the-cloud-dec2015.pdf&#34;&gt;A Practical Guide to Cloud Migration&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/migration-best-practices-rdbms-to-dynamodb.pdf&#34;&gt;Migration Best Practices – RDBMS to DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/strategies-for-migrating-oracle-database-to-aws.pdf&#34;&gt;Strategies for Migrating Oracle Database to AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;AWS Management Portal for vCenter&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/we4dcxIDKJo&#34;&gt;Enable &amp;amp; Secure Your Business Apps via the Hybrid Cloud on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/kgp8jjO6O6Y&#34;&gt;Preparing for Migration: A Roadmap to AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/kn4bETDe5gk&#34;&gt;Migrating Fox’s Media Supply Chains to the Cloud with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XKkYY_FCiQ4&#34;&gt;How Delaware North Migrated 90+ Apps in Four Months (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/pBIbsofLQ3w&#34;&gt;Acceleration of AWS Enterprise Adoption in GE (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.rightscale.com/webinars/lp/aws-vmware-architect-hybid-environments-webinar&#34;&gt;AWS and VMware: How to Architect Hybrid Environments&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;aws-core-knowledge&#34;&gt;AWS Core Knowledge&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;http://aws.amazon.com/architecture/&#34;&gt;AWS Architecture Center&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf&#34;&gt;AWS Well‐Architected Framework&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://media.amazonwebservices.com/AWS_Cloud_Best_Practices.pdf&#34;&gt;Architecting for the Cloud: Best Practices&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;All re:invent 2016 Sessions are available on &lt;a href=&#34;https://www.youtube.com/playlist?list=PLhr1KZpdzukdGa7Gqu4bdql4KH7sL3mhf&#34;&gt;AWS YouTube Playlist&lt;/a&gt;. All slides used at re:Invent, Summit, DevDay are all available on &lt;a href=&#34;http://www.slideshare.net/AmazonWebServices&#34;&gt;AWS SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The User \ Developer and FAQs Are Useful
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html&#34;&gt;CloudFront Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudfront/faqs/&#34;&gt;CloudFront FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html&#34;&gt;CloudFormations User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudformation/faqs/&#34;&gt;CloudFormations FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudhsm/faqs/&#34;&gt;CloudHSM FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudwatch/faqs/&#34;&gt;CloudWatch FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/config/faq/&#34;&gt;Config FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/datapipeline/faqs/&#34;&gt;Data Pipeline FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html&#34;&gt;Direct Connect User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/directconnect/faqs/&#34;&gt;Direct Connect FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html&#34;&gt;DynamoDB Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/dynamodb/faqs/&#34;&gt;DynamoDB FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html&#34;&gt;EBS User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ebs/faqs/&#34;&gt;EBS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html&#34;&gt;EC2 User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/instance-types/&#34;&gt;EC2 Instance Types&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/faqs/&#34;&gt;EC2 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/jLVPqoV4YjU&#34;&gt;EC2 Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html&#34;&gt;Elastic BeanStalk Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/elasticache/faqs/&#34;&gt;ElasticCache FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/elasticloadbalancing/faqs/&#34;&gt;Elastic LoadBalancer FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WnFYoiRqEHw&#34;&gt;Elastic MapReduce : A Technical Introduction (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/glacier/faqs/&#34;&gt;Glacier FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html&#34;&gt;IAM User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/iam/faqs/&#34;&gt;IAM FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/importexport/&#34;&gt;Import Export Snowball&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/importexport/faqs/&#34;&gt;Import Export FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.youtube.com/watch?v=8u9wIC1xNt8&#34;&gt;Kinesis Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/streams/latest/dev/introduction.html&#34;&gt;Kenesis Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/kinesis/streams/faqs/&#34;&gt;Kenesis FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/kms/faqs/&#34;&gt;KMS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/opsworks/faqs/&#34;&gt;OpsWorks FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/rds/faqs/&#34;&gt;RDS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/redshift/faqs/&#34;&gt;Redshift FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/route53/faqs/&#34;&gt;Route 53 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/sns/latest/dg/welcome.html&#34;&gt;SNS Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/sns/faqs/&#34;&gt;SNS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/storagegateway/faqs/&#34;&gt;Storage Gateway FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/s3/faqs/&#34;&gt;S3 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html&#34;&gt;VPC User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/vpc/faqs&#34;&gt;VPC FAQ&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;certification-journey-blog-posts&#34;&gt;Certification Journey Blog Posts&lt;/h1&gt;
+&lt;p&gt;As well as technical study its always good to hear the personal experience stories of people who have studied for and successfully passed.&lt;br&gt;
+&lt;a href=&#34;http://ozaws.com/2015/09/17/aws-professional-solution-architect-certification-tips/&#34;&gt;Nick Triantafillou&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://cloudninjablog.wordpress.com/2015/07/22/aws-certified-solutions-architect-professional-certification-the-road-to-success/&#34;&gt;Jason Oliver&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@anything_cloud/how-to-pass-aws-certified-professional-solutions-architect-exam-5bbb44c04fda&#34;&gt;Frank van der Meer&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@anything_cloud/aws-certified-solutions-architect-professional-level-sample-exam-questions-and-answers-with-dd7df8984a8c#.gxz682t78&#34;&gt;Frank van der Meer - Sample Exam Questions&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://cantrill.io/certification/aws/2015/10/04/passing-the-aws-solutions-architect-professional-exam.html&#34;&gt;Adrian Cantrill&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@jcutting/preparing-for-the-aws-architect-professional-exam-cf54acc1fb2a#.5a5sk5clx&#34;&gt;Jeremiah Cutting&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://hydrasit.com/passed-aws-solutions-architect-professional-exam/&#34;&gt;Stephen Wilding&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://blog.henrik.org/2016/04/how-i-studied-for-aws-certified.html&#34;&gt;Henrik Johnson&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.michaelwittig.info/aws-certified-solutions-architect-professional-level/&#34;&gt;Michael Wittig&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.mitchyb.com/2015/10/aws-certified-solutions-architect.html&#34;&gt;Mitch Beaumont&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Configuring NSX Edge to DLR OSPF</title>
+      <link>https://darrylcauldwell.com/post/nsx-edge-ospf/</link>
+      <pubDate>Mon, 23 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-edge-ospf/</guid>
+      <description>
+        
+          &lt;p&gt;As part of study for VCIX-NV I’ve given myself task of exploring in my new home lab all parts of NSX which I&amp;rsquo;m still not fully comfortable.  One of these things is OSPF,  to investigate this I came up with a test scenario and then worked through the steps to achieve a solution to meet the scenario design.&lt;/p&gt;
+&lt;h2 id=&#34;scenario-design&#34;&gt;Scenario Design&lt;/h2&gt;
+&lt;p&gt;We will replicate a typical development environment secured with an Edge Gateway.  Within the environment the developers will have ability to add and remove logical switches to the DLR and the automatic updating of the Edge Gateway routing table.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test.jpg&#34; alt=&#34;NSX Edge OSPF Test&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;deploy-edge-transit-logical-switch-and-distributed-logical-router&#34;&gt;Deploy Edge, Transit Logical Switch and Distributed Logical Router&lt;/h2&gt;
+&lt;p&gt;The lab has VXLAN capability during my NSX core home lab configuration, so has hosts prepared, VNI pool and deployed Controller.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll first deploy the Transit logical switch.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-ls.jpg&#34; alt=&#34;NSX Edge Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Create Edge Gateway with an Uplink interface on the OOB network  (192.168.1.43) and on the Transit network (192.168.2.1) .&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-edge-deploy.jpg&#34; alt=&#34;NSX Edge Deploy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Create DLR initially with a single uplink on Transit network (192.168.2.254) , do not configure a default gateway.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-dlr.jpg&#34; alt=&#34;NSX Edge DLR&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;configure-ospf-area&#34;&gt;Configure OSPF Area&lt;/h2&gt;
+&lt;p&gt;An OSPF area is a logical collection of OSPF networks, routers, and links that have the same area identification. The simulated development environment we are using RFC1918 address space in order that the IP address schema can overlap as such our OSPF routing will be internal so we will create an OSPF area which is type Stub.&lt;/p&gt;
+&lt;p&gt;On Edge Gateway Enable Dynamic Routing Configuration on the Transit interface.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-dynamic.jpg&#34; alt=&#34;NSX Edge OSPF Dynamic&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then we need to enable OSPF&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-enable.jpg&#34; alt=&#34;NSX Edge OSPF Enable&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We require a stub OSPF area, and usefully Area ID 51 is configured already so we&amp;rsquo;ll use this.  We just need to associate this with the Transit interface in order it can communicate with DLR.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-mapping.jpg&#34; alt=&#34;NSX Edge OSPF Mapping&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Repeat the steps used for configuring OSPF on the Edge on the DLR, when enabling OSPF enter the forwarding address to match the Transit network IP interface and the protocol address to be another available IP address on the Transit network.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-ProFwd.jpg&#34; alt=&#34;NSX Edge OSPF Protocol Forward&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;route-distribution&#34;&gt;Route Distribution&lt;/h2&gt;
+&lt;p&gt;The default Route Redistribution configuration for DLR is to distribute information about networks it is connected to.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-RouteDistribute.jpg&#34; alt=&#34;OSPF Route Redistribution&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If we now check the Edge Gateway routing table we can see all routing is of type C (directly connected) or S (static entry for default gateway).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-RouteTable.jpg&#34; alt=&#34;OSPF Route Table&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If I now simulate a developer creating a new Logical Switch for network 192.168.3.0/24 which is attached to DLR as internal interface 192.168.3.1.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 DLR&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can then check the Edge Gateway routing table again.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 Edge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We see a new route added type O (ospf derived) N2 (OSPF NSSA external type 2).  Which directs this traffic to the DLR interface on Transit network.&lt;/p&gt;
+&lt;p&gt;If we then simulate the developer adding the test2 and test3 networks. We see the other routes populated.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test2-3.jpg&#34; alt=&#34;OSPF Test 2-3&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NSX Backup and Restore</title>
+      <link>https://darrylcauldwell.com/post/nsx-backup-restore/</link>
+      <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-backup-restore/</guid>
+      <description>
+        
+          &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring in my new home lab all parts of NSX which I don&amp;rsquo;t use at work. One of these things is NSX Backup and Restore,  its not that we don&amp;rsquo;t use these function but that its relatively high impacting if it goes wrong.  To investigate this I came up with a list of networking configuration to test backup and restore of and the steps to I followed to perform each backup and restore type.&lt;/p&gt;
+&lt;h2 id=&#34;scenario-1---distributed-firewall&#34;&gt;Scenario 1 - Distributed Firewall&lt;/h2&gt;
+&lt;p&gt;To backup and restore distributed firewall rules is relatively straight forwards to do.  I&amp;rsquo;m starting with no rules created.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-BlankRuleset.jpg&#34; alt=&#34;NSX Firewall Blank Ruleset&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then create a new section.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-BandR.jpg&#34; alt=&#34;NSX Firewall New Section&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Add some rules for example any to WEB on HTTP Service and WEB to DB on SQL Service.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-testRules.jpg&#34; alt=&#34;NSX Firewall New Rules&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click Export and save these as a file.&lt;/p&gt;
+&lt;p&gt;Delete the WEB to DB rule.&lt;/p&gt;
+&lt;p&gt;To perform a restore we do this from the Saved Configuration tab,  we see that there are only auto saved backups.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore1.jpg&#34; alt=&#34;NSX Firewall Auto-Saved&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In order to restore from the file backup we need to import this into the Saved Configurations.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore2.jpg&#34; alt=&#34;NSX Firewall Import Saved&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Now we can change back to the Configuration tab and use &amp;lsquo;Load Saved Configuration&amp;rsquo; option to restore the exported file based backup.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore3.jpg&#34; alt=&#34;NSX Firewall Restore&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The deleted rule then gets added back.&lt;/p&gt;
+&lt;h2 id=&#34;scenario-2---nsx-manager&#34;&gt;Scenario 2 - NSX Manager&lt;/h2&gt;
+&lt;p&gt;To backup and restore NSX Manager it depends on having access to a FTP or SFTP to store the configuration in.&lt;/p&gt;
+&lt;p&gt;Previously I&amp;rsquo;d created a CentOS7 virtual machine template,  I deployed one of these and then followed this procedure to configure FTP.&lt;/p&gt;
+&lt;p&gt;Configure the FTP server settings in NSX.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-nsxBackup.jpg&#34; alt=&#34;NSX Manager Configuration Backup&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once backup location is configured click Backup to create a backup.&lt;/p&gt;
+&lt;p&gt;Check the FTP server and it should have a folder called nsx created and within a file prefixed with nsx followed by the date and time stamp.&lt;/p&gt;
+&lt;p&gt;Make a change to NSX configuration,  for example assign the NSX Manager the primary role.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-PrimaryRole.jpg&#34; alt=&#34;NSX Manager Assign Primary Role&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Check role is applied.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Primary.jpg&#34; alt=&#34;NSX Manager Is Primary&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If we now restore the configuration from the NSX Backup we should see the NSX Manager revert to running the Standalone role.&lt;/p&gt;
+&lt;p&gt;Select the backup created prior to making the configuration change and click Restore.  The NSX Manager will restore and then restart the Management Services so will take a minute or two. We can then check the role is reverted to Standalone.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Standalone.jpg&#34; alt=&#34;NSX Manager Is Standalone&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;scenario-3---vsphere-distributed-switch&#34;&gt;Scenario 3 - vSphere Distributed Switch&lt;/h2&gt;
+&lt;p&gt;I have in lab a vSphere Distributed Switch configured with some Distributed Portgroups and Logical Switches created on.  Otherwise you might need to create some configuration.&lt;/p&gt;
+&lt;p&gt;Use the context menu of the vDistributed Switch to Export the configuration to a file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Export-vDS.jpg&#34; alt=&#34;Export VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This creates a compressed zip file,  most files within this are not readable except for an xml file which appears to be a manifest of the zip file.&lt;/p&gt;
+&lt;p&gt;To test that the configuration is restored add an additional distributed portgroup named TestRestore1.&lt;/p&gt;
+&lt;p&gt;Use the context menu of the vDistributed Switch to Restore the configuration from the file.  Interesting we find that the Portgroup created post backup is not removed.&lt;/p&gt;
+&lt;p&gt;If we export the configuration again to include the new TestRestore1 Portgroup. Then delete the TestRestore1 Portgroup. Then Restore the configuration we find the TestRestore1 Portgroup is added back.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-TestRestore.jpg&#34; alt=&#34;Restored VDS&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NSX-V Load Balancer As A Service LBaaS</title>
+      <link>https://darrylcauldwell.com/post/nsx-lbaas/</link>
+      <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-lbaas/</guid>
+      <description>
+        
+          &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring in my homelab all parts of NSX which I don&amp;rsquo;t use
+at work. One of these things is NSX Load Balancer as a Service (LBaaS), to investigate this I came up with a test
+scenario and then worked through the steps to achieve a solution to meet the design.&lt;/p&gt;
+&lt;h2 id=&#34;load-balancer-scenariodesign&#34;&gt;Load Balancer Scenario Design&lt;/h2&gt;
+&lt;p&gt;I started by reading the &lt;a href=&#34;http://pubs.vmware.com/NSX-62/index.jsp#com.vmware.nsx.admin.doc/GUID-412635AE-1F2C-4CEC-979F-CC5B5D866F53.html&#34;&gt;NSX Administration Guide&lt;/a&gt; section covering load balancer configuration.&lt;/p&gt;
+&lt;p&gt;Here is what I plan to achieve my client and browser will sit on the 192.168.1.0/24 out of band network.  I&amp;rsquo;ll create a new WEB VLAN 1000 to host 192.168.2.0/24 network,  the Edge Gateway will serve this network with DHCP and DHCP will issue gateway IP to be its own address,  two web server VMs will be assigned to this network.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-onearm.jpg&#34; alt=&#34;One Armed Load Balancer&#34;&gt;&lt;/p&gt;
+&lt;p&gt;A destination network address translation (DNAT) rule will be configured to pass this OOB network IP address to the load balancerd address on the WEB network. The load balancer will round robin traffic between the two web servers. Port 80 will be monitored on web servers and when apache is stopped on one server all traffic should direct to the active server. The Edge firewall will be configured to block all traffic except for HTTP to the web servers.&lt;/p&gt;
+&lt;h2 id=&#34;configure-underlay&#34;&gt;Configure Underlay&lt;/h2&gt;
+&lt;p&gt;Create VLAN 1000 on physical switch and ensure this is allowed in the trunk presented to the virtual distributed switch ports.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-VLAN1000-Assignment.jpg&#34; alt=&#34;VLAN 1000 Assignment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Create a distributed portgroup for VLAN1000 and OOB.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-vDS-OOB-and-WEB.jpg&#34; alt=&#34;Distributed Portgroup&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;deploy-edge-gateway&#34;&gt;Deploy Edge Gateway&lt;/h2&gt;
+&lt;p&gt;Create a Compact NSX Edge Gateway with an &lt;em&gt;Uplink&lt;/em&gt; interface on the OOB with IP address 192.168.1.40 and &lt;em&gt;Internal&lt;/em&gt; interface on the WEB - VLAN1000 with IP address 192.168.2.254 .  Specify 192.168.1.254 as default gateway on the OOB interface. Ensure firewall is set to accept as default policy.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-EdgeSummary.jpg&#34; alt=&#34;Edge Deployment Summary&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;create-dnat-rule&#34;&gt;Create DNAT Rule&lt;/h2&gt;
+&lt;p&gt;As 192.168.2.0/24 is not a network my home router is aware of I must create a Destination NAT rule on 192.168.1.0/24 network to map to the 192.168.2.0/24 address.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-DNAT.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Ensure this is created by connecting SSH session to the Edge and viewing the NAT configuration by running&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;show nat
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-NAT-CLI.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;configure-web-server-dhcp&#34;&gt;Configure Web Server DHCP&lt;/h2&gt;
+&lt;p&gt;Enable DHCP and create a DHCP scope 192.168.2.10-192.168.2.50.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-DHCP.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;create-web-servers&#34;&gt;Create Web Servers&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ll look to create two test web servers each will host a single web page with its actual IP address on.  When I connect to load balanced IP the page contents returned will flip between the two servers.&lt;/p&gt;
+&lt;p&gt;I created a &lt;a href=&#34;https://darrylcauldwell.com/post/vsphere-vm-templates&#34;&gt;CentOS 7 VM template&lt;/a&gt; previously in lab and so for this test scenario I provisioned two new VMs from this named web1 and web2.  I left both as DHCP and setup the web server using following commands.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum install httpd -y
+service httpd start
+ifconfig | grep &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;inet&amp;#34;&lt;/span&gt; &amp;amp;gt; /var/www/html/test.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configure-load-balancer&#34;&gt;Configure Load Balancer&lt;/h2&gt;
+&lt;p&gt;Enable the load balance function on the Edge.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-Enable.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Create a load balancer application profile called Web and mark is for HTTP traffic.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-AppProfile.jpg&#34; alt=&#34;Load Balancer AppProfile&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Add web1 and web2 virtual machines to a load balancer pool with monitor port 80.  If adding as VM object as per screenshot then you might have IPv6 issue see section below for solution,  alternatively enter IP address.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-PoolMembers.jpg&#34; alt=&#34;Load Balancer Pool Membership&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Create a load balancer virtual server to link all the parts into a VIP.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-WebLB.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once this is created you will be able to browse to http://192.168.1.40/test.html on the OOB network this will return a web page displaying IP address.  Refreshing the page will display a similar page but with alternate VM IP address.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-loadbalancer-ipv6-issue&#34;&gt;NSX LoadBalancer IPv6 Issue&lt;/h2&gt;
+&lt;p&gt;I found when I configured this initially by selecting VM objects in the Virtual Server the loadbalancer tried to configure all IP addresses including the IPv6 addresses which are present by default in Centos7.  This caused a error in LoadBalancer and wouldn&amp;rsquo;t allow me to proceed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalance-IPv6.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I disabled IPv6 on both CentOS7 VMs by adding the following to /etc/sysctl.conf:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;net.ipv6.conf.all.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then run the following to commit the changes.  When VMs had only IPv4 addresses the process works without error.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sysctl -p
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;secure-solution&#34;&gt;Secure Solution&lt;/h2&gt;
+&lt;p&gt;Up to now we have had the Edge firewall default rule set to allow,  one of the first tasks we would want to do once web load balancing is working is to secure the solution.&lt;/p&gt;
+&lt;p&gt;To do this we create a new rule explicitly allowing HTTP traffic to the IP address it will enter the Edge on,  and once in place change default rule to Deny.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LB-Firewall.jpg&#34; alt=&#34;Load Balancer Firewall&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once in place test you still have access to the web page.&lt;/p&gt;
+&lt;h2 id=&#34;load-balance-monitoring&#34;&gt;Load Balance Monitoring&lt;/h2&gt;
+&lt;p&gt;When creating the Loadbalance configuration we specified to monitor port 80 was available in order to include the server in the balanced set. Before proceeding here ensure that when you connect to 192.168.1.40 and refresh load balancing is working correctly and returning IP addresses alternately.&lt;/p&gt;
+&lt;p&gt;We then stop the apache service on one of the VMs using:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;service httpd stop
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-apache-stop.jpg&#34; alt=&#34;Apache Stop&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If we now go back to browser and refresh a few times it will direct all traffic to one server IP address.  If we restart apache using&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;service httpd start
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and refresh the browser we find load balancing is returned and refreshes alternate the IP addresses.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NSX Activity Monitoring</title>
+      <link>https://darrylcauldwell.com/post/nsx-activity/</link>
+      <pubDate>Thu, 19 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-activity/</guid>
+      <description>
+        
+          &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring all parts of NSX which I don&amp;rsquo;t use at work. One of these things is NSX Activity Monitoring,  to investigate this I came up with a test scenario and then worked through the steps to achieve a solution to meet the scenario design.&lt;/p&gt;
+&lt;h2 id=&#34;scenario-design&#34;&gt;Scenario Design&lt;/h2&gt;
+&lt;p&gt;Gather traffic data between Activity Monitored virtual machines.&lt;/p&gt;
+&lt;h2 id=&#34;virtual-machine-configuration&#34;&gt;Virtual Machine Configuration&lt;/h2&gt;
+&lt;p&gt;I created a Windows 2012 R2 virtual machine template previously,  deploy two of these to a network with DHCP enabled for example in my lab the OOB network.&lt;/p&gt;
+&lt;p&gt;The Windows template I created has the VMware Tools typical installation performed. To use the NSX Activity Monitoring the Network File Introspection Driver (vnetflt.sys) is required.  To add this we need to re-run the VMware tools installer,  select modify and then add NSX Network File Introspection Driver.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-WindowsDriver.jpg&#34; alt=&#34;Install Windows Driver&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Add IIS role to one of the hosts.&lt;/p&gt;
+&lt;p&gt;Add server to Active Directory domain and reboot.&lt;/p&gt;
+&lt;p&gt;In vSphere web client select each virtual machine in turn and enable NSX Activity Monitoring.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-EnableMonitoring.jpg&#34; alt=&#34;Enable Monitoring&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;deployactivity-monitor-appliances&#34;&gt;Deploy Activity Monitor Appliances&lt;/h2&gt;
+&lt;p&gt;From the Networking and Security menu, select Installation. Navigate to the Service Deployments tab and glick green add button.&lt;/p&gt;
+&lt;p&gt;In order to gather activity data virtual appliances are required to be deployed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-DeployActivityServices.jpg&#34; alt=&#34;Deploy Virtual Appliances&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;register-a-windows-domain-with-nsx-manager&#34;&gt;Register a Windows Domain with NSX Manager&lt;/h2&gt;
+&lt;p&gt;In vSphere web client click Networking and Security and then click NSX Managers. Click an NSX Manager in the Name column and then click the Manage tab. Click the Domain tab and then click the Add domain (Add domain) icon.&lt;/p&gt;
+&lt;p&gt;Complete the domain details as per your Active Directory.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-Add-Domain.jpg&#34; alt=&#34;Add Domain&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Wait for synchronization status to show SUCCESS.&lt;/p&gt;
+&lt;h2 id=&#34;generate-activity&#34;&gt;Generate Activity&lt;/h2&gt;
+&lt;p&gt;Connect to test virtual machine which &lt;!-- raw HTML omitted --&gt;does not&lt;!-- raw HTML omitted --&gt; have IIS installed and open browser to virtual machine with IIS installed.&lt;/p&gt;
+&lt;p&gt;Test data is being gathered by Activity Monitor.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-ActivityMonitorActivity.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Another easy test is to copy a file between the two virtual machines.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-ActivityMonitorSMB-CIFS.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cloudformation on </title>
+    <link>https://darrylcauldwell.com/tags/cloudformation/</link>
+    <description>Recent content in cloudformation on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 09 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/cloudformation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How To Use AWS CloudFormation With Ansible</title>
+      <link>https://darrylcauldwell.com/post/ansible-clouformation/</link>
+      <pubDate>Wed, 09 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/ansible-clouformation/</guid>
+      <description>
+        
+          &lt;p&gt;AWS CloudFormation gives developers and systems administrators an easy way to create and manage a collection of related AWS resources, provisioning and updating them in an orderly and predictable fashion. Ansible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs. Ansible uses no agents and no additional custom security infrastructure, so it&amp;rsquo;s easy to deploy, it uses a very simple language which allows you to describe your automation jobs in a way that approaches plain English.&lt;/p&gt;
+&lt;h2 id=&#34;install-ansible-for-aws-management&#34;&gt;Install Ansible For AWS Management&lt;/h2&gt;
+&lt;p&gt;In order that Ansible can manage AWS services create an IAM Role named Ansible and assign it to the AdmistratorAccess policy, then create a RHEL7 EC2 instance with this IAM role attached. The Ansible AWS modules manages AWS via the API by use of the &lt;a href=&#34;http://boto.cloudhackers.com/&#34;&gt;Python boto library&lt;/a&gt; and locally installed AWSCLI. Once the RHEL instance is running connect and run the following commands to install Ansible and the boto and AWS CLI python library.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo yum install wget -y
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+sudo rpm -ivh epel-release-7-8.noarch.rpm
+sudo yum install ansible git python python-devel python-pip -y
+sudo pip install boto awscli
+sudo yum update -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deploy-an-ec2-instance-using-ansible&#34;&gt;Deploy An EC2 Instance Using Ansible&lt;/h2&gt;
+&lt;p&gt;Once installed we can test Ansible can communicate correctly with AWS by creating a security group and EC2 instance. I&amp;rsquo;ve prepared a short playbook for my AWS account, in order to use yourself modify the five variables at the top of the playbook.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+ansible-playbook /home/ec2-user/aws-ansible/my-test-play.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deploy-an-ec2-instance-using-cloudformation&#34;&gt;Deploy An EC2 Instance Using CloudFormation&lt;/h2&gt;
+&lt;p&gt;Amazon provide various &lt;a href=&#34;http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-sample-templates.html&#34;&gt;CloudFormation Sample Templates&lt;/a&gt;. In this example I&amp;rsquo;ll use the sample template EC2InstanceWithSecurityGroupSample: this creates an Amazon EC2 instance and a security group.&lt;/p&gt;
+&lt;p&gt;I included the template file in the github repository with the example files in which we pulled in previous step. The sample template takes upto three parameters,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;KeyName : Name of an existing EC2 KeyPair to enable SSH access to the instance&lt;/li&gt;
+&lt;li&gt;InstanceType (Optional) : The size of EC2 instance if not specified defaults to t2.small&lt;/li&gt;
+&lt;li&gt;SSHLocation (Optional) : The range of IP addresses which is allowed to connect to SSH defaults to 0.0.0.0/0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The example AWS provide requires a default region to be set on the AWS CLI, to do this use &lt;a href=&#34;http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html&#34;&gt;AWS Configure&lt;/a&gt;. We can then ask CloudFormations to deploy the template and include the parameters we want.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws configure
+aws cloudformation create-stack --stack-name startmyinstance --template-body file:///home/ec2-user/aws-ansible/EC2InstanceWithSecurityGroupSample.template --parameters  ParameterKey&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;KeyName,ParameterValue&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MyEC2 ParameterKey&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;InstanceType,ParameterValue&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;t1.micro 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deploy-an-ec2-instance-using-ansible--cloudformation&#34;&gt;Deploy An EC2 Instance Using Ansible &amp;amp; CloudFormation&lt;/h2&gt;
+&lt;p&gt;Taking the scenrio one step further we&amp;rsquo;d like to drive the deployment of AWS infrastructure from Ansible therefore the parameters required by the CloudFormation templates we should use Ansible CloudFormation module and variables.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
+- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;gather_facts&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;vars&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;KeyName&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyEC2&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;InstanceType&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;t2.micro&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;SSHLocation&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0.0.0.0/0&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Run my CloudFormation stack&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;cloudformation&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;stack_name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyEC2Stack&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eu-west-1&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;present&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EC2InstanceWithSecurityGroupSample.template&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;template_parameters&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;KeyName&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ KeyName }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;InstanceType&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ InstanceType }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;SSHLocation&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ SSHLocation }}&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;tags&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;tool&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ansible&amp;#34;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;env&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;my_ec2_stack&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ my_ec2_stack.stack_resources}}&amp;#34;&lt;/span&gt;
+    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ my_ec2_stack.stack_outputs}}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I included the example Ansible playbook above in the github repository with the example files in which we pulled in previous step.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook /home/ec2-user/aws-ansible/my-other-test-play.yml
+
+PLAY &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; ***************************************************************
+TASK &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;Run my CloudFormation stack&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; *********************************************
+changed: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+TASK &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;debug&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; *******************************************************************
+ok: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;last_updated_time&amp;#34;&lt;/span&gt;: null, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;logical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EC2Instance&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;physical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;i-040228bd8fcb5c81a&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;resource_type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AWS::EC2::Instance&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status_reason&amp;#34;&lt;/span&gt;: null
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;, 
+        &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;last_updated_time&amp;#34;&lt;/span&gt;: null, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;logical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;InstanceSecurityGroup&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;physical_resource_id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyEC2Stack-InstanceSecurityGroup-3YAAZV42DEPF&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;resource_type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AWS::EC2::SecurityGroup&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;, 
+            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;status_reason&amp;#34;&lt;/span&gt;: null
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+TASK &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;debug&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; *******************************************************************
+ok: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;localhost&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;msg&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AZ&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eu-west-1a&amp;#34;&lt;/span&gt;, 
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;InstanceId&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;i-040228bd8fcb5c81a&amp;#34;&lt;/span&gt;, 
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PublicDNS&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ec2-54-171-78-90.eu-west-1.compute.amazonaws.com&amp;#34;&lt;/span&gt;, 
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PublicIP&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;54.171.78.90&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+PLAY RECAP *********************************************************************
+localhost                  : ok&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;    changed&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;    unreachable&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;    failed&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;   
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will see that if we run this it creates the stack with parameters we defined as variables.  Notice at the end of the first task we register the output as an object. For the example we output this to the screen by using a debug task, and it includes the EC2 instance details. You could just as easily use this to continue configuration of the EC2 instance guest operating system.&lt;/p&gt;
+&lt;p&gt;The Ansible playbook is idempotent so if you re-run the playbook whith state attribute as &amp;lsquo;present&amp;rsquo; it checks it is in place and makes no changes. If you would like to remove the CloudFormation Stack then you can change the state attribute to &amp;lsquo;absent&amp;rsquo; and when you re-run the playbook the CloudFormation Stack will be removed.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

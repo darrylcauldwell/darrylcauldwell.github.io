@@ -1,0 +1,1088 @@
+
+<!DOCTYPE html>
+<html lang="en" data-figures="" class="page">
+  <head>
+<title>Introduction To Kubernetes Cluster Networking with NSX-T | </title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.82.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-65170021-1');
+</script>
+<meta property="og:locale" content="en" />
+
+<meta property="og:type" content="article">
+<meta name="description" content="Introduction To Kubernetes Cluster Networking with NSX-T">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="">
+<meta name="twitter:title" content="Introduction To Kubernetes Cluster Networking with NSX-T" />
+<meta property="og:url" content="https://darrylcauldwell.com/post/k8s-nsxt/" />
+<meta property="og:title" content="Introduction To Kubernetes Cluster Networking with NSX-T" />
+<meta property="og:description" content="Introduction To Kubernetes Cluster Networking with NSX-T" />
+<meta property="og:image" content="https://darrylcauldwell.com/clarity-icons/code-144.svg" />
+<link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.com/icons/apple-touch-icon.png'>
+<link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.com/icons/favicon-32x32.png'>
+<link rel="manifest" href='https://darrylcauldwell.com/icons/site.webmanifest'>
+<link rel="mask-icon" href='https://darrylcauldwell.com/safari-pinned-tab.svg' color="#002538">
+<meta name="msapplication-TileColor" content="#002538">
+<meta name="theme-color" content="#002538">
+
+<link rel="canonical" href="https://darrylcauldwell.com/post/k8s-nsxt/">
+
+    
+
+    
+    
+    <link rel="preload" href="https://darrylcauldwell.com/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.com/js/bundle.min.93cd992c3cccaecf94d4275ee77263c2458245bfd21a4dc1767c498aaecdc261741dd198221e0c5d0d5a07b0f2e8e7b6b3527da117165bfa8e3712a6c838c89a.js" as="script" integrity=
+    "sha512-k82ZLDzMrs&#43;U1Cde53JjwkWCRb/SGk3BdnxJiq7NwmF0HdGYIh4MXQ1aB7Dy6Oe2s1J9oRcWW/qONxKmyDjImg==" crossorigin="anonymous">
+
+    
+    <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.com/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
+    
+  </head>
+  
+  
+    
+  
+  <body data-code="7" data-lines="false" id="documentTop">
+
+<header class="nav_header" >
+  <nav class="nav"><a href='https://darrylcauldwell.com/' class="nav_brand nav_item" title="">
+  <img src="https://darrylcauldwell.com/logos/logo.svg" class="logo" alt="">
+  <div class="nav_close">
+    <div><svg class="icon">
+  <use xlink:href="#open-menu"></use>
+</svg><svg class="icon">
+  <use xlink:href="#closeme"></use>
+</svg></div>
+  </div>
+</a>
+
+    <div class='nav_body nav_body_left'>
+      
+      
+      
+        
+
+  <div class="nav_parent">
+    <a href="https://darrylcauldwell.com/" class="nav_item" title="Home">Home </a>
+  </div>
+      
+<div class='follow'>
+  <a href="https://github.com/darrylcauldwell/">
+    <svg class="icon">
+  <use xlink:href="#github"></use>
+</svg>
+  </a>
+  <a href="https://twitter.com/darrylcauldwell/">
+    <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+  </a>
+  <a href="https://www.linkedin.com/in/darryl-cauldwell-82156333/">
+    <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+  </a>
+<div class="color_mode">
+  <input type="checkbox" class="color_choice" id="mode">
+</div>
+
+</div>
+
+    </div>
+  </nav>
+</header>
+
+    <main>
+  
+<div class="grid-inverse wrap content">
+  <article class="post_content">
+    <h1 class="post_title">Introduction To Kubernetes Cluster Networking with NSX-T</h1><div class="post_meta">
+  
+    <svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg>
+    <span class="post_date">
+      Dec 31, 2019</span>
+      <a href='https://darrylcauldwell.com/tags/kubernetes' title="kubernetes" class="post_tag button button_translucent">kubernetes
+      </a>
+      <a href='https://darrylcauldwell.com/tags/nsx' title="nsx" class="post_tag button button_translucent">nsx
+      </a>
+</div>
+
+    
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=Introduction%20To%20Kubernetes%20Cluster%20Networking%20with%20NSX-T&url=https%3a%2f%2fdarrylcauldwell.com%2fpost%2fk8s-nsxt%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.com%2fpost%2fk8s-nsxt%2f&t=Introduction%20To%20Kubernetes%20Cluster%20Networking%20with%20NSX-T" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://darrylcauldwell.com/post/k8s-nsxt/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
+
+    
+    <p>When developing a cloud native application using Docker containers she soon needs to understand how Docker containers communicate. In previous <a href="/post/docker-networking">post</a> I looked at how Docker containers communicate on a single host. When the developer wants to scaleout capacity of the hosting across multiple hosts or increase abailability she might look at deploying this on a Kubernetes cluster. The move from single Docker host to multiple hosts managed as Kubernetes Cluster introduces changes to the container networking model. The four distinct networking problems a Kubernetes Cluster needs to address:</p>
+<ul>
+<li>Highly-coupled container-to-container communications</li>
+<li>Pod-to-Pod communications</li>
+<li>Pod-to-Service communications</li>
+<li>External-to-Service communications: this is covered by services</li>
+</ul>
+<h2 id="what-is-a-kubernetes-pod">What Is A Kubernetes Pod</h2>
+<p>A Docker container is great for deploying a single atomic unit of software. This model can become a bit cumbersome when you want to run multiple pieces of software together. You often see this when developers create Docker images that use <a href="https://docs.docker.com/config/containers/multi-service_container/">supervisord</a> as an entrypoint to start and manage multiple processes. Many have found that it is instead more useful to deploy those applications in groups of containers that are partially isolated and partially share an environment. It is possible to configure Docker to control the level of sharing between groups of containers by creating a parent container and manage the lifetime of those containers, however this is administratively complex. Kubernetes provides an abstraction called Pods for just this use case.</p>
+<p>A Kubernetes Pod implements a &lsquo;pause&rsquo; container as the managing parent container, the Pod also contains one or more of  application containers. The &lsquo;pause&rsquo; container serves as the basis of Linux namespace sharing in the Pod the other containers are starterd within that namespace. Sharing a namespace includes sharing network stack and other resources such as volumes. Sharing a network namespace means containers within a Pod share an IP address and all containers within a Pod can all reach each other’s ports on localhost.</p>
+<p><img src="/images/k8s-nsxt-pod.png" alt="Kubernets Pod"></p>
+<h2 id="what-is-a-kubernetes-service">What Is A Kubernetes Service</h2>
+<p>Typically a Kubernetes Deployment is used to When a Kubernetes Pod is deployed Pods. A Deployment describes a desired state it can create and destroy Pods dynamically. While each Pod gets its own IP address, the set of Pods running can change. A Kubernetes Service (sometimes called a micro-service) is an abstraction which defines a logical set of Pods. The Kubernetes API provides Service discovery to Pods, it also offers a method of exposing Services via network port or load balancer to external systems.</p>
+<h2 id="what-is-container-networking-interface-cni">What Is Container Networking Interface (CNI)</h2>
+<p>Container-centric infrastructure needs a network and this network must be dynamic. Container networking is designed to be plugable, the Container Networking Interface is a defined <a href="https://github.com/containernetworking/cni/blob/master/SPEC.md">specification</a>. Various open source projects and vendors provide CNI compliant plugins which provide dynamic networking solution for containers.</p>
+<h2 id="what-is-nsx-t-container-plugin-ncp">What Is NSX-T Container Plugin (NCP)</h2>
+<p>The NSX-T Container Plug-in (NCP) provides a CNI plugin and an integration with container orchestrators such as Kubernetes and OpenShift.</p>
+<p>NSX-T bring advanced features which can enrich Kubernetes cluster networking <a href="https://blogs.vmware.com/networkvirtualization/2017/03/kubecon-2017.html/">including</a>:</p>
+<ul>
+<li>Fine-grained traffic control and monitoring</li>
+<li>Fine-grained security policy (firewall rules)</li>
+<li>Automated creation of network topology</li>
+<li>Integration with enterprise networking</li>
+</ul>
+<p>The main component of NCP runs in a container and communicates with NSX Manager and with the Kubernetes control plane. NCP monitors changes to containers and other resources and manages networking resources such as logical ports, switches, routers, and security groups for the containers by calling the NSX API.</p>
+<h2 id="nsx-t-container-plug-in-release-25">NSX-T Container Plug-in Release 2.5</h2>
+<p>I looked at the <a href="http://darrylcauldwell.com/nsx-openshift/">NCP initially for integration with OpenShift</a> in mid-2018. I am revisiting this now to refresh my understanding and explore some of the new features introduced with the <a href="https://blogs.vmware.com/networkvirtualization/2019/09/nsx-t-2-5-what-is-new-for-kubernetes.html/">2.5 release</a> including:</p>
+<h3 id="policy-api-object-support">Policy API Object Support</h3>
+<p>Prior to the 2.5 release all NSX objects which the NCP interacted with had to be created via the Advanced Networking &amp; Security tab in the UI or the old imperative APIs. The imperative API was harder than it could have been to control programatically so with the NSX-T 2.4 release VMware introduced a new intent-based Policy API and corresponding Simplified UI. The NCP now supports either the imperative or the intent-based API,  to use the intent-based API a new parameter in the NCP configmap (ncp.ini) policy_nsxapi needs to be set to True.</p>
+<h3 id="simplified-installation">Simplified Installation</h3>
+<p>Another change I am interested in exploring is the simplified installation. In the past, an admin had to login to every k8s node and perform multiple steps to bootstrap it. She had to install the NSX CNI Plug-in and OpenVSwitch, to create OVS bridge and to add one vNic to the bridge. The 2.5 release introduces a second DaemonSet nsx-ncp-bootstrap Pod this now handles the deployment and lifecycle management of these components and we don’t need to login to every node. This should make it easier to scale out a cluster with additional nodes.</p>
+<h2 id="lab-hardware-configuration">Lab Hardware Configuration</h2>
+<p>To explore Kubernetes networking and the NCP I am using my homelab. My homelab has a very simple physical network namely a single subnet (192.168.1.0/24) with DHCP enabled and which has default route to the internet. Connected to the physical network are three Intel NUCs each has two 1G NIC an onboard and an additional 1G USB3 NIC.</p>
+<h2 id="lab-vsphere-configuration">Lab vSphere Configuration</h2>
+<p>The hosts run vSphere 6.7 Update 3 and have the onboard NIC configure as a vSphere Standard Switch hosting Management and vSAN VMkernels and the USB3 NIC is unused. The hosts are added to a vCenter appliance (192.168.1.13) and formed into a VSAN enabled cluster. The cluster also hosts a Windows 2019 Server VM running Active Directory (192.168.1.10) this also acts as DNS server and NTP source for lab.</p>
+<h2 id="lab-nsx-t-configuration">Lab NSX-T Configuration</h2>
+<p>An extra-small NSX Manager appliance (192.168.1.14) is deployed.  All esxi hosts are configured as Transport Nodes using vusb0 interface to Transport Zone named &lsquo;overlayTransport&rsquo;. A medium sized NSX Edge called &lsquo;nsxEdge&rsquo; is deployed which is a member of &lsquo;overlayTransport&rsquo; and &lsquo;vlanTransport&rsquo; Transport Zones. A Edge Cluster named &lsquo;edgeCluster&rsquo; and add &lsquo;nsxEdge&rsquo; is a member.</p>
+<h2 id="kubernetes-ip-address-space">Kubernetes IP Address Space</h2>
+<p>A Kubernetes Cluster requires all Pods on a node to communicate with all Pods on all nodes in the cluster without NAT these are refered to as CluterIP. To support this a range of IP addresses must be defined to be issued to Pods and Services within a cluster. Even though the range is used for both Pods and Services, it is called the Pod address range. The last /20 of the Pod address range is used for Services. A /20 range has 212 = 4096 addresses. So 4096 addresses are used for Services, and the rest of the range is used for Pods.</p>
+<p>The address range I will be using to issue ClusterIP for this lab cluster is 10.0.0.0/16.</p>
+<p>As well as internal communicatins using ClusterIP some parts of your application may need to be exposed as a Service to be accessible on an externally routable IP address. There are two methods for exposing Service onto an externally routable IP address, NodePort and LoadBalancer. Source NAT is used for translating private ClusterIP address to a public routable address.</p>
+<p>The external address range I will be using to issue ExternalIP for this lab cluster is 172.16.0.0/16.</p>
+<h2 id="ncp---nsx-object-identification">NCP - NSX Object Identification</h2>
+<p>There can be many objects deployed within NSX-T, the NCP needs to understand which of these objects to interact with. The NSX objects which the NCP needs to interact with include:</p>
+<ul>
+<li>Overlay transport zone</li>
+<li>Tier-0 logical router</li>
+<li>Logical switch to connect the node VMs</li>
+<li>IP Block for internal ClusterIP addressing</li>
+<li>IP Pool for ExternalIP addressing</li>
+</ul>
+<p>The NCP configuration is stored in ncp.ini file. It is possible to put the UUID of NSX objects in the ncp.ini but this an administrative pain. The mapping of which NSX objects for NCP to interact with is better achieved by applying tags to the appropriate NSX objects.</p>
+<p>An NSX-T instance can support multiple Kubernetes clusters to ensure correct object mapping a cluster name is used. The cluster name is specified in NCP configuration and the appopriate NSX objects must have tag of same name applied.</p>
+<p>For this lab environment I am configuring with cluster name &lsquo;pandora&rsquo;.</p>
+<h2 id="deploy-and-configure-tier-0">Deploy and Configure Tier-0</h2>
+<p>The NCP deploys application centric network topology at the top of that topology is a Tier-0 router which provides uplink to the physical network.</p>
+<p>Use the Policy UI to deploy a Tier-0 Logical Router with High-Availability mode Active-Passive. In order the NCP knows the correct Tier-0 Logical Router a tag like this needs to be applied:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th style="text-align:center">Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pandora</td>
+<td style="text-align:center">ncp/cluster</td>
+</tr>
+</tbody>
+</table>
+<p>When applied it should look like:</p>
+<p><img src="/images/k8s-nsxt-tier0.png" alt="NSX-T Tier-0 Router"></p>
+<p>To communicate with the physical network the Tier-0 requires an uplink IP address.  In order to add uplink IP address we require creating a network segment backed by VLAN.</p>
+<p><img src="/images/k8s-nsxt-physical-segment.png" alt="VLAN Backed Segment"></p>
+<p>We can now configure an interface on the Tier-0 with IP address 192.168.1.17.</p>
+<p><img src="/images/k8s-nsxt-tier0-uplink.png" alt="NSX-T Tier-0 Uplink"></p>
+<p>To enable ExternalIP routing from physical network add a static route to physical router directing 172.16.0.0/16 to 192.168.1.17.</p>
+<h3 id="nsx-ip-block-for-internal-clusterip">NSX IP Block for internal ClusterIP</h3>
+<p>NSX-T has an inbuilt capability for IP Management, in which we can allocate blocks of IP Addresses and create IP Pools.</p>
+<p>The NCP requires an IP Block for issuing internal ClusterIP. Create the 10.0.0.0/16 IP address block named &lsquo;k8s-1-internal&rsquo; with tags applied like this:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th style="text-align:center">Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pandora</td>
+<td style="text-align:center">ncp/no_snat</td>
+</tr>
+<tr>
+<td>pandora</td>
+<td style="text-align:center">ncp/cluster</td>
+</tr>
+</tbody>
+</table>
+<p>When applied it should look like:</p>
+<p><img src="/images/k8s-nsxt-internal-block.png" alt="Internal Block"></p>
+<h2 id="nsx-ip-pool-for-externalip">NSX IP Pool for ExternalIP</h2>
+<p>The NCP requires an IP Pool for issuing internal ExternalIP. First create an IP Block named &lsquo;k8s-1-external&rsquo; with CIDR 172.16.0.0/16. This IP Block is not accessed directly by NCP so does not need any tags.</p>
+<p><img src="/images/k8s-nsxt-external-block.png" alt="External Block"></p>
+<p>Once the IP Block is in place create an IP Pool named &lsquo;k8s-1-loadbalancer&rsquo; which has a subnet issued from IP Block &lsquo;k8s-1-external&rsquo; which is sized at 128 the IP Pool.  The External IP Pool can be shared but should at least have tag applied like this:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th style="text-align:center">Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>true</td>
+<td style="text-align:center">ncp/external</td>
+</tr>
+</tbody>
+</table>
+<p>When applied it should look like:</p>
+<p><img src="/images/k8s-nsxt-external-pool.png" alt="External Block Tag"></p>
+<h2 id="node-logical-switch">Node Logical Switch</h2>
+<p>Network connectivity to the containers running in Kubernetes is provided by a NSX-T logical switch segment which is often referred to as the node logical switch. For this create a new segment called &lsquo;node-logical-switch&rsquo; within the &lsquo;overlayTransportZone&rsquo; connected to no gateway.</p>
+<p><img src="/images/k8s-nsxt-node-logical-switch.png" alt="Node Logical Switch"></p>
+<h2 id="kubernetes-master-vm">Kubernetes Master VM</h2>
+<p>Create a Ubuntu 18.04 VM with 2x CPU, 4GB RAM and 50GB vHDD named &lsquo;k8s-master&rsquo;. The VM should have two vNIC one which is used to communicate with NSX API and which will host Kubernetes API. The second connected to the node logical switch which will have the Open vSwitch (OVS) bridge configured to give connectivity to the Pods. In my lab first connected to &lsquo;VM Network&rsquo; enumerates as ens160 and the scond connected to &lsquo;node-logical-switch&rsquo; enumerates as ens192.</p>
+<pre><code>cat /etc/netplan/01-netcfg.yaml 
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens160:
+      addresses: 
+      - 192.168.1.27/24
+      gateway4: 192.168.1.254
+      nameservers:
+          search:
+          - darrylcauldwell.com
+          addresses: 
+          - 192.168.1.10
+    ens192: {}
+</code></pre><p>In order the NCP know which vNIC to configure the VM vNIC connected &lsquo;node-logical-switch&rsquo; creates a segment port object in NSX-T this port must have tag applied like this:</p>
+<table>
+<thead>
+<tr>
+<th>Tag</th>
+<th style="text-align:center">Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k8s-master</td>
+<td style="text-align:center">ncp/node_name</td>
+</tr>
+<tr>
+<td>pandora</td>
+<td style="text-align:center">ncp/cluster</td>
+</tr>
+</tbody>
+</table>
+<p>When applied it should look like:</p>
+<p><img src="/images/k8s-nsxt-segment-port-tags.png" alt="Segment Port Tags"></p>
+<h2 id="install-and-configure-kubernetes">Install and Configure Kubernetes</h2>
+<p>Docker and Kubernetes require installation do this by running the following.</p>
+<pre><code>sudo apt update -y
+sudo apt upgrade -y
+sudo apt install docker.io python apt-transport-https -y
+sudo gpasswd -a $USER docker
+sudo systemctl start docker
+sudo systemctl enable docker
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-add-repository &quot;deb http://apt.kubernetes.io/ kubernetes-xenial main&quot;
+sudo apt-get update
+sudo swapoff -a 
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo apt-get install -y kubelet=1.16.4-00 kubeadm=1.16.4-00 kubectl=1.16.4-00
+</code></pre><p>Initialize the Kubernetes cluster by running the following:</p>
+<pre><code>sudo kubeadm init
+</code></pre><p>In order to easily run kubectl as a user we need to copy the cluster configuration to the user profile, do this by running the following.</p>
+<pre><code>mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre><p>We can now connect to cluster and check the state of the nodes, do this by running the following on the Master node.</p>
+<pre><code>kubectl get nodes
+</code></pre><p><img src="/images/k8s-nsxt-init-get-nodes.png" alt="Init Get Nodes"></p>
+<p>The status of each Node will show &lsquo;NotReady&rsquo;,  we can get more details of why it is in this state by running the following on the Master node.</p>
+<pre><code>kubectl describe nodes k8s-master | grep Conditions -A9
+</code></pre><p><img src="/images/k8s-nsxt-init-describe-node.png" alt="Init Describe Nodes"></p>
+<p>With this we can see this reason for the error is &lsquo;NetworkPluginNotReady&rsquo; that the cni plugin is not initiated.</p>
+<h2 id="install-and-configure-nsx-container-plug-in-ncp">Install and Configure NSX Container Plug-in (NCP)</h2>
+<p>The NSX Container Plug-in (NCP) provides integration between NSX-T and Kubernetes, it is a containerised application which manages communicates between NSX Manager and the Kubernetes control plane. The NSX Container Plug-in (NCP) application runs in Kubernetes it is supplied as .zip download. The configuration of the NCP applications is maintained in a Kubernetes manifest file.</p>
+<p>The NCP application ships a container image file we could deploy this to a container registry but here we will just upload the image file to VM and import the image to the local docker repository. The default container image name specified in the manifest is nsx-ncp so we can apply that as tag on the image.</p>
+<pre><code>sudo docker load -i /home/ubuntu/nsx-ncp-ubuntu-2.5.1.15287458.tar
+sudo docker image tag registry.local/2.5.1.15287458/nsx-ncp-ubuntu nsx-ncp
+sudo docker images | grep ncp
+</code></pre><p>Prior to the 2.5 release there were multiple  manifest files each targetting a specific area of configuration.  These are now merged into a single manifest file with multiple sections with multiple resource specifications the sections can be identified by the separator <code>---</code>. The resources are created in the order they appear in the file.</p>
+<table>
+<thead>
+<tr>
+<th>Resource Kind</th>
+<th style="text-align:center">Resource Name</th>
+<th style="text-align:center">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CustomResourceDefinition</td>
+<td style="text-align:center">nsxerrors.nsx.vmware.com</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>CustomResourceDefinition</td>
+<td style="text-align:center">nsxlocks.nsx.vmware.com</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>Namespace</td>
+<td style="text-align:center">nsx-system</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ServiceAccount</td>
+<td style="text-align:center">ncp-svc-account</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ClusterRole</td>
+<td style="text-align:center">ncp-cluster-role</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ClusterRole</td>
+<td style="text-align:center">ncp-patch-role</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ClusterRoleBinding</td>
+<td style="text-align:center">ncp-cluster-role-binding</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ClusterRoleBinding</td>
+<td style="text-align:center">ncp-patch-role-binding</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ServiceAccount</td>
+<td style="text-align:center">nsx-node-agent-svc-account</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ClusterRole</td>
+<td style="text-align:center">nsx-node-agent-cluster-role</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ClusterRoleBinding</td>
+<td style="text-align:center">nsx-node-agent-cluster-role-binding</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ConfigMap</td>
+<td style="text-align:center">nsx-ncp-config</td>
+<td style="text-align:center">Must update Kubernetes API and NSX API parameters</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td style="text-align:center">nsx-ncp</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>ConfigMap</td>
+<td style="text-align:center">nsx-node-agent-config</td>
+<td style="text-align:center">Must update Kubernetes API and NSX API parameters</td>
+</tr>
+<tr>
+<td>DaemonSet</td>
+<td style="text-align:center">nsx-ncp-bootstrap</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>DaemonSet</td>
+<td style="text-align:center">nsx-node-agent</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>For this lab I will use mostly default configuration from the supplied manifest file template. The settings I change from what is in template are the environment specifics such as details for connecting to NSX API including whether to use imperative API or intent-based API, the &lsquo;cluster&rsquo; name and the Node vNIC on which the OVS bridge gets created on.</p>
+<pre><code>[nsx_v3]
+policy_nsxapi = True
+
+nsx_api_managers = 192.168.1.14
+nsx_api_user = admin
+nsx_api_password = VMware1!
+
+insecure = True
+
+[coe]
+cluster = pandora
+
+[k8s]
+apiserver_host_ip = 192.168.1.27
+apiserver_host_port = 6443
+
+[nsx_kube_proxy]
+ovs_uplink_port = ens192
+</code></pre><p>Once the manifest file is updated and docker image in local registry we can apply the NCP manifest. Applying the manifest takes a couple of minutes while as it creates various Pods we can watch their creation to view progress.</p>
+<pre><code>kubectl apply --filename /home/ubuntu/ncp-ubuntu.yaml
+kubectl get pods --output wide --namespace nsx-system --watch
+</code></pre><p><img src="/images/k8s-nsxt-deploy-ncp.png" alt="Deploy NCP"></p>
+<p>If all has gone well we can take a look at the objects created within the namespace.</p>
+<pre><code>kubectl get all --namespace nsx-system
+</code></pre><p><img src="/images/k8s-nsxt-deployed-ncp.png" alt="Deployed NCP"></p>
+<p>Now its running we can check health of the NCP, the NCP has a <a href="https://docs.vmware.com/en/VMware-NSX-T-Data-Center/2.5/ncp-kubernetes/GUID-EA8E6CEE-36F4-423C-AD1E-DD6421A5FB1C.html">CLI</a> where we can run various commands including health checks.</p>
+<pre><code>kubectl exec -it nsx-ncp-6978b9cb69-dj4k2 --namespace nsx-system -- /bin/bash 
+nsxcli
+get ncp-k8s-api-server status
+get ncp-nsx status
+exit
+exit
+</code></pre><p><img src="/images/k8s-nsxt-ncp-health.png" alt="NCP Health"></p>
+<h2 id="nsx-policy-ui-object-creation">NSX Policy UI Object Creation</h2>
+<p>With NSX integration when we deploy a Kubernetes namespace the NCP creates a corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.  If you open NSX Manager and view one of the object categories which should have objects created. Then create two Kubernetes namespaces one called development and one called production.</p>
+<pre><code>kubectl create --filename https://k8s.io/examples/admin/namespace-dev.json
+kubectl create --filename https://k8s.io/examples/admin/namespace-prod.json
+</code></pre><p>If you refresh view in NSX Manager you will see the new objects appear in the Policy UI.</p>
+<p><img src="/images/k8s-nsxt-tier1s.png" alt="NSX-T Tier-1"></p>
+<p>We can then remove these two namespaces the NCP removes the corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.</p>
+<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl delete -f https://k8s.io/examples/admin/namespace-prod.json
+</code></pre><h2 id="ncp-bootstrap-scaleout-cluster">NCP Bootstrap Scaleout Cluster</h2>
+<p>We started this lab with a single node cluster to look at the nsx-ncp-bootstrap Daemonset. When Nodes are added to the cluster this should install and configure the Node with NCP.</p>
+<p>Create a second and third VM with same hardware configuration as k8s-master but name these k8s-worker-1 / k8s-worker-2 and give IPs 192.168.1.28  / 192.168.1.29.  Ensure the NSX segment port attached to  VMs is tagged correctly. Ensure the NCP docker image is uploaded, imported to local docker registry and has tag applied.</p>
+<p>To add the additional Node to the cluster first step is to create a token on master.</p>
+<pre><code>kubeadm token create --print-join-command
+</code></pre><p><img src="/images/k8s-nsxt-token.png" alt="Token"></p>
+<p>We use the output of command from the master to add the additional worker nodes to the cluster. The nsx-ncp-bootstap and nsx-node-agent are DaemonSets this ensures that all Nodes run a copy of a Pod. When we add the worker nodes to the cluster we can see the nsx-ncp-bootstrap Pods initialize and configure the Node and the nsx-node-agent Pods initialize.</p>
+<pre><code>kubectl get pods -o wide --namespace nsx-system --watch
+</code></pre><p><img src="/images/k8s-nsxt-ncp-scale-out.png" alt="NCP Scale Out"></p>
+<h2 id="ip-assignments">IP Assignments</h2>
+<p>When a Pod is deployed it can be exposed as a Service, the service</p>
+<p>If we deploy an simple stateless application example like <a href="https://kubernetes.io/docs/tutorials/stateless-application/guestbook/">guestbook</a>.</p>
+<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl config set-context --current --namespace=development
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-service.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
+</code></pre><p>When we configures the lab we created NSX managed IP Block 10.0.0.0/16. When created the development namespace got allocated a /24 subnet from this block. If we view the Pods get IP in correct range.</p>
+<pre><code>kubectl get pods --output wide
+</code></pre><p><img src="/images/k8s-nsxt-internal-ip-allocation.png" alt="Internal IP Allocation"></p>
+<p>As well as Pod deployments the guestbook application installation also creates Service resources. A Service is an abstraction which defines a logical set of Pods. Our application runs three frontend pods and two Redis slaves the Service provides virtual IP. The kube-proxy is responsible for implementing the virtual IP for Services. We can see the ClusterIP are issued from the last /20 of the Pod address range. If we look in more detail at the Service resource we can see the three internal IP addresses behind it.</p>
+<pre><code>kubectl get services --namespace development
+kubectl cluster-info dump | grep -m 1 service-cluster-ip-range
+kubectl describe service frontend
+</code></pre><p><img src="/images/k8s-nsxt-clusterip.png" alt="Cluster IP"></p>
+<p>To facilitate communications between Pods the NCP is configuring the Open vSwitch on each Node. The Open vSwitch user space daemon runs on a container named nsx-ovs within the nsx-node-agent Pods. The Open vSwitch bridge name can be specified in the ncp.ini but defaults to br-int. If we connect to this container we can view the Open vSwitch flows .</p>
+<pre><code>kubectl exec -it nsx-node-agent-llf2c -c nsx-ovs bash --namespace nsx-system
+ovs-ofctl dump-flows br-int
+</code></pre><p><img src="/images/k8s-nsxt-ovs-flows.png" alt="OVS Flows"></p>
+<p>We can then remove the namespace and all objects within.</p>
+<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+</code></pre><h2 id="nsx-loadbalancer">NSX Loadbalancer</h2>
+<p>NSX provides an load balancer capability to Kubernetes we can use this by creating service resource with type LoadBalancer.  If we create a simple replicaset of five pods and expose this we can see it gets issued with IP Address from the IP Pool tagged with ncp/external = True. We can also see this in NSX Loadbalancer configuration.</p>
+<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl config set-context --current --namespace=development
+kubectl apply -f https://k8s.io/examples/service/load-balancer-example.yaml
+kubectl get replicasets
+kubectl expose deployment hello-world --type=LoadBalancer --name=hello-world-nsx-lb
+kubectl get services hello-world-nsx-lb --watch
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+hello-world-nsx-lb   LoadBalancer   10.110.64.115   &lt;pending&gt;     8080:32091/TCP   7s
+hello-world-nsx-lb   LoadBalancer   10.110.64.115   172.16.0.13   8080:32091/TCP   7s
+</code></pre><p>We can then remove the namespace and all objects within.</p>
+<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+</code></pre><h2 id="kubernetes-pods-micro-segmentation">Kubernetes Pods Micro-Segmentation</h2>
+<p>One of the great usecases for NSX with vSphere has been the is the Distributed Firewall which protects VM workload at the Hypervisor layer. When we extend NSX into the Kubernetes container we also extend the Distributed Firewall capability. We can create firewall rules which contain members of groups, the groups can be dynamically populated by use of NSX tags. Kubernetes objects can have labels attached a label attached to a Pod is reflected in NSX as a tag on the segement port of the Pod.</p>
+<p>A simple test might be to deploy a two tier app where frontend can talk to backend but frontend cannot talk to other frontend. If we create a NSX group called Web with membership criteria Segement Port, Tag, Equals web Scope secgroup. We then create a NSX DFW rule with Web as source and destination and action of drop.</p>
+<p>With this in place we can ping test from one frontend pod to another frontend and backend and see this works.  We can then apply the label to the three frontend web Pods so they become members of the NSX group and are affected by the firewall rule.  With these in place we can retest ping from one frontend pod to another frontend and see that this is now blocked.</p>
+<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl config set-context --current --namespace=development
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+kubectl get pods --output wide --watch
+
+NAME                            READY   STATUS    RESTARTS   AGE   IP         NODE           NOMINATED NODE   READINESS GATES
+frontend-6cb7f8bd65-4mctt       1/1     Running   0          13m   10.0.6.4   k8s-worker-1   &lt;none&gt;           &lt;none&gt;
+frontend-6cb7f8bd65-8wkhr       1/1     Running   0          13m   10.0.6.2   k8s-worker-1   &lt;none&gt;           &lt;none&gt;
+frontend-6cb7f8bd65-rtgc9       1/1     Running   0          13m   10.0.6.3   k8s-worker-1   &lt;none&gt;           &lt;none&gt;
+redis-master-7db7f6579f-zlx26   1/1     Running   0          3s    10.0.6.5   k8s-worker-1   &lt;none&gt;           &lt;none&gt;
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.2
+PING 10.0.6.2 (10.0.6.2): 56 data bytes
+64 bytes from 10.0.6.2: icmp_seq=0 ttl=64 time=0.083 ms
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.5
+PING 10.0.6.5 (10.0.6.5): 56 data bytes
+64 bytes from 10.0.6.5: icmp_seq=0 ttl=64 time=3.191 ms
+
+kubectl label pod frontend-6cb7f8bd65-4mctt secgroup=web
+kubectl label pod frontend-6cb7f8bd65-8wkhr secgroup=web
+kubectl label pod frontend-6cb7f8bd65-rtgc9 secgroup=web
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.2
+PING 10.0.6.2 (10.0.6.2): 56 data bytes
+^C--- 10.0.6.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+command terminated with exit code 1
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.5
+PING 10.0.6.5 (10.0.6.5): 56 data bytes
+64 bytes from 10.0.6.5: icmp_seq=0 ttl=64 time=5.672 ms
+</code></pre><p>We can then remove the namespace and all objects within.</p>
+<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+</code></pre>
+
+  </article>
+<aside class="sidebar">
+  <section class="sidebar_inner">
+    
+      <h2>Darryl Cauldwell</h2>
+      <div class="sidebar_description">
+        Technologist, perpetual student, teacher, continual incremental improvement.
+      </div>
+      <a href='https://www.linkedin.com/in/darryl-cauldwell-82156333/' class="button mt-1" role="button" title='Read More'>Read More</a>
+    <h2 class="mt-4">Featured Posts</h2>
+    <ul>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi/" class="nav-link" title="Raspberry Pi Cluster Hardware">Raspberry Pi Cluster Hardware</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/avi/" class="nav-link" title="Avi Load Balancer">Avi Load Balancer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/devops-architect/" class="nav-link" title="The DevOps Infrastructure Architect">The DevOps Infrastructure Architect</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-nuc/" class="nav-link" title="Intel NUC Cluster Hardware">Intel NUC Cluster Hardware</a>
+      </li>
+    </ul>
+    <h2 class="mt-4">Recent Posts</h2>
+    <ul class="flex-column">
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi-mpi/" class="nav-link" title="Pi Supercomputer">Pi Supercomputer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi-storage/" class="nav-link" title="Comparing SD and USB 3 Storage Performance With Raspberry Pi4B">Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi-ubuntu/" class="nav-link" title="Raspberry Pi Cluster Ubuntu Base">Raspberry Pi Cluster Ubuntu Base</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi/" class="nav-link" title="Raspberry Pi Cluster Hardware">Raspberry Pi Cluster Hardware</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/zsh/" class="nav-link" title="Customizing Zsh Prompt">Customizing Zsh Prompt</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/ish/" class="nav-link" title="Running Linux on iPhone">Running Linux on iPhone</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/avi/" class="nav-link" title="Avi Load Balancer">Avi Load Balancer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/antrea/" class="nav-link" title="Introduction To Kubernetes Cluster Networking with Antrea">Introduction To Kubernetes Cluster Networking with Antrea</a>
+      </li>
+    </ul>
+    <div>
+      <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
+      <nav class="tags_nav">
+        <a href='https://darrylcauldwell.com/categories/automation/' class="post_tag button button_translucent" title="automation">
+          AUTOMATION
+          <span class="button_tally">33</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/networking/' class="post_tag button button_translucent" title="networking">
+          NETWORKING
+          <span class="button_tally">18</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/homelab/' class="post_tag button button_translucent" title="homelab">
+          HOMELAB
+          <span class="button_tally">9</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/certification/' class="post_tag button button_translucent" title="certification">
+          CERTIFICATION
+          <span class="button_tally">7</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/storage/' class="post_tag button button_translucent" title="storage">
+          STORAGE
+          <span class="button_tally">5</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/handy-hacks/' class="post_tag button button_translucent" title="handy-hacks">
+          HANDY-HACKS
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/raspberry/' class="post_tag button button_translucent" title="raspberry">
+          RASPBERRY
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/architecture/' class="post_tag button button_translucent" title="architecture">
+          ARCHITECTURE
+          <span class="button_tally">2</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/sustainability/' class="post_tag button button_translucent" title="sustainability">
+          SUSTAINABILITY
+          <span class="button_tally">2</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/blogging/' class="post_tag button button_translucent" title="blogging">
+          BLOGGING
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/vsphere/' class="post_tag button button_translucent" title="vsphere">
+          VSPHERE
+          <span class="button_tally">1</span>
+        </a>
+        
+        
+      </nav>
+    </div>
+    <div>
+      <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
+      <nav class="tags_nav">
+        <a href='https://darrylcauldwell.com/tags/nsx/' class="post_tag button button_translucent" title="nsx">
+          NSX
+          <span class="button_tally">15</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/vsphere/' class="post_tag button button_translucent" title="vsphere">
+          VSPHERE
+          <span class="button_tally">13</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/aws/' class="post_tag button button_translucent" title="aws">
+          AWS
+          <span class="button_tally">10</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/python/' class="post_tag button button_translucent" title="python">
+          PYTHON
+          <span class="button_tally">7</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/ansible/' class="post_tag button button_translucent" title="ansible">
+          ANSIBLE
+          <span class="button_tally">6</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/docker/' class="post_tag button button_translucent" title="docker">
+          DOCKER
+          <span class="button_tally">6</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
+          KUBERNETES
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/performance/' class="post_tag button button_translucent" title="performance">
+          PERFORMANCE
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/raspberry/' class="post_tag button button_translucent" title="raspberry">
+          RASPBERRY
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/vcix/' class="post_tag button button_translucent" title="vcix">
+          VCIX
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/windows/' class="post_tag button button_translucent" title="windows">
+          WINDOWS
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/dynamodb/' class="post_tag button button_translucent" title="dynamodb">
+          DYNAMODB
+          <span class="button_tally">3</span>
+        </a>
+        
+        
+        <br>
+        <div class="post_tags_toggle button">All Tags</div>
+        <div class="post_tags">
+          <div class="tags_list">
+            
+            <a href='https://darrylcauldwell.com/tags/ansible/' class=" post_tag button button_translucent" data-position=6 title="ansible">ANSIBLE<span class="button_tally">6</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/antrea/' class=" post_tag button button_translucent" data-position=1 title="antrea">ANTREA<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/architecture/' class=" post_tag button button_translucent" data-position=2 title="architecture">ARCHITECTURE<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/avi/' class=" post_tag button button_translucent" data-position=1 title="avi">AVI<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/aws/' class=" post_tag button button_translucent" data-position=10 title="aws">AWS<span class="button_tally">10</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloud-assembly/' class=" post_tag button button_translucent" data-position=1 title="cloud-assembly">CLOUD-ASSEMBLY<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloud-init/' class=" post_tag button button_translucent" data-position=1 title="cloud-init">CLOUD-INIT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloudbased-init/' class=" post_tag button button_translucent" data-position=1 title="cloudbased-init">CLOUDBASED-INIT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloudformation/' class=" post_tag button button_translucent" data-position=1 title="cloudformation">CLOUDFORMATION<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/devops/' class=" post_tag button button_translucent" data-position=4 title="devops">DEVOPS<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/dfw/' class=" post_tag button button_translucent" data-position=2 title="dfw">DFW<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/docker/' class=" post_tag button button_translucent" data-position=6 title="docker">DOCKER<span class="button_tally">6</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/dynamodb/' class=" post_tag button button_translucent" data-position=3 title="dynamodb">DYNAMODB<span class="button_tally">3</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/encryption/' class=" post_tag button button_translucent" data-position=1 title="encryption">ENCRYPTION<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/flask/' class=" post_tag button button_translucent" data-position=1 title="flask">FLASK<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/hanlon/' class=" post_tag button button_translucent" data-position=1 title="hanlon">HANLON<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/hpe/' class=" post_tag button button_translucent" data-position=1 title="hpe">HPE<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/index/' class=" post_tag button button_translucent" data-position=1 title="index">INDEX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/ios/' class=" post_tag button button_translucent" data-position=1 title="ios">IOS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/jekyll/' class=" post_tag button button_translucent" data-position=1 title="jekyll">JEKYLL<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/kubernetes/' class=" post_tag button button_translucent" data-position=4 title="kubernetes">KUBERNETES<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/lambda/' class=" post_tag button button_translucent" data-position=1 title="lambda">LAMBDA<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/load-balancer/' class=" post_tag button button_translucent" data-position=1 title="load-balancer">LOAD-BALANCER<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/macos/' class=" post_tag button button_translucent" data-position=1 title="macos">MACOS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/migration/' class=" post_tag button button_translucent" data-position=1 title="migration">MIGRATION<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/netapp/' class=" post_tag button button_translucent" data-position=2 title="netapp">NETAPP<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/nsx/' class=" post_tag button button_translucent" data-position=15 title="nsx">NSX<span class="button_tally">15</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/nuc/' class=" post_tag button button_translucent" data-position=1 title="nuc">NUC<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/openshift/' class=" post_tag button button_translucent" data-position=1 title="openshift">OPENSHIFT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/openstack/' class=" post_tag button button_translucent" data-position=2 title="openstack">OPENSTACK<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/ovftool/' class=" post_tag button button_translucent" data-position=1 title="ovftool">OVFTOOL<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/peloton/' class=" post_tag button button_translucent" data-position=1 title="peloton">PELOTON<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/performance/' class=" post_tag button button_translucent" data-position=4 title="performance">PERFORMANCE<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/planespotter/' class=" post_tag button button_translucent" data-position=1 title="planespotter">PLANESPOTTER<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/postman/' class=" post_tag button button_translucent" data-position=1 title="postman">POSTMAN<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/powershell/' class=" post_tag button button_translucent" data-position=3 title="powershell">POWERSHELL<span class="button_tally">3</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/puppet/' class=" post_tag button button_translucent" data-position=1 title="puppet">PUPPET<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/python/' class=" post_tag button button_translucent" data-position=7 title="python">PYTHON<span class="button_tally">7</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/raspberry/' class=" post_tag button button_translucent" data-position=4 title="raspberry">RASPBERRY<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/rest/' class=" post_tag button button_translucent" data-position=2 title="rest">REST<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/tanzu/' class=" post_tag button button_translucent" data-position=1 title="tanzu">TANZU<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/tcp/' class=" post_tag button button_translucent" data-position=1 title="tcp">TCP<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/terraform/' class=" post_tag button button_translucent" data-position=1 title="terraform">TERRAFORM<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/time-management/' class=" post_tag button button_translucent" data-position=1 title="time-management">TIME-MANAGEMENT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcap/' class=" post_tag button button_translucent" data-position=1 title="vcap">VCAP<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcd/' class=" post_tag button button_translucent" data-position=1 title="vcd">VCD<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcdx/' class=" post_tag button button_translucent" data-position=1 title="vcdx">VCDX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcix/' class=" post_tag button button_translucent" data-position=4 title="vcix">VCIX<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/virtustream/' class=" post_tag button button_translucent" data-position=1 title="virtustream">VIRTUSTREAM<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vpc/' class=" post_tag button button_translucent" data-position=1 title="vpc">VPC<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vra/' class=" post_tag button button_translucent" data-position=2 title="vra">VRA<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vrli/' class=" post_tag button button_translucent" data-position=2 title="vrli">VRLI<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vro/' class=" post_tag button button_translucent" data-position=3 title="vro">VRO<span class="button_tally">3</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vrops/' class=" post_tag button button_translucent" data-position=1 title="vrops">VROPS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vsan/' class=" post_tag button button_translucent" data-position=2 title="vsan">VSAN<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vsphere/' class=" post_tag button button_translucent" data-position=13 title="vsphere">VSPHERE<span class="button_tally">13</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vvols/' class=" post_tag button button_translucent" data-position=1 title="vvols">VVOLS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/windows/' class=" post_tag button button_translucent" data-position=4 title="windows">WINDOWS<span class="button_tally">4</span>
+            </a>
+            
+            <div class="tags_sort"><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span>
+            </div>
+            <span class="tags_hide"><svg class="icon">
+            <use xlink:href="#closeme"></use>
+          </svg></span>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </section>
+</aside>
+
+  
+</div>
+    </main><svg width="0" height="0" class="hidden">
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.001 18.001" id="twitter">
+    <path d="M15.891 4.013c.808-.496 1.343-1.173 1.605-2.034a8.68 8.68 0 0 1-2.351.861c-.703-.756-1.593-1.14-2.66-1.14-1.043 0-1.924.366-2.643 1.078a3.56 3.56 0 0 0-1.076 2.605c0 .309.039.585.117.819-3.076-.105-5.622-1.381-7.628-3.837-.34.601-.51 1.213-.51 1.846 0 1.301.549 2.332 1.645 3.089-.625-.053-1.176-.211-1.645-.47 0 .929.273 1.705.82 2.388a3.623 3.623 0 0 0 2.115 1.291c-.312.08-.641.118-.979.118-.312 0-.533-.026-.664-.083.23.757.664 1.371 1.291 1.841a3.652 3.652 0 0 0 2.152.743C4.148 14.173 2.625 14.69.902 14.69c-.422 0-.721-.006-.902-.038 1.697 1.102 3.586 1.649 5.676 1.649 2.139 0 4.029-.542 5.674-1.626 1.645-1.078 2.859-2.408 3.639-3.974a10.77 10.77 0 0 0 1.172-4.892v-.468a7.788 7.788 0 0 0 1.84-1.921 8.142 8.142 0 0 1-2.11.593z"
+      ></path>
+  </symbol>
+  <symbol aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="mail">
+    <path  d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="calendar">
+    <path d="M452 40h-24V0h-40v40H124V0H84v40H60C26.916 40 0 66.916 0 100v352c0 33.084 26.916 60 60 60h392c33.084 0 60-26.916 60-60V100c0-33.084-26.916-60-60-60zm20 412c0 11.028-8.972 20-20 20H60c-11.028 0-20-8.972-20-20V188h432v264zm0-304H40v-48c0-11.028 8.972-20 20-20h24v40h40V80h264v40h40V80h24c11.028 0 20 8.972 20 20v48z"></path>
+    <path d="M76 230h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 310h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 390h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80-80h40v40h-40z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="github">
+    <path d="M255.968 5.329C114.624 5.329 0 120.401 0 262.353c0 113.536 73.344 209.856 175.104 243.872 12.8 2.368 17.472-5.568 17.472-12.384 0-6.112-.224-22.272-.352-43.712-71.2 15.52-86.24-34.464-86.24-34.464-11.616-29.696-28.416-37.6-28.416-37.6-23.264-15.936 1.728-15.616 1.728-15.616 25.696 1.824 39.2 26.496 39.2 26.496 22.848 39.264 59.936 27.936 74.528 21.344 2.304-16.608 8.928-27.936 16.256-34.368-56.832-6.496-116.608-28.544-116.608-127.008 0-28.064 9.984-51.008 26.368-68.992-2.656-6.496-11.424-32.64 2.496-68 0 0 21.504-6.912 70.4 26.336 20.416-5.696 42.304-8.544 64.096-8.64 21.728.128 43.648 2.944 64.096 8.672 48.864-33.248 70.336-26.336 70.336-26.336 13.952 35.392 5.184 61.504 2.56 68 16.416 17.984 26.304 40.928 26.304 68.992 0 98.72-59.84 120.448-116.864 126.816 9.184 7.936 17.376 23.616 17.376 47.584 0 34.368-.32 62.08-.32 70.496 0 6.88 4.608 14.88 17.6 12.352C438.72 472.145 512 375.857 512 262.353 512 120.401 397.376 5.329 255.968 5.329z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 212" id="gitlab">
+    <path d="M12.3 74.7h54L43.3 3c-1-3.6-6.4-3.6-7.6 0L12.3 74.8z" />
+    <path d="M12.3 74.7L.5 111c-1 3.2 0 6.8 3 8.8l101.6 74-92.5-119z"/>
+    <path d="M105 193.7l-38.6-119h-54l92.7 119z"/>
+    <path d="M105 193.7l38.7-119H66.4l38.7 119z"/>
+    <path d="M105 193.7l38.7-119H198l-93 119z"/>
+    <path d="M198 74.7l11.6 36.2c1 3 0 6.6-3 8.6l-101.5 74 93-119z"/>
+    <path d="M198 74.7h-54.3L167 3c1.2-3.6 6.4-3.6 7.6 0L198 74.8z"/> 
+  </symbol>
+  <symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="rss">
+    <circle cx="3.429" cy="20.571" r="3.429"></circle>
+    <path d="M11.429 24h4.57C15.999 15.179 8.821 8.001 0 8v4.572c6.302.001 11.429 5.126 11.429 11.428z"></path>
+    <path d="M24 24C24 10.766 13.234 0 0 0v4.571c10.714 0 19.43 8.714 19.43 19.429z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="linkedin">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h362c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zM181 406h-60V196h60zm0-240h-60v-60h60zm210 240h-60V286c0-16.54-13.46-30-30-30s-30 13.46-30 30v120h-60V196h60v11.309C286.719 202.422 296.93 196 316 196c40.691.043 75 36.547 75 79.688zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612" id="arrow">
+    <path d="M604.501 440.509L325.398 134.956c-5.331-5.357-12.423-7.627-19.386-7.27-6.989-.357-14.056 1.913-19.387 7.27L7.499 440.509c-9.999 10.024-9.999 26.298 0 36.323s26.223 10.024 36.222 0l262.293-287.164L568.28 476.832c9.999 10.024 26.222 10.024 36.221 0 9.999-10.023 9.999-26.298 0-36.323z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="carly">
+    <path d="M504.971 239.029L448 182.059V84c0-46.317-37.682-84-84-84h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c19.851 0 36 16.149 36 36v108c0 6.365 2.529 12.47 7.029 16.971L454.059 256l-47.029 47.029A24.002 24.002 0 0 0 400 320v108c0 19.851-16.149 36-36 36h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c46.318 0 84-37.683 84-84v-98.059l56.971-56.971c9.372-9.372 9.372-24.568 0-33.941zM112 192V84c0-19.851 16.149-36 36-36h44c13.255 0 24-10.745 24-24S205.255 0 192 0h-44c-46.318 0-84 37.683-84 84v98.059l-56.971 56.97c-9.373 9.373-9.373 24.568 0 33.941L64 329.941V428c0 46.317 37.682 84 84 84h44c13.255 0 24-10.745 24-24s-10.745-24-24-24h-44c-19.851 0-36-16.149-36-36V320c0-6.365-2.529-12.47-7.029-16.971L57.941 256l47.029-47.029A24.002 24.002 0 0 0 112 192z"></path>
+  </symbol>
+  <symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="copy">
+    <path d="M23 2.75A2.75 2.75 0 0 0 20.25 0H8.75A2.75 2.75 0 0 0 6 2.75v13.5A2.75 2.75 0 0 0 8.75 19h11.5A2.75 2.75 0 0 0 23 16.25zM18.25 14.5h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5zm0-3h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5zm0-3h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5z"></path>
+    <path d="M8.75 20.5a4.255 4.255 0 0 1-4.25-4.25V2.75c0-.086.02-.166.025-.25H3.75A2.752 2.752 0 0 0 1 5.25v16A2.752 2.752 0 0 0 3.75 24h12a2.752 2.752 0 0 0 2.75-2.75v-.75z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512.001" id="closeme">
+    <path d="M284.286 256.002L506.143 34.144c7.811-7.811 7.811-20.475 0-28.285-7.811-7.81-20.475-7.811-28.285 0L256 227.717 34.143 5.859c-7.811-7.811-20.475-7.811-28.285 0-7.81 7.811-7.811 20.475 0 28.285l221.857 221.857L5.858 477.859c-7.811 7.811-7.811 20.475 0 28.285a19.938 19.938 0 0 0 14.143 5.857 19.94 19.94 0 0 0 14.143-5.857L256 284.287l221.857 221.857c3.905 3.905 9.024 5.857 14.143 5.857s10.237-1.952 14.143-5.857c7.811-7.811 7.811-20.475 0-28.285L284.286 256.002z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="open-menu">
+    <path d="M492 236H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0-160H20C8.954 76 0 84.954 0 96s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0 320H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="instagram">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id=youtube>
+    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="stackoverflow">
+    <path d="M21 27v-8h3v11H0V19h3v8h18z"></path><path d="M17.1.2L15 1.8l7.9 10.6 2.1-1.6L17.1.2zm3.7 14.7L10.6 6.4l1.7-2 10.2 8.5-1.7 2zM7.2 12.3l12 5.6 1.1-2.4-12-5.6-1.1 2.4zm-1.8 6.8l13.56 1.96.17-2.38-13.26-2.55-.47 2.97zM19 25H5v-3h14v3z"></path>
+  </symbol>
+</svg>
+
+
+<footer class="footer">
+  <div class="footer_inner wrap pale">
+    <img src='https://darrylcauldwell.com/icons/apple-touch-icon.png' class="icon icon_2 transparent" alt="">
+    <p>Copyright&nbsp;<span class="year"></span>&nbsp;. All Rights Reserved</p><a class="to_top" href="#documentTop">
+  <svg class="icon">
+  <use xlink:href="#arrow"></use>
+</svg>
+</a>
+
+  </div>
+</footer>
+
+    <script type="text/javascript" src="https://darrylcauldwell.com/js/bundle.min.93cd992c3cccaecf94d4275ee77263c2458245bfd21a4dc1767c498aaecdc261741dd198221e0c5d0d5a07b0f2e8e7b6b3527da117165bfa8e3712a6c838c89a.js" integrity="sha512-k82ZLDzMrs&#43;U1Cde53JjwkWCRb/SGk3BdnxJiq7NwmF0HdGYIh4MXQ1aB7Dy6Oe2s1J9oRcWW/qONxKmyDjImg==" crossorigin="anonymous"></script>
+    
+  </body>
+</html>

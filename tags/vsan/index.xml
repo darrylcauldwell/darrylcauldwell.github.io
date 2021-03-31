@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vsan on </title>
+    <link>https://darrylcauldwell.com/tags/vsan/</link>
+    <description>Recent content in vsan on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 12 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/vsan/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Programaticly configuring VMware Storage Profile API with Python</title>
+      <link>https://darrylcauldwell.com/post/python_spbm/</link>
+      <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/python_spbm/</guid>
+      <description>
+        
+          &lt;p&gt;I was looking to programaticly configuring VMware Storage Profile recently. My scripting language of choice is Python, VMware maintain &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;pyVmomi&lt;/a&gt; is which is the Python SDK for the VMware vSphere API. pyVmomi can be used to form binding and configure the &lt;a href=&#34;https://code.vmware.com/apis/968/vsphere&#34;&gt;vSphere Web Services API&lt;/a&gt; and the &lt;a href=&#34;https://code.vmware.com/apis/971&#34;&gt;VMware Storage Policy API&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The Storage Policy API is exposed as a Web service, running on VMware vCenter server systems.  When I approached the requirement it wasn&amp;rsquo;t clear to me how to connect to the Storage Policy API Web service. I read the &lt;a href=&#34;https://code.vmware.com/docs/11900/vmware-storage-policy-sdk-programming-guide&#34;&gt;VMware Storage Policy SDK Programming Guide&lt;/a&gt; section on forming connection which describes using the session cookie from a vCenter Server session to establish the Storage Policy session.&lt;/p&gt;
+&lt;p&gt;pyVim is a client-side Python API which wraps pvVmomi these are made available as a package.  These are published to PyPI repository and as such can be installed easily with pip.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pip install --upgrade pyvmomi
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It we look at pyVmomi in GitHub we can see that &lt;a href=&#34;https://github.com/vmware/pyvmomi/blob/master/pyVim/connect.py&#34;&gt;pyVim.connect&lt;/a&gt; defines a function SmartConnect which can be used to form connection to the vSphere Web Services API.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python3
+# Connect to a VMOMI ServiceInstance.
+
+import ssl argparse atexit getpass
+from pyVim.connect import SmartConnect
+
+def get_args():
+    parser = argparse.ArgumentParser(
+        description=&#39;Arguments for talking to vCenter&#39;)
+
+    parser.add_argument(&#39;-s&#39;, &#39;--host&#39;,
+                        required=True,
+                        action=&#39;store&#39;,
+                        help=&#39;vCenter Server FQDN or IP address&#39;)
+
+    parser.add_argument(&#39;-o&#39;, &#39;--port&#39;,
+                        type=int,
+                        default=443,
+                        action=&#39;store&#39;,
+                        help=&#39;vCenter Server TCP port&#39;)
+
+    parser.add_argument(&#39;-u&#39;, &#39;--user&#39;,
+                        required=True,
+                        action=&#39;store&#39;,
+                        help=&#39;Username to login to vCenter Server&#39;)
+
+    parser.add_argument(&#39;-p&#39;, &#39;--password&#39;,
+                        required=False,
+                        action=&#39;store&#39;,
+                        help=&#39;Password to login to vCenter Server&#39;)
+
+    args = parser.parse_args()
+
+    if not args.password:
+        args.password = getpass.getpass(prompt=&#39;Enter password:&#39;)
+
+    return args
+
+def main():
+    args = get_args()
+
+    &amp;quot;&amp;quot;&amp;quot; connect to vcenter service instance &amp;quot;&amp;quot;&amp;quot;
+
+    context = None
+    if hasattr(ssl, &amp;quot;_create_unverified_context&amp;quot;):
+        context = ssl._create_unverified_context()
+
+    serviceInstance = SmartConnect(
+                    host=args.host,
+                    user=args.user,
+                    pwd=args.password,
+                    port=args.port,
+                    sslContext=context)
+
+    atexit.register(Disconnect, serviceInstance)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To connect to the VMware Storage Policy API we need to get the session cookie. The &lt;a href=&#34;https://github.com/vmware/pyvmomi/blob/master/pyVmomi/VmomiSupport.py&#34;&gt;VmomiSupport&lt;/a&gt; provides us helper functions to do things like gather the context which includes session cookie details. With this we can form a stub session to the Storage Policy API.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    &amp;quot;&amp;quot;&amp;quot; connect to pbm service instance &amp;quot;&amp;quot;&amp;quot;
+
+    VmomiSupport.GetRequestContext()[&amp;quot;vcSessionCookie&amp;quot;] = \
+    serviceInstance._stub.cookie.split(&#39;&amp;quot;&#39;)[1]
+    hostname = serviceInstance._stub.host.split(&amp;quot;:&amp;quot;)[0]
+    pbmStub = SoapStubAdapter(
+        host=hostname,
+        version=&amp;quot;pbm.version.version1&amp;quot;,
+        path=&amp;quot;/pbm/sdk&amp;quot;,
+        poolSize=0,
+        sslContext=ssl._create_unverified_context())
+    pbmServiceInstance = pbm.ServiceInstance(&amp;quot;ServiceInstance&amp;quot;, pbmStub)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With this connection in place we can make our request, in this example pull back all of the Storage Profiles.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+    &amp;quot;&amp;quot;&amp;quot; get profiles &amp;quot;&amp;quot;&amp;quot;
+
+    profileManager = pbmServiceInstance.RetrieveContent().profileManager
+    profiles = profileManager.PbmQueryProfile(resourceType=pbm.profile.ResourceType(resourceType=&amp;quot;STORAGE&amp;quot;))
+    print(profiles)
+
+if __name__ == &#39;__main__&#39;:
+    main()
+&lt;/code&gt;&lt;/pre&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>VMware Data Encryption At Rest</title>
+      <link>https://darrylcauldwell.com/post/encryption-at-rest/</link>
+      <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/encryption-at-rest/</guid>
+      <description>
+        
+          &lt;p&gt;Encryption of data at rest is a requirement for many customers,  with VMware hosted Virtual Machines (VMs) there are two ways to achieve this. VM data can be encrypted using vSAN whole-datastore encryption or using Storage Policy (VMcrypt). Both VM Encryption and vSAN Encryption require a Key Management Interoperability Protocol (KMIP) 1.1 compliant Key Management Server (KMS), the same KMS provider can be used for both types of encryption.&lt;/p&gt;
+&lt;p&gt;There are important differences between these two encryption methods.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Feature/Function&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;VSAN Encryption&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;VMcrypt Encryption&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;External key-management server (KMS)&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;√&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;√&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Per VM Encryption&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;x&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;√&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Datastore Encryption&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;√&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Data At Rest Encryption&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;√&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;√&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;End To End Encryption&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;x&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;√&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;VMs Encrypted By&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Placement on datastore&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Storage Policy&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Encryption Occurs&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;After Deduplication&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Before Deduplication&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;vm-encryption-vmcrypt&#34;&gt;VM Encryption (VMcrypt)&lt;/h2&gt;
+&lt;p&gt;Encryption is done in the hypervisor, “beneath” the virtual machine. As I/O comes out of the virtual disk controller in the VM it is immediately encrypted by a module in the kernel before being send to the kernel storage layer. Because encryption happens at the hypervisor level and not in the VM, the Guest OS and datastore type are not a factor. The encyrption is hardware accelerated when host CPU support &lt;a href=&#34;https://software.intel.com/en-us/articles/intel-advanced-encryption-standard-instructions-aes-ni&#34;&gt;Intel Advanced Encryption Standard Instructuctions (AES-NI)&lt;/a&gt;. The encryption option is exposed via Storage Policy, therefore it can be applied to only those VMs or groups of VMs which require it.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/encryption.jpg&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
+&lt;p&gt;VM Encryption is implemented through &lt;a href=&#34;https://code.vmware.com/programs/vsphere-apis-for-io-filtering&#34;&gt;vSphere APIs for IO Filters (VAIO)&lt;/a&gt;. The VAIO framework allows a filter driver to intercept IO that a VM sends down to a storage device. Ecryption occurs before any data is send across the wire.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/encryption-vaio-architecture.png&#34; alt=&#34;vSphere APIs for IO Architecture&#34;&gt;&lt;/p&gt;
+&lt;p&gt;## VMcrypt VSAN Efficiency Consideration
+An important consideration when using VSAN is that, VMcrypt writes an encrypted data stream whereas vSAN encryption receives an unencrypted data stream and encrypts it during the write process. As the encrypted data written by VMcrypt appears to be random, it does not deduplicate well. If using VMcrypt with VSAN deduplication, expect deduplication efficiency to approach zero for encrypted VMs.&lt;/p&gt;
+&lt;h2 id=&#34;vsan-encyption&#34;&gt;VSAN Encyption&lt;/h2&gt;
+&lt;p&gt;With vSAN Encryption we can achieve “data encryption at rest” however the data travels to the destination unencrypted then when it reaches its destination it is encrypted, and it will be encrypted after it is deduplicated and/or compressed again. This allows the benefit of deduplicated and/or compressed space saving functionality.&lt;/p&gt;
+&lt;p&gt;Thie data encyption at rest method is a cluster wide option, which means that every VM will be encrypted.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/encryption-vsan-hytrust.png&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;key-management-server-kms-topologies&#34;&gt;Key Management Server (KMS) Topologies&lt;/h2&gt;
+&lt;p&gt;Key Management Server (KMS) availability is a critical component when deploying encryption as without it all data access is not allowed. If you lose the keys, you’ve lost the data (unless you’ve backed it up).&lt;/p&gt;
+&lt;p&gt;Key Managers today are usually set up in a way that they replicate keys to one another. If I have three instances of a key manager, KMS-A, KMS-B and KMS-C, they replicate the keys between them. If I create a key on KMS-A it will show up in KMS-B &amp;amp; KMS-C at some point. Using this example, in vCenter I would create a key manager cluster/alias. In this example I’ll call it “KMSCluster” and add KMS-A, KMS-B and KMS-C into that KMS Cluster. I would then establish a trust with each of the key managers.&lt;/p&gt;
+&lt;p&gt;KMS can either be purchased as hardware appliances or virtual appliances. When using KMS virtual appliances avoid circular dependancy where the datastore hosting the appliance is encrypted using itself. The same is true for vCenter and PSC’s in a VM Encryption scenario. You shouldn’t encrypt them using VM Encryption because they would then need to boot up to get their encryption key to boot up.&lt;/p&gt;
+&lt;p&gt;If you have a single site then you probably want to have, at minimum, two replicating key managers. For multi-site,  you want all the KMS servers running and replicating across the sites.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/encryption-multisite.png&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>macos on </title>
+    <link>https://darrylcauldwell.com/tags/macos/</link>
+    <description>Recent content in macos on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 27 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Customizing Zsh Prompt</title>
+      <link>https://darrylcauldwell.com/post/zsh/</link>
+      <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/zsh/</guid>
+      <description>
+        
+          &lt;p&gt;macOS 10.15 Catalina changed default Terminal from bash to zsh. When I first moved I tried Powerline extension but it was always a bit slow and really I all I need is a custom prompt. So today I revisited this and created a custom prompt for Zsh and learned a little along the way.&lt;/p&gt;
+&lt;p&gt;First I create an empty ~/.hushlogin to suppress the status message at the start of each Terminal session.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;touch ~/.hushlogin
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html&#34;&gt;Prompt expansion&lt;/a&gt; can be used to customize the experience. The default prompt in zsh is %n%m%#.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;%n username&lt;/li&gt;
+&lt;li&gt;%m hostname&lt;/li&gt;
+&lt;li&gt;%# shell state, # when privileges, otherwise %&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So my default login prompt would show&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;dcauldwell@dcauldwell-a01 ~ %
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;PROMPT is variable so can be be set interactively give you immediate feedback and when you&amp;rsquo;re happy add to a startup script like ~/.zshrc so it loads automagically every time.&lt;/p&gt;
+&lt;p&gt;The options I choose to set:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;%(?.%F{green}√.%F{red}?%?) will show  previous Exit Code&lt;/li&gt;
+&lt;li&gt;%F{blue} defines foreground colour&lt;/li&gt;
+&lt;li&gt;%/ current working directory&lt;/li&gt;
+&lt;li&gt;%F{cyan} defines foreground colour&lt;/li&gt;
+&lt;li&gt;%# shell state&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Zsh ships with a framework for getting information from version control systems, called vcs_info. When working within Git repositories in Terminal its useful to know which is active branch your editing.&lt;/p&gt;
+&lt;p&gt;We make the vcs_info framework by loading it:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;autoload -Uz vcs_info
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Run vcs_info just before a prompt is displayed (precmd)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Enable option for PROMPT_SUBST which turns on command substitution in the prompt:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;setopt prompt_subst
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then call its methods and consume within prompt, my new ~/.zshrc file looks like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat ~/.zshrc
+autoload -Uz vcs_info
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
+PROMPT=&#39;%(?.%F{green}√.%F{red}?%?)%F{blue} %/ %F{yellow}${vcs_info_msg_0_}%F{magenta} %# &#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/zsh-profile.jpg&#34; alt=&#34;This is the end state&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

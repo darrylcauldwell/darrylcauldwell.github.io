@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>architecture on </title>
+    <link>https://darrylcauldwell.com/tags/architecture/</link>
+    <description>Recent content in architecture on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 29 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/architecture/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The DevOps Infrastructure Architect</title>
+      <link>https://darrylcauldwell.com/post/devops-architect/</link>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/devops-architect/</guid>
+      <description>
+        
+          &lt;p&gt;One common critisism of Agile teams is they are architecturally weak and disconnected from the operational realities of complex enterprise environments. Traditional enterprise architecture processes are viewed focusing on delivering documentation rather than delivering a working solution, slow, and focussed on delivering monolith design rather than continuous delivery of small incremental updates.&lt;/p&gt;
+&lt;h2 id=&#34;traditional-infrastructure-lifecycle&#34;&gt;Traditional Infrastructure Lifecycle&lt;/h2&gt;
+&lt;p&gt;Traditional infrastructure architecture development metholodies are a series of cyclical processes which culminate in a set of detailed documentation, including conceptual design, logical design and physical design. These are developed by an architect or architectural team in relative isolation to day-to-day operational activities. Typically in a traditional large enterprise architectural disciplines are aligned to technoligies wintel, security, network, storage, &amp;amp; *nix and each prepares there own documentation set.&lt;/p&gt;
+&lt;p&gt;At the point of delivery it is often found that the documentation sets are so large that they are often delivered incomplete of the full detail needed to deliver the solution. Cross discipline highly skilled engineers with deep technical product knowledge then engineer the solution design to make the component pieces work together. The engineers then delivers automation scripts to deliver the exact settings needed for the solution to operate. At this point the carefully prepared architectural documentation set is out of date.&lt;/p&gt;
+&lt;p&gt;Enterprise solutions are usually intended to plugin to existing operational tooling, and the enterprise architect usually assume this tooling will have suitable functionality built in to support the solution they design. Once deployed it is often found that the integration to operational tooling works at a very basic level but does not out of the box meet the management complexities of the solution delivered. At this point cross discipline highly skilled engineers with deep technical product knowledge have to get together with the operational tooling team and engineer a solution to make the solution work. These changes to the solution make the architectural documentation further out of date. Day two operations of any delivered solution will naturally lead to more change and the document set becoming more obsolete. All of these changes require high skilled people at every stage of delivery.&lt;/p&gt;
+&lt;h2 id=&#34;agile-infrastructure-architecture&#34;&gt;Agile Infrastructure Architecture&lt;/h2&gt;
+&lt;p&gt;Pre-virtualisation the requirement for up front design was partially justified as the hardware required for the application needed to be specced, procured, delivered, racked and powered before it could be consumed. Virtualization de-coupled these two processes and pools of compute resources could be pre-provisioned and consumed elastically, the public cloud provides further elasticity in delivery.&lt;/p&gt;
+&lt;p&gt;Agile development techniques such as ExtremeProgramming revolve around &amp;lsquo;You Aren&amp;rsquo;t Going to Need It (YAGNI)&amp;rsquo;. This principle relates to the notion of &amp;lsquo;incremental design&amp;rsquo; rather than carefully considered planned development encompassing all possible future need. In lean this is refered to as just-in-time. Agile architecture should be a collaborative activity which enables agile development to progress features and improvements in a timely manner to produce artifacts to meet the immediate requirement, and iterated just-in-time. The use of architecture model storming can be used between, architecture and operational engineering teams to agree solutions collaboratively.&lt;/p&gt;
+&lt;p&gt;The agile infrastructure architect still has the primary goal of designing solutions which are deployable, scalable, secure, maintainable, managable, standards compliant, fault tolerant, testable, upgradable and recoverable.&lt;/p&gt;
+&lt;p&gt;When architectcure design is designed and delivered in small units, the feedback loop to deploying engineer is much shorter, issues are found and fixed and all stakeholders are kept in the loop. The use of collaboration tools to store documentation such as Github WiKi&amp;rsquo;s or Atlassian Confluence means that documention can be kept up to date collabortaively and be kept close to the automation scipts.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.guru99.com/agile-vs-kanban.html&#34;&gt;Agile Vs Kanban: What’s the Difference?&lt;/a&gt;
+&lt;a href=&#34;http://www.agilearchitect.org/agile/role.htm&#34;&gt;Agile Architect: Role&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://martinfowler.com/bliki/Yagni.html&#34;&gt;Martin Fowler: YAGNI&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://agilemodeling.com/essays/agileArchitecture.htm&#34;&gt;Agile Modeling: Agile Architecture&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.agilemodeling.com/&#34;&gt;Agile Modeling&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.gilb.com/blog/what-every-successful-project-manager-should-know&#34;&gt;What Every Successful Product Manager (Owner) Should Know&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://blog.xebia.com/lean-architecture-principle-5-just-in-time-just-enough/&#34;&gt;Lean Architecture: Just In Time, Just Enough&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.extremeprogramming.org/&#34;&gt;Extreme Programming: A Gentle Introduction&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.scaledagileframework.com/agile-architecture/&#34;&gt;Scaled Agile: Agile Architectuere Abstract&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://martinfowler.com/articles/designDead.html&#34;&gt;Martin Fowler: Is Design Dead&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://agilemodeling.com/essays/modelStorming.htm&#34;&gt;Agile Modeling: Model Storming&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://shapingsoftware.com/2009/03/02/agile-architecture-method/&#34;&gt;Shaping Software: Agile Architecture Method&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;www.agiledata.org/essays/enterpriseArchitecture.html#AgileApproach&#34;&gt;Agile Data: Agile Enterprise Architecture Approach&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>AWS Certified Solutions Architect Professional - Study Link O&#39;Rama</title>
+      <link>https://darrylcauldwell.com/post/aws-sa-study/</link>
+      <pubDate>Wed, 19 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-sa-study/</guid>
+      <description>
+        
+          &lt;p&gt;While studying to become a &lt;a href=&#34;https://aws.amazon.com/certification/certified-solutions-architect-professional/&#34;&gt;AWS Certified Solutions Architect - Professional&lt;/a&gt; I have been passed and found lots of resources, in this post I am trying to store the links which are useful. I started my journey with the &lt;a href=&#34;https://d0.awsstatic.com/training-and-certification/docs-sa-pro/AWS_certified_solutions_architect_professional_blueprint.pdf&#34;&gt;AWS exam blueprint&lt;/a&gt;. This is I believe the perfect place to start to study as it describes when exactly is covered by the exam and the weighted value of each skill being measured. I&amp;rsquo;ve then categorised the many study links I have been passed under each knowledge domain.&lt;/p&gt;
+&lt;p&gt;After each knowledge domain is covered I&amp;rsquo;ve placed links to the base knowledge covered in Associate level exams.  Finally there is a section of the blog posts from people who have taken the exam and there experience of the process.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PL_RVC-cMNyYTz8zlxq117O1bfji-knooI&#34;&gt;A series of video&amp;rsquo;s for AWS Solutions Architecture Professional training.&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;high-availability-and-business-continuity-15&#34;&gt;High Availability and Business Continuity (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Storage/Backup_and_Recovery_Approaches_Using_AWS.pdf&#34;&gt;Backup and Recovery Approaches Using AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/best-practices-for-backup-and-recovery-on-prem-to-aws.pdf&#34;&gt;Enterprise Backup and Recovery&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/implementing-windows-file-server-disaster-recovery.pdf&#34;&gt;Using Amazon Web Services and DFS Replication for Disaster Recovery of File Servers&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Backup_Archive_and_Restore_Approaches_Using_AWS.pdf&#34;&gt;Backup and Recovery Approaches Using AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-disaster-recovery.pdf&#34;&gt;Using AWS for Disaster Recovery&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-migrate-resources-to-new-region.pdf&#34;&gt;Migrating AWS Resources to a New Region&lt;/a&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances-autohealing.html&#34;&gt;Using OpsWorks Auto Healing&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/NoSwvJ18tMM&#34;&gt;How to Enable Disaster Recovery and Migrate to AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bXrGUlgbl-s&#34;&gt;Deploying a Disaster Recovery Site on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5hCAwEQpWNc&#34;&gt;Rapid Recovery Solution for Disaster Recovery (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/xA97GUzLAls&#34;&gt;Multi-Region Application Using Amazon VPC (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XU6KDBQiwEM&#34;&gt;Deploy High Availability &amp;amp; Disaster Recovery Architectures with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zYI4Gx0D54U&#34;&gt;Introducing AWS Solutions for Backup and Archiving (Video)&lt;/a&gt;
+&lt;a href=&#34;https://youtu.be/VmjDfz-MIZE&#34;&gt;AWS Storage Gateway: Secure, Cost-Effective Backup &amp;amp; Archive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.zerto.com/disaster-recovery-for-vmware-hyper-v-and-aws-that-actually-works/&#34;&gt;Disaster Recovery for VMware, Hyper-V, and AWS&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;costing-6&#34;&gt;Costing (6%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws_pricing_overview.pdf&#34;&gt;How AWS Pricing Works&lt;/a&gt;
+&lt;a href=&#34;https://youtu.be/kId90Q7b6kY&#34;&gt;Cost Optimisation on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/i1Uq8_gt2p4&#34;&gt;Cost Optimization at Scale (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/R_0BQIeRNHw&#34;&gt;The Science of Saving with AWS Reserved Instances (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/SG1DsYgeGEk&#34;&gt;Running Lean Architectures: Optimizing for Cost Efficiency (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/LZwlkqERv2g&#34;&gt;Cloud-Native Cost Optimization (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/rnL9Raf5shM&#34;&gt;Strategies to Quantify TCO and Optimize Costs using AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/lVOw1u_UaDE&#34;&gt;EC2 Dedicated Hosts: Save Money, Use Your Software Licenses (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://connect.awswebcasts.com/p2lkwv8o9rs/&#34;&gt;Save Up to 90% on your Amazon EC2 Bill with Spot Instances&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.cloudability.com/aws-101-reserved-instances/&#34;&gt;Reserved Instances 101&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://visit.cloudability.com/ReservedInstanceGuide&#34;&gt;Complete Guide to AWS Reserved Instances&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/fLex8Qgzvpk&#34;&gt;Advanced Strategies for AWS Cost Allocation with Tags and Linked Accounts (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.rightscale.com/webinars/lp/10-ways-optimize-public-private-cloud-costs-webinar&#34;&gt;10 Ways to Optimize Public and Private Cloud Costs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://support.cloudability.com/hc/en-us/articles/205014127-Webinar-Mastering-the-fundamentals-of-AWS-cost-management&#34;&gt;Mastering the fundamentals of AWS cost management&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.cloudability.com/aws-enterprise-cost-management-webinar/&#34;&gt;Managing enterprise AWS costs at scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://support.cloudability.com/hc/en-us/articles/205034237-Webinar-Using-Cloudability-to-reduce-AWS-costs&#34;&gt;Using Cloudability to reduce AWS costs&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;deployment-management-10&#34;&gt;Deployment Management (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://d0.awsstatic.com/whitepapers/overview-of-deployment-options-on-aws.pdf&#34;&gt;Deployment Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-multi-tiered-web-applications-with-opsworks.pdf&#34;&gt;Managing Multi-Tiered Applications with AWS OpsWorks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/overview-of-deployment-options-on-aws.pdf&#34;&gt;Overview of Deployment Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-multi-tiered-web-applications-with-opsworks.pdf&#34;&gt;Managing Multi-Tiered Web Applications with OpsWorks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-your-aws-infrastructure-at-scale.pdf&#34;&gt;Managing your AWS Infrastructure at Scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS_DevOps.pdf&#34;&gt;Introduction to DevOps on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WL2xSMVXy5w&#34;&gt;Infrastructure as Code (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/1QCXABOIcuc&#34;&gt;Managing Your Infrastructure as Code (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/-0ELfN-kb7g&#34;&gt;Zero to Sixty: AWS CloudFormation (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/6R44BADNJA8&#34;&gt;CloudFormation Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Wk-tOPicq78&#34;&gt;Using AWS CloudFormation for Deployment and Management at Scale (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/fVMlxJJNmyA&#34;&gt;CloudFormation Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ZhGMaw67Yu0&#34;&gt;CloudFormation under the Hood (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WNLIsqjkvu8&#34;&gt;Deploy, Manage, and Scale Your Apps with OpsWorks and Elastic Beanstalk (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/A4NSyUbAEkw&#34;&gt;CodeDeploy: Automating Your Software Deployments (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5xlqk9bFkYM&#34;&gt;Introducing AWS OpsWorks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/AQWl5jLtsTc&#34;&gt;Getting Started with AWS OpsWorks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WxSu015Zgak&#34;&gt;AWS OpsWorks Under the Hood (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OJVLYPo2T4Y&#34;&gt;Going Zero to Sixty with AWS Elastic Beanstalk (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nkj0GXgaRv8&#34;&gt;Scaling Your Web Applications with AWS Elastic Beanstalk (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;network-design-10&#34;&gt;Network Design (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-amazon-vpc-connectivity-options.pdf&#34;&gt;Amazon VPC Network Connectivity Options&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/5_bQ6Dgk6k8&#34;&gt;VPC Fundamentals and Connectivity Options (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/SMvom9QjkPk&#34;&gt;Deep Dive: AWS Direct Connect and VPNs (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ykmqjgLdmL4&#34;&gt;From One to Many: Evolving VPC Design (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/3qln2u1Vr2E&#34;&gt;Another Day, Another Billion Packets (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/DVywbZdzW4c&#34;&gt;New Capabilities for Amazon Virtual Private Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/EqVpsnAen5I&#34;&gt;Build a Remote Access VPN Solution on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/f9y-T7mQVxs&#34;&gt;Amazon Route 53 Deep Dive: Delivering Resiliency, Minimizing Latency (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XXUYbdbCb6Q&#34;&gt;Consolidating DNS Data in the Cloud with Amazon Route 53 (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/MKn_PQtRcl8&#34;&gt;Implementing Microsoft DirectAccess and NAT in the AWS Cloud (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;data-storage-15&#34;&gt;Data Storage (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=gUYa7RzrNhM&#34;&gt;Maximizing EC2 and EBS Performance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMFADelete.html&#34;&gt;S3 MFA Delete&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Big_Data_Analytics_Options_on_AWS.pdf&#34;&gt;Big Data Analytics Options on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS%20Storage%20Services%20Whitepaper-v9.pdf&#34;&gt;Cloud Storage Services Overview&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/rdbms-in-the-cloud-sql-server-on-aws.pdf&#34;&gt;RDBMS in the Cloud: Deploying SQL Server on AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Z5vNK6U2HKA&#34;&gt;Understand AWS Storage Options (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/3HDQsW_r1DM&#34;&gt;State of the Union: AWS Storage Services (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/VC0k-noNwOU&#34;&gt;S3 Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OuyUbvtgfDk&#34;&gt;EBS Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/2wKgha8CZ_w&#34;&gt;Amazon EBS: Designing for Performance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/OvoTPdm9cck&#34;&gt;Storage Management &amp;amp; Backup Using Amazon S3 &amp;amp; Amazon Glacier (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/PmPriuFEz1k&#34;&gt;How Electronic Arts, State of Texas, &amp;amp; H3 Biomedicine Use AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://connect.awswebcasts.com/p1fr4f2iitu/&#34;&gt;Amazon S3 Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/1TvJCLl9NNg&#34;&gt;Amazon S3 Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/P0pKdy_Y0CM&#34;&gt;New Storage Class for Amazon S3: Standard-Infrequent Access (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eKyS9rvbj40&#34;&gt;Intro to AWS: Database Services (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eHg8LD5KNC0&#34;&gt;Amazon RDS for MySQL: Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/AtASjS0hVDA&#34;&gt;Best Practices: SQL Server on Amazon RDS and EC2 (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WnFYoiRqEHw&#34;&gt;A Technical Introduction to Amazon Elastic MapReduce (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zc1_Rfb_txQ&#34;&gt;EMR Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4HseALaLllc&#34;&gt;EMR Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/lMRVg2f380Y&#34;&gt;EFS Update (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/tDqLwzQEOmM&#34;&gt;From Zero to NoSQL Hero: Amazon DynamoDB Tutorial (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ggDIat_FZtA&#34;&gt;Amazon DynamoDB Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/VuKu23oZp9Q&#34;&gt;Deep Dive: Amazon DynamoDB (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;security-19&#34;&gt;Security (19%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/DDoS_White_Paper_June2015.pdf&#34;&gt;AWS Best Practises for DDoS Resiliency&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-securing-data-at-rest-with-encryption.pdf&#34;&gt;Securing Data at Rest with Encryption&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html&#34;&gt;IAM Best Practise&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/blogs/security/enabling-federation-to-aws-using-windows-active-directory-adfs-and-saml-2-0/&#34;&gt;SAML Federation with ADFS and AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/code/1288653099190193&#34;&gt;Identity Broker Sample For Active Directory&lt;/a&gt;
+&lt;a href=&#34;https://web-identity-federation-playground.s3.amazonaws.com/index.html&#34;&gt;IAM Federation Playground&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html&#34;&gt;Delegate Access Across AWS Accounts Using IAM Roles&lt;/a&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-security-best-practices.pdf&#34;&gt;AWS Security Best Practices&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/training/course-descriptions/security-fundamentals/&#34;&gt;Amazon Web Services Security Fundamentals&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Security/Intro_to_AWS_Security.pdf&#34;&gt;Introduction to AWS Security&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/Security/AWS%20Security%20Whitepaper.pdf&#34;&gt;Overview of Security Processes&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/compliance/AWS_Risk_and_Compliance_Whitepaper.pdf&#34;&gt;AWS Risk and Compliance&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/DDoS_White_Paper_June2015.pdf&#34;&gt;AWS DDoS Whitepaper&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/aws-whitepaper-single-sign-on-integrating-aws-open-ldap-and-shibboleth.pdf&#34;&gt;Single Sign-On: Integrating AWS, OpenLDAP, and Shibboleth&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/AWS_Securing_Data_at_Rest_with_Encryption.pdf&#34;&gt;Securing Data at Rest with Encryption&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/compliance/AWS_Security_at_Scale_Logging_in_AWS_Whitepaper.pdf&#34;&gt;Security at Scale: Logging in AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html&#34;&gt;Identity Providers and Federation&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/yVWHNJel7Qs&#34;&gt;Understanding The AWS Security Model (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/suOObEz_2Fc&#34;&gt;Getting Started with AWS Identity and Access Management (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/_wiGpBQGCjU&#34;&gt;IAM Best Practices to Live By (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Du478i9O_mc&#34;&gt;How to Become an IAM Policy Ninja in 60 Minutes or Less (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/0WI5sirOvco&#34;&gt;Mastering Access Control Policies (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/rXPyGDWKHIo&#34;&gt;Security Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zU1x5SfKEzs&#34;&gt;Advanced Security Best Practices Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/DykPS2gvDeo&#34;&gt;Architecting for Greater Security on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/Ys0gG1koqJA&#34;&gt;Defending Against DDoS Attacks (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/NL3sDn92NuU&#34;&gt;Practical Steps to Hack-Proofing AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nqaL5zJqFuo&#34;&gt;Architecting for End-to-End Security in the Enterprise (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/ZaOR-ybLJF0&#34;&gt;Log, Monitor and Analyze your IT with Amazon CloudWatch (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/jX6pEWf344I&#34;&gt;Mobile Identity Management &amp;amp; Data Sync Using Amazon Cognito (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/KtMANvC7_n8&#34;&gt;Reliable Design and Deployment of Security and Compliance (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/On9NoUwj-Os&#34;&gt;Strategies for Protecting Data Using Encryption in AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bqIYI3mDsd4&#34;&gt;Encryption and Key Management in AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/0kWpm1FyG_Q&#34;&gt;Secure Applications with AWS Key Management Service (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/pi4HTSrmzis&#34;&gt;Encryption Key Storage with AWS KMS at Okta (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WUQNeMhkaco&#34;&gt;Intrusion Detection in the Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/nzSrRvADh6g&#34;&gt;Incident Response in the Cloud (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/8AODa_AazY4&#34;&gt;SSL with Amazon Web Services (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;scalability--elasticity-15&#34;&gt;Scalability &amp;amp; Elasticity (15%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/blogs/aws/auto-scale-dynamodb-with-dynamic-dynamodb/&#34;&gt;AutoScaling for DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://nineofclouds.blogspot.com.au/2013/01/vpc-migration-nats-bandwidth-bottleneck.html&#34;&gt;VPC Migration: NATs &amp;amp; Bandwidth Bottleneck&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/managing-your-aws-infrastructure-at-scale.pdf&#34;&gt;Managing Your AWS Infrastructure at Scale&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/performance-at-scale-with-amazon-elasticache.pdf&#34;&gt;Performance at Scale with Amazon ElastiCache&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/gUAuhdtHacI&#34;&gt;Using Amazon CloudFront For Your Websites &amp;amp; Apps (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/s9Xt1qzD6SA&#34;&gt;Best Practices for Content Delivery using Amazon CloudFront (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/eorGJL-LkJc&#34;&gt;Secure Content Delivery Using Amazon CloudFront (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/91TAx4fmcxk&#34;&gt;Elastic Load Balancing Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/vg5onp8TU6Q&#34;&gt;Scaling Up to Your First 10 Million Users (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/bSa_byGRGR4&#34;&gt;Scaling Infrastructure Operations with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4trGuelatMI&#34;&gt;All You Need To Know About Auto Scaling (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/FxCF34txNfk&#34;&gt;Introduction to Amazon Kinesis (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XFHtsUgH-L8&#34;&gt;Streaming Data Processing with Amazon Kinesis and AWS Lambda (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/JFfvD2cw2IE&#34;&gt;Building Real-time Streaming Applications with Amazon Kinesis (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/8u9wIC1xNt8&#34;&gt;Kinesis Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4VfIINg9DYI&#34;&gt;ElastiCache: Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/zc1_Rfb_txQ&#34;&gt;EMR Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/4HseALaLllc&#34;&gt;EMR Deep Dive and Best Practices (Video)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cloud-migration--hybrid-architecture-10&#34;&gt;Cloud Migration &amp;amp; Hybrid Architecture (10%)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/ec2/vm-import/&#34;&gt;Existing vSphere, Hyper-V and Xen VM Import&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;AWS Management Portal for vCenter&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;vCenter Portal&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/migration-best-practices-rdbms-to-dynamodb.pdf&#34;&gt;Best Practices for Migrating from RDBMS to Amazon DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/the-path-to-the-cloud-dec2015.pdf&#34;&gt;A Practical Guide to Cloud Migration&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/migration-best-practices-rdbms-to-dynamodb.pdf&#34;&gt;Migration Best Practices – RDBMS to DynamoDB&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://d0.awsstatic.com/whitepapers/strategies-for-migrating-oracle-database-to-aws.pdf&#34;&gt;Strategies for Migrating Oracle Database to AWS&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/ec2/vcenter-portal/&#34;&gt;AWS Management Portal for vCenter&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/we4dcxIDKJo&#34;&gt;Enable &amp;amp; Secure Your Business Apps via the Hybrid Cloud on AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/kgp8jjO6O6Y&#34;&gt;Preparing for Migration: A Roadmap to AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/kn4bETDe5gk&#34;&gt;Migrating Fox’s Media Supply Chains to the Cloud with AWS (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/XKkYY_FCiQ4&#34;&gt;How Delaware North Migrated 90+ Apps in Four Months (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/pBIbsofLQ3w&#34;&gt;Acceleration of AWS Enterprise Adoption in GE (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.rightscale.com/webinars/lp/aws-vmware-architect-hybid-environments-webinar&#34;&gt;AWS and VMware: How to Architect Hybrid Environments&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;aws-core-knowledge&#34;&gt;AWS Core Knowledge&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;http://aws.amazon.com/architecture/&#34;&gt;AWS Architecture Center&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://d0.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf&#34;&gt;AWS Well‐Architected Framework&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://media.amazonwebservices.com/AWS_Cloud_Best_Practices.pdf&#34;&gt;Architecting for the Cloud: Best Practices&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;All re:invent 2016 Sessions are available on &lt;a href=&#34;https://www.youtube.com/playlist?list=PLhr1KZpdzukdGa7Gqu4bdql4KH7sL3mhf&#34;&gt;AWS YouTube Playlist&lt;/a&gt;. All slides used at re:Invent, Summit, DevDay are all available on &lt;a href=&#34;http://www.slideshare.net/AmazonWebServices&#34;&gt;AWS SlideShare&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The User \ Developer and FAQs Are Useful
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html&#34;&gt;CloudFront Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudfront/faqs/&#34;&gt;CloudFront FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html&#34;&gt;CloudFormations User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudformation/faqs/&#34;&gt;CloudFormations FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudhsm/faqs/&#34;&gt;CloudHSM FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/cloudwatch/faqs/&#34;&gt;CloudWatch FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/config/faq/&#34;&gt;Config FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/datapipeline/faqs/&#34;&gt;Data Pipeline FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html&#34;&gt;Direct Connect User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/directconnect/faqs/&#34;&gt;Direct Connect FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html&#34;&gt;DynamoDB Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/dynamodb/faqs/&#34;&gt;DynamoDB FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html&#34;&gt;EBS User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ebs/faqs/&#34;&gt;EBS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html&#34;&gt;EC2 User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/instance-types/&#34;&gt;EC2 Instance Types&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/ec2/faqs/&#34;&gt;EC2 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/jLVPqoV4YjU&#34;&gt;EC2 Masterclass (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html&#34;&gt;Elastic BeanStalk Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/elasticache/faqs/&#34;&gt;ElasticCache FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/elasticloadbalancing/faqs/&#34;&gt;Elastic LoadBalancer FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://youtu.be/WnFYoiRqEHw&#34;&gt;Elastic MapReduce : A Technical Introduction (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/glacier/faqs/&#34;&gt;Glacier FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html&#34;&gt;IAM User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/iam/faqs/&#34;&gt;IAM FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/importexport/&#34;&gt;Import Export Snowball&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/importexport/faqs/&#34;&gt;Import Export FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.youtube.com/watch?v=8u9wIC1xNt8&#34;&gt;Kinesis Deep Dive (Video)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/streams/latest/dev/introduction.html&#34;&gt;Kenesis Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/kinesis/streams/faqs/&#34;&gt;Kenesis FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/kms/faqs/&#34;&gt;KMS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/opsworks/faqs/&#34;&gt;OpsWorks FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/rds/faqs/&#34;&gt;RDS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/redshift/faqs/&#34;&gt;Redshift FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/route53/faqs/&#34;&gt;Route 53 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/sns/latest/dg/welcome.html&#34;&gt;SNS Developer Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://aws.amazon.com/sns/faqs/&#34;&gt;SNS FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/storagegateway/faqs/&#34;&gt;Storage Gateway FAQs&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/s3/faqs/&#34;&gt;S3 FAQ&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html&#34;&gt;VPC User Guide&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://aws.amazon.com/vpc/faqs&#34;&gt;VPC FAQ&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;certification-journey-blog-posts&#34;&gt;Certification Journey Blog Posts&lt;/h1&gt;
+&lt;p&gt;As well as technical study its always good to hear the personal experience stories of people who have studied for and successfully passed.&lt;br&gt;
+&lt;a href=&#34;http://ozaws.com/2015/09/17/aws-professional-solution-architect-certification-tips/&#34;&gt;Nick Triantafillou&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://cloudninjablog.wordpress.com/2015/07/22/aws-certified-solutions-architect-professional-certification-the-road-to-success/&#34;&gt;Jason Oliver&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@anything_cloud/how-to-pass-aws-certified-professional-solutions-architect-exam-5bbb44c04fda&#34;&gt;Frank van der Meer&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@anything_cloud/aws-certified-solutions-architect-professional-level-sample-exam-questions-and-answers-with-dd7df8984a8c#.gxz682t78&#34;&gt;Frank van der Meer - Sample Exam Questions&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://cantrill.io/certification/aws/2015/10/04/passing-the-aws-solutions-architect-professional-exam.html&#34;&gt;Adrian Cantrill&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://medium.com/@jcutting/preparing-for-the-aws-architect-professional-exam-cf54acc1fb2a#.5a5sk5clx&#34;&gt;Jeremiah Cutting&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://hydrasit.com/passed-aws-solutions-architect-professional-exam/&#34;&gt;Stephen Wilding&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://blog.henrik.org/2016/04/how-i-studied-for-aws-certified.html&#34;&gt;Henrik Johnson&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.michaelwittig.info/aws-certified-solutions-architect-professional-level/&#34;&gt;Michael Wittig&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.mitchyb.com/2015/10/aws-certified-solutions-architect.html&#34;&gt;Mitch Beaumont&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

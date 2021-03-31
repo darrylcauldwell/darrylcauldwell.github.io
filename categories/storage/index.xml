@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>storage on </title>
+    <link>https://darrylcauldwell.com/categories/storage/</link>
+    <description>Recent content in storage on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/categories/storage/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</title>
+      <link>https://darrylcauldwell.com/post/homelab-pi-storage/</link>
+      <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-pi-storage/</guid>
+      <description>
+        
+          &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.com/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I look at the comparing the storage performance of SD and USB.&lt;/p&gt;
+&lt;h2 id=&#34;sd-card-performance&#34;&gt;SD Card Performance&lt;/h2&gt;
+&lt;p&gt;Linux FIO tool will be used to measure sequential write performance of a 4GB file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/sd_reads.png&#34; alt=&#34;SD Card Read Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.5MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.3MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.4MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.3MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Similarly, the tool will be used to measure sequential read performance of a 4GB file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/sd_writes.png&#34; alt=&#34;SD Card Write Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=5429, BW=21.2MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=5128, BW=20.0MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=5136, BW=20.1MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=5245, BW=20.5MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;With the SD card the performance bottleneck is the reader which supports peak bandwidth 50MiB/s. To test this I has a lower spec SanDisk Ultra card so I repeated test and got near exact throughput to the SanDisk Extreme.&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.4MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=5245, BW=20.5MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;usb-flash-performance&#34;&gt;USB Flash Performance&lt;/h2&gt;
+&lt;p&gt;The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device.&lt;/p&gt;
+&lt;p&gt;Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/usb_writes.png&#34; alt=&#34;USB Write Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=14.5k, BW=56.6MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=14.4k, BW=56.4MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=14.4k, BW=56.2MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=11.9k, BW=46.6MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/usb_reads.png&#34; alt=&#34;USB Read Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=33.3k, BW=130MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=37.0k, BW=148MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=42.6k, BW=166MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=42.5k, BW=166MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;So for a very small investment in the USB Flash Drives we&amp;rsquo;ve increased sequential read potential by 4X and write potential by 3X over the SD card.  The Pi 4 firmware doesn&amp;rsquo;t presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NetApp Cloud OnTap For AWS</title>
+      <link>https://darrylcauldwell.com/post/aws-ontap/</link>
+      <pubDate>Fri, 12 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-ontap/</guid>
+      <description>
+        
+          &lt;p&gt;NetApp has often been a pioneer of bleeding edge concepts in storage. When designing data ONTAP and the WAFL file system they were the first to look at creating a virtual control plane for data. They also pioneered fully non disruptive upgrades when the introduced clustered data ONTAP.  They then introduced ONTAP Edge for providing the really cool features of data ONTAP for non NetApp SANs. Recently the pioneering spirit has been continuing with the launch of Cloud ONTAP for AWS which takes the clustered data ONTAP features to overlay Amazon EC2 storage.&lt;/p&gt;
+&lt;p&gt;There are hundreds of business use cases which spring to mind when you begin to consider what this offers, however the total killer feature for this is using snap mirror to extend your data between private cloud and public cloud.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Using the public cloud makes great sense for standing up solutions quickly and without the up front capital expenditure and instead the operational usage charging. As your new product grows and becomes more popular it maybe your operational charges out weight the cost savings and you then want to bring it to private cloud.&lt;/p&gt;
+&lt;p&gt;Most applications have great agility for the application, simply stand up a new OS in other cloud provider and install application.  However application data agility is, until now, much harder to manage.&lt;/p&gt;
+&lt;p&gt;In this example you would simply build your private cloud and new application tier and use snap mirror to bring your data to your datacenter and keep it in sync with the application still running.  When all sync&amp;rsquo;d you would cutover by breaking the mirror all could be seam less to your customers.&lt;/p&gt;
+&lt;p&gt;I expect as well that while currently this is only for EC2 storage, if it was to also interface into S3 and glacier you could also move your data tiering&lt;/p&gt;
+&lt;p&gt;While I love NetApp I&amp;rsquo;m not a storage admin,  and while the ONTAP simulator is useful at $1.50 per hour if I ever wanted to exercise my skills I could just spin up a clustered ONTAP AMI and away I would go then release it to save the recurring charge.&lt;/p&gt;
+&lt;p&gt;While there is more detailed info on the &lt;a href=&#34;http://www.netapp.com/us/system/pdf-reader.aspx?cc=us&amp;amp;m=ds-3618.pdf&amp;amp;pdfUri=tcm:10-127470&#34;&gt;NetApp website&lt;/a&gt;, a superb way to see this in action is to sign up for free and look at &lt;a href=&#34;https://poc.netapp.com/cloud/testdrive/&#34;&gt;test drive&lt;/a&gt;where you get to spin up a AMI on NetApp&amp;rsquo;s AWS account and look around.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>VMware Virtual Volumes Deep Dive</title>
+      <link>https://darrylcauldwell.com/post/vvols/</link>
+      <pubDate>Fri, 24 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vvols/</guid>
+      <description>
+        
+          &lt;h2 id=&#34;how-vvols-will-help&#34;&gt;How vVols Will Help&lt;/h2&gt;
+&lt;p&gt;The constraints and issues which VVOLs address include, LUNs introduce constrains such as the quantity of LUNs we can present,  having lots of LUNs each with unused space is in efficient as such we currently shared VMs on data stores and this  gives a lack of granular control for passing storage attribute on a per-VM basis.&lt;/p&gt;
+&lt;p&gt;Virtual Volumes addresses these challenges by rather than using the construct of LUNs on the storage array which is then formatted with VMFS filesystem.  Instead we would create on the storage array a Storage Container, the capabilities of the  Storage Container are exposed via the VMware Aware Storage API (VASA) provider and the data path is exposed via a Protocol Endpoint (PE). While the PE exposes the data path traffic is not funneled through it it provides a pointer, the ESXi to array IO is direct. The removal of the LUN construct and replacement the storage container removes the constraints of using LUNs.&lt;/p&gt;
+&lt;p&gt;The capabilities of the VMware Aware Storage API (VASA) provider needs to be extended for VVOLs so will increment to version 2. The storage array vendor will provide this extended VASA provider, the current deployment of VASA providers is most typically on a management server, as this is now more critical, it is likely vendors will move its hosting to the array, by way of firmware update. By moving the VASA provider to the array will give the solution the inherent resilience built in to the array.&lt;/p&gt;
+&lt;p&gt;The Virtual Volume is analogous to the file object which makes up a virtual machine. The other key thing which VVOLs gives us is that by directly exposing the storage we get more full access to offload work to the storage array.  For example snapshots traditionally are managed snapshots within vSphere but now these are performed directly as storage array operations as Un-(vSphere)managed snapshots which allows this to be done as efficiently as possible. As well as snapshotting all SCSI operations, ATS, XCOPY, UNMAP, TRIM etc are also performed natively. One thing to note is that snapshotting of a running virtual machine while being much fantastically improved is not instantaneous for a running virtual machine as the memory bitmap is still required to be written.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.wooditwork.com/wp-content/uploads/2014/08/image_thumb18.png&#34; alt=&#34;Virtual Volumes&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vvols-deep-dive&#34;&gt;VVOLs Deep Dive&lt;/h2&gt;
+&lt;p&gt;The Protocol Endpoint (PE) is compatible with all SAN and NAS protocols and each can support any one of the protocols at a given time. The PE is still a SCSI device and as such is managed by the Pluggable Storage Architecture (PSA) which applies the multi-path policies, the PSA is modified slightly to be aware of the PE construct. There can be multiple PEs defined an SCSI PE is picked up during a rescan. While you may at first thing that VVOLs is purely for block storage it is also a construct which can be used with NFS, a NFS PE is maintained as an IP address or file path, ESX identifies and maintains all discovered PEs within a database. Each Virtual volumes has a UID, the data paths are established through a VASA bind request, the bind request is processed by VASA and the mapping of UID and paths can be many to many and all bindings are stored within the database.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://datacenterdude.com/wp-content/uploads/2012/10/vmware-vvol-1.png&#34; alt=&#34;Protocol Endpoint&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The storage container holds the capabilities of the storage, capabilities would be things like performance tier (Diamond, Gold, Silver, Bronze), backup, snapshots, whether it is de-duplicated. We can therefore use storage containers as logical partitions to apply  storage needs and requirements. There would be a minimum of one storage container per array and maximum would depend on vendor. There is no direct mapping between storage container and PE, a PE can manage multiple storage containers and multiple PEs can manage a single storage container. These storage container capabilities are then advertised for use by ESX through the VMware Aware Storage API (VASA) provider. Surprisingly at first we still need to form Storage Containers into datastores within vSphere. This requirement is to allow all the traditional features of vSphere HA, SDRS etc, which need to interact with the datastore construct.&lt;/p&gt;
+&lt;p&gt;A virtual volume is per virtual machine but within it is broken up by capability requirement into five sub-types,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Config-VVOL&lt;/li&gt;
+&lt;li&gt;Data-VVOL&lt;/li&gt;
+&lt;li&gt;Mem-VVOL&lt;/li&gt;
+&lt;li&gt;Swap-VVOL&lt;/li&gt;
+&lt;li&gt;Other-VVOL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With this granularity we can now place each VVOL sub-type onto a Storage Container with the best match for its capability requirement.&lt;/p&gt;
+&lt;p&gt;To consume VVOLs effectively and on a per object (per virtual machine) basis we need to move towards Storage Policy Based Management (SPBM) so we can consume the storage capabilities presented with VVOLs by VMware Aware Storage API (VASA) provider.&lt;/p&gt;
+&lt;p&gt;In this current release mentioned as 2015 SRM is not supported, although it was mentioned that that is on radar for 2016. The use of RDMs is also not supported within VVOLs, you can however present these as normal outside of the VVOL container.&lt;/p&gt;
+&lt;h2 id=&#34;try-vvols-at-home&#34;&gt;Try VVOLs At Home&lt;/h2&gt;
+&lt;p&gt;Up until recently you couldn&amp;rsquo;t realistically configure a VVOLs solution unless you had a spare array running beta firmware which supported VASA2. That is until NetApp shipped &lt;a href=&#34;http://mysupport.netapp.com/NOW/download/tools/simulator/ontap/8.X/&#34;&gt;OnTap simulator 8.2.1&lt;/a&gt;, the NetApp Simulator is run as a nested VM under Fusion, Workstaion or ESX and provides the interface for vSphere 6 to connect to.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NetApp FAS IOPS Theoretical Maximum &amp; Workload Aggregate Load Balancing</title>
+      <link>https://darrylcauldwell.com/post/netapp-iops/</link>
+      <pubDate>Tue, 26 Aug 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/netapp-iops/</guid>
+      <description>
+        
+          &lt;p&gt;To achieve good performance for a virtualized workload your Storage Area Network (SAN) should deliver high IOps with a predictable low latency. If you are using a good flash system where IOps (Input/Output Operations Per Second) effectively become an unlimited resource then latency will probably be your limiting factor.&lt;/p&gt;
+&lt;p&gt;The NetApp FAS family of storage systems offer a series of arrays at various price points and specifications. NetApp also offer the option of adding Performance Acceleration Module (PAM) to improve the performance of random read intensive workloads by way of a tunable cache to reduce latency. the model you have will shape the latency capability for example the &lt;a href=&#34;https://www.spec.org/sfs2008/results/res2009q1/sfs2008-20081215-00111.html&#34;&gt;FAS3140 with PAM and FC disk gives a latency at 40,000 IOPs of 4.4ms&lt;/a&gt; where the &lt;a href=&#34;https://www.spec.org/sfs2008/results/res2009q3/sfs2008-20090727-00126.html&#34;&gt;FAS3160 with PAM and FC disk gives a latency at 40,000 IOPs of 1.7ms.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You can add varying amounts of disk shelves and disks to the various FAS models. The amount of disk and specification of disk and aggregate design will effect the theoretical maximum amount of IOps. Duncan Epping wrote &lt;a href=&#34;http://www.yellow-bricks.com/2009/12/23/iops/&#34;&gt;this piece&lt;/a&gt; on the calculation of IOps and if we use this in an example. We have 90 disk per storage controller and we form 3 aggregates each with 30 SAN 15K disks. Within the aggregate we follow &lt;a href=&#34;https://communities.netapp.com/message/2676%20&#34;&gt;NetApp best practice&lt;/a&gt; to form two RAID groups of no more than 16x disks and so form 2x RAID-DP RAID groups within each aggregate which consumes 2×2 disks for parity.  We know from using vscsiStats that today our VMs generate approximatley 60% read and 40% write traffic,  so our formula would read for each aggregate ((26*175)&lt;em&gt;0.6)+((26&lt;/em&gt;85)&lt;em&gt;0.4) = 3614 IOps per aggregate.  If we then add a PAM card the cache would potentially absorb some of IOps going as disk reads, this is very worload dependant but if we look on &lt;a href=&#34;https://communities.netapp.com/servlet/JiveServlet/download/3053-2273/TechONTAP_PAM.ppt&#34;&gt;page 9 of this NetApp powerpoint&lt;/a&gt; we can see the 256GB PAM absorbing 2000 of the 5847 disk reads,  around 30% which would effect our formula to (((26&lt;/em&gt;175)*0.6)&lt;em&gt;1.3)+((26&lt;/em&gt;85)*0.4) and give 4433 IOps per aggregate.&lt;/p&gt;
+&lt;p&gt;It is important to understand the relationship between IOps and the disks as we can see in our example each storage controller has 3x islands of IOps.  As such workload can become hot in one aggregate and cool in others,  to ensure your driving your system the most efficient way you should monitor the average IOps in each aggregate and can look to balance these.  You can use either svMotion to move VM workload between datastores in different aggregates or data motion to move volumes between aggregates.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Windows Server 2012 - SAN Performance</title>
+      <link>https://darrylcauldwell.com/post/win2012-san-perf/</link>
+      <pubDate>Mon, 03 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/win2012-san-perf/</guid>
+      <description>
+        
+          &lt;p&gt;In a newly deployed Windows Server 2012 HyperV environment with around sixty nodes, running a couple of hundred Windows Server 2012 virtual machines running various applications.  We found the EMC VMX storage which underpinned this became massively busy with Write IO at around 3am,  the Write IO was mostly coming from TRIM and Unmap commands,  the amount has a dramatic impact and leads to lots of 153 errors on the server estate,  after one to two hours the Write IO subsided. I wrote a script to audit the estate to identify if there was any pattern to the errors. We found the errors correlated to the 3am Window also.&lt;/p&gt;
+&lt;p&gt;EMC initially said the cause of this was the way the VNX was interpreting ODX command and they asked if we disable ODX on all HyperV servers. I used a PowerShell command to extract out all servers in AD with a ServiceConnection point of HyperV,  then looked to audit ODX on these and then disable.&lt;/p&gt;
+&lt;p&gt;Since disabling the problem persisted second thoughts were that there was some tasks scheduled within the applications running on the VMs which was triggering this event,  after speaking to the product groups they said nothing was scheduled at this time. We continued our search within the HyperV communities and found &lt;a href=&#34;http://larsjoergensen.net/windows/windows-server/windows-server-2012/server-2012-automatic-maintenance-killed-san&#34;&gt;this article&lt;/a&gt; which suggested some scheduled tasks are now enabled by default within Windows Server 2012.  On looking there appear two&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Regular Maintenance
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 03:00 (if 2012 R2 this would be 2am as the default time changed) and&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Maintenance Configurator
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 01:00.&lt;/p&gt;
+&lt;p&gt;The Action for these tasks is “Custom Handler”, Microsoft publish no details on what these tasks do. We logged a call with Microsoft and they also did not know what these, but they did say that tasks with a “Custom Handler” are umbrella’s for other tasks.&lt;/p&gt;
+&lt;p&gt;As Regular Maintenance appeared to be the most likely due to execution time, I viewed its Last Run Time.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I then manually worked through each Windows task in Task Scheduler and took note of which Tasks had Last Run Time which matched that of “Regular Maintenance”.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
+\Microsoft\Windows\.NET Framework.Net Framework NGEN v4.0.30319 64
+\Microsoft\Windows\Application Experience\AitAgent
+\Microsoft\Windows\Application Experience\ProgramDataUpdater
+\Microsoft\Windows\ApplicationData\CleanupTermporaryState
+\Microsoft\Windows\Chkdsk\ProactiveScan
+\Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask
+\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip
+\Microsoft\Windows\Defrag\ScheduledDefrag
+\Microsoft\Windows\Device Setup\Metadata Refresh
+\Microsoft\Windows\PI\Sqm-Tasks
+\Microsoft\Windows\Registry\RegIdleBackup
+\Microsoft\Windows\Servicing\StartComponentCleanup
+\Microsoft\Windows\Shell\CreateObjectTask
+\Microsoft\Windows\Time Synchronization\SynchronizeTime
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Of these tasks,  we identified &lt;em&gt;ScheduleDefrag&lt;/em&gt; and &lt;em&gt;Chkdsk&lt;/em&gt; as potentially moving a lot of data around and freeing up blocks which would trigger Windows to isssue TRIM \ Unmap commands for the SAN to \recover the space within the Thin LUN.&lt;/p&gt;
+&lt;p&gt;While looking at Trim \ Unmap on 2012 I  found that you can disable Trim \ Unmap commands being issued by setting the &lt;a href=&#34;http://technet.microsoft.com/en-us/library/cc785435.aspx&#34;&gt;DisableDeleteNotify&lt;/a&gt; file system attribute.&lt;/p&gt;
+&lt;p&gt;As there are around 350 virtual servers per site, it was not practical to audit, enable and disable each of the four configuration items, &lt;em&gt;ODX&lt;/em&gt;, &lt;em&gt;Trim on delete&lt;/em&gt;, &lt;em&gt;ScheduledDefrag&lt;/em&gt; and &lt;em&gt;ChkDskProactiveScan&lt;/em&gt; so I wrote a modular PowerShell script to get current state,  enable and disable each against a list of servers,  this script can be &lt;a href=&#34;https://github.com/darrylcauldwell/WindowsTrimAndUnmap&#34;&gt;found here.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Our storage vendor provided this excellent detail &lt;a href=&#34;https://emc--c.na5.visual.force.com/apex/KB_BreakFix_1?id=kA1700000000tup&#34;&gt;EMC KB182688&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I would like to take functionality of thin provisioning so we have left enabled TrimOnDelete, but I could not see why you would want to Defrag a volume sitting on a Thin SAN LUN so we have disabled the ScheduledDefrag task. By disabling the task prevents Regular Maintenance running this at the 3am Window.*&lt;/p&gt;
+&lt;p&gt;For the medium to longer term we are looking to prove the performance differential between 2012 R0 to R2 and if beneficial look to migrate to that.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

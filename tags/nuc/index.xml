@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nuc on </title>
+    <link>https://darrylcauldwell.com/tags/nuc/</link>
+    <description>Recent content in nuc on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 16 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/nuc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Intel NUC Cluster Hardware</title>
+      <link>https://darrylcauldwell.com/post/homelab-nuc/</link>
+      <pubDate>Thu, 16 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-nuc/</guid>
+      <description>
+        
+          &lt;p&gt;I have worked most of my professional life with systems built with Intel x86, x64. Often there is little hardware available in the work environment to learn and try out new things.&lt;/p&gt;
+&lt;p&gt;I enjoy learning by doing and to begin to better understand the technology looked to build a cluster of Intel NUCs. My goals of cluster include understanding more about:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VMware vSphere, NSX and vSAN&lt;/li&gt;
+&lt;li&gt;Kubernetes, OpenShift and Tanzu&lt;/li&gt;
+&lt;li&gt;Configuring infrastructure with Python, Ansible and Terraform&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;compute&#34;&gt;Compute&lt;/h1&gt;
+&lt;p&gt;The NUC6i5SYH was latest model when I purchased. My purchasing decision was primarily lead by power as these draw 60watt at peak load. I also wanted to try vSAN which drove need for at least two disk bays and the NUC has an M.2 and a 2.5&amp;quot; Drive bay.&lt;/p&gt;
+&lt;h1 id=&#34;storage&#34;&gt;Storage&lt;/h1&gt;
+&lt;p&gt;To form vSAN required the two internal disks be fully available which drove the addition of USB Flash Drive. The NUCs sit on and around desk so its very easy for them to get knocked the SanDisk Cruzer Fit formfactor keeps the chance of damage to a minimum.&lt;/p&gt;
+&lt;p&gt;I was working to a budget but wanted good performance. When cluster operating with vSAN all writes go via a cache disk and then get destaged to capacity tier. For the vSAN cache tier I chose the 128GB Samsung SM951 NVMe M.2 as it is rated for ~2,150MiB/sec read and 1550MB/s MiB/sec write. For the vSAN capacity tier I chose the 1TB Samsung 850 EVO SATA3 as it is rated for ~500MiB/sec read and write. The lab does not need a lot of capacity so only two of the three NUCs are populated with disks and contribute to vSAN the third contributes only compute capacity to the cluster.&lt;/p&gt;
+&lt;p&gt;As well as internal storage I have a Synology DiskStation DS213j a  &amp;ldquo;budget-friendly&amp;rdquo; 2-bay NAS server. It isn&amp;rsquo;t the fastest but offers iSCSI and/or NFS with 100MiB/sec read and 70MiB/sec write.&lt;/p&gt;
+&lt;h1 id=&#34;network&#34;&gt;Network&lt;/h1&gt;
+&lt;p&gt;One of usecases I wanted to explore with this hardware was Software Defined Networking. To this end I wanted network switch to support configuring multiple VLANs. To connect three NUCs each with two 1GbE NICs would consume six ports, to uplink to wider home network and the Synolofy DiskStation drove my choice to the eight 1GbE port Cisco SG200-08.&lt;/p&gt;
+&lt;p&gt;To simulate redundant networking scenarios at the ESXi side I wanted to add a second NIC albeit connecting to same switch. To allow for USB NIC on NUCs VMware released a unsupported driver by way of a Fling. This was a little prescritive and this lead me to the StarTech USB 3.0 to Gigabit Ethernet NICs.&lt;/p&gt;
+&lt;p&gt;My home office is in a cabin in the garden while it has power cabling it has no network cabling. To give a cabled network connection I use TP-Link AV500/AV600s. As these are very specific to my scenario I&amp;rsquo;ve not included them in the BOM.&lt;/p&gt;
+&lt;p&gt;# Bill Of Materials&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;3x Intel NUC 6th Gen NUC6i5SYH (3x £358=) £1,074&lt;/li&gt;
+&lt;li&gt;3x Crucial 32GB Kit (2x16GB) DDR4 (3x £86=) £258&lt;/li&gt;
+&lt;li&gt;2x Samsung SM951 NVMe 128GB M.2 (2x £43=) £86&lt;/li&gt;
+&lt;li&gt;2x Samsung 850 EVO 1TB SATA3 (2x £248=) £496&lt;/li&gt;
+&lt;li&gt;3x SanDisk Cruzer Fit 16GB USB Flash Drive (3x £5=) £15&lt;/li&gt;
+&lt;li&gt;3x StarTech USB 3.0 to Gigabit Ethernet (3x £17=) £51&lt;/li&gt;
+&lt;li&gt;1x Cisco SG200-08 8-port Gigabit £73&lt;/li&gt;
+&lt;li&gt;7x 0.5m Cat6 Cables £7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Total cluster parts cost ~£2060&lt;/p&gt;
+&lt;p&gt;Note: Prices at time of purchase in 2014/2015&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

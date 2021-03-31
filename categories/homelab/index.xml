@@ -1,0 +1,1737 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>homelab on </title>
+    <link>https://darrylcauldwell.com/categories/homelab/</link>
+    <description>Recent content in homelab on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/categories/homelab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pi Supercomputer</title>
+      <link>https://darrylcauldwell.com/post/homelab-pi-mpi/</link>
+      <pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-pi-mpi/</guid>
+      <description>
+        
+          &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.com/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I begin to look at Parrallel Programming.&lt;/p&gt;
+&lt;h2 id=&#34;parrallel-programming&#34;&gt;Parrallel Programming&lt;/h2&gt;
+&lt;p&gt;Each Raspberry Pi is a small unit of compute, one of my goals is to understand how operating many in a cluster. There are various approaches to parallel computational models, message-passing has proven to be an effective one. MPI the Message Passing Interface, is a standardized and portable message-passing system designed to function on a wide variety of parallel computers.&lt;/p&gt;
+&lt;p&gt;My prefered language is Python and usefully there is &lt;a href=&#34;https://mpi4py.readthedocs.io/en/stable/install.html&#34;&gt;MPI for Python&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get install -y libopenmpi-dev python-dev pip
+sudo pip install mpi4py
+mpirun --version
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;All the RPIs in the cluster will access each other via SSH, this communication needs to be passwordless. The first thing you need to do is generate an SSH key pair on first host.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ssh-keygen -t rsa -b 4096
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once key generated to enable passwordless access, upload a copy of the public key to the other three servers.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ssh-copy-id ubuntu@[server_ip_address]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Repeat keygen and copy public key process on all four hosts.&lt;/p&gt;
+&lt;p&gt;In order for mpi to distribute workload the node where execution occurs needs to understand which nodes are available.  The machinename parameter can be used to point to a text file containing list of nodes.&lt;/p&gt;
+&lt;p&gt;In order name we can use names we can add entries to hosts file.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo sh -c &#39;echo &amp;quot;192.168.1.100 rpi-0&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &amp;quot;192.168.1.101 rpi-1&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &amp;quot;192.168.1.102 rpi-2&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &amp;quot;192.168.1.103 rpi-3&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then create a file in home directory listing nodes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/machinefile
+rpi-0
+rpi-1
+rpi-2
+rpi-3
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The easiest way to run commands or code is with the mpirun command. This command, run in a shell, will launch multiple copies of your code, and set up communications between them. As each Pi has four cores and we have four we can specify number of processors to run as sixteen.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/mpirun_temp.png&#34; alt=&#34;MPIRUN Measure Temparature&#34;&gt;&lt;/p&gt;
+&lt;p&gt;While its interesting running individual commands across nodes the MPI for Python module exposes options for programs to spread load.  A simple test of this is where we scatter a bunch of elements, like those in a list, to processing nodes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/scatter.py
+from mpi4py import MPI
+
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()
+
+if rank == 0:
+   data = [(x+1)**x for x in range(size)]
+   print (&#39;we will be scattering:&#39;,data)
+else:
+   data = None
+   
+data = comm.scatter(data, root=0)
+print (&#39;rank&#39;,rank,&#39;has data:&#39;,data)
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once script created execute:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/mpirun_scatter.png&#34; alt=&#34;MPIRUN Scatter&#34;&gt;&lt;/p&gt;
+&lt;p&gt;While scattering elements of a list is interesting splitting up a processing problem and distributing to multiple processing nodes is more fun.  Calculating Pi is a nice example of this,  and its nice for a Pi cluster to calculate Pi with MPI.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#pi.py&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; mpi4py &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; MPI
+
+comm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;COMM_WORLD
+rank &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_rank()
+size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_size()
+
+slice_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000000&lt;/span&gt;
+total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# This is the controller node.&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; rank &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+    pi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+    slice &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+    process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (size)
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the first batch of processes to the nodes.&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+        slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        process &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;# Wait for the data to come back&lt;/span&gt;
+    received_processes &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; received_processes &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+        pi &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Recieved data from process&amp;#34;&lt;/span&gt;, process)
+        received_processes &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+            comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+            slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the shutdown signal&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,size):
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pi is&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pi)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# These are the worker nodes, where rank &amp;gt; 0. They do the real work&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; True:
+        start &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; start &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+
+        i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+        slice_value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; slice_size:
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+            i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice_value, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(rank, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execute script with mpi and watch it distribute the calculation around the nodes and aggregate these to final answer.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 pi.py
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/pi_with_mpi_on_pi.png&#34; alt=&#34;Pi with MPI on Pi&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</title>
+      <link>https://darrylcauldwell.com/post/homelab-pi-storage/</link>
+      <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-pi-storage/</guid>
+      <description>
+        
+          &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.com/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I look at the comparing the storage performance of SD and USB.&lt;/p&gt;
+&lt;h2 id=&#34;sd-card-performance&#34;&gt;SD Card Performance&lt;/h2&gt;
+&lt;p&gt;Linux FIO tool will be used to measure sequential write performance of a 4GB file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/sd_reads.png&#34; alt=&#34;SD Card Read Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.5MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.3MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.4MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.3MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Similarly, the tool will be used to measure sequential read performance of a 4GB file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/sd_writes.png&#34; alt=&#34;SD Card Write Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=5429, BW=21.2MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=5128, BW=20.0MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=5136, BW=20.1MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=5245, BW=20.5MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;With the SD card the performance bottleneck is the reader which supports peak bandwidth 50MiB/s. To test this I has a lower spec SanDisk Ultra card so I repeated test and got near exact throughput to the SanDisk Extreme.&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=10.1k, BW=39.4MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=5245, BW=20.5MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;usb-flash-performance&#34;&gt;USB Flash Performance&lt;/h2&gt;
+&lt;p&gt;The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device.&lt;/p&gt;
+&lt;p&gt;Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/usb_writes.png&#34; alt=&#34;USB Write Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=14.5k, BW=56.6MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=14.4k, BW=56.4MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=14.4k, BW=56.2MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=11.9k, BW=46.6MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/usb_reads.png&#34; alt=&#34;USB Read Performance&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;IOPS=33.3k, BW=130MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=37.0k, BW=148MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=42.6k, BW=166MiB/s&lt;/li&gt;
+&lt;li&gt;IOPS=42.5k, BW=166MiB/s&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;So for a very small investment in the USB Flash Drives we&amp;rsquo;ve increased sequential read potential by 4X and write potential by 3X over the SD card.  The Pi 4 firmware doesn&amp;rsquo;t presently offer option for USB boot so the SD cards are needed but hopefully soon the firmware will get updated.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi Cluster Ubuntu Base</title>
+      <link>https://darrylcauldwell.com/post/homelab-pi-ubuntu/</link>
+      <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-pi-ubuntu/</guid>
+      <description>
+        
+          &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.com/post/homelab-pi&#34;&gt;Raspberry Pi Cluster&lt;/a&gt; here I look at the base Ubuntu build.&lt;/p&gt;
+&lt;h2 id=&#34;install-and-configure&#34;&gt;Install and Configure&lt;/h2&gt;
+&lt;p&gt;I used &lt;a href=&#34;https://www.raspberrypi.org/software/&#34;&gt;Raspberry Pi imager&lt;/a&gt; to install the Ubuntu 20.10 64bit on each SD Card.  Insert these into the Pi&amp;rsquo;s and power them on.&lt;/p&gt;
+&lt;p&gt;The image is configured with DHCP client, &lt;a href=&#34;https://maclookup.app/macaddress/DCA632&#34;&gt;Pi device MAC addresses are prefixed DC:A6:32&lt;/a&gt;. I connected to my router which acts as DHCP server and found the four leases sorting by MAC. With the DHCP addresses can connect via SSH, the Ubuntu image has default username of &lt;code&gt;ubuntu&lt;/code&gt; and password &lt;code&gt;ubuntu&lt;/code&gt;. You&amp;rsquo;re prompted to change password at first connect.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/ubuntu-pw.png&#34; alt=&#34;Ubuntu Password&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I want to reliably know how to connect to these and like to change from dynamic to a staticly asssigned IP address. To do this for Ubuntu 20.10 we update Netplan configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo vi /etc/netplan/50-cloud-init.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here is example of how I update this to reflect static IP.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;network:
+    ethernets:
+        eth0:
+            addresses: [192.168.1.100/24]
+            gateway4: 192.168.1.254
+            nameservers:
+              addresses: [8.8.8.8,8.8.4.4]
+            dhcp4: no
+            match:
+                driver: bcmgenet smsc95xx lan78xx
+            optional: true
+            set-name: eth0
+    version: 2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the configuration file updated can have netplan load the config.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo netplan --debug apply
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With any new install its useful to apply latest patches.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt update
+sudo apt upgrade -y
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;install-tools&#34;&gt;Install Tools&lt;/h2&gt;
+&lt;p&gt;The VideoCore packages provide command line utilities that can get various pieces of information from the VideoCore GPU on the Raspberry Pi. The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt install -y libraspberrypi-bin
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;# Storage Performance&lt;/p&gt;
+&lt;p&gt;The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt install -y fio
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;usb-flash-disk&#34;&gt;USB Flash Disk&lt;/h2&gt;
+&lt;p&gt;The SD card on the Pi will normally show as /dev/mmcblk0. The USB drive will normally show as /dev/sda. The following could be data destructive so check the enumeration before proceeding.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo fdisk -l
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/usb_dev.png&#34; alt=&#34;USB Device&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then create primary partition on USB device&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo sfdisk /dev/sda &amp;lt;&amp;lt; EOF
+;
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/usb_dev.png&#34; alt=&#34;USB Partition&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then format and label the partition then mount and set permissions for the parition&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo mkfs.ext4 -L SSD /dev/sda1
+sudo mkdir /mnt/ssd
+sudo mount /dev/sda1 /mnt/ssd
+echo &amp;quot;LABEL=SSD  /mnt/ssd  ext4  defaults 0 2&amp;quot; | sudo cat /etc/fstab -
+sudo chmod 777 .
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/usb_ext4.png&#34; alt=&#34;USB Mount&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi Cluster Hardware</title>
+      <link>https://darrylcauldwell.com/post/homelab-pi/</link>
+      <pubDate>Sat, 27 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-pi/</guid>
+      <description>
+        
+          &lt;p&gt;I have worked most of my professional life with systems built with Intel x86, x64 and ia64 chips. Intel processors use Complex Instruction Set Computing while Arm uses Reduced Instruction Set Computing. Processors with CISC architecture look to move complexity to hardware to simlify code, so small code sizes with high cycles per second. Processors with RISC architecture invert the relationship larger code size with low cycles per second.&lt;/p&gt;
+&lt;p&gt;Anyone who has worked in a data center has an awareness of importance of the amount of heat generated by Intel powered servers. There isn’t much heat generated from allowing electricity to flow through something (unless there is A LOT of electricity). All of Arm’s designs are energy efficient which is why they have become popular for running in smartphones, tablets and other embedded devices. If Arm processors can get traction used in servers this can only be good news for data center electricity usage.&lt;/p&gt;
+&lt;p&gt;I enjoy learning by doing and to begin to better understand Arm looked to build a cluster of Raspberry Pi. My goals of cluster include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Understanding more about Raspberry Pi hardware&lt;/li&gt;
+&lt;li&gt;Understanding how an distributed application might work across physical hosts using MPI. MPI is a programming model that is widely used for parallel programming in a cluster.&lt;/li&gt;
+&lt;li&gt;Understanding how micro-servies application may work in Edge locations running Kubernetes on low-cost hardware.&lt;/li&gt;
+&lt;li&gt;Understanding how ESXi on Arm development is progressing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Project repository: &lt;a href=&#34;https://github.com/darrylcauldwell/piCluster&#34;&gt;https://github.com/darrylcauldwell/piCluster&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;pi-cluster-rack-hardware&#34;&gt;Pi Cluster Rack Hardware&lt;/h1&gt;
+&lt;h2 id=&#34;power-over-ethernet&#34;&gt;Power over Ethernet&lt;/h2&gt;
+&lt;p&gt;One of my goals for the cluster was the hardware self-contained and easy to connect to network and power. Out of the box the Raspberry Pi 4b is powered over USB-C and operates at 5.1V upto 3A so has maximum draw (5.1*3=) 15.3watt. While I could use one official Raspberry Pi USB-C 15.3watt power supply for each this would require four power sockets. A cleaner cabling solution is to equip each Pi 4b with a PoE HAT and power each using a Power over Ethernet–enabled network. When the Pi is cabled to a PoE network switch port the power gets routed to four PoE pins on the Pi board. The PoE switch ports deliver between 27-57volts. The PoE HAT connects to the four PoE pins and has onboard transformer which converts input voltage to 5volt and then routes this to the GPIO power pins.&lt;/p&gt;
+&lt;h2 id=&#34;network-switch&#34;&gt;Network Switch&lt;/h2&gt;
+&lt;p&gt;For selecting the PoE network switch there are two important factors I considered.  PoE has two specifications the initial 802.3af (upto 15watt) and revised 802.3at (upto 30watt), the Pi 4b has 15.3watt maximum draw so ports supporting 802.3af.  Another important factor to consider is maximum draw across  all PoE ports here our maximum draw would be (15.3*4=) 61.2watts. The Netgear GS305P has five ports with four supported for 802.3af or 802.3at and is rated for 63W power draw, it is also compact with dimensions 158 x 101 x 29 mm.&lt;/p&gt;
+&lt;h2 id=&#34;storage&#34;&gt;Storage&lt;/h2&gt;
+&lt;p&gt;For storage selection the SanDisk Extreme offers sequential read up to 160MB/sec and sequential write up to 90MB/sec. The SanDisk Ultra offers sequential read up to 100MB/sec and sequential write up to 90MB/sec. The Pi4B has a dedicated SD card socket which suports 1.8V, DDR50 mode (at a peak bandwidth of 50 Megabytes / sec). The Pi 4h as a USB 3 interface which has peak bandwidth 620 Megabytes / sec. The Arcanite 128GB USB 3.1 Flash Drive has a small formfactor and low cost and offers read speeds up to 400 MB/s and write speeds up to 100 MB/s.&lt;/p&gt;
+&lt;h2 id=&#34;mounting-rack&#34;&gt;Mounting Rack&lt;/h2&gt;
+&lt;p&gt;Towards goal of keeping cluster self contained I wanted to house the network switch and four Pi 4b in a rack. There are vaious off the shelf options for stacking Pi&amp;rsquo;s but I couldn&amp;rsquo;t find a great solution for my specific requirement. I&amp;rsquo;d not done a project using custom cut metal before and thought this would be a  good opportunity to explore. I thought aluminium would be good to polish to a nice finish so I decided to use 3mm medium strength 5251 aluminium.&lt;/p&gt;
+&lt;p&gt;I found a UK based mail-order laser cutting provider &lt;a href=&#34;https://lasered.co.uk/&#34;&gt;Lasered&lt;/a&gt;. To make the order required drawing in either Drawing Interchange Format (DXF), AutoCAD (DWG) of Mastercam Numerical Control File (NC) format to  create this I used open-source LibreCAD software. I&amp;rsquo;d not used CAD software before so there was a learning curve but this was not large and within few hours I&amp;rsquo;d created two drawings. The cluster will primarily be used  as Kubernetes cluster so I designed all the plates shaped as heptagons, the top and base plates also have Raspberry Pi logo. For attaching plates together allowing enough space for airflow I chose 35mm standoffs with M4 thread to accept M4 I gave holes a 4.2mm radius. For mounting the Pi the board has 2.7mm holes to accept M2.5 thread screws so I mirror these on the plate with 2.7mm radius and use 5mm standoff to lift slightly. I added a rectangular hole behin Pi on each shelf to allow for internal PoE cable routing. The rack dimensions when assembled, widest points the heptagon is 210mm and (6x3mm=)18mm plates plus (5x40mm)=200 standoffs gives total height of 218mm.
+&lt;img src=&#34;https://darrylcauldwell.com/images/pi/cut_plates.jpeg&#34; alt=&#34;Laser cut plates&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I got the plates cut and they looked better than expected except the standoff holes looked rather large. I checked the the calipers and noticed my planned 4.2mm holes were 8.4mm and my 2.7mm holes 5.4mm. Seems I had entered diameter as value for circle radius parameter. Luckily I hadn&amp;rsquo;t ordered the standoffs, nuts or bolts. It was easy to switched from M4 to M6 for the between layer standoffs but as the Pi board only accepts M2.5 I kept these and added a washer to prevent bolt going straight through the mount hole on the shelf.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/radius_diameter.jpeg&#34; alt=&#34;Oops radius != diameter&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/first_assembly.jpeg&#34; alt=&#34;First assembly&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;rack-cabling&#34;&gt;Rack Cabling&lt;/h2&gt;
+&lt;p&gt;To keep the internal rack cabling tidy I decided to create each cable with custom length. The PoE standards require category 3 cable or better for 802.3af (upto 15watt) and category 5 cable for better for 802.3at (upto 30watt). The Raspberry Pi NIC can operate at 1Gb/s, category 5 is cable rated for 100Mb/s, category 5e is cable rated for 1Gb/s, category 6 is cable rated for 10Gb/s. To operate the Pi&amp;rsquo;s over PoE at full potential I use category 5e cable and crimped RJ45 connectors.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/custom_cables.jpeg&#34; alt=&#34;Custom cable lengths&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;finished-rack&#34;&gt;Finished Rack&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/rack_full.jpeg&#34; alt=&#34;Pi Rack Full&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/rack_side.jpeg&#34; alt=&#34;Pi Rack Side&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;hardware-bill-of-materials&#34;&gt;Hardware Bill of materials&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;35mm M6 Standoffs (Bag 50) £30&lt;/li&gt;
+&lt;li&gt;10mm M6 screws (Bag 100) £6.45&lt;/li&gt;
+&lt;li&gt;M6 hexagonal nuts (Bag 250) £6&lt;/li&gt;
+&lt;li&gt;5mm M2.5 Standoffs (Bag 20) £5&lt;/li&gt;
+&lt;li&gt;6mm M2.5 screws (Bag 100) £3.50&lt;/li&gt;
+&lt;li&gt;Custom laser cut aluminium plates £60&lt;/li&gt;
+&lt;li&gt;&amp;lt;1m Cat5e cable&lt;/li&gt;
+&lt;li&gt;RJ45 cable crimping tool kit £20&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Total rack parts cost ~£130&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;4x Raspberry Pi 4B WITH 8GB RAM (4X £73.50=) £294&lt;/li&gt;
+&lt;li&gt;4x Raspberry Pi PoE HAT (4x £18=) £72&lt;/li&gt;
+&lt;li&gt;4x 128GB SanDisk Extreme (4x £24=) £96&lt;/li&gt;
+&lt;li&gt;4x Arcanite 128GB USB 3.1 Flash Drive (4x £20=) £80&lt;/li&gt;
+&lt;li&gt;Netgear GS305P £45&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Total cluster parts cost ~£717&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>vSphere with Kubernetes Homelab Build</title>
+      <link>https://darrylcauldwell.com/post/vsphere-k8s/</link>
+      <pubDate>Wed, 29 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vsphere-k8s/</guid>
+      <description>
+        
+          &lt;p&gt;I&amp;rsquo;d been exploring Project Pacific during its beta in my homelab for a while. When vSphere 7 and NSX-T 3.0 went GA I took chance to rebuild lab and consolidate much of the configuration I&amp;rsquo;d been applying iteratively.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/tanzu-vsphere.png&#34; alt=&#34;vSphere with Tanzu&#34;&gt;&lt;/p&gt;
+&lt;p&gt;My lab hardware specification is a constraint so I&amp;rsquo;ve had to deviate from documentation in a few areas of configuration. During stand up and power up hosts experience CPU and RAM pressure but once everything is running in steady state it is tight but just fits.&lt;/p&gt;
+&lt;h2 id=&#34;single-vlan--subnet-lab-network&#34;&gt;Single VLAN / subnet Lab Network&lt;/h2&gt;
+&lt;p&gt;My lab has a very simple physical network namely a single subnet (192.168.1.0/24) with DHCP enabled and which has default route to the internet.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Host&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Allocation&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ad&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;esx1&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.11&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;esx2&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.12&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;esx3&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;vcenter&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.14&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;nsx&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.15&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;edge&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.16&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;t0-uplink&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.17&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tep-pool&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.20-24&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;workload control plane&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.30-34&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kubernetes Ingress&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.48-63&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kubernetes Egress&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.64-79&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;DHCP&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.64-253&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Gateway&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;192.168.1.254&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;I look to configure subnets on the NSX overlay network using the other RFC1918 private address range. The physical router does not support dynamic routing protocol so I configure static routes for these two CIDR with next hop as tier-0 uplink IP 192.168.1.17.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;CIDR&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;IP Range&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;10.0.0.0/8&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;10.0.0.0 – 10.255.255.255&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;172.16.0.0/12&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;172.16.0.0 – 172.31.255.255&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;compute-resource-nodes&#34;&gt;Compute Resource Nodes&lt;/h2&gt;
+&lt;p&gt;Lab compute resources are provided by three &lt;a href=&#34;https://ark.intel.com/content/www/us/en/ark/products/89190/intel-nuc-kit-nuc6i5syh.html&#34;&gt;Intel NUC6i5SYH&lt;/a&gt; hardware, each provides 2x 1.8Ghz CPU and 32GB RAM. I install ESXi boot partition on USB drives. To create a bootable USB for ESXi on macOS by creating a new VM in VMware Fusion with ESXi ISO attached as CD/DVD. It is only possible to connect USB to a running VM so power on VM and connect USB drive, work through ESXi installation via Fusion console.&lt;/p&gt;
+&lt;p&gt;At the end of installation message to disconnect the CD/DVD and reboot VM.  I remain connected for reboot, using remote console navigate Troubleshoot menu to enable ESXi Shall and SSH, then configure networking to reflect homelab IP allocation.&lt;/p&gt;
+&lt;h2 id=&#34;ensure-unique-system-uuid-and-mac-address&#34;&gt;Ensure unique System UUID and MAC address&lt;/h2&gt;
+&lt;p&gt;Once ESXi has a basic network configuration I power down the VM and move USB to the Intel NUC and power on. During installation of ESXi the System UUID and MAC address are formed from the MAC address of the NIC. When  using Fusion to create multiple ESXi VMs this scenario can lead to duplicatation of System UUID and MAC address. We can configure ESXi to move to physical NIC MAC address and form new ESXi System UUID by running commands like.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;esxcli system settings advanced set -o /Net/FollowHardwareMac -i 1
+sed -i &#39;s#/system/uuid.*##&#39; /etc/vmware/esx.conf
+/sbin/auto-backup.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;add-external-usb-nic-drivers&#34;&gt;Add external USB NIC drivers&lt;/h2&gt;
+&lt;p&gt;The Intel NUC has a single onboard 1GB NIC, I add an external USB NIC to each NUC. ESXi doesn&amp;rsquo;t ship with required drivers for these external USB NIC, for labs these are provides via &lt;a href=&#34;https://flings.vmware.com/usb-network-native-driver-for-esxi&#34;&gt;VMware Flings&lt;/a&gt;. I copy the downloaded driver bundle to the /tmp folder on ESXi via an SFTP client like CyberDuck. Once the bundle is uploaded I following command to install the bundle.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;esxcli software vib install -d /tmp/ESXi700-VMKUSB-NIC-FLING-34491022-component-15873236.zip
+esxcli system maintenanceMode set --enable true
+esxcli system shutdown reboot --reason &amp;quot;USB NIC driver&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;suppress-warnings&#34;&gt;Suppress Warnings&lt;/h2&gt;
+&lt;p&gt;When booting ESXi from USB the system logs and coredumps can not persist to local storage. I also prefer to leave SSH enabled in lab so get warnings. Both of these choices gives me warnings which I prefer to suppress.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vim-cmd hostsvc/advopt/update UserVars.SuppressShellWarning long 1
+vim-cmd hostsvc/advopt/update UserVars.SuppressCoredumpWarning long 1
+vim-cmd hostsvc/advopt/update Syslog.global.logHost string 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;form-vsan-cluster&#34;&gt;Form vSAN Cluster&lt;/h2&gt;
+&lt;p&gt;Two of the Intel NUC I use each have SSD the third is used to provide compute resources only. The ESXi installation allows Management traffic only on VMkernel port so need to bind vSAN to VMkernel port. In my lab only two devices contribute disk to vSAN the default storage policy for will prevent any VM deployment. To configure this I run the following on each host in cluster.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;esxcli system maintenanceMode set --enable false
+esxcli vsan network ip add -i vmk0
+esxcli vsan policy setdefault -c cluster -p &amp;quot;((\&amp;quot;hostFailuresToTolerate\&amp;quot; i0)&amp;quot;
+esxcli vsan policy setdefault -c vdisk -p &amp;quot;((\&amp;quot;hostFailuresToTolerate\&amp;quot; i0)&amp;quot;
+esxcli vsan policy setdefault -c vmnamespace -p &amp;quot;((\&amp;quot;hostFailuresToTolerate\&amp;quot; i0)&amp;quot;
+esxcli vsan policy setdefault -c vmswap -p &amp;quot;((\&amp;quot;hostFailuresToTolerate\&amp;quot; i0) (\&amp;quot;forceProvisioning\&amp;quot; i1))&amp;quot;
+esxcli vsan policy setdefault -c vmem -p &amp;quot;((\&amp;quot;hostFailuresToTolerate\&amp;quot; i0) (\&amp;quot;forceProvisioning\&amp;quot; i1))&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the pre-requists in place a new vSAN cluster can be formed on first host using command like.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;esxcli vsan cluster new 
+esxcli vsan cluster get | grep &amp;quot;Sub-Cluster UUID&amp;quot;
+    Sub-Cluster UUID: 5291783f-77a6-c1dc-2ed8-6cfc200618b1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Add other nodes to the cluster using output of Sub-Cluster Master UUID using command like.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;esxcli vsan cluster join -u 5291783f-77a6-c1dc-2ed8-6cfc200618b1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At this stage vSAN cluster while nodes are looking to form the quorum cannot be formed. Prior to vSAN 6.6 the cluster can discover members using multicast. Forming cluster without vCenter requires formation of unicast networking from the command line by manually building table &lt;a href=&#34;https://kb.vmware.com/s/article/2150303&#34;&gt;kb2150303&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;active-directory&#34;&gt;Active Directory&lt;/h2&gt;
+&lt;p&gt;At this stage I upload Windows Server 2019 ISO to vSAN and use this to deploy a VM which acts as a environment Remote Desktop, File Store, DNS server, NTP source and Active Directory. Before proceeding create DNS A &amp;amp; PTR records for the environment.&lt;/p&gt;
+&lt;h2 id=&#34;vcenter-server&#34;&gt;vCenter Server&lt;/h2&gt;
+&lt;p&gt;I use the Active Directory jump server to mount the vCenter ISO and use UI installer to deploy a &amp;lsquo;Tiny&amp;rsquo; sized vCenter Server to existing Datastore. This creates a cluster with the move deployed to, at this stage I attach remaining hosts to cluster.&lt;/p&gt;
+&lt;p&gt;We can then pass ownership of vSAN cluster membership back to vCenter by running following on each host.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;esxcfg-advcfg -s 0 /VSAN/IgnoreClusterMemberListupdates
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The Workload Control Plane feature requires DRS and HA are required to be enabled on clusters it manages. Ensure these are enabled and HA admission control is disabled to maintain capacity.&lt;/p&gt;
+&lt;h2 id=&#34;default-vsan-storage-policy&#34;&gt;Default vSAN Storage Policy&lt;/h2&gt;
+&lt;p&gt;During the setup of VSAN cluster we configured the local policies to FTT=0 as I only have 2x hosts providing disk capacity. To deploy VMs and appliances via vCenter similarly need to adjust the &amp;lsquo;vSAN Default Storage Policy&amp;rsquo; to &amp;lsquo;No data redundancy&amp;rsquo;.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-installation&#34;&gt;NSX Installation&lt;/h2&gt;
+&lt;p&gt;Deploy NSX-T 3.0 appliance sized Small, I need to remove CPU reservation to power on.&lt;/p&gt;
+&lt;h2 id=&#34;connect-nsx-and-vcenter&#34;&gt;Connect NSX and vCenter&lt;/h2&gt;
+&lt;p&gt;Connect to NSX appliance navigate to System &amp;gt; Fabric &amp;gt; Compute Managers and create bindng to vCenter. In order vCenter Workload Platform services can communicate with NSX ensure Enable Trust option is checked.&lt;/p&gt;
+&lt;h2 id=&#34;vsphere-distributed-switch&#34;&gt;vSphere Distributed Switch&lt;/h2&gt;
+&lt;p&gt;Prior to release of vSphere 7 and NSX-T 3.0 to install NSX required the creation of a N-VDS host switch on each ESXi host. While segments created on N-VDS where visible in vSphere they were not as rich as VDS. It is a constraint that physical NIC uplinks cannot be assigned to both a VDS and N-VDS.&lt;/p&gt;
+&lt;p&gt;It was possible to have hosts with two pNIC which initially get built as VDS and then migrate to N-VDS and remove VDS. When running only with N-VDS the segments show in vCenter as Opaque networks. Not many 3rd party products support Opaque networks, automation became more complex as the network could not be correctly gathered via vCenter. Many production deployments moved to hosts with four pNIC two assigned to N-VDS and two assigned to VDS to hold the VMkernel ports.&lt;/p&gt;
+&lt;p&gt;With these latest product versions the VDS and N-VDS capabilities converge to singluar VDS construct for use as host switch on ESXi the N-VDS remains for Edge and non-ESXi Transport Node types. The converged VDS for ESXi improves pNIC design and also makes operational management much easier as there is a singluar place for configuring NIOC, MTU and LLDP configuration.&lt;/p&gt;
+&lt;p&gt;The lab hosts have two pNIC I leave onboard to vSphere Standard Switch with VMkernel ports attached. I create a VDS Version 7 configured with 1 uplink,  NIOS enabled but without default port group. The default VDS is created with MTU 1500, to support NSX I increase this to Advanced configuration option for MTU 1700.&lt;/p&gt;
+&lt;p&gt;Once VDS is created I add usb0 NIC from all cluster hosts to be assigned to Uplink1.  I do not migrate VMkernel or VM networking to VDS.&lt;/p&gt;
+&lt;h2 id=&#34;create-a-tunnel-endpoint-ip-address-pool&#34;&gt;Create a Tunnel Endpoint IP Address Pool&lt;/h2&gt;
+&lt;p&gt;System &amp;gt; Networking &amp;gt; IP Management &amp;gt; IP Address Pools &amp;gt; Add IP Address Pool&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Name:             tep-pool
+IP Range:         192.168.1.20-192.168.1.24
+CIDR:             192.168.1.0/24
+Gateway IP:       192.168.1.254
+DNS Server:       192.168.1.10
+DNS Suffix:       darrylcauldwell.com
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;configure-esxi-hosts-as-transport-nodes&#34;&gt;Configure ESXi hosts as Transport Nodes&lt;/h2&gt;
+&lt;p&gt;To consistently configure ESXi hosts as NSX Transport Nodes I create a Transport Node Profile.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Name                           Host Transport Node Profile
+Host Switch - Type             VDS
+Host Switch - Mode             Standard
+Host Switch - Name             vCenter \ DSwitch
+Host Switch - Transport Zone   nsx-overlay-transportzone &amp;amp; nsx-vlan-transportzone
+Host Switch - Uplink Profile   nsx-default-uplink-hostswitch-profile
+Host Switch - IP Assignment    IP Pool - tep-pool
+Host Switch - Teaming Policy   uplink1 (active)= Uplink 1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once created using Host Transport Nodes menu select cluster and apply profile. Once completed it is possible to view the NSX components installed on all ESXi hosts using:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;esxcli software vib list | grep nsx
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;configure-nsx-edge&#34;&gt;Configure NSX Edge&lt;/h2&gt;
+&lt;p&gt;The NSX Edge provides a Layer 3 routing capability the NSX Container Plugin requires at least a medium sized Edge to deploy a small loadbalancer.&lt;/p&gt;
+&lt;p&gt;Deploy a medium sized Edge node&lt;/p&gt;
+&lt;p&gt;System &amp;gt; Fabric &amp;gt;  Nodes &amp;gt; Edge Transport Nodes &amp;gt; Add Edge VM&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Name:                   nsxEdge
+FQDN:                   edge
+Size:                   Large
+Shares:                 Normal
+Memory Reservation:     0
+IP Assignment:          Static
+Management Interface:   VM Network
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Node Switch&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Name:                       nvds1
+Transport Zone:             nsx-overlay-transportzone
+Uplink Profile:             nsx-edge-single-nic-uplink-profile
+IP Pool:                    tep-pool
+DPDK Fastpath Interfaces:   VM Network
+
+Name:                       nvds2
+Transport Zone:             nsx-vlan-transportzone
+Uplink Profile:             nsx-edge-single-nic-uplink-profile
+DPDK Fastpath Interfaces:   VM Network
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;configure-edge-cluster&#34;&gt;Configure Edge Cluster&lt;/h2&gt;
+&lt;p&gt;When Edge has fully deployed create Edge Cluster&lt;/p&gt;
+&lt;p&gt;System &amp;gt; Fabric &amp;gt; Nodes &amp;gt; Edge Clusters &amp;gt; Add&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Name:                       edgeCluster
+Transport Nodes:            nsxEdge
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;uplink-network-segment&#34;&gt;Uplink Network Segment&lt;/h2&gt;
+&lt;p&gt;A network segment is required to to connect Tier0 router uplink to VLAN&lt;/p&gt;
+&lt;p&gt;Networking &amp;gt; Segments &amp;gt;  Add Segment&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Segment Name:               edgeUplink
+Connectivity:               None
+Transport Zone:             nsx-vlan-transportzone
+VLAN:                       0
+Multicast:                  Disabled
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;tier0-router&#34;&gt;Tier0 Router&lt;/h2&gt;
+&lt;p&gt;A logical router is required I create one like:&lt;/p&gt;
+&lt;p&gt;Networking &amp;gt; Tier-0 Gateways &amp;gt; Add Gateway &amp;gt; Tier0&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Name:                       tier0
+HA Mode:                    Active-Standby
+Failover:                   non preemptive
+Edge Cluster:               edgeCluster
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Add Interface&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Name:                       tier0uplink
+Type:                       External
+IP Address:                 192.168.1.17/24
+Connected To:               edgeUplink
+Edge Node:                  nsxEdge
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once interface is added you can test it works as it will now be able to ping.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ping 192.168.1.17 -c &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;enable-a-cluster-as-workload-control-plane-wcp&#34;&gt;Enable a cluster as Workload Control Plane (WCP)&lt;/h2&gt;
+&lt;p&gt;With all of the pre-requists in place we can now use wizard to enable integrated Kubernetes.&lt;/p&gt;
+&lt;p&gt;[EDIT 4th May] since initial publication I found another &lt;a href=&#34;https://www.virtuallyghetto.com/2020/04/deploying-a-minimal-vsphere-with-kubernetes-environment.html&#34;&gt;blog post&lt;/a&gt; around deploying minimal lab. By default when enabling Workload Control Plane this deploys a 3x VMs which form the Kubernetes supervisor cluster. This can be reduced to 2x by updating &lt;code&gt;/etc/vmware/wcp/wcpsvc.yaml&lt;/code&gt; on the VCSA and changing the minmasters and maxmasters properties from 3 to 2. Then restarting the wcp service &lt;code&gt;service-control --restart wcp&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Menu &amp;gt; Workload Management &amp;gt; Enable&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Select a Cluster&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If cluster does not show available check reason via GUI and or these vCenter logs for clues.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/var/log/vmware/wcp/wcpsvc.log
+/var/log/vmware/wcp/nsxd.log
+&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Cluster Settings&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;Cluster Size:                  Tiny
+&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;Network&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The management network refers to the control plane needs to communicate with vCenter and NSX.  The workload network will come from the RFC1918 addressable space. Enter network details&lt;/p&gt;
+&lt;p&gt;Workload Control Plane Networking&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Network:                        VM Network
+Starting IP Address:            192.168.1.30
+Subnet Mask:                    255.255.255.0
+Gateway:                        192.168.1.254
+DNS Server:                     192.168.1.10
+NTP Server:                     192.168.1.10
+DNS Search Domains:             darrylcauldwell.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Workload Network&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vDS:                            DSwitch
+Edge Cluster:                   edgeCluster
+DNS Server:                     192.168.1.10
+Pod CIDRs:                      10.244.0.0/21 (default)
+Service CIDRS:                  10.96.0.0/24 (default)
+Ingress CIDR:                   192.168.1.48/28
+Egress CIDR:                    192.168.1.64/28
+&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;Configure storage to use&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;Control Plane Node              vSAN Default Storage Policy
+Ephemeral Disks                 vSAN Default Storage Policy
+Image Cache                     vSAN Default Storage Policy
+&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;Review and confirm&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Once submitted we see in vCenter a resource pool named Namespaces and three virtual appliances named WcpAPIServerAgent each is allocated 2CPU and 8GB RAM.  An installation occurs on the three virtual appliances which,  these attempt to run before appliances deploy it is normal to see install failures during this phase.&lt;/p&gt;
+&lt;p&gt;The progress messages available via UI aren&amp;rsquo;t superb its useful to SSH to VCSA and tail the log:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tail -f /var/log/vmware/wcp/wcpsvc.logtail -f /var/log/vmware/wcp/wcpsvc.log
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If all has goes to plan an hour and a half or so later and if all gone to plan.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/tanzu-wcp.png&#34; alt=&#34;WCP Success&#34;&gt;&lt;/p&gt;
+&lt;p&gt;From here I can begin to create and consume native Kubernetes namespaces and resources.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Introduction To Kubernetes Cluster Networking with NSX-T</title>
+      <link>https://darrylcauldwell.com/post/k8s-nsxt/</link>
+      <pubDate>Tue, 31 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/k8s-nsxt/</guid>
+      <description>
+        
+          &lt;p&gt;When developing a cloud native application using Docker containers she soon needs to understand how Docker containers communicate. In previous &lt;a href=&#34;https://darrylcauldwell.com/post/docker-networking&#34;&gt;post&lt;/a&gt; I looked at how Docker containers communicate on a single host. When the developer wants to scaleout capacity of the hosting across multiple hosts or increase abailability she might look at deploying this on a Kubernetes cluster. The move from single Docker host to multiple hosts managed as Kubernetes Cluster introduces changes to the container networking model. The four distinct networking problems a Kubernetes Cluster needs to address:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Highly-coupled container-to-container communications&lt;/li&gt;
+&lt;li&gt;Pod-to-Pod communications&lt;/li&gt;
+&lt;li&gt;Pod-to-Service communications&lt;/li&gt;
+&lt;li&gt;External-to-Service communications: this is covered by services&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;what-is-a-kubernetes-pod&#34;&gt;What Is A Kubernetes Pod&lt;/h2&gt;
+&lt;p&gt;A Docker container is great for deploying a single atomic unit of software. This model can become a bit cumbersome when you want to run multiple pieces of software together. You often see this when developers create Docker images that use &lt;a href=&#34;https://docs.docker.com/config/containers/multi-service_container/&#34;&gt;supervisord&lt;/a&gt; as an entrypoint to start and manage multiple processes. Many have found that it is instead more useful to deploy those applications in groups of containers that are partially isolated and partially share an environment. It is possible to configure Docker to control the level of sharing between groups of containers by creating a parent container and manage the lifetime of those containers, however this is administratively complex. Kubernetes provides an abstraction called Pods for just this use case.&lt;/p&gt;
+&lt;p&gt;A Kubernetes Pod implements a &amp;lsquo;pause&amp;rsquo; container as the managing parent container, the Pod also contains one or more of  application containers. The &amp;lsquo;pause&amp;rsquo; container serves as the basis of Linux namespace sharing in the Pod the other containers are starterd within that namespace. Sharing a namespace includes sharing network stack and other resources such as volumes. Sharing a network namespace means containers within a Pod share an IP address and all containers within a Pod can all reach each other’s ports on localhost.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-pod.png&#34; alt=&#34;Kubernets Pod&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-is-a-kubernetes-service&#34;&gt;What Is A Kubernetes Service&lt;/h2&gt;
+&lt;p&gt;Typically a Kubernetes Deployment is used to When a Kubernetes Pod is deployed Pods. A Deployment describes a desired state it can create and destroy Pods dynamically. While each Pod gets its own IP address, the set of Pods running can change. A Kubernetes Service (sometimes called a micro-service) is an abstraction which defines a logical set of Pods. The Kubernetes API provides Service discovery to Pods, it also offers a method of exposing Services via network port or load balancer to external systems.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-container-networking-interface-cni&#34;&gt;What Is Container Networking Interface (CNI)&lt;/h2&gt;
+&lt;p&gt;Container-centric infrastructure needs a network and this network must be dynamic. Container networking is designed to be plugable, the Container Networking Interface is a defined &lt;a href=&#34;https://github.com/containernetworking/cni/blob/master/SPEC.md&#34;&gt;specification&lt;/a&gt;. Various open source projects and vendors provide CNI compliant plugins which provide dynamic networking solution for containers.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-nsx-t-container-plugin-ncp&#34;&gt;What Is NSX-T Container Plugin (NCP)&lt;/h2&gt;
+&lt;p&gt;The NSX-T Container Plug-in (NCP) provides a CNI plugin and an integration with container orchestrators such as Kubernetes and OpenShift.&lt;/p&gt;
+&lt;p&gt;NSX-T bring advanced features which can enrich Kubernetes cluster networking &lt;a href=&#34;https://blogs.vmware.com/networkvirtualization/2017/03/kubecon-2017.html/&#34;&gt;including&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fine-grained traffic control and monitoring&lt;/li&gt;
+&lt;li&gt;Fine-grained security policy (firewall rules)&lt;/li&gt;
+&lt;li&gt;Automated creation of network topology&lt;/li&gt;
+&lt;li&gt;Integration with enterprise networking&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The main component of NCP runs in a container and communicates with NSX Manager and with the Kubernetes control plane. NCP monitors changes to containers and other resources and manages networking resources such as logical ports, switches, routers, and security groups for the containers by calling the NSX API.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-t-container-plug-in-release-25&#34;&gt;NSX-T Container Plug-in Release 2.5&lt;/h2&gt;
+&lt;p&gt;I looked at the &lt;a href=&#34;http://darrylcauldwell.com/nsx-openshift/&#34;&gt;NCP initially for integration with OpenShift&lt;/a&gt; in mid-2018. I am revisiting this now to refresh my understanding and explore some of the new features introduced with the &lt;a href=&#34;https://blogs.vmware.com/networkvirtualization/2019/09/nsx-t-2-5-what-is-new-for-kubernetes.html/&#34;&gt;2.5 release&lt;/a&gt; including:&lt;/p&gt;
+&lt;h3 id=&#34;policy-api-object-support&#34;&gt;Policy API Object Support&lt;/h3&gt;
+&lt;p&gt;Prior to the 2.5 release all NSX objects which the NCP interacted with had to be created via the Advanced Networking &amp;amp; Security tab in the UI or the old imperative APIs. The imperative API was harder than it could have been to control programatically so with the NSX-T 2.4 release VMware introduced a new intent-based Policy API and corresponding Simplified UI. The NCP now supports either the imperative or the intent-based API,  to use the intent-based API a new parameter in the NCP configmap (ncp.ini) policy_nsxapi needs to be set to True.&lt;/p&gt;
+&lt;h3 id=&#34;simplified-installation&#34;&gt;Simplified Installation&lt;/h3&gt;
+&lt;p&gt;Another change I am interested in exploring is the simplified installation. In the past, an admin had to login to every k8s node and perform multiple steps to bootstrap it. She had to install the NSX CNI Plug-in and OpenVSwitch, to create OVS bridge and to add one vNic to the bridge. The 2.5 release introduces a second DaemonSet nsx-ncp-bootstrap Pod this now handles the deployment and lifecycle management of these components and we don’t need to login to every node. This should make it easier to scale out a cluster with additional nodes.&lt;/p&gt;
+&lt;h2 id=&#34;lab-hardware-configuration&#34;&gt;Lab Hardware Configuration&lt;/h2&gt;
+&lt;p&gt;To explore Kubernetes networking and the NCP I am using my homelab. My homelab has a very simple physical network namely a single subnet (192.168.1.0/24) with DHCP enabled and which has default route to the internet. Connected to the physical network are three Intel NUCs each has two 1G NIC an onboard and an additional 1G USB3 NIC.&lt;/p&gt;
+&lt;h2 id=&#34;lab-vsphere-configuration&#34;&gt;Lab vSphere Configuration&lt;/h2&gt;
+&lt;p&gt;The hosts run vSphere 6.7 Update 3 and have the onboard NIC configure as a vSphere Standard Switch hosting Management and vSAN VMkernels and the USB3 NIC is unused. The hosts are added to a vCenter appliance (192.168.1.13) and formed into a VSAN enabled cluster. The cluster also hosts a Windows 2019 Server VM running Active Directory (192.168.1.10) this also acts as DNS server and NTP source for lab.&lt;/p&gt;
+&lt;h2 id=&#34;lab-nsx-t-configuration&#34;&gt;Lab NSX-T Configuration&lt;/h2&gt;
+&lt;p&gt;An extra-small NSX Manager appliance (192.168.1.14) is deployed.  All esxi hosts are configured as Transport Nodes using vusb0 interface to Transport Zone named &amp;lsquo;overlayTransport&amp;rsquo;. A medium sized NSX Edge called &amp;lsquo;nsxEdge&amp;rsquo; is deployed which is a member of &amp;lsquo;overlayTransport&amp;rsquo; and &amp;lsquo;vlanTransport&amp;rsquo; Transport Zones. A Edge Cluster named &amp;lsquo;edgeCluster&amp;rsquo; and add &amp;lsquo;nsxEdge&amp;rsquo; is a member.&lt;/p&gt;
+&lt;h2 id=&#34;kubernetes-ip-address-space&#34;&gt;Kubernetes IP Address Space&lt;/h2&gt;
+&lt;p&gt;A Kubernetes Cluster requires all Pods on a node to communicate with all Pods on all nodes in the cluster without NAT these are refered to as CluterIP. To support this a range of IP addresses must be defined to be issued to Pods and Services within a cluster. Even though the range is used for both Pods and Services, it is called the Pod address range. The last /20 of the Pod address range is used for Services. A /20 range has 212 = 4096 addresses. So 4096 addresses are used for Services, and the rest of the range is used for Pods.&lt;/p&gt;
+&lt;p&gt;The address range I will be using to issue ClusterIP for this lab cluster is 10.0.0.0/16.&lt;/p&gt;
+&lt;p&gt;As well as internal communicatins using ClusterIP some parts of your application may need to be exposed as a Service to be accessible on an externally routable IP address. There are two methods for exposing Service onto an externally routable IP address, NodePort and LoadBalancer. Source NAT is used for translating private ClusterIP address to a public routable address.&lt;/p&gt;
+&lt;p&gt;The external address range I will be using to issue ExternalIP for this lab cluster is 172.16.0.0/16.&lt;/p&gt;
+&lt;h2 id=&#34;ncp---nsx-object-identification&#34;&gt;NCP - NSX Object Identification&lt;/h2&gt;
+&lt;p&gt;There can be many objects deployed within NSX-T, the NCP needs to understand which of these objects to interact with. The NSX objects which the NCP needs to interact with include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Overlay transport zone&lt;/li&gt;
+&lt;li&gt;Tier-0 logical router&lt;/li&gt;
+&lt;li&gt;Logical switch to connect the node VMs&lt;/li&gt;
+&lt;li&gt;IP Block for internal ClusterIP addressing&lt;/li&gt;
+&lt;li&gt;IP Pool for ExternalIP addressing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The NCP configuration is stored in ncp.ini file. It is possible to put the UUID of NSX objects in the ncp.ini but this an administrative pain. The mapping of which NSX objects for NCP to interact with is better achieved by applying tags to the appropriate NSX objects.&lt;/p&gt;
+&lt;p&gt;An NSX-T instance can support multiple Kubernetes clusters to ensure correct object mapping a cluster name is used. The cluster name is specified in NCP configuration and the appopriate NSX objects must have tag of same name applied.&lt;/p&gt;
+&lt;p&gt;For this lab environment I am configuring with cluster name &amp;lsquo;pandora&amp;rsquo;.&lt;/p&gt;
+&lt;h2 id=&#34;deploy-and-configure-tier-0&#34;&gt;Deploy and Configure Tier-0&lt;/h2&gt;
+&lt;p&gt;The NCP deploys application centric network topology at the top of that topology is a Tier-0 router which provides uplink to the physical network.&lt;/p&gt;
+&lt;p&gt;Use the Policy UI to deploy a Tier-0 Logical Router with High-Availability mode Active-Passive. In order the NCP knows the correct Tier-0 Logical Router a tag like this needs to be applied:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Tag&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Scope&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;pandora&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp/cluster&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;When applied it should look like:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier0.png&#34; alt=&#34;NSX-T Tier-0 Router&#34;&gt;&lt;/p&gt;
+&lt;p&gt;To communicate with the physical network the Tier-0 requires an uplink IP address.  In order to add uplink IP address we require creating a network segment backed by VLAN.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-physical-segment.png&#34; alt=&#34;VLAN Backed Segment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can now configure an interface on the Tier-0 with IP address 192.168.1.17.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier0-uplink.png&#34; alt=&#34;NSX-T Tier-0 Uplink&#34;&gt;&lt;/p&gt;
+&lt;p&gt;To enable ExternalIP routing from physical network add a static route to physical router directing 172.16.0.0/16 to 192.168.1.17.&lt;/p&gt;
+&lt;h3 id=&#34;nsx-ip-block-for-internal-clusterip&#34;&gt;NSX IP Block for internal ClusterIP&lt;/h3&gt;
+&lt;p&gt;NSX-T has an inbuilt capability for IP Management, in which we can allocate blocks of IP Addresses and create IP Pools.&lt;/p&gt;
+&lt;p&gt;The NCP requires an IP Block for issuing internal ClusterIP. Create the 10.0.0.0/16 IP address block named &amp;lsquo;k8s-1-internal&amp;rsquo; with tags applied like this:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Tag&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Scope&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;pandora&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp/no_snat&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;pandora&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp/cluster&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;When applied it should look like:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-internal-block.png&#34; alt=&#34;Internal Block&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-ip-pool-for-externalip&#34;&gt;NSX IP Pool for ExternalIP&lt;/h2&gt;
+&lt;p&gt;The NCP requires an IP Pool for issuing internal ExternalIP. First create an IP Block named &amp;lsquo;k8s-1-external&amp;rsquo; with CIDR 172.16.0.0/16. This IP Block is not accessed directly by NCP so does not need any tags.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-external-block.png&#34; alt=&#34;External Block&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once the IP Block is in place create an IP Pool named &amp;lsquo;k8s-1-loadbalancer&amp;rsquo; which has a subnet issued from IP Block &amp;lsquo;k8s-1-external&amp;rsquo; which is sized at 128 the IP Pool.  The External IP Pool can be shared but should at least have tag applied like this:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Tag&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Scope&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;true&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp/external&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;When applied it should look like:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-external-pool.png&#34; alt=&#34;External Block Tag&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;node-logical-switch&#34;&gt;Node Logical Switch&lt;/h2&gt;
+&lt;p&gt;Network connectivity to the containers running in Kubernetes is provided by a NSX-T logical switch segment which is often referred to as the node logical switch. For this create a new segment called &amp;lsquo;node-logical-switch&amp;rsquo; within the &amp;lsquo;overlayTransportZone&amp;rsquo; connected to no gateway.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-node-logical-switch.png&#34; alt=&#34;Node Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;kubernetes-master-vm&#34;&gt;Kubernetes Master VM&lt;/h2&gt;
+&lt;p&gt;Create a Ubuntu 18.04 VM with 2x CPU, 4GB RAM and 50GB vHDD named &amp;lsquo;k8s-master&amp;rsquo;. The VM should have two vNIC one which is used to communicate with NSX API and which will host Kubernetes API. The second connected to the node logical switch which will have the Open vSwitch (OVS) bridge configured to give connectivity to the Pods. In my lab first connected to &amp;lsquo;VM Network&amp;rsquo; enumerates as ens160 and the scond connected to &amp;lsquo;node-logical-switch&amp;rsquo; enumerates as ens192.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat /etc/netplan/01-netcfg.yaml 
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens160:
+      addresses: 
+      - 192.168.1.27/24
+      gateway4: 192.168.1.254
+      nameservers:
+          search:
+          - darrylcauldwell.com
+          addresses: 
+          - 192.168.1.10
+    ens192: {}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In order the NCP know which vNIC to configure the VM vNIC connected &amp;lsquo;node-logical-switch&amp;rsquo; creates a segment port object in NSX-T this port must have tag applied like this:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Tag&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Scope&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;k8s-master&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp/node_name&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;pandora&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp/cluster&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;When applied it should look like:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-segment-port-tags.png&#34; alt=&#34;Segment Port Tags&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;install-and-configure-kubernetes&#34;&gt;Install and Configure Kubernetes&lt;/h2&gt;
+&lt;p&gt;Docker and Kubernetes require installation do this by running the following.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt update -y
+sudo apt upgrade -y
+sudo apt install docker.io python apt-transport-https -y
+sudo gpasswd -a $USER docker
+sudo systemctl start docker
+sudo systemctl enable docker
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-add-repository &amp;quot;deb http://apt.kubernetes.io/ kubernetes-xenial main&amp;quot;
+sudo apt-get update
+sudo swapoff -a 
+sudo sed -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab
+sudo apt-get install -y kubelet=1.16.4-00 kubeadm=1.16.4-00 kubectl=1.16.4-00
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Initialize the Kubernetes cluster by running the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo kubeadm init
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In order to easily run kubectl as a user we need to copy the cluster configuration to the user profile, do this by running the following.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can now connect to cluster and check the state of the nodes, do this by running the following on the Master node.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get nodes
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-init-get-nodes.png&#34; alt=&#34;Init Get Nodes&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The status of each Node will show &amp;lsquo;NotReady&amp;rsquo;,  we can get more details of why it is in this state by running the following on the Master node.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl describe nodes k8s-master | grep Conditions -A9
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-init-describe-node.png&#34; alt=&#34;Init Describe Nodes&#34;&gt;&lt;/p&gt;
+&lt;p&gt;With this we can see this reason for the error is &amp;lsquo;NetworkPluginNotReady&amp;rsquo; that the cni plugin is not initiated.&lt;/p&gt;
+&lt;h2 id=&#34;install-and-configure-nsx-container-plug-in-ncp&#34;&gt;Install and Configure NSX Container Plug-in (NCP)&lt;/h2&gt;
+&lt;p&gt;The NSX Container Plug-in (NCP) provides integration between NSX-T and Kubernetes, it is a containerised application which manages communicates between NSX Manager and the Kubernetes control plane. The NSX Container Plug-in (NCP) application runs in Kubernetes it is supplied as .zip download. The configuration of the NCP applications is maintained in a Kubernetes manifest file.&lt;/p&gt;
+&lt;p&gt;The NCP application ships a container image file we could deploy this to a container registry but here we will just upload the image file to VM and import the image to the local docker repository. The default container image name specified in the manifest is nsx-ncp so we can apply that as tag on the image.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo docker load -i /home/ubuntu/nsx-ncp-ubuntu-2.5.1.15287458.tar
+sudo docker image tag registry.local/2.5.1.15287458/nsx-ncp-ubuntu nsx-ncp
+sudo docker images | grep ncp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Prior to the 2.5 release there were multiple  manifest files each targetting a specific area of configuration.  These are now merged into a single manifest file with multiple sections with multiple resource specifications the sections can be identified by the separator &lt;code&gt;---&lt;/code&gt;. The resources are created in the order they appear in the file.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Resource Kind&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Resource Name&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;Comments&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;CustomResourceDefinition&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsxerrors.nsx.vmware.com&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CustomResourceDefinition&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsxlocks.nsx.vmware.com&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Namespace&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-system&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ServiceAccount&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp-svc-account&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ClusterRole&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp-cluster-role&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ClusterRole&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp-patch-role&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ClusterRoleBinding&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp-cluster-role-binding&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ClusterRoleBinding&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;ncp-patch-role-binding&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ServiceAccount&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-node-agent-svc-account&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ClusterRole&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-node-agent-cluster-role&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ClusterRoleBinding&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-node-agent-cluster-role-binding&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ConfigMap&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-ncp-config&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Must update Kubernetes API and NSX API parameters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Deployment&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-ncp&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ConfigMap&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-node-agent-config&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;Must update Kubernetes API and NSX API parameters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;DaemonSet&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-ncp-bootstrap&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;DaemonSet&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;nsx-node-agent&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For this lab I will use mostly default configuration from the supplied manifest file template. The settings I change from what is in template are the environment specifics such as details for connecting to NSX API including whether to use imperative API or intent-based API, the &amp;lsquo;cluster&amp;rsquo; name and the Node vNIC on which the OVS bridge gets created on.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[nsx_v3]
+policy_nsxapi = True
+
+nsx_api_managers = 192.168.1.14
+nsx_api_user = admin
+nsx_api_password = VMware1!
+
+insecure = True
+
+[coe]
+cluster = pandora
+
+[k8s]
+apiserver_host_ip = 192.168.1.27
+apiserver_host_port = 6443
+
+[nsx_kube_proxy]
+ovs_uplink_port = ens192
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the manifest file is updated and docker image in local registry we can apply the NCP manifest. Applying the manifest takes a couple of minutes while as it creates various Pods we can watch their creation to view progress.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply --filename /home/ubuntu/ncp-ubuntu.yaml
+kubectl get pods --output wide --namespace nsx-system --watch
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-deploy-ncp.png&#34; alt=&#34;Deploy NCP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If all has gone well we can take a look at the objects created within the namespace.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get all --namespace nsx-system
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-deployed-ncp.png&#34; alt=&#34;Deployed NCP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Now its running we can check health of the NCP, the NCP has a &lt;a href=&#34;https://docs.vmware.com/en/VMware-NSX-T-Data-Center/2.5/ncp-kubernetes/GUID-EA8E6CEE-36F4-423C-AD1E-DD6421A5FB1C.html&#34;&gt;CLI&lt;/a&gt; where we can run various commands including health checks.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl exec -it nsx-ncp-6978b9cb69-dj4k2 --namespace nsx-system -- /bin/bash 
+nsxcli
+get ncp-k8s-api-server status
+get ncp-nsx status
+exit
+exit
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ncp-health.png&#34; alt=&#34;NCP Health&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-policy-ui-object-creation&#34;&gt;NSX Policy UI Object Creation&lt;/h2&gt;
+&lt;p&gt;With NSX integration when we deploy a Kubernetes namespace the NCP creates a corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.  If you open NSX Manager and view one of the object categories which should have objects created. Then create two Kubernetes namespaces one called development and one called production.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create --filename https://k8s.io/examples/admin/namespace-dev.json
+kubectl create --filename https://k8s.io/examples/admin/namespace-prod.json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you refresh view in NSX Manager you will see the new objects appear in the Policy UI.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier1s.png&#34; alt=&#34;NSX-T Tier-1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can then remove these two namespaces the NCP removes the corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl delete -f https://k8s.io/examples/admin/namespace-prod.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;ncp-bootstrap-scaleout-cluster&#34;&gt;NCP Bootstrap Scaleout Cluster&lt;/h2&gt;
+&lt;p&gt;We started this lab with a single node cluster to look at the nsx-ncp-bootstrap Daemonset. When Nodes are added to the cluster this should install and configure the Node with NCP.&lt;/p&gt;
+&lt;p&gt;Create a second and third VM with same hardware configuration as k8s-master but name these k8s-worker-1 / k8s-worker-2 and give IPs 192.168.1.28  / 192.168.1.29.  Ensure the NSX segment port attached to  VMs is tagged correctly. Ensure the NCP docker image is uploaded, imported to local docker registry and has tag applied.&lt;/p&gt;
+&lt;p&gt;To add the additional Node to the cluster first step is to create a token on master.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubeadm token create --print-join-command
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-token.png&#34; alt=&#34;Token&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We use the output of command from the master to add the additional worker nodes to the cluster. The nsx-ncp-bootstap and nsx-node-agent are DaemonSets this ensures that all Nodes run a copy of a Pod. When we add the worker nodes to the cluster we can see the nsx-ncp-bootstrap Pods initialize and configure the Node and the nsx-node-agent Pods initialize.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods -o wide --namespace nsx-system --watch
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ncp-scale-out.png&#34; alt=&#34;NCP Scale Out&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;ip-assignments&#34;&gt;IP Assignments&lt;/h2&gt;
+&lt;p&gt;When a Pod is deployed it can be exposed as a Service, the service&lt;/p&gt;
+&lt;p&gt;If we deploy an simple stateless application example like &lt;a href=&#34;https://kubernetes.io/docs/tutorials/stateless-application/guestbook/&#34;&gt;guestbook&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl config set-context --current --namespace=development
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-service.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When we configures the lab we created NSX managed IP Block 10.0.0.0/16. When created the development namespace got allocated a /24 subnet from this block. If we view the Pods get IP in correct range.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get pods --output wide
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-internal-ip-allocation.png&#34; alt=&#34;Internal IP Allocation&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As well as Pod deployments the guestbook application installation also creates Service resources. A Service is an abstraction which defines a logical set of Pods. Our application runs three frontend pods and two Redis slaves the Service provides virtual IP. The kube-proxy is responsible for implementing the virtual IP for Services. We can see the ClusterIP are issued from the last /20 of the Pod address range. If we look in more detail at the Service resource we can see the three internal IP addresses behind it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl get services --namespace development
+kubectl cluster-info dump | grep -m 1 service-cluster-ip-range
+kubectl describe service frontend
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-clusterip.png&#34; alt=&#34;Cluster IP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;To facilitate communications between Pods the NCP is configuring the Open vSwitch on each Node. The Open vSwitch user space daemon runs on a container named nsx-ovs within the nsx-node-agent Pods. The Open vSwitch bridge name can be specified in the ncp.ini but defaults to br-int. If we connect to this container we can view the Open vSwitch flows .&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl exec -it nsx-node-agent-llf2c -c nsx-ovs bash --namespace nsx-system
+ovs-ofctl dump-flows br-int
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ovs-flows.png&#34; alt=&#34;OVS Flows&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can then remove the namespace and all objects within.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-loadbalancer&#34;&gt;NSX Loadbalancer&lt;/h2&gt;
+&lt;p&gt;NSX provides an load balancer capability to Kubernetes we can use this by creating service resource with type LoadBalancer.  If we create a simple replicaset of five pods and expose this we can see it gets issued with IP Address from the IP Pool tagged with ncp/external = True. We can also see this in NSX Loadbalancer configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl config set-context --current --namespace=development
+kubectl apply -f https://k8s.io/examples/service/load-balancer-example.yaml
+kubectl get replicasets
+kubectl expose deployment hello-world --type=LoadBalancer --name=hello-world-nsx-lb
+kubectl get services hello-world-nsx-lb --watch
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+hello-world-nsx-lb   LoadBalancer   10.110.64.115   &amp;lt;pending&amp;gt;     8080:32091/TCP   7s
+hello-world-nsx-lb   LoadBalancer   10.110.64.115   172.16.0.13   8080:32091/TCP   7s
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then remove the namespace and all objects within.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;kubernetes-pods-micro-segmentation&#34;&gt;Kubernetes Pods Micro-Segmentation&lt;/h2&gt;
+&lt;p&gt;One of the great usecases for NSX with vSphere has been the is the Distributed Firewall which protects VM workload at the Hypervisor layer. When we extend NSX into the Kubernetes container we also extend the Distributed Firewall capability. We can create firewall rules which contain members of groups, the groups can be dynamically populated by use of NSX tags. Kubernetes objects can have labels attached a label attached to a Pod is reflected in NSX as a tag on the segement port of the Pod.&lt;/p&gt;
+&lt;p&gt;A simple test might be to deploy a two tier app where frontend can talk to backend but frontend cannot talk to other frontend. If we create a NSX group called Web with membership criteria Segement Port, Tag, Equals web Scope secgroup. We then create a NSX DFW rule with Web as source and destination and action of drop.&lt;/p&gt;
+&lt;p&gt;With this in place we can ping test from one frontend pod to another frontend and backend and see this works.  We can then apply the label to the three frontend web Pods so they become members of the NSX group and are affected by the firewall rule.  With these in place we can retest ping from one frontend pod to another frontend and see that this is now blocked.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl config set-context --current --namespace=development
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+kubectl get pods --output wide --watch
+
+NAME                            READY   STATUS    RESTARTS   AGE   IP         NODE           NOMINATED NODE   READINESS GATES
+frontend-6cb7f8bd65-4mctt       1/1     Running   0          13m   10.0.6.4   k8s-worker-1   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
+frontend-6cb7f8bd65-8wkhr       1/1     Running   0          13m   10.0.6.2   k8s-worker-1   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
+frontend-6cb7f8bd65-rtgc9       1/1     Running   0          13m   10.0.6.3   k8s-worker-1   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
+redis-master-7db7f6579f-zlx26   1/1     Running   0          3s    10.0.6.5   k8s-worker-1   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.2
+PING 10.0.6.2 (10.0.6.2): 56 data bytes
+64 bytes from 10.0.6.2: icmp_seq=0 ttl=64 time=0.083 ms
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.5
+PING 10.0.6.5 (10.0.6.5): 56 data bytes
+64 bytes from 10.0.6.5: icmp_seq=0 ttl=64 time=3.191 ms
+
+kubectl label pod frontend-6cb7f8bd65-4mctt secgroup=web
+kubectl label pod frontend-6cb7f8bd65-8wkhr secgroup=web
+kubectl label pod frontend-6cb7f8bd65-rtgc9 secgroup=web
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.2
+PING 10.0.6.2 (10.0.6.2): 56 data bytes
+^C--- 10.0.6.2 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+command terminated with exit code 1
+
+kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.5
+PING 10.0.6.5 (10.0.6.5): 56 data bytes
+64 bytes from 10.0.6.5: icmp_seq=0 ttl=64 time=5.672 ms
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then remove the namespace and all objects within.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+&lt;/code&gt;&lt;/pre&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NSX-T for Planespotter</title>
+      <link>https://darrylcauldwell.com/post/nsx-planespotter/</link>
+      <pubDate>Thu, 14 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-planespotter/</guid>
+      <description>
+        
+          &lt;p&gt;Moving towards application centric infrastructure suitable for microservices applications requires a good example application to work with.  I saw an NSX demo presented by &lt;a href=&#34;https://github.com/yfauser&#34;&gt;Yves Fauser&lt;/a&gt; where he used just such an application called planespotter.&lt;/p&gt;
+&lt;p&gt;My first task towards understanding this more was to get this setup in my homelab and look at it in context of NSX-T.&lt;/p&gt;
+&lt;h2 id=&#34;homelab-core&#34;&gt;Homelab Core&lt;/h2&gt;
+&lt;p&gt;My homelab networking is very simple, I have a domestic BT broadband router, this connects a Cisco SB200 8-port L2 only switch. Each port connected to ESXi is configured with MTU 9216 and has the VLAN passed untagged.&lt;/p&gt;
+&lt;p&gt;Connected to this are a pair of Intel NUCs each has onboard 1GB NIC and two USB 1GB NICs.  The lab is used for other things so the on-board vmnic0 NIC is assigned to a VSS which has default &amp;lsquo;VM Network&amp;rsquo; portgroup. This leaves both vusb0 and vusb1 free to be used for N-VDS.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-esxi.png&#34; alt=&#34;ESXi Networking&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The NUCs are single socket, dual core i5s running at 1.8GHz and each has only 32GB of RAM, these currently run vSphere 6.7 Update 1 and shared storage is all-flash VSAN with no data protection.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-t-base&#34;&gt;NSX-T Base&lt;/h2&gt;
+&lt;p&gt;Download OVA&amp;rsquo;s and perform initial deployment of NSX Manager,  NSX Controller and NSX Edge.  As lab only has a single L2 all get deployed with all vNICs connected to the portgroup &amp;lsquo;VM Network&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-edge.png&#34; alt=&#34;NSX-T Base&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-t-routing&#34;&gt;NSX-T Routing&lt;/h2&gt;
+&lt;p&gt;One of the biggest differences between NSX for vSphere and NSX-T is the routing architecture. The services are split between service router (SR) and distributed router (DR), the service router functions are run on the NSX edge and the distributed router (DR) is a kernel module running on the ESXi hosts. My lab setup uses defaults for all transit switches, it is importanrt to understand the relationship when we look at packets flow through these various hops.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-edge-arch.png&#34; alt=&#34;NSX-T Routing&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;planespotter&#34;&gt;Planespotter&lt;/h2&gt;
+&lt;p&gt;The planespotter application is made up of various microservices and database. For this NSX-T setup each is installed on a VM. The application can be installed by following &lt;a href=&#34;https://github.com/darrylcauldwell/planespotter/blob/master/docs/vm_deployment/README.md&#34;&gt;this guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-logical-switches.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;planespotter-fe-to-api-traceflow&#34;&gt;Planespotter FE to API Traceflow&lt;/h2&gt;
+&lt;p&gt;One neat feature of NSX-T and geneve is to inject data into the header and use this to trace flows. The traceflow feature helps inspect the path of a packet as it travels from one logical port to a single or multiple logical ports.&lt;/p&gt;
+&lt;p&gt;So if we select the port connected to planespotter frontend and port connected to planespotter api, we get a nice visual represenation of the path.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-traceflow.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>NSX-T for OpenShift</title>
+      <link>https://darrylcauldwell.com/post/nsx-openshift/</link>
+      <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-openshift/</guid>
+      <description>
+        
+          &lt;p&gt;While looking at the various documentation sets I found it difficult to understand the NSX-T and OpenShift integration. A lot was masked by configuration performed by Ansible scripts. Here I try and record my understanding of the technology and then work through getting this running in a capacity constrained lab environment.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-t&#34;&gt;NSX T&lt;/h2&gt;
+&lt;p&gt;NSX-T (NSX Transformers) can provide network virtualization for multi-hypervisor environments, including both vSphere and KVM. It is also designed to address emerging application frameworks and architectures that have heterogeneous endpoints and technology stacks such as OpenStack, Red Hat OpenShift, Pivotal Cloud Foundry, Kubernetes, and Docker. NSX-V (NSX for vSphere) Manager integrates into vCenter and leverages a vSphere dvSwitch to form an overlay. NSX-T Manager can be used with vSphere it does not integrate with vCenter or dvSwitch, instead NSX is managed via its API, and its overlay is formed by each member having Open vSwitch (OVS) installed.&lt;/p&gt;
+&lt;h2 id=&#34;red-hat-openshift&#34;&gt;Red Hat OpenShift&lt;/h2&gt;
+&lt;p&gt;OpenShift helps you to develop, deploy, and manage container-based applications. It provides you with a self-service platform to create, modify, and deploy applications on demand, thus enabling faster development and release life cycles. OpenShift is built around a core of application containers powered by Docker, with orchestration and management provided by Kubernetes.&lt;/p&gt;
+&lt;h2 id=&#34;container-networking-framework-background&#34;&gt;Container Networking Framework Background&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/docker/libnetwork/blob/master/docs/design.md&#34;&gt;Libnetwork&lt;/a&gt; is the canonical implementation Container Network Model (CNM) which formalizes the steps required to provide networking for containers while providing an abstraction that can be used to support multiple network drivers. Libnetwork provides an interface between the Docker daemon and network drivers. Container Network Model (CNM) is designed to support the Docker runtime engine only.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/containernetworking/cni&#34;&gt;Container Network Interface&lt;/a&gt; (CNI), consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins. Container Network Interface (CNI) supports integration with any container runtime.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-cni.jpeg&#34; alt=&#34;Container Network Interface (CNI) Integration&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vmware-nsx-and-kubernetes-integration&#34;&gt;VMware NSX and Kubernetes Integration&lt;/h2&gt;
+&lt;p&gt;VMware provide an &lt;a href=&#34;https://my.vmware.com/group/vmware/details?downloadGroup=NSX-T-PKS-221&amp;amp;productId=673&#34;&gt;NSX Container Plugin package&lt;/a&gt; which contains the required modules to integrate NSX-T with Kubernetes.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;NSX Container Plugin (NCP) - is a container image which watches the Kubernetes API for changes to Kubernetes Objects (namespaces, network policies, services etc.). It calls the NSX API to creates network constructs based on object addition and changes.&lt;/li&gt;
+&lt;li&gt;NSX DaemonSet
+&lt;ul&gt;
+&lt;li&gt;NSX Node Agent - is a container image which manages the container network interface&lt;/li&gt;
+&lt;li&gt;NSX Kube-Proxy - is a container image which replaces the native distributed east-west load balancer in Kubernetes with the NSX load-balancer based on Open vSwitch (OVS).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;NSX Container Network Interface (CNI) - is an executable which allow the integration of NSX into Kubernetes.&lt;/li&gt;
+&lt;li&gt;Open vSwitch&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp.jpeg&#34; alt=&#34;NSX and Kubernetes Integration&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-for-openshift&#34;&gt;NSX For OpenShift&lt;/h2&gt;
+&lt;p&gt;NSX implements a discreet network topology per Kubernetes namespace. NSX maps logical network elements like logical switches and distributed logical router to Kubernetes namespaces. Each of those network topologies can be directly routed, or privately addressed and behind NAT.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-for-openshift-homelab&#34;&gt;NSX For OpenShift Homelab&lt;/h2&gt;
+&lt;p&gt;For the rest of this blog post I am aiming to create a NSX OpenShift integration. I aiming for two namespaces, each with a logical router and three subnets. The namespaces will use private address ranges and the tier-0 router will provide SNAT connectivity to the routed network.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-topology.jpeg&#34; alt=&#34;NSX Topology&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;starting-point-homelab-configuration&#34;&gt;Starting point homelab configuration&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;1GbE Switch (Layer 2 only)
+&lt;ul&gt;
+&lt;li&gt;VLAN 0 - CIDR 192.168.1.0/24&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;vSphere vCenter Appliance 6.7&lt;/li&gt;
+&lt;li&gt;3x vSphere ESXi 6.7 Update 1 hosts (Intel NUC - 3x 1.8GHz CPU &amp;amp; 32GB RAM)
+&lt;ul&gt;
+&lt;li&gt;Onboard NIC is connected to a vSphere Standard Switch&lt;/li&gt;
+&lt;li&gt;USB3 NIC is unused and will be used for NSX&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;VSAN&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following resources are required&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Small NSX-T Manager is a VM sized 8GB vRAM, 2x vCPU and 140GB vHDD&lt;/li&gt;
+&lt;li&gt;Small NSX Controller is a VM sized 8GB vRAM, 2x vCPU and 120GB vHDD&lt;/li&gt;
+&lt;li&gt;Small NSX Edge is a VM sized 4GB vRAM, 2x vCPU and 120GB vHDD&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;nsx-management-plane&#34;&gt;NSX Management Plane&lt;/h2&gt;
+&lt;p&gt;Deploy a small NSX unifed appliance specifying the nsx-manager role. Once deployed link this to vCenter, to do this add vCenter in &amp;lsquo;Fabric / Compute Manager&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-compute-manager.jpeg&#34; alt=&#34;NSX-T Management Plane&#34;&gt;&lt;/p&gt;
+&lt;p&gt;With the manager in place we now need to create the management plane, to do this we need to install the management plane agent (MPA) on each host so they are added as usable Fabric Nodes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-nodes.jpeg&#34; alt=&#34;NSX-T Fabric Nodes&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;tunnel-endpoint-ip-pool&#34;&gt;Tunnel Endpoint IP Pool&lt;/h2&gt;
+&lt;p&gt;We create an IP pool one for the Transort Nodes to communicate for my scenario the three ESXi hosts and an edge will all participate so I create an IP Pool with four addresses. Navigate to Inventory &amp;gt; Groups &amp;gt; IP Pools and click add.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ip-pool.png&#34; alt=&#34;NSX-T IP Pool&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-control-plane&#34;&gt;NSX Control Plane&lt;/h2&gt;
+&lt;p&gt;In order to create an overlay network we need an NSX Controller to manage the hosts. NSX Controllers serve as the central control point got all hosts, logical switches, and logical routers.&lt;/p&gt;
+&lt;p&gt;While NSX Manager can deploy and configure NSX Controllers the size cannot be selected. As lab is resource constrained I only want a small NSX Controller, the &amp;lsquo;NSX Controller for VMware ESXi&amp;rsquo; is a separate OVA download where size can be selected.&lt;/p&gt;
+&lt;p&gt;Once the controller appliance is deployed we need to facilitate communications between it and nsx manager.  To do this open an SSH session with admin user to NSX Manager and run&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;get certificate api thumbprint
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Open an SSH session to NSX Controller with admin user and run&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;join management-plane &amp;lt;NSX-Manager&amp;gt; username admin thumbprint &amp;lt;NSX-Managers-thumbprint&amp;gt;
+
+set control-cluster security-model shared-secret
+
+initialize control-cluster
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This should then be viewable in NSX Manager&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;overlay-transport-zone&#34;&gt;Overlay Transport Zone&lt;/h2&gt;
+&lt;p&gt;All the virtual network objects will need to communicate across an overlay network. To faciliate this the three esxi hosts and edges need to be part of an Overlay Transport Zone.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport.jpeg&#34; alt=&#34;NSX-T Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once we have a Transport Zone we can add our NSX fabric nodes as transport nodes. Navigate menu to Select Fabric &amp;gt; Transport Nodes and click Add.  A wizard will open on the general tab select first Node (host), give appropriate name for that host and select the openshift transport zone.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport-node.jpeg&#34; alt=&#34;NSX-T Transport Node&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Change to N-VDS tab, create N-VDS for openshift, select default NIOC, select default hostswitch Uplink profile, select transport IP Pool and enter Physical NIC identifier for Uplink-1.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In order that the NSX Container Plugin can find the correct NSX objects all of the NSX objects created require a tag applying. For this lab build I am using tag dc-openshift. Navigate within NSX Manager to Fabric &amp;gt; Transport Zones, select overlay network then Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vlan-transport-zone&#34;&gt;VLAN Transport Zone&lt;/h2&gt;
+&lt;p&gt;As well as connecting to the overlay network the Edges running Tier-0 routing functions also needs to be able to connect to the physical network. This connectivity is achieved by using a Transport Zone of type VLAN.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-vlan-transport.png&#34; alt=&#34;NSX-T VLAN Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-edge&#34;&gt;NSX Edge&lt;/h2&gt;
+&lt;p&gt;We need some way for the logical container overlay network to communicate with the physical network. AN NSX Edge can host services which provide this connectivity.&lt;/p&gt;
+&lt;p&gt;The NSX Edge has 4 network adapters, the first is used by the management network, the other 3 interfaces (fp-eth0, fp-eth1 and fp-eth2) can then be used for connecting to overlay networks or for routing. Within my lab I have a single flat physical network so all NSX Edge interfaces connect to the same Port Group.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;GUI Reference&lt;/th&gt;
+&lt;th&gt;VM vNIC&lt;/th&gt;
+&lt;th&gt;NIC&lt;/th&gt;
+&lt;th&gt;Lab Function&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Managewment&lt;/td&gt;
+&lt;td&gt;Network adapter 1&lt;/td&gt;
+&lt;td&gt;eth0&lt;/td&gt;
+&lt;td&gt;Management&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Datapath #1&lt;/td&gt;
+&lt;td&gt;Network adapter 2&lt;/td&gt;
+&lt;td&gt;fp-eth0&lt;/td&gt;
+&lt;td&gt;Overlay&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Datapath #2&lt;/td&gt;
+&lt;td&gt;Network adapter 3&lt;/td&gt;
+&lt;td&gt;fp-eth1&lt;/td&gt;
+&lt;td&gt;Uplink&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Datapath #3&lt;/td&gt;
+&lt;td&gt;Network adapter 4&lt;/td&gt;
+&lt;td&gt;fp-eth2&lt;/td&gt;
+&lt;td&gt;Unused&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge.jpeg&#34; alt=&#34;NSX-T Add Edge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The NSX Edge needs to participate in the Overlay Transport Zone so we need to first configure this as Transport Node.  This is very similar process to how we setup ESXi hosts as Transport Nodes except on N-VDS tab we add to both overlay and vlan transport zones,  we use the edge-vm Uplink profile and for Virtual NIC select appropriate NIC as per table above.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-nvds.png&#34; alt=&#34;NSX-T Edge N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In order we can deploy Tier-0 router the Edge needs to be a member of an Edge Cluster.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-cluster.jpeg&#34; alt=&#34;NSX-T Add Edge Cluster&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;tier-0-router&#34;&gt;Tier-0 Router&lt;/h2&gt;
+&lt;p&gt;Once the Edge Cluster is created we can create the tier-0 router.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Router&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In my lab I have 192.168.1.0 /24 and will be using the 172.16.0.0 /16 address space for NSX. I would like to use network address translation (NAT) and allocate a separate SNAT IP on the 192.168.1.0 network for each OpenShift namespace on the 172.16.0.0 network.  To achieve this I need to configure a redistribution criteria of type Tier-0 NAT.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-redist.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Route Redist&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The next step requires an NSX Logical Switch so we create that.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-logical-switch.jpeg&#34; alt=&#34;NSX-T Add Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can now configure the Router Port,  selecting the Transport Node and Logical Switch.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This will be used by OpenShift to once created navigate to Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;ip-block-kubernetes-pods&#34;&gt;IP Block Kubernetes Pods&lt;/h2&gt;
+&lt;p&gt;In order to create the topology we are aiming for we need to create an IP Blocks for each of our two namespaces.  Within each IP Block we need to create the three subnets. In the end you should end up with something which looks like this, and all IP Block needs to have the ncp/cluster tag.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ddi-blocks.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;ip-pool-snat&#34;&gt;IP Pool SNAT&lt;/h2&gt;
+&lt;p&gt;We create an IP pool for the tier-0 router to issue SNAT and provide external (floating) IPs to OpenShift.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once created add the following two tags,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
+Scope = ncp/external and Tag = true
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;red-hat-openshift-origin&#34;&gt;Red Hat OpenShift Origin&lt;/h2&gt;
+&lt;p&gt;OpenShift Origin is a computer software product from Red Hat for container-based software deployment and management. It is a supported distribution of Kubernetes using Docker containers and DevOps tools for accelerated application development.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift.jpeg&#34; alt=&#34;Openshift Stack&#34;&gt;&lt;/p&gt;
+&lt;p&gt;OpenShift Origin is the upstream community project used in &lt;a href=&#34;https://www.openshift.com/products/online/&#34;&gt;OpenShift Online&lt;/a&gt;, &lt;a href=&#34;https://www.openshift.com/products/dedicated/&#34;&gt;OpenShift Dedicated&lt;/a&gt;, and &lt;a href=&#34;https://www.openshift.com/products/container-platform/&#34;&gt;OpenShift Container Platform (formerly known as OpenShift Enterprise)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;VMware provides &lt;a href=&#34;https://github.com/vmware/nsx-integration-for-openshift&#34;&gt;Red Hat Ansible playbooks for installing NSX-T for OpenShift Container Platform&lt;/a&gt;. However, OpenShift Container Platform is a licensed product and this deploys a scaled-out deployment. Neither of these lend itself to a home lab deployment, my goal for the rest of this blog post is to detail the steps I follow for a cutdown installation.&lt;/p&gt;
+&lt;h2 id=&#34;create-openshift-origin-base-vm&#34;&gt;Create OpenShift Origin Base VM&lt;/h2&gt;
+&lt;p&gt;The OpenShift Container Platform is Red Hat Enterprise Linux based, I don&amp;rsquo;t have a Red Hat Enterprise Linux subscription license. As such I created a CentOS 7 (64-bit) virtual machine, as the library versions are the same, so binaries that work on one will work on the other.&lt;/p&gt;
+&lt;p&gt;Each OpenShift node needs to be managed and also provide connectivity to NSX, it is possible to perform these two functions on same vNIC however, I give my VM two vNICs one for management on VLAN backed dvPortgroup and one for NSX on VXLAN backed dvPortgroup. I used the CentOS minimal installation ISO set static IP address on management vNIC, and create DNS A &amp;amp; PTR records for this.&lt;/p&gt;
+&lt;p&gt;Once built I run following commands to install Docker, some other basic tools and apply latest patches.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt; &#39;__EOF__&#39;
+[docker]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+__EOF__
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install -y git open-vm-tools wget docker-engine net-tools python-pip
+pip install docker-py
+systemctl enable docker.service
+yum update -y
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;default-kubernetes-service-addresses&#34;&gt;Default Kubernetes Service Addresses&lt;/h2&gt;
+&lt;p&gt;OpenShift leverages the Kubernetes concept of a pod, which is one or more containers deployed together on one host, and the smallest compute unit that can be defined, deployed, and managed. A Kubernetes service address serves as an internal load balancer. It identifies a set of replicated pods in order to proxy the connections it receives to them. Services are assigned an IP address and port pair that, when accessed, proxy to an appropriate backing pod. These service addresses are assigned and managed by OpenShift. By default they are assigned out of the 172.30.0.0/16 network.&lt;/p&gt;
+&lt;p&gt;To setup our environment we can configure the Docker daemon with an insecure registry parameter of 172.30.0.0/16.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl start docker
+touch /etc/docker/daemon.json
+cat &amp;gt; /etc/docker/daemon.json &amp;lt;&amp;lt; &#39;__EOF__&#39;
+{
+&amp;quot;insecure-registries&amp;quot;: [
+    &amp;quot;172.30.0.0/16&amp;quot;
+    ]
+}
+__EOF__
+systemctl daemon-reload
+systemctl restart docker
+&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;add-openshift-client&#34;&gt;Add OpenShift Client&lt;/h1&gt;
+&lt;p&gt;The OpenShift client is used to manage the OpenShift installation and configuration it is supplied as a package. Download this, unpack and add to runtime path.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd /tmp
+wget https://github.com/openshift/origin/releases/download/v3.10.0-rc.0/openshift-origin-client-tools-v3.10.0-rc.0-c20e215-linux-64bit.tar.gz
+tar -xvf /tmp/openshift-origin-client-tools-v3.10.0-rc.0-c20e215-linux-64bit.tar.gz -C /bin
+mv /bin/openshift* /home/openshift
+echo &#39;PATH=$PATH:/home/openshift&#39; &amp;gt; /etc/profile.d/oc-path.sh
+chmod +x /etc/profile.d/oc-path.sh
+. /etc/profile
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;start-openshift-origin-as-all-in-one-cluster&#34;&gt;Start OpenShift Origin as all-in-one Cluster&lt;/h2&gt;
+&lt;p&gt;For next steps we need a basic OpenShift stack. Rather than build something custom we can simply start a local OpenShift all-in-one cluster with a configured registry, router, image streams, and default templates, by running the following command (where openshift.darrylcauldwell.com is the FQDN which points to IP address of management interface of your VM),&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc cluster up --public-hostname=openshift.darrylcauldwell.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should also be able to logon and see all of the OpenShift services listed&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc login -u system:admin
+oc get services --all-namespaces
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;NAMESPACE&lt;/th&gt;
+&lt;th&gt;NAME&lt;/th&gt;
+&lt;th&gt;TYPE&lt;/th&gt;
+&lt;th&gt;CLUSTER-IP&lt;/th&gt;
+&lt;th&gt;EXTERNAL-IP&lt;/th&gt;
+&lt;th&gt;PORT(S)&lt;/th&gt;
+&lt;th&gt;AGE&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;docker-registry&lt;/td&gt;
+&lt;td&gt;ClusterIP&lt;/td&gt;
+&lt;td&gt;172.30.1.1&lt;/td&gt;
+&lt;td&gt;none&lt;/td&gt;
+&lt;td&gt;5000/TCP&lt;/td&gt;
+&lt;td&gt;9m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;kubernetes&lt;/td&gt;
+&lt;td&gt;ClusterIP&lt;/td&gt;
+&lt;td&gt;172.30.0.1&lt;/td&gt;
+&lt;td&gt;none&lt;/td&gt;
+&lt;td&gt;443/TCP,53/UDP,53/TCP&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;router&lt;/td&gt;
+&lt;td&gt;ClusterIP&lt;/td&gt;
+&lt;td&gt;172.30.88.3&lt;/td&gt;
+&lt;td&gt;none&lt;/td&gt;
+&lt;td&gt;80/TCP,443/TCP,1936/TCP&lt;/td&gt;
+&lt;td&gt;9m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-dns&lt;/td&gt;
+&lt;td&gt;kube-dns&lt;/td&gt;
+&lt;td&gt;ClusterIP&lt;/td&gt;
+&lt;td&gt;172.30.0.2&lt;/td&gt;
+&lt;td&gt;none&lt;/td&gt;
+&lt;td&gt;53/UDP,53/TCP&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-apiserver&lt;/td&gt;
+&lt;td&gt;api&lt;/td&gt;
+&lt;td&gt;ClusterIP&lt;/td&gt;
+&lt;td&gt;172.30.85.121&lt;/td&gt;
+&lt;td&gt;none&lt;/td&gt;
+&lt;td&gt;443/TCP&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-web-console&lt;/td&gt;
+&lt;td&gt;webconsole&lt;/td&gt;
+&lt;td&gt;ClusterIP&lt;/td&gt;
+&lt;td&gt;172.30.83.178&lt;/td&gt;
+&lt;td&gt;none&lt;/td&gt;
+&lt;td&gt;443/TCP&lt;/td&gt;
+&lt;td&gt;9m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;We should also be able to see all of the OpenShift pods listed&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc get pod --all-namespaces
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;NAMESPACE&lt;/th&gt;
+&lt;th&gt;NAME&lt;/th&gt;
+&lt;th&gt;READY&lt;/th&gt;
+&lt;th&gt;STATUS&lt;/th&gt;
+&lt;th&gt;RESTARTS&lt;/th&gt;
+&lt;th&gt;AGE&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;docker-registry-1-4l59n&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;persistent-volume-setup-grm9s&lt;/td&gt;
+&lt;td&gt;0/1&lt;/td&gt;
+&lt;td&gt;Completed&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;router-1-5xtqg&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-dns&lt;/td&gt;
+&lt;td&gt;kube-dns-bj5cq&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;11m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-proxy&lt;/td&gt;
+&lt;td&gt;kube-proxy-9l8ql&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;11m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;kube-controller-manager-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;kube-scheduler-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;master-api-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;master-etcd-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;11m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-apiserver&lt;/td&gt;
+&lt;td&gt;openshift-apiserver-ptk5j&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;11m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-controller-manager&lt;/td&gt;
+&lt;td&gt;openshift-controller-manager-vg7gm&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-core-operators&lt;/td&gt;
+&lt;td&gt;openshift-web-console-operator-78ddf7cbb7-r8dhd&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-web-console&lt;/td&gt;
+&lt;td&gt;webconsole-847bc4ccc4-hgsv4&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Once running we can open browser to OpenShift Origin&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://openshift.darrylcauldwell.com:8443/console/catalog
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Default credentials username &amp;lsquo;system&amp;rsquo; password &amp;lsquo;admin&amp;rsquo;&lt;/p&gt;
+&lt;h2 id=&#34;nsx-t-open-vswitch&#34;&gt;NSX-T Open vSwitch&lt;/h2&gt;
+&lt;p&gt;The NSX-T Container Plug-in (NCP) relies on Open vSwitch (OVS) providing a bridge to the NSX Logical Switch. VMware provide an Open vSwitch (OVS)  in the &lt;a href=&#34;https://my.vmware.com/web/vmware/details?downloadGroup=NSX-T-PKS-220&amp;amp;productId=673&#34;&gt;NSX Container Plugin 2.2.0&lt;/a&gt;, package.  Download expand and copy to OpenShift VM /tmp folder. Once uploaded install the following packages.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;yum install -y /tmp/nsx-container-2.2.0.8740202/OpenvSwitch/rhel74_x86_64/kmod-openvswitch-2.9.1.8614397.rhel74-1.el7.x86_64.rpm
+yum install -y /tmp/nsx-container-2.2.0.8740202/OpenvSwitch/rhel74_x86_64/openvswitch-2.9.1.8614397.rhel74-1.x86_64.rpm
+yum install -y /tmp/nsx-container-2.2.0.8740202/OpenvSwitch/rhel74_x86_64/openvswitch-kmod-2.9.1.8614397.rhel74-1.el7.x86_64.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once installed start the Open vSwitch&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;service openvswitch start
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the Open vSwitch is running we can create a bridge network interface, and then connect this to the VM network interface located on the NSX-T Logical Switch. You can do this by running the following command (where eno33559296 is the devicename of NIC on NSX Logical Switch),&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ovs-vsctl add-br br-int
+ovs-vsctl add-port br-int eno33559296 -- set Interface eno33559296 ofport_request=1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These connections are created with link state DOWN in order to use them we need to set link status is up for both,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ip link set br-int up
+ip link set eno33559296 up
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Update the network configuration file to ensure that the network interface is up after a reboot.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/sysconfig/network-scripts/ifcfg-eno33559296
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensure has a line reading,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ONBOOT=yes
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-t-container-network-interface-cni&#34;&gt;NSX-T Container Network Interface (CNI)&lt;/h2&gt;
+&lt;p&gt;The NSX-T Container Plug-in (NCP) provides integration between NSX-T and container orchestrators such as Kubernetes. The installation files are in same package as the NSX Open vSwitch (OVS). Install using command.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;yum install -y /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-cni-2.2.0.8740202-1.x86_64.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-t-container-plug-in-ncp-replicationcontroller-rc&#34;&gt;NSX-T Container Plug-in (NCP) ReplicationController (RC)&lt;/h2&gt;
+&lt;p&gt;There are a few accounts used for rights assignments, the project, users and roles are defined in NCP RBAC file. To create the users within the project run,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc login -u system:admin
+oc create -f /tmp/nsx-container-2.2.0.8740202/nsx-ncp-rbac.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The RBAC creates two service account users, the tokens for these are required by NCP in folder /etc/nsx-ujo. This gets mounted as config-volume and these tokens used for authentication.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc project nsx-system
+mkdir -p /etc/nsx-ujo
+SVC_TOKEN_NAME=&amp;quot;$(oc get serviceaccount ncp-svc-account -o yaml | grep -A1 secrets | tail -n1 | awk {&#39;print $3&#39;})&amp;quot;
+oc get secret $SVC_TOKEN_NAME -o yaml | grep &#39;token:&#39; | awk {&#39;print $2&#39;} | base64 -d &amp;gt; /etc/nsx-ujo/ncp_token
+NODE_TOKEN_NAME=&amp;quot;$(oc get serviceaccount nsx-node-agent-svc-account -o yaml | grep -A1 secrets | tail -n1 | awk {&#39;print $3&#39;})&amp;quot;
+oc get secret $NOD_TOKEN_NAME -o yaml | grep &#39;token:&#39; | awk {&#39;print $2&#39;} | base64 -d &amp;gt; /etc/nsx-ujo/node_agent_token
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The pods which NSX-T Container Plug-in (NCP) ReplicationController (RC) run in need to use the host networking so we need to allow then this right by loading the NCP Security Context Constraints for NCP and NSX Node Agent.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc apply -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/ncp-os-scc.yml
+oc adm policy add-scc-to-user ncp-scc -z ncp-svc-account
+oc adm policy add-scc-to-user ncp-scc -z nsx-node-agent-svc-account
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Edit the ReplicationController (RC) YML file,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi /tmp/nsx-container-2.2.0.8740202/Kubernetes/ncp-rc.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensure the following lines are configured thus,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;serviceAccountName: ncp-svc-account
+apiserver_host_port = 8443
+apiserver_host_ip = 192.168.1.20
+nsx_api_managers = 192.168.1.15
+insecure = True
+nsx_api_user = admin
+nsx_api_password = VMware1!
+cluster = dc-openshift
+adaptor = openshift
+enable_snat = True
+tier0_router = 0d772616-4c44-47ae-ac9e-06f3c0222211
+overlay_tz = 5eeefd4c-bd7d-4871-9eba-d7ed02394dec
+container_ip_blocks = 562c85de-8675-4bb2-b211-3f95a6342e0e, f225d518-2fe3-4f8d-a476-a4697bff3ea6
+external_ip_pools = d5095d53-c7f8-4fcd-9fad-3032afd080a4
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The NSX-T Container Plug-in (NCP) is a docker image which we import into the local registry.  The image is referenced by later script by different tag name so we add an additional tag.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker load -i /tmp/nsx-container-2.2.0.8740202/Kubernetes/nsx-ncp-rhel-2.2.0.8740202.tar
+docker image tag registry.local/2.2.0.8740202/nsx-ncp-rhel nsx-ncp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then we can create NSX ReplicationController&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc project nsx-system
+oc create -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/ncp-rc.yml
+oc describe rc/nsx-ncp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should now see the container running within pod namespace nsx-system.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc get pod --all-namespaces
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If all has gone well we can now connect to the NCP container and use the &lt;a href=&#34;https://docs.vmware.com/en/VMware-NSX-T/2.2/com.vmware.nsxt.ncp_openshift.doc/GUID-12F44CD5-0518-41C3-BB14-5507224A5D60.html&#34;&gt;nsxcli&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc exec -it nsx-ncp-6k5t2 nsxcli
+get ncp-nsx status
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-t-container-plug-in-ncp-node-agent-daemonset-ds&#34;&gt;NSX-T Container Plug-in (NCP) Node Agent DaemonSet (DS)&lt;/h2&gt;
+&lt;p&gt;Edit the nsx-node-agent-ds.yml file,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-node-agent-ds.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensure the following is set,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;serviceAccountName: nsx-node-agent-svc-account
+cluster = dc-openshift
+apiserver_host_port = 8443
+apiserver_host_ip = 192.168.1.20
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once updated create the Node Agent Daemonset (DS),&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc login -u system:admin
+oc apply -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-node-agent-ds.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Check the Node Agent Daemonset is there,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc describe daemonset.apps/nsx-node-agent
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should also be able to see all of the OpenShift pods listed including our two NSX ones.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;oc get pod --all-namespaces
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;NAMESPACE&lt;/th&gt;
+&lt;th&gt;NAME&lt;/th&gt;
+&lt;th&gt;READY&lt;/th&gt;
+&lt;th&gt;STATUS&lt;/th&gt;
+&lt;th&gt;RESTARTS&lt;/th&gt;
+&lt;th&gt;AGE&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;docker-registry-1-4l59n&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;persistent-volume-setup-grm9s&lt;/td&gt;
+&lt;td&gt;0/1&lt;/td&gt;
+&lt;td&gt;Completed&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;default&lt;/td&gt;
+&lt;td&gt;router-1-5xtqg&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-dns&lt;/td&gt;
+&lt;td&gt;kube-dns-bj5cq&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-proxy&lt;/td&gt;
+&lt;td&gt;kube-proxy-9l8ql&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;kube-controller-manager-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;kube-scheduler-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;master-api-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-system&lt;/td&gt;
+&lt;td&gt;master-etcd-localhost&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;nsx-system&lt;/td&gt;
+&lt;td&gt;nsx-ncp-9m2jl&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;10m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;nsx-system&lt;/td&gt;
+&lt;td&gt;nsx-node-agent-jlt5t&lt;/td&gt;
+&lt;td&gt;2/2&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;4m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-apiserver&lt;/td&gt;
+&lt;td&gt;openshift-apiserver-ptk5j&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-controller-manager&lt;/td&gt;
+&lt;td&gt;openshift-controller-manager-vg7gm&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-core-operators&lt;/td&gt;
+&lt;td&gt;openshift-web-console-operator-78ddf7cbb7-r8dhd&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;openshift-web-console&lt;/td&gt;
+&lt;td&gt;webconsole-847bc4ccc4-hgsv4&lt;/td&gt;
+&lt;td&gt;1/1&lt;/td&gt;
+&lt;td&gt;Running&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;1h&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;testing&#34;&gt;Testing&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;oc create namespace my-first
+oc logs nsx-ncp-9m2jl | grep ERROR
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;nsx_ujo.k8s.ns_watcher Failed to create NSX topology for project my-first: Unexpected error from backend manager ([&amp;lsquo;192.168.1.15&amp;rsquo;]) for Allocate subnet from IP block&lt;/p&gt;
+&lt;p&gt;more commands for working OpenShift here&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://static.rainfocus.com/vmware/vmworldus17/sess/148924638739800152Do/finalpresentationPDF/NET1522BU_FORMATTED_FINAL_1507910147966001nlDx.pdf&#34;&gt;https://static.rainfocus.com/vmware/vmworldus17/sess/148924638739800152Do/finalpresentationPDF/NET1522BU_FORMATTED_FINAL_1507910147966001nlDx.pdf&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Intel NUC Cluster Hardware</title>
+      <link>https://darrylcauldwell.com/post/homelab-nuc/</link>
+      <pubDate>Thu, 16 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-nuc/</guid>
+      <description>
+        
+          &lt;p&gt;I have worked most of my professional life with systems built with Intel x86, x64. Often there is little hardware available in the work environment to learn and try out new things.&lt;/p&gt;
+&lt;p&gt;I enjoy learning by doing and to begin to better understand the technology looked to build a cluster of Intel NUCs. My goals of cluster include understanding more about:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VMware vSphere, NSX and vSAN&lt;/li&gt;
+&lt;li&gt;Kubernetes, OpenShift and Tanzu&lt;/li&gt;
+&lt;li&gt;Configuring infrastructure with Python, Ansible and Terraform&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;compute&#34;&gt;Compute&lt;/h1&gt;
+&lt;p&gt;The NUC6i5SYH was latest model when I purchased. My purchasing decision was primarily lead by power as these draw 60watt at peak load. I also wanted to try vSAN which drove need for at least two disk bays and the NUC has an M.2 and a 2.5&amp;quot; Drive bay.&lt;/p&gt;
+&lt;h1 id=&#34;storage&#34;&gt;Storage&lt;/h1&gt;
+&lt;p&gt;To form vSAN required the two internal disks be fully available which drove the addition of USB Flash Drive. The NUCs sit on and around desk so its very easy for them to get knocked the SanDisk Cruzer Fit formfactor keeps the chance of damage to a minimum.&lt;/p&gt;
+&lt;p&gt;I was working to a budget but wanted good performance. When cluster operating with vSAN all writes go via a cache disk and then get destaged to capacity tier. For the vSAN cache tier I chose the 128GB Samsung SM951 NVMe M.2 as it is rated for ~2,150MiB/sec read and 1550MB/s MiB/sec write. For the vSAN capacity tier I chose the 1TB Samsung 850 EVO SATA3 as it is rated for ~500MiB/sec read and write. The lab does not need a lot of capacity so only two of the three NUCs are populated with disks and contribute to vSAN the third contributes only compute capacity to the cluster.&lt;/p&gt;
+&lt;p&gt;As well as internal storage I have a Synology DiskStation DS213j a  &amp;ldquo;budget-friendly&amp;rdquo; 2-bay NAS server. It isn&amp;rsquo;t the fastest but offers iSCSI and/or NFS with 100MiB/sec read and 70MiB/sec write.&lt;/p&gt;
+&lt;h1 id=&#34;network&#34;&gt;Network&lt;/h1&gt;
+&lt;p&gt;One of usecases I wanted to explore with this hardware was Software Defined Networking. To this end I wanted network switch to support configuring multiple VLANs. To connect three NUCs each with two 1GbE NICs would consume six ports, to uplink to wider home network and the Synolofy DiskStation drove my choice to the eight 1GbE port Cisco SG200-08.&lt;/p&gt;
+&lt;p&gt;To simulate redundant networking scenarios at the ESXi side I wanted to add a second NIC albeit connecting to same switch. To allow for USB NIC on NUCs VMware released a unsupported driver by way of a Fling. This was a little prescritive and this lead me to the StarTech USB 3.0 to Gigabit Ethernet NICs.&lt;/p&gt;
+&lt;p&gt;My home office is in a cabin in the garden while it has power cabling it has no network cabling. To give a cabled network connection I use TP-Link AV500/AV600s. As these are very specific to my scenario I&amp;rsquo;ve not included them in the BOM.&lt;/p&gt;
+&lt;p&gt;# Bill Of Materials&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;3x Intel NUC 6th Gen NUC6i5SYH (3x £358=) £1,074&lt;/li&gt;
+&lt;li&gt;3x Crucial 32GB Kit (2x16GB) DDR4 (3x £86=) £258&lt;/li&gt;
+&lt;li&gt;2x Samsung SM951 NVMe 128GB M.2 (2x £43=) £86&lt;/li&gt;
+&lt;li&gt;2x Samsung 850 EVO 1TB SATA3 (2x £248=) £496&lt;/li&gt;
+&lt;li&gt;3x SanDisk Cruzer Fit 16GB USB Flash Drive (3x £5=) £15&lt;/li&gt;
+&lt;li&gt;3x StarTech USB 3.0 to Gigabit Ethernet (3x £17=) £51&lt;/li&gt;
+&lt;li&gt;1x Cisco SG200-08 8-port Gigabit £73&lt;/li&gt;
+&lt;li&gt;7x 0.5m Cat6 Cables £7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Total cluster parts cost ~£2060&lt;/p&gt;
+&lt;p&gt;Note: Prices at time of purchase in 2014/2015&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

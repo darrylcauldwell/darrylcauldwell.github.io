@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>blogging on </title>
+    <link>https://darrylcauldwell.com/categories/blogging/</link>
+    <description>Recent content in blogging on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 29 Jun 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/categories/blogging/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Migrate Wordpress to GitHub Pages</title>
+      <link>https://darrylcauldwell.com/post/jekyll/</link>
+      <pubDate>Wed, 29 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/jekyll/</guid>
+      <description>
+        
+          &lt;p&gt;There are the steps I used to migrate my blog from Wordpress to GitHub Pages,  first I will try and describe why I am doing this.&lt;/p&gt;
+&lt;h2 id=&#34;migrate-to-learn&#34;&gt;Migrate To Learn&lt;/h2&gt;
+&lt;p&gt;Learning new technical skills is straight forwards but while building any new skill building a muscle memory for command syntax is only achieved by taking as many opportunities to exercise the muscle as possible.&lt;/p&gt;
+&lt;p&gt;I found at my old job I was more and more using distributed source control more and more to help my day to day work, since changing job this required much less. The goal at my employer is to use this in the near future so editing my personal blog is a good way to keep learning and building knowledge with github. By migrating my blog to GitHub Pages and Jekyll, publishing a blog post becomes committing changes and pushing them to GitHub.&lt;/p&gt;
+&lt;p&gt;Albeit distributed source control is used much less in my new role writting infrastructure configuration code is still very much required. I&amp;rsquo;ve moved away from Sublime Text and been starting to use the excellent Visual Studio Code at work. I write much less code at home on Mac and struggle with the shortcut key differences. By maintaining my personal blog as a series of files which I use a code editor will help me with this.&lt;/p&gt;
+&lt;p&gt;While working with Ansible I use YAML formatted files, using Jeykll and passing variables seems a great way to keep using and learning.&lt;/p&gt;
+&lt;h2 id=&#34;migration-overview&#34;&gt;Migration Overview&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Install Jekyll&lt;/li&gt;
+&lt;li&gt;Create new Jekyll project&lt;/li&gt;
+&lt;li&gt;Create GitHub Pages site&lt;/li&gt;
+&lt;li&gt;Export Wordpress posts as Jekyll&lt;/li&gt;
+&lt;li&gt;Test posts on Jekyll (Local)&lt;/li&gt;
+&lt;li&gt;Commit exported posts to GitHub Pages&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;install-jekyll&#34;&gt;Install Jekyll&lt;/h2&gt;
+&lt;p&gt;The &lt;a href=&#34;https://jekyllrb.com/docs/installation&#34;&gt;Jekyll install&lt;/a&gt; requires Ruby and Ruby Gems be in place before starting.
+These are included with OS X so we can just pen terminal and run the following to install.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo gem install jekyll
+sudo gem install jekyll-paginate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;create-new-jekyll-project&#34;&gt;Create new Jekyll project&lt;/h2&gt;
+&lt;p&gt;A Jekyll project is just a collection of files so first its worth creating a folder to house the project then running a Jekyll command
+to create the framework files.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir Website
+cd Website/
+jekyll new darrylcauldwell.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;create-github-pages-site&#34;&gt;Create GitHub Pages site&lt;/h2&gt;
+&lt;p&gt;Create a personal GitHub repository called &lt;em&gt;projectname&lt;/em&gt;.github.io,  for example &amp;lt;&lt;em&gt;&amp;gt;darrylcaudwell.github.io&amp;lt;&lt;/em&gt;&amp;gt;.&lt;/p&gt;
+&lt;p&gt;Initialise your Jekyll website project folder as a local git repository, add all the files to the local repository, link the local
+git repository to github.com, create first commit and then push this to master.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git init
+git add .
+git remote add github git@github.com:darrylcauldwell/darrylcauldwell.github.io
+git add README.md
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;first commit&amp;#34;&lt;/span&gt;
+git remote add origin https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By performing this commit should trigger the creation of your SSL secured GitHub Pages website in my example the URL is.
+&lt;a href=&#34;https://darrylcauldwell.github.io&#34;&gt;https://darrylcauldwell.github.io&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;export-wordpress-posts-as-jekyll&#34;&gt;Export Wordpress posts as Jekyll&lt;/h2&gt;
+&lt;p&gt;So by this stage we have the website running with our chosen theme and we&amp;rsquo;re now ready to migrate across all old posts from wordpress.&lt;/p&gt;
+&lt;p&gt;Within existing wordpress site install the &lt;a href=&#34;https://wordpress.org/plugins/wp2jekyll/&#34;&gt;&amp;lsquo;WordPress2Jekyll&amp;rsquo;&lt;/a&gt; plugin and use this to export the site as a zip file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cd yourproject
+jekyll build
+git add .
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;imports old blog posts&amp;#34;&lt;/span&gt;
+git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;redirect-url&#34;&gt;Redirect URL&lt;/h2&gt;
+&lt;p&gt;Once your happy that your website is fully funcional on the URL &lt;em&gt;yourproject&lt;/em&gt;.github.io you can then add a DNS alias to point your domain
+name to the new site.  After a few days if your still happy you can then remove your account from previous hosting company.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

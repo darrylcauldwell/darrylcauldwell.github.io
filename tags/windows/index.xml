@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>windows on </title>
+    <link>https://darrylcauldwell.com/tags/windows/</link>
+    <description>Recent content in windows on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 28 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Patching Windows EC2 Instances</title>
+      <link>https://darrylcauldwell.com/post/ec2-win-patching/</link>
+      <pubDate>Wed, 28 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/ec2-win-patching/</guid>
+      <description>
+        
+          &lt;p&gt;Amazon EC2 Systems Manager is a collection of capabilities that helps you automate management tasks such as collecting system inventory, applying operating system (OS) patches, automating the creation of Amazon Machine Images (AMIs), and configuring operating systems (OSs) and applications at scale.&lt;/p&gt;
+&lt;p&gt;Amazon EC2 Systems Manager relies on the Amazon Simple Systems Management Service (SSM) agent being installed on the guests. The SSM agent is pre-installed on Windows Server 2016 instances or Windows Server 2003-2012 R2 instances created from AMI&amp;rsquo;s published after November 2016, if you created your own or used earlier AMI you&amp;rsquo;ll need to install. The SSM agent can be installed on other instances by following this &lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/sysman-install-ssm-win.html&#34;&gt;install guide&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Patch Management is always an operational pain point so its welcome that AWS offers a solution. You create groups of computers to patch by applying a tag &amp;lsquo;Patch Group&amp;rsquo; and specifying a group name as the value. You create a group of patches by forming a patch baseline containing and excluding the patches you require. You then specify a maintenance window and specify task like patch this group of servers to this patch baseline.&lt;/p&gt;
+&lt;h2 id=&#34;how-to&#34;&gt;How To&lt;/h2&gt;
+&lt;p&gt;The guest agent requires permissions to connect to EC2 Systems Manager, we give these rights by create an EC2 Service role with the policy document &amp;lsquo;AmazonEC2RoleforSSM&amp;rsquo; attached. We then provision the EC2 instance to be patched with this role attached. If you have instance already deployed you can add the policy document to a role which is added already,  or clone the instance to a new AMI attach role and power on.&lt;/p&gt;
+&lt;p&gt;Here I create a new role named &amp;lsquo;EC2-Systems-Manager-Role&amp;rsquo; with the policy document &amp;lsquo;AmazonEC2RoleforSSM&amp;rsquo; attached, attached it to a new test Windows 2016 EC2 instance.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-role --role-name EC2-Systems-Manager-Role --assume-role-policy-document &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Version&amp;#34;:&amp;#34;2012-10-17&amp;#34;,&amp;#34;Statement&amp;#34;:[{&amp;#34;Effect&amp;#34;:&amp;#34;Allow&amp;#34;,&amp;#34;Principal&amp;#34;:{&amp;#34;Service&amp;#34;:[&amp;#34;ssm.amazonaws.com&amp;#34;]},&amp;#34;Action&amp;#34;:[&amp;#34;sts:AssumeRole&amp;#34;]}]}&amp;#39;&lt;/span&gt;
+
+aws iam create-instance-profile --instance-profile-name EC2-Systems-Manager-Profile
+
+aws iam add-role-to-instance-profile --instance-profile-name EC2-Systems-Manager-Profile --role-name EC2-Systems-Manager-Role
+
+aws ec2 create-security-group --group-name systemsManagerTest --description &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EC2 Systems Manager Test Security Group&amp;#34;&lt;/span&gt;
+
+aws ec2 run-instances --image-id ami-771b4504 --count &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --instance-type t2.micro --key-name MyEC2 --security-groups systemsManagerTest --iam-instance-profile Name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;EC2-Systems-Manager-Profile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &amp;lsquo;Systems Manager Service&amp;rsquo; requires a Patch Group tag adding to the EC2 instances to patch,  so here we add a tag to the instance we just created.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ec2 create-tags --resources &amp;lt;ec2-instance-id&amp;gt; --tags Key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Patch Group&amp;#39;&lt;/span&gt;,Value&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Test-Patch&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &amp;lsquo;Systems Manager Service - Maintenance Window&amp;rsquo; task requires rights on the EC2 instances to apply patches and also to task to the &amp;lsquo;Systems Manager Service&amp;rsquo;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-user --user-name ssmPatchUser
+aws iam create-policy --policy-name ssmPassRole --policy-document &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Version&amp;#34;: &amp;#34;2012-10-17&amp;#34;,&amp;#34;Statement&amp;#34;: [{&amp;#34;Effect&amp;#34;: &amp;#34;Allow&amp;#34;,&amp;#34;Action&amp;#34;: [&amp;#34;iam:PassRole&amp;#34;],&amp;#34;Resource&amp;#34;: &amp;#34;*&amp;#34;}]}&amp;#39;&lt;/span&gt;
+aws iam attach-user-policy --policy-arn arn:aws:iam::&amp;lt;your-acc-number&amp;gt;:policy/ssmPassRole  --user-name ssmPatchUser
+aws iam attach-user-policy --policy-arn arn:aws:iam::aws:policy/AmazonSSMFullAccess --user-name ssmPatchUser
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then setup a patch baseline, this baseline auto approves all Critical, Important and Moderate patches of all classifications to be deployed seven days after they released.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ssm create-patch-baseline --name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;testBaseline&amp;#34;&lt;/span&gt; --approval-rules &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PatchRules=[{PatchFilterGroup={PatchFilters=[{Key=MSRC_SEVERITY,Values=[Critical,Important,Moderate]},{Key=CLASSIFICATION,Values=[SecurityUpdates,Updates,UpdateRollups,CriticalUpdates]}]},ApproveAfterDays=7}]&amp;#34;&lt;/span&gt; --description &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;myBaseline&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We then take the baseline ID output and link the patch baseline with the patch group.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ssm register-patch-baseline-for-patch-group --baseline-id &amp;lt;baseline-id&amp;gt; --patch-group &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Test-Patch&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the baseline and patch groups are created and linked,  we create a SSM Maintenance Window with a task to deploy.  Here we create a schedule which starts every week day 6pm to midnight and stops scheduling tasks at 11pm. To format the cron expression is a little complex but its documented &lt;a href=&#34;https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sysman-maintenance-cron.html?icmpid=docs_ec2_console&#34;&gt;here&lt;/a&gt; in my example we have a window at 6pm for six hours Monday through Friday.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws ssm create-maintenance-window --name myFirstMaintenanceWindow --schedule &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cron(0 00 18 ? * MON-FRI)&amp;#34;&lt;/span&gt; --duration &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; --cutoff &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --allow-unassociated-targets
+aws ssm register-target-with-maintenance-window --window-id &amp;lt;maint-window-id&amp;gt; --targets &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Key=tag:Patch Group,Values=Test-Patch&amp;#34;&lt;/span&gt; --owner-information &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Test server&amp;#34;&lt;/span&gt; --resource-type &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INSTANCE&amp;#34;&lt;/span&gt; 
+aws ssm register-task-with-maintenance-window --window-id &amp;lt;your-maintenance-window-id&amp;gt; --targets &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Key=WindowTargetIds,Values=&amp;lt;your-target-group-id&amp;gt;&amp;#34;&lt;/span&gt; --task-arn &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;AWS-ApplyPatchBaseline&amp;#34;&lt;/span&gt; --service-role-arn &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;arn:aws:iam::&amp;lt;your-acc-id&amp;gt;:policy/ssmPassRole&amp;#34;&lt;/span&gt; --task-type &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RUN_COMMAND&amp;#34;&lt;/span&gt; --max-concurrency &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; --max-errors &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --priority &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; --task-parameters &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{\&amp;#34;Operation\&amp;#34;:{\&amp;#34;Values\&amp;#34;:[\&amp;#34;Install\&amp;#34;]}}&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another useful little tool for making operating EC2 instances that little bit easier.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Migrate VMware VMs to AWS EC2 using Server Migration Services (SMS)</title>
+      <link>https://darrylcauldwell.com/post/aws-sms/</link>
+      <pubDate>Tue, 01 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/aws-sms/</guid>
+      <description>
+        
+          &lt;p&gt;The &lt;a href=&#34;https://aws.amazon.com/server-migration-service/&#34;&gt;AWS Server Migration Service&lt;/a&gt; simplifies and streamlines the process of migrating existing virtualized applications to Amazon EC2. AWS SMS allows you to automate, schedule, and track incremental replications of live server volumes, making it easier for you to coordinate large-scale server migrations. Presently this only supports migrating from VMware with support for other hypervisors and physical servers is coming soon.&lt;/p&gt;
+&lt;p&gt;Amazon provide a virtual appliance (OVA) which can be imported into your existing vCenter, once booted this is configured to connect to vCenter and your AWS account. Once configured this appliance is controlled by the AWS SMS service to take a snapshot of VMware virtual machines and facilitate the upload of the snapshot copy into an S3 bucket.  Once the VMware snapshot is uploaded into the S3 bucket the SMS service then updates the disk format and then prepare this as an AMI.&lt;/p&gt;
+&lt;p&gt;The size of virtual machine images is such that the upload process might well take a long time, and during this time you might well want to keep the virtual machine running. The changes made during this time therefore will not be reflected in the initial AMI created. As such AWS SMS offers the option of running the replication job again, but rather than the job creating a full new virtual machine it takes an incremental snapshot.  Once the upload of this is completed the SMS service processes the initial upload with the incremental to form a new AMI.&lt;/p&gt;
+&lt;h2 id=&#34;how-to-configure-server-migration-services-sms&#34;&gt;How To: Configure Server Migration Services (SMS)&lt;/h2&gt;
+&lt;p&gt;The process is pretty straight forwards,  first task is to download the AWS Server Migration Connector from &lt;a href=&#34;https://s3.amazonaws.com/sms-connector/AWS-SMS-Connector.ova&#34;&gt;S3&lt;/a&gt;, then deploy the OVA.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-ova-deploy.jpeg&#34; alt=&#34;Deploy OVF Template&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-ova-deploy-final.jpeg&#34; alt=&#34;Deploy OVF Ready to complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The SMS Connector needst to connect to your AWS account and therefore we need to create a user with the &amp;ldquo;ServerMigrationConnector&amp;rdquo; role attached.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-account.jpeg&#34; alt=&#34;MigrationUser Role Mapping&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once the SMS connector appliance is deployed connect to the web UI by opening the browser to https://dhcp-addr&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-wiz.jpeg&#34; alt=&#34;AWS Server Migration Service Splash&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Work through the wizard to configure all,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: License Agreement&lt;/li&gt;
+&lt;li&gt;Step 2: Create a Password&lt;/li&gt;
+&lt;li&gt;Step 3: Network Info&lt;/li&gt;
+&lt;li&gt;Step 4: Log Uploads and Upgrades&lt;/li&gt;
+&lt;li&gt;Step 5: Server Migration Service&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once configuration is complete the connection to AWS and vCenter should show good in the connector configuration.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-complete.jpeg&#34; alt=&#34;AWS Server Migration Service Configuration Complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If we then connect to AWS we can see the connector.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-complete-console.jpeg&#34; alt=&#34;AWS Server Migration Service Complete Console&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In order to create the first replication job we need to import the list of vCenter VMs by using the &amp;lsquo;Import server catalog&amp;rsquo; function.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-import.jpeg&#34; alt=&#34;AWS Server Migration Service Import Server Catalog&#34;&gt;&lt;/p&gt;
+&lt;p&gt;There is not a default role supplied which the SMS services can use to form AMI&amp;rsquo;s from the uploaded VMware snapshots. To do this download this file &lt;a href=&#34;https://darrylcauldwell.com/attachments/trust-policy.json&#34;&gt;trust-policy.json&lt;/a&gt; and this file &lt;a href=&#34;https://darrylcauldwell.com/attachments/role-policy.json&#34;&gt;role-policy.json&lt;/a&gt;. Then at a command prompt, go to the directory where you stored the two JSON files, and run the following commands to create the SMS service role:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-role --role-name sms --assume-role-policy-document file://trust-policy.json
+aws iam put-role-policy --role-name sms --policy-name sms --policy-document file://role-policy.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;how-to-migrate-virtual-machine&#34;&gt;How To: Migrate Virtual Machine&lt;/h2&gt;
+&lt;p&gt;Once the vCenter Server Inventory is imported to AWS SMS, and the role is created we can create our first replication job by using the SMS service wizard.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: Select the servers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Select the virtual machine(s) you would like to migrate.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 2: Configure server-specific settings&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Select the license type for the guest operating system of the virtual server(s) being migrated.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 3: Configure replication job settings&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Schedule the replication job, assuming you used the two files about to create the SMS role for IAM service role leave as default &amp;lsquo;sms&amp;rsquo;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 4: Review&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once the job schedules,  the first task the job performs is to create a VMware snapshot, it&amp;rsquo;s important to remember to have enough disk capacity to hold snapshots.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-seed-snapshot.jpeg&#34; alt=&#34;AWS Server Migration Service Seeding Snapshot&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The AWS console doesn&amp;rsquo;t update very well, so its best to view the progress via the AWS CLI. First list all of the replication jobs and from this you can find the JobID then to make it easier to read target the output to the specific JobID.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-jobs  
+aws sms get-replication-jobs --replication-job-id sms-job-2ca54045  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A replication job refers to the server being migrated,  as we mentioned earlier multiple replications can occur for example the initial seed and an incremental.  Therefore within a replication job there might be various replication runs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-runs --replication-job-id sms-job-2ca54045  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following example we can see this has three runs in the runlist, the initial seed which has completed, an incrememental which has completed, it also has a pending job as I had left the default replication job values to schedule a daily incremental.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-repl-runs.jpeg&#34; alt=&#34;AWS Server Migration Service Replication Runs&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When a job is running you would see the state roll through the various stages&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pending&lt;/li&gt;
+&lt;li&gt;Active&lt;/li&gt;
+&lt;li&gt;Complete&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While the job state is in the Active state the statusMessage rolls through the various stages&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Uploading&lt;/li&gt;
+&lt;li&gt;Converting&lt;/li&gt;
+&lt;li&gt;Preparing&lt;/li&gt;
+&lt;li&gt;Completed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each run forms a new AMI, each newly created AMIs can then be launched in ec2, so you can for example start from the initial seed replication, one containing all the incrementals or anywhere in between.&lt;/p&gt;
+&lt;h2 id=&#34;offical-sms-documentation-links&#34;&gt;Offical SMS Documentation Links&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/server-migration-service/&#34;&gt;Marketing Page&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://aws.amazon.com/blogs/aws/new-aws-server-migration-service/&#34;&gt;AWS Blog&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://docs.aws.amazon.com/ServerMigration/latest/userguide/server-migration.html&#34;&gt;Tech Documentation&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Ansible For Windows Managed Nodes</title>
+      <link>https://darrylcauldwell.com/post/ansible-windows/</link>
+      <pubDate>Tue, 27 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/ansible-windows/</guid>
+      <description>
+        
+          &lt;p&gt;On starting to look at learning using Ansible to manage Windows hosts, first step was to setup a test lab.&lt;/p&gt;
+&lt;p&gt;Setup an Ubuntu 14.04 or CentOS 7 and a Windows 2008 R2 virtual machines.&lt;/p&gt;
+&lt;h2 id=&#34;install-ansible-ubuntu&#34;&gt;Install Ansible (Ubuntu)&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;apt-get install software-properties-common
+apt-add-repository ppa:ansible/ansible
+apt-get update
+apt-get install ansible
+sudo pip install http://github.com/diyan/pywinrm/archive/master.zip#egg&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;pywinrm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;install-ansible-centos-7-minimal&#34;&gt;Install Ansible (CentOS 7 Minimal)&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum update
+yum install net-tools
+yum install epel-release
+yum install ansible
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configure-winrm-on-windows-2008-r2-guest&#34;&gt;Configure WinRM On Windows 2008 R2 Guest&lt;/h2&gt;
+&lt;p&gt;The configuration of Windows managed guests WinRM is automated and available in
+&lt;a href=&#34;https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1&#34;&gt;this&lt;/a&gt; powershell script.&lt;/p&gt;
+&lt;h2 id=&#34;create-a-working-space-test-your-connectivity&#34;&gt;Create A Working Space Test Your Connectivity&lt;/h2&gt;
+&lt;p&gt;Ansible is file based,  so here I create a folder underneath my home directory to store my lab configuration&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir -p ~/ansible_test/group_vars
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We then create a file for holding hosts in lab and begin editing it&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;vi ~/ansible_test/host
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Add the contents of this in the following format,  adding extra lines with extra IPs as needed&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;windows]&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;&amp;lt;windows server ip address&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We then create a file for holding WinRM connectivity hosts in lab and begin editing it&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;vi /home/&amp;lt;user&amp;gt;/ansible_test/group_vars/windows.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Add the contents of this in the following format,  adding extra lines with username and password as needed&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# it is suggested that these be encrypted with ansible-vault:&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# ansible-vault edit group_vars/windows.yml&lt;/span&gt;
+ansible_ssh_user: &amp;lt;admin user&amp;gt;
+ansible_ssh_pass: &amp;lt;admin user password&amp;gt;
+ansible_ssh_port: &lt;span style=&#34;color:#ae81ff&#34;&gt;5986&lt;/span&gt;
+ansible_connection: winrm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we have these two files setup,  we can look to test connectivity&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cd /home/dcauldwell/ansible_test
+ansible windows -i host -m win_ping
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Debugging is not enabled by default,  you might want to append -vvvvv to enable this if you have issue on first connect.&lt;/p&gt;
+&lt;p&gt;If you still have issues you can test connectivity using cURL&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -vk -d &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; -u &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user:pass&amp;#34;&lt;/span&gt; https://&amp;lt;windows server ip address&amp;gt;:5986/wsman&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you havethe win_ping module working,  you can look at running the other modules shipped with the core product a full list can be found here.  Maybe you might gather the Ansible facts using.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible &amp;lt;windows server ip address&amp;gt; -m setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;create-a-custom-powershell-module&#34;&gt;Create A Custom Powershell Module&lt;/h2&gt;
+&lt;p&gt;On looking at the core modules you might think your a bit limited but its easy to wrapper your existing Powershell logic as an Ansible module.&lt;/p&gt;
+&lt;p&gt;I decided to keep all my custom modules in the lab in there own folder and change the module path.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir -p ~/ansible_test/group_vars/library
+export ANSIBLE_LIBRARY&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;~/ansible_test/library/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;An Ansible Powershell module is made up of two files,  one is the ps1 with the script contents and one is py which has description and examples.  The main difference appears to be to get the Powershell console output back to Ansible you need to form as object and convert that object to JSON.  It also appears not required but good practice to set an object to be returned with a changed flag to true or false unsure but believe this logic might be used at runtime to decide whether to call the handler.&lt;/p&gt;
+&lt;p&gt;An easy way to create a new module,  is to copy an existing one and rename it this way you get the supporting text and structure.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp /usr/share/pyshared/ansible/modules/core/windows/win_ping* ~/ansible_test/library/
+mv ~/ansible_test/library/win_ping.ps1 ~/ansible_test/library/&amp;lt;new module name&amp;gt;.ps1
+mv ~/ansible_test/library/win_ping.py ~/ansible_test/library/&amp;lt;new module name&amp;gt;.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A simple example use case might be if you wanted to call the Get-Host cmdlet to gather Powershell version your ps1 might read.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!powershell&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# WANT_JSON&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# POWERSHELL_COMMON&lt;/span&gt;
+$data = Get-Host | Select Version
+$result = New-Object psobject @{
+get_host_version = $data
+changed = $false
+};
+Exit-Json $result;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Using the same example your py might read&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;DOCUMENTATION &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;---
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;module: get_host
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;version_added: &amp;#34;0.1&amp;#34;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;short_description: Call Get-Host cmdlet.
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;description:
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;- Call Get-Host cmdlet
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+EXAMPLES &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# Test connectivity to a windows host
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;ansible winserver -m get_host
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# Example from an Ansible Playbook
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;- action: get_host
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we have these two module files,  we can look to test the new module&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cd /home/dcauldwell/ansible_test
+ansible windows -i host -m get_host
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If its working you should get returned the output from Get-Host command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;dcauldwell@ansible-server:~/ansible_test$ ansible windows -i host -m get_host
+192.128.0.60 | success &amp;gt;&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;changed&amp;#34;&lt;/span&gt;: false,
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;get_host_version&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Version&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Build&amp;#34;&lt;/span&gt;: -1,
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Major&amp;#34;&lt;/span&gt;: 4,
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MajorRevision&amp;#34;&lt;/span&gt;: -1,
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Minor&amp;#34;&lt;/span&gt;: 0,
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MinorRevision&amp;#34;&lt;/span&gt;: -1,
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Revision&amp;#34;&lt;/span&gt;: -1
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With this technique you should be able to form some simple modules.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Windows Server 2012 - SAN Performance</title>
+      <link>https://darrylcauldwell.com/post/win2012-san-perf/</link>
+      <pubDate>Mon, 03 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/win2012-san-perf/</guid>
+      <description>
+        
+          &lt;p&gt;In a newly deployed Windows Server 2012 HyperV environment with around sixty nodes, running a couple of hundred Windows Server 2012 virtual machines running various applications.  We found the EMC VMX storage which underpinned this became massively busy with Write IO at around 3am,  the Write IO was mostly coming from TRIM and Unmap commands,  the amount has a dramatic impact and leads to lots of 153 errors on the server estate,  after one to two hours the Write IO subsided. I wrote a script to audit the estate to identify if there was any pattern to the errors. We found the errors correlated to the 3am Window also.&lt;/p&gt;
+&lt;p&gt;EMC initially said the cause of this was the way the VNX was interpreting ODX command and they asked if we disable ODX on all HyperV servers. I used a PowerShell command to extract out all servers in AD with a ServiceConnection point of HyperV,  then looked to audit ODX on these and then disable.&lt;/p&gt;
+&lt;p&gt;Since disabling the problem persisted second thoughts were that there was some tasks scheduled within the applications running on the VMs which was triggering this event,  after speaking to the product groups they said nothing was scheduled at this time. We continued our search within the HyperV communities and found &lt;a href=&#34;http://larsjoergensen.net/windows/windows-server/windows-server-2012/server-2012-automatic-maintenance-killed-san&#34;&gt;this article&lt;/a&gt; which suggested some scheduled tasks are now enabled by default within Windows Server 2012.  On looking there appear two&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Regular Maintenance
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 03:00 (if 2012 R2 this would be 2am as the default time changed) and&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Maintenance Configurator
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 01:00.&lt;/p&gt;
+&lt;p&gt;The Action for these tasks is “Custom Handler”, Microsoft publish no details on what these tasks do. We logged a call with Microsoft and they also did not know what these, but they did say that tasks with a “Custom Handler” are umbrella’s for other tasks.&lt;/p&gt;
+&lt;p&gt;As Regular Maintenance appeared to be the most likely due to execution time, I viewed its Last Run Time.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I then manually worked through each Windows task in Task Scheduler and took note of which Tasks had Last Run Time which matched that of “Regular Maintenance”.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
+\Microsoft\Windows\.NET Framework.Net Framework NGEN v4.0.30319 64
+\Microsoft\Windows\Application Experience\AitAgent
+\Microsoft\Windows\Application Experience\ProgramDataUpdater
+\Microsoft\Windows\ApplicationData\CleanupTermporaryState
+\Microsoft\Windows\Chkdsk\ProactiveScan
+\Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask
+\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip
+\Microsoft\Windows\Defrag\ScheduledDefrag
+\Microsoft\Windows\Device Setup\Metadata Refresh
+\Microsoft\Windows\PI\Sqm-Tasks
+\Microsoft\Windows\Registry\RegIdleBackup
+\Microsoft\Windows\Servicing\StartComponentCleanup
+\Microsoft\Windows\Shell\CreateObjectTask
+\Microsoft\Windows\Time Synchronization\SynchronizeTime
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Of these tasks,  we identified &lt;em&gt;ScheduleDefrag&lt;/em&gt; and &lt;em&gt;Chkdsk&lt;/em&gt; as potentially moving a lot of data around and freeing up blocks which would trigger Windows to isssue TRIM \ Unmap commands for the SAN to \recover the space within the Thin LUN.&lt;/p&gt;
+&lt;p&gt;While looking at Trim \ Unmap on 2012 I  found that you can disable Trim \ Unmap commands being issued by setting the &lt;a href=&#34;http://technet.microsoft.com/en-us/library/cc785435.aspx&#34;&gt;DisableDeleteNotify&lt;/a&gt; file system attribute.&lt;/p&gt;
+&lt;p&gt;As there are around 350 virtual servers per site, it was not practical to audit, enable and disable each of the four configuration items, &lt;em&gt;ODX&lt;/em&gt;, &lt;em&gt;Trim on delete&lt;/em&gt;, &lt;em&gt;ScheduledDefrag&lt;/em&gt; and &lt;em&gt;ChkDskProactiveScan&lt;/em&gt; so I wrote a modular PowerShell script to get current state,  enable and disable each against a list of servers,  this script can be &lt;a href=&#34;https://github.com/darrylcauldwell/WindowsTrimAndUnmap&#34;&gt;found here.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Our storage vendor provided this excellent detail &lt;a href=&#34;https://emc--c.na5.visual.force.com/apex/KB_BreakFix_1?id=kA1700000000tup&#34;&gt;EMC KB182688&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I would like to take functionality of thin provisioning so we have left enabled TrimOnDelete, but I could not see why you would want to Defrag a volume sitting on a Thin SAN LUN so we have disabled the ScheduledDefrag task. By disabling the task prevents Regular Maintenance running this at the 3am Window.*&lt;/p&gt;
+&lt;p&gt;For the medium to longer term we are looking to prove the performance differential between 2012 R0 to R2 and if beneficial look to migrate to that.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

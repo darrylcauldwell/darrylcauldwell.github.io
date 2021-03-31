@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+<html lang="en" data-figures="" class="page">
+  <head>
+<title>Introduction To Kubernetes Cluster Networking with Antrea | </title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.82.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-65170021-1');
+</script>
+<meta property="og:locale" content="en" />
+
+<meta property="og:type" content="article">
+<meta name="description" content="Introduction To Kubernetes Cluster Networking with Antrea">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="">
+<meta name="twitter:title" content="Introduction To Kubernetes Cluster Networking with Antrea" />
+<meta property="og:url" content="https://darrylcauldwell.com/post/antrea/" />
+<meta property="og:title" content="Introduction To Kubernetes Cluster Networking with Antrea" />
+<meta property="og:description" content="Introduction To Kubernetes Cluster Networking with Antrea" />
+<meta property="og:image" content="https://darrylcauldwell.com/clarity-icons/code-144.svg" />
+<link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.com/icons/apple-touch-icon.png'>
+<link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.com/icons/favicon-32x32.png'>
+<link rel="manifest" href='https://darrylcauldwell.com/icons/site.webmanifest'>
+<link rel="mask-icon" href='https://darrylcauldwell.com/safari-pinned-tab.svg' color="#002538">
+<meta name="msapplication-TileColor" content="#002538">
+<meta name="theme-color" content="#002538">
+
+<link rel="canonical" href="https://darrylcauldwell.com/post/antrea/">
+
+    
+
+    
+    
+    <link rel="preload" href="https://darrylcauldwell.com/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.com/js/bundle.min.93cd992c3cccaecf94d4275ee77263c2458245bfd21a4dc1767c498aaecdc261741dd198221e0c5d0d5a07b0f2e8e7b6b3527da117165bfa8e3712a6c838c89a.js" as="script" integrity=
+    "sha512-k82ZLDzMrs&#43;U1Cde53JjwkWCRb/SGk3BdnxJiq7NwmF0HdGYIh4MXQ1aB7Dy6Oe2s1J9oRcWW/qONxKmyDjImg==" crossorigin="anonymous">
+
+    
+    <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.com/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
+    
+  </head>
+  
+  
+    
+  
+  <body data-code="7" data-lines="false" id="documentTop">
+
+<header class="nav_header" >
+  <nav class="nav"><a href='https://darrylcauldwell.com/' class="nav_brand nav_item" title="">
+  <img src="https://darrylcauldwell.com/logos/logo.svg" class="logo" alt="">
+  <div class="nav_close">
+    <div><svg class="icon">
+  <use xlink:href="#open-menu"></use>
+</svg><svg class="icon">
+  <use xlink:href="#closeme"></use>
+</svg></div>
+  </div>
+</a>
+
+    <div class='nav_body nav_body_left'>
+      
+      
+      
+        
+
+  <div class="nav_parent">
+    <a href="https://darrylcauldwell.com/" class="nav_item" title="Home">Home </a>
+  </div>
+      
+<div class='follow'>
+  <a href="https://github.com/darrylcauldwell/">
+    <svg class="icon">
+  <use xlink:href="#github"></use>
+</svg>
+  </a>
+  <a href="https://twitter.com/darrylcauldwell/">
+    <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+  </a>
+  <a href="https://www.linkedin.com/in/darryl-cauldwell-82156333/">
+    <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+  </a>
+<div class="color_mode">
+  <input type="checkbox" class="color_choice" id="mode">
+</div>
+
+</div>
+
+    </div>
+  </nav>
+</header>
+
+    <main>
+  
+<div class="grid-inverse wrap content">
+  <article class="post_content">
+    <h1 class="post_title">Introduction To Kubernetes Cluster Networking with Antrea</h1><div class="post_meta">
+  
+    <svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg>
+    <span class="post_date">
+      Aug 12, 2020</span>
+      <a href='https://darrylcauldwell.com/tags/kubernetes' title="kubernetes" class="post_tag button button_translucent">kubernetes
+      </a>
+      <a href='https://darrylcauldwell.com/tags/antrea' title="antrea" class="post_tag button button_translucent">antrea
+      </a>
+</div>
+
+    
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=Introduction%20To%20Kubernetes%20Cluster%20Networking%20with%20Antrea&url=https%3a%2f%2fdarrylcauldwell.com%2fpost%2fantrea%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.com%2fpost%2fantrea%2f&t=Introduction%20To%20Kubernetes%20Cluster%20Networking%20with%20Antrea" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://darrylcauldwell.com/post/antrea/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
+
+    
+    <p><img src="/images/antrea-logo.png" alt="Antrea Logo"></p>
+<h2 id="what-is-antrea">What is Antrea</h2>
+<p>Antrea is Container Network Interface (CNI) plugin for Kubernetes. The Antrea CNI leverages Open vSwitch (OVS) to provides an overlay network and security services for a Kubernetes cluster. The overlay encapsulation uses Virtual Extensible LAN (VXLAN) by default, although Generic Network Virtualization Encapsulation (GENEVE), Generic Routing Encapsulation (GRE) or Stateless Transport Tunneling (STT) encapsulation can be configured. Antrea is an open source project hosted on GitHub <a href="https://github.com/vmware-tanzu/antrea">here</a>. Using OVS also introduces other standard network management capabilities such NetFlow, sFlow, IP Flow Information Export (IPFIX) and Remote SPAN (RSPAN).</p>
+<h2 id="architecture">Architecture</h2>
+<p>Antrea is composed of several components deployed as Pods in the kube-system namespace of the cluster. The Antrea Conroller monitors the addition and deletion of objects by watching the Kubernetes API. A daemonset is deployed which druns Antrea Agent on each node the Agent applys flow configuration to Open vSwitch (OVS).</p>
+<p><img src="/images/antrea-architecture.png" alt="Antrea Logo"></p>
+<p>The network configration required by Kubernetes is configured in a collection of Open vSwitch (OVS) flow tables. To make it easy to interpret each type of network traffic is classified and each traffic classification is stored in its own flow table.</p>
+<p><img src="/images/antrea-ovs-pipeline.svg" alt="OVS Pipeline"></p>
+<h2 id="creating-a-simple-antrea-lab">Creating A Simple Antrea Lab</h2>
+<p>We can create a lab to look at Antrea anywhere we can run some VMs so on either a public cloud or a homelab. Create three Ubuntu 19.10 VMs with 2x CPU, 4GB RAM and 50GB vHDD, use Netplan to configure NIC to static IP addressing like.</p>
+<pre><code>cat /etc/netplan/01-netcfg.yaml 
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens160:
+      addresses: 
+      - 192.168.1.27/24
+      gateway4: 192.168.1.254
+      nameservers:
+          search:
+          - darrylcauldwell.com
+          addresses: 
+          - 192.168.1.10
+</code></pre><p>Antrea requires Kubernetes 1.16 or later. Install Docker, Open vSwitch and Kubernetes by running the following.</p>
+<pre><code>sudo apt update -y
+sudo apt upgrade -y
+sudo apt install docker.io python apt-transport-https openvswitch-switch -y
+sudo gpasswd -a $USER docker
+sudo systemctl start docker
+sudo systemctl enable docker
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-add-repository &quot;deb http://apt.kubernetes.io/ kubernetes-xenial main&quot;
+sudo apt-get update
+sudo swapoff -a 
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo apt-get install -y kubelet=1.16.4-00 kubeadm=1.16.4-00 kubectl=1.16.4-00
+</code></pre><p>To form the overlay network Antrea requires an IP address block to allocate IP addresses (&ndash;pod-network-cidr). We can use kubeadm to configure the IP address block and bootstrap the cluster by running the following:</p>
+<pre><code>sudo kubeadm init --pod-network-cidr=172.16.0.0/16
+</code></pre><p>In order to easily run kubectl from the master we can copy the kube config to our user profile by running the following.</p>
+<pre><code>mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre><p>With the control plane initiatlised  we can now get the cluster token from the master we can use this to add the two worker Nodes to the cluster.</p>
+<pre><code>sudo kubeadm join 192.168.1.27:6443 --token 4bp2f0.ppfjk7mfee89j2kd \
+&gt;     --discovery-token-ca-cert-hash sha256:5e79610f28840c15be46895340c4a5535b9a0d003741ed657961891a05987ccd 
+</code></pre><p>All the Antrea components are containerized and can be installed using the Kubernetes deployment manifest. We can apply the default Antrea manifest supplied in GitHub repository which will deploy all necessary components.</p>
+<pre><code>kubectl apply -f https://raw.githubusercontent.com/vmware-tanzu/antrea/master/build/yamls/antrea.yml
+</code></pre><p>The Antrea components are deployed to the kube-system Namespace. The components include Deploymentm, Pods, Daemonset and ConfigMap.</p>
+<pre><code>kubectl get all --namespace kube-system
+kubectl get configmap --namespace kube-system
+</code></pre><p>The ConfigMap defines antrea-agent.conf this is used by Daemonset on each Node to configure Open vSwitch for use with CNI we can see some key information like.</p>
+<pre><code>kubectl describe configmap antrea-config-tm7bht9mg6
+
+Integration Bridge name (default: br-int)
+DataPath type (default: system)
+Interface name to communicate with host (default: gw0)
+Tunnel (Encapsulation) type (default: vxlan)
+MTU value (default: 1450)
+Service CIDR (default 10.96.0.0/12)
+</code></pre><h2 id="exploring-the-open-vswitch-overlay-network">Exploring The Open vSwitch Overlay Network</h2>
+<p>With Antrea in place we can look at exploring the overlay network it has put in place. We create a Kubernetes Namespace and deploy an simple stateless application like <a href="https://kubernetes.io/docs/tutorials/stateless-application/guestbook/">guestbook</a>.</p>
+<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+kubectl config set-context --current --namespace=development
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-service.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
+</code></pre><p>When running we can view the Pods IP addressing.</p>
+<pre><code>kubectl get pods --output wide
+
+NAME                            READY   STATUS    RESTARTS   AGE     IP           NODE              NOMINATED NODE   READINESS GATES
+frontend-6cb7f8bd65-25qv4       1/1     Running   0          5m47s   172.16.2.4   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
+frontend-6cb7f8bd65-mn5jk       1/1     Running   0          5m47s   172.16.1.5   antrea-worker-1   &lt;none&gt;           &lt;none&gt;
+frontend-6cb7f8bd65-nr9zk       1/1     Running   0          5m47s   172.16.2.5   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
+redis-master-7db7f6579f-4wdnj   1/1     Running   0          5m51s   172.16.2.2   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
+redis-slave-7664787fbc-5xrvj    1/1     Running   0          5m49s   172.16.1.4   antrea-worker-1   &lt;none&gt;           &lt;none&gt;
+redis-slave-7664787fbc-nj6m5    1/1     Running   0          5m49s   172.16.2.3   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
+</code></pre><p>We can see that IPs from 172.16.1.0/24 are issued to Pods running on Node antrea-worker-1 and 172.16.2.0/24 are issued to Pods running on Node antrea-worker-2. To facilitate communications between Pods the antrea-agent configures flows on Open vSwitch on each Node. If we connect to a Antrea Agent container we can see that an OVS bridge is created called br-int and the bridge has a vxlan tunnel port called tun0 and a gateway port called gw0. The internal port gw0 is allocated the role of gateway of the Node&rsquo;s subnet and is allocated the first IP address in subnet.</p>
+<pre><code>kubectl config set-context --current --namespace=kube-system
+kubectl get pods --selector=component=antrea-agent --output wide
+
+NAME                 READY   STATUS    RESTARTS   AGE   IP             NODE              NOMINATED NODE   READINESS GATES
+antrea-agent-czksb   2/2     Running   0          14m   192.168.1.28   antrea-worker-1   &lt;none&gt;           &lt;none&gt;
+antrea-agent-gwkmr   2/2     Running   0          14m   192.168.1.27   antrea-master     &lt;none&gt;           &lt;none&gt;
+antrea-agent-x9xjk   2/2     Running   0          14m   192.168.1.29   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
+
+kubectl exec -it antrea-agent-czksb -c antrea-ovs bash
+
+ovs-vsctl list-br
+ovs-vsctl show
+
+3cf39eec-f64c-49ed-ad86-48f203b215a4
+    Bridge br-int
+        Port &quot;tun0&quot;
+            Interface &quot;tun0&quot;
+                type: vxlan
+                options: {key=flow, remote_ip=flow}
+        Port &quot;coredns--886217&quot;
+            Interface &quot;coredns--886217&quot;
+        Port &quot;redis-sl-b32512&quot;
+            Interface &quot;redis-sl-b32512&quot;
+        Port &quot;coredns--3d5851&quot;
+            Interface &quot;coredns--3d5851&quot;
+        Port &quot;gw0&quot;
+            Interface &quot;gw0&quot;
+                type: internal
+        Port &quot;frontend-1ee3a9&quot;
+            Interface &quot;frontend-1ee3a9&quot;
+    ovs_version: &quot;2.11.1&quot;
+</code></pre><p>We can also see that ArpResponderTable (20) and L3ForwardingTable (70) have flow records relating to the pod network.</p>
+<pre><code>kubectl config set-context --current --namespace=kube-system
+kubectl exec -it antrea-agent-czksb -c antrea-ovs bash
+ovs-ofctl dump-flows br-int | grep 172.16.2
+
+ cookie=0xf70e020000000000, duration=820.733s, table=20, n_packets=1, n_bytes=42, idle_age=585, priority=200,arp,arp_tpa=172.16.2.1,arp_op=1 actions=move:NXM_OF_ETH_SRC[]-&gt;NXM_OF_ETH_DST[],mod_dl_src:aa:bb:cc:dd:ee:ff,load:0x2-&gt;NXM_OF_ARP_OP[],move:NXM_NX_ARP_SHA[]-&gt;NXM_NX_ARP_THA[],load:0xaabbccddeeff-&gt;NXM_NX_ARP_SHA[],move:NXM_OF_ARP_SPA[]-&gt;NXM_OF_ARP_TPA[],load:0xac100201-&gt;NXM_OF_ARP_SPA[],IN_PORT
+
+ cookie=0xf70e020000000000, duration=820.733s, table=70, n_packets=649, n_bytes=63996, idle_age=0, priority=200,ip,nw_dst=172.16.2.0/24 actions=dec_ttl,mod_dl_src:06:d1:bb:d3:bc:fa,mod_dl_dst:aa:bb:cc:dd:ee:ff,load:0x1-&gt;NXM_NX_REG1[],load:0x1-&gt;NXM_NX_REG0[16],load:0xc0a8011d-&gt;NXM_NX_TUN_IPV4_DST[],resubmit(,105)
+</code></pre><p>We can look to test the IP routing and connectivity between Pods on same Node and also between Nodes,</p>
+<pre><code>kubectl config set-context --current --namespace=development
+kubectl get pods --output wide | grep frontend
+
+frontend-6cb7f8bd65-25qv4       1/1     Running   0          12m   172.16.2.4   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
+frontend-6cb7f8bd65-mn5jk       1/1     Running   0          12m   172.16.1.5   antrea-worker-1   &lt;none&gt;           &lt;none&gt;
+frontend-6cb7f8bd65-nr9zk       1/1     Running   0          12m   172.16.2.5   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
+
+kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.5
+kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.1.5
+</code></pre><h2 id="exploring-network-policy">Exploring Network Policy</h2>
+<p>Antrea implements NetworkPolicy using OVS Flows. Flows are organized in tables, and they are applied on each node by the Antrea agent. Before applying a network policy, we can check flow table IngressDefault (100) and IngressRuleTable (90)</p>
+<pre><code>kubectl config set-context --current --namespace=kube-system
+kubectl get pods | grep antrea-agent
+
+kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=100
+
+cookie=0xcac6000000000000, duration=9103.902s, table=100, n_packets=102, n_bytes=9696, priority=0 actions=resubmit(,105)
+</code></pre><pre><code>kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=90
+
+cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=32493, n_bytes=6556290, priority=210,ct_state=-new+est,ip actions=resubmit(,105)
+
+cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=1634, n_bytes=122104, priority=210,ip,nw_src=172.16.1.1 actions=resubmit(,105)
+
+cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=37, n_bytes=3768, priority=0 actions=resubmit(,100)
+</code></pre><p>We can confirm that frontend can ping the backend.</p>
+<pre><code>kubectl config set-context --current --namespace=development
+kubectl get pods -o wide
+kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
+</code></pre><p>We can create a network policy to deny all ingress.</p>
+<pre><code>cat &lt;&lt;EOF &gt;/tmp/deny-all.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+EOF
+
+kubectl create -f /tmp/deny-all.yaml
+</code></pre><p>If we test again we can test and ensure that the policy is applied and the frontend can no longer ping backend.</p>
+<pre><code>kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
+</code></pre><p>We can then check IngressDefault (100) flow table and see that our network policy has added action to drop.</p>
+<pre><code>kubectl config set-context --current --namespace=kube-system
+
+kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=100
+ cookie=0xcac6000000000000, duration=3.427s, table=100, n_packets=0, n_bytes=0, priority=200,ip,reg1=0xa actions=drop
+
+ cookie=0xcac6000000000000, duration=3.427s, table=100, n_packets=0, n_bytes=0, priority=200,ip,reg1=0x8 actions=drop
+
+ cookie=0xcac6000000000000, duration=9226.746s, table=100, n_packets=137, n_bytes=12966, priority=0 actions=resubmit(,105)
+</code></pre>
+
+  </article>
+<aside class="sidebar">
+  <section class="sidebar_inner">
+    
+      <h2>Darryl Cauldwell</h2>
+      <div class="sidebar_description">
+        Technologist, perpetual student, teacher, continual incremental improvement.
+      </div>
+      <a href='https://www.linkedin.com/in/darryl-cauldwell-82156333/' class="button mt-1" role="button" title='Read More'>Read More</a>
+    <h2 class="mt-4">Featured Posts</h2>
+    <ul>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi/" class="nav-link" title="Raspberry Pi Cluster Hardware">Raspberry Pi Cluster Hardware</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/avi/" class="nav-link" title="Avi Load Balancer">Avi Load Balancer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/devops-architect/" class="nav-link" title="The DevOps Infrastructure Architect">The DevOps Infrastructure Architect</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-nuc/" class="nav-link" title="Intel NUC Cluster Hardware">Intel NUC Cluster Hardware</a>
+      </li>
+    </ul>
+    <h2 class="mt-4">Recent Posts</h2>
+    <ul class="flex-column">
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi-mpi/" class="nav-link" title="Pi Supercomputer">Pi Supercomputer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi-storage/" class="nav-link" title="Comparing SD and USB 3 Storage Performance With Raspberry Pi4B">Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi-ubuntu/" class="nav-link" title="Raspberry Pi Cluster Ubuntu Base">Raspberry Pi Cluster Ubuntu Base</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/homelab-pi/" class="nav-link" title="Raspberry Pi Cluster Hardware">Raspberry Pi Cluster Hardware</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/zsh/" class="nav-link" title="Customizing Zsh Prompt">Customizing Zsh Prompt</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/ish/" class="nav-link" title="Running Linux on iPhone">Running Linux on iPhone</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/avi/" class="nav-link" title="Avi Load Balancer">Avi Load Balancer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.com/post/python_spbm/" class="nav-link" title="Programaticly configuring VMware Storage Profile API with Python">Programaticly configuring VMware Storage Profile API with Python</a>
+      </li>
+    </ul>
+    <div>
+      <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
+      <nav class="tags_nav">
+        <a href='https://darrylcauldwell.com/categories/automation/' class="post_tag button button_translucent" title="automation">
+          AUTOMATION
+          <span class="button_tally">33</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/networking/' class="post_tag button button_translucent" title="networking">
+          NETWORKING
+          <span class="button_tally">18</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/homelab/' class="post_tag button button_translucent" title="homelab">
+          HOMELAB
+          <span class="button_tally">9</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/certification/' class="post_tag button button_translucent" title="certification">
+          CERTIFICATION
+          <span class="button_tally">7</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/storage/' class="post_tag button button_translucent" title="storage">
+          STORAGE
+          <span class="button_tally">5</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/handy-hacks/' class="post_tag button button_translucent" title="handy-hacks">
+          HANDY-HACKS
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/raspberry/' class="post_tag button button_translucent" title="raspberry">
+          RASPBERRY
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/architecture/' class="post_tag button button_translucent" title="architecture">
+          ARCHITECTURE
+          <span class="button_tally">2</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/sustainability/' class="post_tag button button_translucent" title="sustainability">
+          SUSTAINABILITY
+          <span class="button_tally">2</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/blogging/' class="post_tag button button_translucent" title="blogging">
+          BLOGGING
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/categories/vsphere/' class="post_tag button button_translucent" title="vsphere">
+          VSPHERE
+          <span class="button_tally">1</span>
+        </a>
+        
+        
+      </nav>
+    </div>
+    <div>
+      <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
+      <nav class="tags_nav">
+        <a href='https://darrylcauldwell.com/tags/nsx/' class="post_tag button button_translucent" title="nsx">
+          NSX
+          <span class="button_tally">15</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/vsphere/' class="post_tag button button_translucent" title="vsphere">
+          VSPHERE
+          <span class="button_tally">13</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/aws/' class="post_tag button button_translucent" title="aws">
+          AWS
+          <span class="button_tally">10</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/python/' class="post_tag button button_translucent" title="python">
+          PYTHON
+          <span class="button_tally">7</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/ansible/' class="post_tag button button_translucent" title="ansible">
+          ANSIBLE
+          <span class="button_tally">6</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/docker/' class="post_tag button button_translucent" title="docker">
+          DOCKER
+          <span class="button_tally">6</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
+          KUBERNETES
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/performance/' class="post_tag button button_translucent" title="performance">
+          PERFORMANCE
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/raspberry/' class="post_tag button button_translucent" title="raspberry">
+          RASPBERRY
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/vcix/' class="post_tag button button_translucent" title="vcix">
+          VCIX
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/windows/' class="post_tag button button_translucent" title="windows">
+          WINDOWS
+          <span class="button_tally">4</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.com/tags/dynamodb/' class="post_tag button button_translucent" title="dynamodb">
+          DYNAMODB
+          <span class="button_tally">3</span>
+        </a>
+        
+        
+        <br>
+        <div class="post_tags_toggle button">All Tags</div>
+        <div class="post_tags">
+          <div class="tags_list">
+            
+            <a href='https://darrylcauldwell.com/tags/ansible/' class=" post_tag button button_translucent" data-position=6 title="ansible">ANSIBLE<span class="button_tally">6</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/antrea/' class=" post_tag button button_translucent" data-position=1 title="antrea">ANTREA<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/architecture/' class=" post_tag button button_translucent" data-position=2 title="architecture">ARCHITECTURE<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/avi/' class=" post_tag button button_translucent" data-position=1 title="avi">AVI<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/aws/' class=" post_tag button button_translucent" data-position=10 title="aws">AWS<span class="button_tally">10</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloud-assembly/' class=" post_tag button button_translucent" data-position=1 title="cloud-assembly">CLOUD-ASSEMBLY<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloud-init/' class=" post_tag button button_translucent" data-position=1 title="cloud-init">CLOUD-INIT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloudbased-init/' class=" post_tag button button_translucent" data-position=1 title="cloudbased-init">CLOUDBASED-INIT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/cloudformation/' class=" post_tag button button_translucent" data-position=1 title="cloudformation">CLOUDFORMATION<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/devops/' class=" post_tag button button_translucent" data-position=4 title="devops">DEVOPS<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/dfw/' class=" post_tag button button_translucent" data-position=2 title="dfw">DFW<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/docker/' class=" post_tag button button_translucent" data-position=6 title="docker">DOCKER<span class="button_tally">6</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/dynamodb/' class=" post_tag button button_translucent" data-position=3 title="dynamodb">DYNAMODB<span class="button_tally">3</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/encryption/' class=" post_tag button button_translucent" data-position=1 title="encryption">ENCRYPTION<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/flask/' class=" post_tag button button_translucent" data-position=1 title="flask">FLASK<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/hanlon/' class=" post_tag button button_translucent" data-position=1 title="hanlon">HANLON<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/hpe/' class=" post_tag button button_translucent" data-position=1 title="hpe">HPE<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/index/' class=" post_tag button button_translucent" data-position=1 title="index">INDEX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/ios/' class=" post_tag button button_translucent" data-position=1 title="ios">IOS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/jekyll/' class=" post_tag button button_translucent" data-position=1 title="jekyll">JEKYLL<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/kubernetes/' class=" post_tag button button_translucent" data-position=4 title="kubernetes">KUBERNETES<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/lambda/' class=" post_tag button button_translucent" data-position=1 title="lambda">LAMBDA<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/load-balancer/' class=" post_tag button button_translucent" data-position=1 title="load-balancer">LOAD-BALANCER<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/macos/' class=" post_tag button button_translucent" data-position=1 title="macos">MACOS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/migration/' class=" post_tag button button_translucent" data-position=1 title="migration">MIGRATION<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/netapp/' class=" post_tag button button_translucent" data-position=2 title="netapp">NETAPP<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/nsx/' class=" post_tag button button_translucent" data-position=15 title="nsx">NSX<span class="button_tally">15</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/nuc/' class=" post_tag button button_translucent" data-position=1 title="nuc">NUC<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/openshift/' class=" post_tag button button_translucent" data-position=1 title="openshift">OPENSHIFT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/openstack/' class=" post_tag button button_translucent" data-position=2 title="openstack">OPENSTACK<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/ovftool/' class=" post_tag button button_translucent" data-position=1 title="ovftool">OVFTOOL<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/peloton/' class=" post_tag button button_translucent" data-position=1 title="peloton">PELOTON<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/performance/' class=" post_tag button button_translucent" data-position=4 title="performance">PERFORMANCE<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/planespotter/' class=" post_tag button button_translucent" data-position=1 title="planespotter">PLANESPOTTER<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/postman/' class=" post_tag button button_translucent" data-position=1 title="postman">POSTMAN<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/powershell/' class=" post_tag button button_translucent" data-position=3 title="powershell">POWERSHELL<span class="button_tally">3</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/puppet/' class=" post_tag button button_translucent" data-position=1 title="puppet">PUPPET<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/python/' class=" post_tag button button_translucent" data-position=7 title="python">PYTHON<span class="button_tally">7</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/raspberry/' class=" post_tag button button_translucent" data-position=4 title="raspberry">RASPBERRY<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/rest/' class=" post_tag button button_translucent" data-position=2 title="rest">REST<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/tanzu/' class=" post_tag button button_translucent" data-position=1 title="tanzu">TANZU<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/tcp/' class=" post_tag button button_translucent" data-position=1 title="tcp">TCP<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/terraform/' class=" post_tag button button_translucent" data-position=1 title="terraform">TERRAFORM<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/time-management/' class=" post_tag button button_translucent" data-position=1 title="time-management">TIME-MANAGEMENT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcap/' class=" post_tag button button_translucent" data-position=1 title="vcap">VCAP<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcd/' class=" post_tag button button_translucent" data-position=1 title="vcd">VCD<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcdx/' class=" post_tag button button_translucent" data-position=1 title="vcdx">VCDX<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vcix/' class=" post_tag button button_translucent" data-position=4 title="vcix">VCIX<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/virtustream/' class=" post_tag button button_translucent" data-position=1 title="virtustream">VIRTUSTREAM<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vpc/' class=" post_tag button button_translucent" data-position=1 title="vpc">VPC<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vra/' class=" post_tag button button_translucent" data-position=2 title="vra">VRA<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vrli/' class=" post_tag button button_translucent" data-position=2 title="vrli">VRLI<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vro/' class=" post_tag button button_translucent" data-position=3 title="vro">VRO<span class="button_tally">3</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vrops/' class=" post_tag button button_translucent" data-position=1 title="vrops">VROPS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vsan/' class=" post_tag button button_translucent" data-position=2 title="vsan">VSAN<span class="button_tally">2</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vsphere/' class=" post_tag button button_translucent" data-position=13 title="vsphere">VSPHERE<span class="button_tally">13</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/vvols/' class=" post_tag button button_translucent" data-position=1 title="vvols">VVOLS<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.com/tags/windows/' class=" post_tag button button_translucent" data-position=4 title="windows">WINDOWS<span class="button_tally">4</span>
+            </a>
+            
+            <div class="tags_sort"><span title="sort alphabetically">[A~Z]</span><span title="sort by count">[0~9]</span>
+            </div>
+            <span class="tags_hide"><svg class="icon">
+            <use xlink:href="#closeme"></use>
+          </svg></span>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </section>
+</aside>
+
+  
+</div>
+    </main><svg width="0" height="0" class="hidden">
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.001 18.001" id="twitter">
+    <path d="M15.891 4.013c.808-.496 1.343-1.173 1.605-2.034a8.68 8.68 0 0 1-2.351.861c-.703-.756-1.593-1.14-2.66-1.14-1.043 0-1.924.366-2.643 1.078a3.56 3.56 0 0 0-1.076 2.605c0 .309.039.585.117.819-3.076-.105-5.622-1.381-7.628-3.837-.34.601-.51 1.213-.51 1.846 0 1.301.549 2.332 1.645 3.089-.625-.053-1.176-.211-1.645-.47 0 .929.273 1.705.82 2.388a3.623 3.623 0 0 0 2.115 1.291c-.312.08-.641.118-.979.118-.312 0-.533-.026-.664-.083.23.757.664 1.371 1.291 1.841a3.652 3.652 0 0 0 2.152.743C4.148 14.173 2.625 14.69.902 14.69c-.422 0-.721-.006-.902-.038 1.697 1.102 3.586 1.649 5.676 1.649 2.139 0 4.029-.542 5.674-1.626 1.645-1.078 2.859-2.408 3.639-3.974a10.77 10.77 0 0 0 1.172-4.892v-.468a7.788 7.788 0 0 0 1.84-1.921 8.142 8.142 0 0 1-2.11.593z"
+      ></path>
+  </symbol>
+  <symbol aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="mail">
+    <path  d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="calendar">
+    <path d="M452 40h-24V0h-40v40H124V0H84v40H60C26.916 40 0 66.916 0 100v352c0 33.084 26.916 60 60 60h392c33.084 0 60-26.916 60-60V100c0-33.084-26.916-60-60-60zm20 412c0 11.028-8.972 20-20 20H60c-11.028 0-20-8.972-20-20V188h432v264zm0-304H40v-48c0-11.028 8.972-20 20-20h24v40h40V80h264v40h40V80h24c11.028 0 20 8.972 20 20v48z"></path>
+    <path d="M76 230h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 310h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 390h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80-80h40v40h-40z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="github">
+    <path d="M255.968 5.329C114.624 5.329 0 120.401 0 262.353c0 113.536 73.344 209.856 175.104 243.872 12.8 2.368 17.472-5.568 17.472-12.384 0-6.112-.224-22.272-.352-43.712-71.2 15.52-86.24-34.464-86.24-34.464-11.616-29.696-28.416-37.6-28.416-37.6-23.264-15.936 1.728-15.616 1.728-15.616 25.696 1.824 39.2 26.496 39.2 26.496 22.848 39.264 59.936 27.936 74.528 21.344 2.304-16.608 8.928-27.936 16.256-34.368-56.832-6.496-116.608-28.544-116.608-127.008 0-28.064 9.984-51.008 26.368-68.992-2.656-6.496-11.424-32.64 2.496-68 0 0 21.504-6.912 70.4 26.336 20.416-5.696 42.304-8.544 64.096-8.64 21.728.128 43.648 2.944 64.096 8.672 48.864-33.248 70.336-26.336 70.336-26.336 13.952 35.392 5.184 61.504 2.56 68 16.416 17.984 26.304 40.928 26.304 68.992 0 98.72-59.84 120.448-116.864 126.816 9.184 7.936 17.376 23.616 17.376 47.584 0 34.368-.32 62.08-.32 70.496 0 6.88 4.608 14.88 17.6 12.352C438.72 472.145 512 375.857 512 262.353 512 120.401 397.376 5.329 255.968 5.329z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 212" id="gitlab">
+    <path d="M12.3 74.7h54L43.3 3c-1-3.6-6.4-3.6-7.6 0L12.3 74.8z" />
+    <path d="M12.3 74.7L.5 111c-1 3.2 0 6.8 3 8.8l101.6 74-92.5-119z"/>
+    <path d="M105 193.7l-38.6-119h-54l92.7 119z"/>
+    <path d="M105 193.7l38.7-119H66.4l38.7 119z"/>
+    <path d="M105 193.7l38.7-119H198l-93 119z"/>
+    <path d="M198 74.7l11.6 36.2c1 3 0 6.6-3 8.6l-101.5 74 93-119z"/>
+    <path d="M198 74.7h-54.3L167 3c1.2-3.6 6.4-3.6 7.6 0L198 74.8z"/> 
+  </symbol>
+  <symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="rss">
+    <circle cx="3.429" cy="20.571" r="3.429"></circle>
+    <path d="M11.429 24h4.57C15.999 15.179 8.821 8.001 0 8v4.572c6.302.001 11.429 5.126 11.429 11.428z"></path>
+    <path d="M24 24C24 10.766 13.234 0 0 0v4.571c10.714 0 19.43 8.714 19.43 19.429z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="linkedin">
+    <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h362c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zM181 406h-60V196h60zm0-240h-60v-60h60zm210 240h-60V286c0-16.54-13.46-30-30-30s-30 13.46-30 30v120h-60V196h60v11.309C286.719 202.422 296.93 196 316 196c40.691.043 75 36.547 75 79.688zm0 0"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612" id="arrow">
+    <path d="M604.501 440.509L325.398 134.956c-5.331-5.357-12.423-7.627-19.386-7.27-6.989-.357-14.056 1.913-19.387 7.27L7.499 440.509c-9.999 10.024-9.999 26.298 0 36.323s26.223 10.024 36.222 0l262.293-287.164L568.28 476.832c9.999 10.024 26.222 10.024 36.221 0 9.999-10.023 9.999-26.298 0-36.323z"></path>
+  </symbol>
+  <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="carly">
+    <path d="M504.971 239.029L448 182.059V84c0-46.317-37.682-84-84-84h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c19.851 0 36 16.149 36 36v108c0 6.365 2.529 12.47 7.029 16.971L454.059 256l-47.029 47.029A24.002 24.002 0 0 0 400 320v108c0 19.851-16.149 36-36 36h-44c-13.255 0-24 10.745-24 24s10.745 24 24 24h44c46.318 0 84-37.683 84-84v-98.059l56.971-56.971c9.372-9.372 9.372-24.568 0-33.941zM112 192V84c0-19.851 16.149-36 36-36h44c13.255 0 24-10.745 24-24S205.255 0 192 0h-44c-46.318 0-84 37.683-84 84v98.059l-56.971 56.97c-9.373 9.373-9.373 24.568 0 33.941L64 329.941V428c0 46.317 37.682 84 84 84h44c13.255 0 24-10.745 24-24s-10.745-24-24-24h-44c-19.851 0-36-16.149-36-36V320c0-6.365-2.529-12.47-7.029-16.971L57.941 256l47.029-47.029A24.002 24.002 0 0 0 112 192z"></path>
+  </symbol>
+  <symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="copy">
+    <path d="M23 2.75A2.75 2.75 0 0 0 20.25 0H8.75A2.75 2.75 0 0 0 6 2.75v13.5A2.75 2.75 0 0 0 8.75 19h11.5A2.75 2.75 0 0 0 23 16.25zM18.25 14.5h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5zm0-3h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5zm0-3h-7.5a.75.75 0 0 1 0-1.5h7.5a.75.75 0 0 1 0 1.5z"></path>
+    <path d="M8.75 20.5a4.255 4.255 0 0 1-4.25-4.25V2.75c0-.086.02-.166.025-.25H3.75A2.752 2.752 0 0 0 1 5.25v16A2.752 2.752 0 0 0 3.75 24h12a2.752 2.752 0 0 0 2.75-2.75v-.75z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512.001" id="closeme">
+    <path d="M284.286 256.002L506.143 34.144c7.811-7.811 7.811-20.475 0-28.285-7.811-7.81-20.475-7.811-28.285 0L256 227.717 34.143 5.859c-7.811-7.811-20.475-7.811-28.285 0-7.81 7.811-7.811 20.475 0 28.285l221.857 221.857L5.858 477.859c-7.811 7.811-7.811 20.475 0 28.285a19.938 19.938 0 0 0 14.143 5.857 19.94 19.94 0 0 0 14.143-5.857L256 284.287l221.857 221.857c3.905 3.905 9.024 5.857 14.143 5.857s10.237-1.952 14.143-5.857c7.811-7.811 7.811-20.475 0-28.285L284.286 256.002z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="open-menu">
+    <path d="M492 236H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0-160H20C8.954 76 0 84.954 0 96s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20zm0 320H20c-11.046 0-20 8.954-20 20s8.954 20 20 20h472c11.046 0 20-8.954 20-20s-8.954-20-20-20z"></path>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="instagram">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id=youtube>
+    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+  </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="stackoverflow">
+    <path d="M21 27v-8h3v11H0V19h3v8h18z"></path><path d="M17.1.2L15 1.8l7.9 10.6 2.1-1.6L17.1.2zm3.7 14.7L10.6 6.4l1.7-2 10.2 8.5-1.7 2zM7.2 12.3l12 5.6 1.1-2.4-12-5.6-1.1 2.4zm-1.8 6.8l13.56 1.96.17-2.38-13.26-2.55-.47 2.97zM19 25H5v-3h14v3z"></path>
+  </symbol>
+</svg>
+
+
+<footer class="footer">
+  <div class="footer_inner wrap pale">
+    <img src='https://darrylcauldwell.com/icons/apple-touch-icon.png' class="icon icon_2 transparent" alt="">
+    <p>Copyright&nbsp;<span class="year"></span>&nbsp;. All Rights Reserved</p><a class="to_top" href="#documentTop">
+  <svg class="icon">
+  <use xlink:href="#arrow"></use>
+</svg>
+</a>
+
+  </div>
+</footer>
+
+    <script type="text/javascript" src="https://darrylcauldwell.com/js/bundle.min.93cd992c3cccaecf94d4275ee77263c2458245bfd21a4dc1767c498aaecdc261741dd198221e0c5d0d5a07b0f2e8e7b6b3527da117165bfa8e3712a6c838c89a.js" integrity="sha512-k82ZLDzMrs&#43;U1Cde53JjwkWCRb/SGk3BdnxJiq7NwmF0HdGYIh4MXQ1aB7Dy6Oe2s1J9oRcWW/qONxKmyDjImg==" crossorigin="anonymous"></script>
+    
+  </body>
+</html>

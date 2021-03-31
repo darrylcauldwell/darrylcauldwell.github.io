@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cloud assembly on </title>
+    <link>https://darrylcauldwell.com/tags/cloud-assembly/</link>
+    <description>Recent content in cloud assembly on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 01 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/cloud-assembly/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cloud Assembly VM Guest Management With Ansible</title>
+      <link>https://darrylcauldwell.com/post/ansible-cloud-assembly/</link>
+      <pubDate>Thu, 01 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/ansible-cloud-assembly/</guid>
+      <description>
+        
+          &lt;p&gt;VMware &lt;a href=&#34;https://cloud.vmware.com/cloud-automation-services&#34;&gt;Cloud Automation Services&lt;/a&gt; is a product suite comprising three products, &lt;a href=&#34;https://cloud.vmware.com/cloud-assembly&#34;&gt;Cloud Assembly&lt;/a&gt;, &lt;a href=&#34;https://cloud.vmware.com/service-broker&#34;&gt;Service Broker&lt;/a&gt; and &lt;a href=&#34;https://cloud.vmware.com/code-stream&#34;&gt;Code Stream&lt;/a&gt;. Cloud Assembly provides a blueprinting engine and manages connectivity to multiple cloud endpoints. Service Broker provides a unified catalog for publishing blueprints with role-based policies. Code Stream provides a release pipeline with analytics.&lt;/p&gt;
+&lt;p&gt;The Cloud Assembly blueprinting engine can be used to consistently deliver VMs and applications.  To deliver VM guest configuration Cloud Assembly natively uses &lt;a href=&#34;https://cloudinit.readthedocs.io/en/latest/&#34;&gt;cloud-init&lt;/a&gt;. This native VM guest configuration capability can be extended with desired state management tools &lt;a href=&#34;https://puppet.com/&#34;&gt;Puppet&lt;/a&gt; and &lt;a href=&#34;https://www.ansible.com/&#34;&gt;Ansible&lt;/a&gt;. A major difference between the Puppet and Ansible is that Puppet requires an in-guest agent where Ansible operates agentless.&lt;/p&gt;
+&lt;h2 id=&#34;ansible&#34;&gt;Ansible&lt;/h2&gt;
+&lt;p&gt;In this blog post I am going to focus on Cloud Assembly integration with Ansible.  The Ansible engine is &lt;a href=&#34;https://github.com/ansible/ansible&#34;&gt;fully open source&lt;/a&gt;, but OSS RedHat also offers a &lt;a href=&#34;https://www.ansible.com/products/engine&#34;&gt;license model and support package&lt;/a&gt; for Ansible engine. In addition to the Ansible engine RedHat provides support for &lt;a href=&#34;https://www.ansible.com/products/tower&#34;&gt;Ansible Tower&lt;/a&gt; which offers many enterprise grade features. A useful comparison can be found in the blog &lt;a href=&#34;https://www.ansible.com/blog/red-hat-ansible-automation-engine-vs-tower&#34;&gt;Red Hat Ansible Automation: Engine, Tower or Both&lt;/a&gt;. Cloud Assembly supports integration directly with Ansible engine and does not depend on Ansible Tower.&lt;/p&gt;
+&lt;p&gt;The Ansible control node connects to managed nodes and pushing out small programs, called &amp;ldquo;Ansible modules&amp;rdquo; to them. These programs are written to be resource models of the desired state of the system. Ansible then executes these modules (over SSH by default), and removes them when finished.&lt;/p&gt;
+&lt;h2 id=&#34;ansible-headless-deployment-model&#34;&gt;Ansible Headless Deployment Model&lt;/h2&gt;
+&lt;p&gt;Ansible does not require a single controlling machine. Any Linux machine can run Ansible. A headless deployment model is where each machine runs as both the Ansible control node role and the Ansible controlled node. The absence of a central management server requirement can greatly increase availability, simplify disaster-recovery planning and enhance security (no single point of control).&lt;/p&gt;
+&lt;p&gt;When we use this deployment model each server has Ansible installed and has inventory file with a single entry named localhost. We create a Cloud Assembly blueprint which includes cloud-init configuration to pull an Ansible playbook from a repository and execute it locally. Here the Ansible playbook is specific to the server role on which it will be ran.&lt;/p&gt;
+&lt;p&gt;An example of how to deploy an application using this deployment architecture using Cloud Assembly is described &lt;a href=&#34;https://github.com/darrylcauldwell/titoAnsibleHeadless&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;central-ansible-control-node&#34;&gt;Central Ansible Control Node&lt;/h2&gt;
+&lt;p&gt;While running Ansible without a central control node can be useful for some deployment scenarios, others are better suited to having a central Ansible controller node controlling multiple clients.&lt;/p&gt;
+&lt;p&gt;Typical factors which would drive a deployment architecture with a central control node would be the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows guests as Ansible control node can only runs on Linux&lt;/li&gt;
+&lt;li&gt;Large deployments that require centralized control for day two operations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When we use this deployment model we deploy a central Ansible control node and on this we create SSH authorization private public key pair. We then configure this to be integrated with Cloud Assembly.&lt;/p&gt;
+&lt;p&gt;We create a Cloud Assembly blueprint which includes on each VM resource cloud-init configuration to create a local account named ansible which has a SSH public key of key pair on the Ansible control node. The Cloud Assembly blueprint then has Ansible resource added with details of the Ansible control node, the private key to use to connect and which playbook to execute. Within the blueprint the Ansible resouece has a relationship formed with the appropriate VM resources. When the blueprint is deployed the VM resources get added dynamically to the Ansible server inventory file and the playbook executed. In this model the Ansible playbook can be application rather than server role specific.&lt;/p&gt;
+&lt;p&gt;An example of how to deploy an application with this deployment architecture using Cloud Assembly is described &lt;a href=&#34;https://github.com/darrylcauldwell/titoAnsible&#34;&gt;here&lt;/a&gt;.  This also includes a simplified example of how Ansible server can be used for day two operations for servers of a specific type.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

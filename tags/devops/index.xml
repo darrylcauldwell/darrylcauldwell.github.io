@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>devops on </title>
+    <link>https://darrylcauldwell.com/tags/devops/</link>
+    <description>Recent content in devops on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 29 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The DevOps Infrastructure Architect</title>
+      <link>https://darrylcauldwell.com/post/devops-architect/</link>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/devops-architect/</guid>
+      <description>
+        
+          &lt;p&gt;One common critisism of Agile teams is they are architecturally weak and disconnected from the operational realities of complex enterprise environments. Traditional enterprise architecture processes are viewed focusing on delivering documentation rather than delivering a working solution, slow, and focussed on delivering monolith design rather than continuous delivery of small incremental updates.&lt;/p&gt;
+&lt;h2 id=&#34;traditional-infrastructure-lifecycle&#34;&gt;Traditional Infrastructure Lifecycle&lt;/h2&gt;
+&lt;p&gt;Traditional infrastructure architecture development metholodies are a series of cyclical processes which culminate in a set of detailed documentation, including conceptual design, logical design and physical design. These are developed by an architect or architectural team in relative isolation to day-to-day operational activities. Typically in a traditional large enterprise architectural disciplines are aligned to technoligies wintel, security, network, storage, &amp;amp; *nix and each prepares there own documentation set.&lt;/p&gt;
+&lt;p&gt;At the point of delivery it is often found that the documentation sets are so large that they are often delivered incomplete of the full detail needed to deliver the solution. Cross discipline highly skilled engineers with deep technical product knowledge then engineer the solution design to make the component pieces work together. The engineers then delivers automation scripts to deliver the exact settings needed for the solution to operate. At this point the carefully prepared architectural documentation set is out of date.&lt;/p&gt;
+&lt;p&gt;Enterprise solutions are usually intended to plugin to existing operational tooling, and the enterprise architect usually assume this tooling will have suitable functionality built in to support the solution they design. Once deployed it is often found that the integration to operational tooling works at a very basic level but does not out of the box meet the management complexities of the solution delivered. At this point cross discipline highly skilled engineers with deep technical product knowledge have to get together with the operational tooling team and engineer a solution to make the solution work. These changes to the solution make the architectural documentation further out of date. Day two operations of any delivered solution will naturally lead to more change and the document set becoming more obsolete. All of these changes require high skilled people at every stage of delivery.&lt;/p&gt;
+&lt;h2 id=&#34;agile-infrastructure-architecture&#34;&gt;Agile Infrastructure Architecture&lt;/h2&gt;
+&lt;p&gt;Pre-virtualisation the requirement for up front design was partially justified as the hardware required for the application needed to be specced, procured, delivered, racked and powered before it could be consumed. Virtualization de-coupled these two processes and pools of compute resources could be pre-provisioned and consumed elastically, the public cloud provides further elasticity in delivery.&lt;/p&gt;
+&lt;p&gt;Agile development techniques such as ExtremeProgramming revolve around &amp;lsquo;You Aren&amp;rsquo;t Going to Need It (YAGNI)&amp;rsquo;. This principle relates to the notion of &amp;lsquo;incremental design&amp;rsquo; rather than carefully considered planned development encompassing all possible future need. In lean this is refered to as just-in-time. Agile architecture should be a collaborative activity which enables agile development to progress features and improvements in a timely manner to produce artifacts to meet the immediate requirement, and iterated just-in-time. The use of architecture model storming can be used between, architecture and operational engineering teams to agree solutions collaboratively.&lt;/p&gt;
+&lt;p&gt;The agile infrastructure architect still has the primary goal of designing solutions which are deployable, scalable, secure, maintainable, managable, standards compliant, fault tolerant, testable, upgradable and recoverable.&lt;/p&gt;
+&lt;p&gt;When architectcure design is designed and delivered in small units, the feedback loop to deploying engineer is much shorter, issues are found and fixed and all stakeholders are kept in the loop. The use of collaboration tools to store documentation such as Github WiKi&amp;rsquo;s or Atlassian Confluence means that documention can be kept up to date collabortaively and be kept close to the automation scipts.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.guru99.com/agile-vs-kanban.html&#34;&gt;Agile Vs Kanban: What’s the Difference?&lt;/a&gt;
+&lt;a href=&#34;http://www.agilearchitect.org/agile/role.htm&#34;&gt;Agile Architect: Role&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://martinfowler.com/bliki/Yagni.html&#34;&gt;Martin Fowler: YAGNI&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://agilemodeling.com/essays/agileArchitecture.htm&#34;&gt;Agile Modeling: Agile Architecture&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.agilemodeling.com/&#34;&gt;Agile Modeling&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.gilb.com/blog/what-every-successful-project-manager-should-know&#34;&gt;What Every Successful Product Manager (Owner) Should Know&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://blog.xebia.com/lean-architecture-principle-5-just-in-time-just-enough/&#34;&gt;Lean Architecture: Just In Time, Just Enough&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.extremeprogramming.org/&#34;&gt;Extreme Programming: A Gentle Introduction&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.scaledagileframework.com/agile-architecture/&#34;&gt;Scaled Agile: Agile Architectuere Abstract&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://martinfowler.com/articles/designDead.html&#34;&gt;Martin Fowler: Is Design Dead&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://agilemodeling.com/essays/modelStorming.htm&#34;&gt;Agile Modeling: Model Storming&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://shapingsoftware.com/2009/03/02/agile-architecture-method/&#34;&gt;Shaping Software: Agile Architecture Method&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;www.agiledata.org/essays/enterpriseArchitecture.html#AgileApproach&#34;&gt;Agile Data: Agile Enterprise Architecture Approach&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>DevOps != Products</title>
+      <link>https://darrylcauldwell.com/post/devops/</link>
+      <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/devops/</guid>
+      <description>
+        
+          &lt;p&gt;The last 10 to 20 years in the enterprise has been defined by increasing capital spending on fixed assets (CapEx) while reducing the cost of staffing and operations (OpEx).  Gartner report the growth of spend on enterprise application software (EAS) is continuing to grow and in 2015 will grow at &lt;a href=&#34;http://www.gartner.com/newsroom/id/3119717&#34;&gt;7.5% to $149.9 Billion&lt;/a&gt;.  According to the &lt;a href=&#34;https://hbr.org/2011/09/why-your-it-project-may-be-riskier-than-you-think/ar/1&#34;&gt;Harvard Business Review&lt;/a&gt; one in six IT projects had an average cost overrun of 200% and a schedule overrun of 70%.&lt;/p&gt;
+&lt;p&gt;Some companies who provide solutions to enterprise businesses have continued to use the same delivery model they have used for years,  of investing in products (increase CapEx) and reducing people count and replacing high skilled workers with fewer, low cost, lower skilled workers (reducing OpEx). The current levels of under staffing in IT teams lead to constant firefighting that leaves no energy, time or motivation to conduct fire prevention. A common reason heard for buying product to meet a requirement is that the IT staff don&amp;rsquo;t have the time or skills, but they rarely consider where the skills are created ? Who gave those people the time, scope and resources to develop those skills? Training an upskilling builds employee loyalty, new skills of existing employee allows them to quickly realise business benefit, bringing in new hires with skills which are out of context take longer to realize business benefits.&lt;/p&gt;
+&lt;p&gt;Other companies have realized the legacy model is broken and have made pivot to lower CapEx spend by the use of open source products hosted on IaaS in the cloud. The effective use of open source products ran to host production services within the cloud increases complexity and as the products are open source and self supported increases the requirement for a highly skilled and highly motivated workforce. The companies who are choosing to invest in people rather than hardware and products to deliver the requirements of business are excelling in the industry as they have improved service agility. Service agility means they can pivot quickly to quickly deliver new features to there customer,  they can scale out on demand to give the required density at the right time and also give great visibility. The success of these cloud native companies shows that over-investment in people NOT over-investment in products produces real increases in productivity.  The other factor about these companies to note is that with a small workforce of highly skilled engineers everyone is required to cover each other, the developers needed to understand the operational requirements and the operations an intimate knowledge of the requirements of the application.  This close relationship and shared empathy between developer and operator is in essence to me what the DevOps culture is.&lt;/p&gt;
+&lt;p&gt;Choosing people over products is not limited to the cloud native application space,  cloud providers make huge investment in hardware and software and the scale at which they work to deliver effectively means they need to draw every ounce of productivity out of there hardware investment.  To do this requires again very highly skilled, highly motivated employeers,  examples of success in this area have been Facebook and there founding of the &lt;a href=&#34;http://www.opencompute.org/about/&#34;&gt;Open Compute Project&lt;/a&gt;, the &lt;a href=&#34;http://research.google.com/pubs/pub43438.html&#34;&gt;Google borg project&lt;/a&gt;,  &lt;a href=&#34;https://aws.amazon.com/about-aws/global-infrastructure/&#34;&gt;AWS&lt;/a&gt; and Azure.&lt;/p&gt;
+&lt;p&gt;The growth of the enterprise application software (EAS) and the purchase promise of the EAS product vendors to reduce the cost of ownership through faster performance, better features, better software and usability and see that the enterprise fails to deliver large projects. Then consider the success of cloud native companies and DevOps culture,  it leads us to the conclusion that enterprise IT needs to change fundamentally in how they make decisions.&lt;/p&gt;
+&lt;p&gt;We can summaries &amp;lsquo;DevOps = People&amp;rsquo; and therefore &amp;lsquo;DevOps != Products&amp;rsquo;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Is the future of sysadmin to be an SRE?</title>
+      <link>https://darrylcauldwell.com/post/devops-sre/</link>
+      <pubDate>Thu, 22 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/devops-sre/</guid>
+      <description>
+        
+          &lt;p&gt;I recently came across the role SRE, I didn&amp;rsquo;t know what this was so researched it a little and found that it refers to Site Reliability Engineers after reading around the subject here is my considered opinion.&lt;/p&gt;
+&lt;p&gt;The classic sysadmin role could be defined in generic terms as &amp;ldquo;IT operations staff responsible for designing, building, and maintaining an organization&amp;rsquo;s computer infrastructure&amp;rdquo;. The world of IT is continually growing and changing, we&amp;rsquo;re presently going through technological changes and a move to virutalization and containization of server services, a sysadmin now only needs to manage the hosting platform and can manage by policy applied around the server instance and use light touch operational administration of the each server instance.  As well as this businesses are also changing and attempting to embrace lean methodologies to gain the efficiencies they promise, starting in software engineering using Agile process and now moving to encompass operational management by breaking down the silos between development and operations. A healthy DevOps culture is shown by having working relationships which allows each classical team to see how their work influences and affects the other, and by combining knowledge and effort, produces a more robust, reliable, agile product as a result.&lt;/p&gt;
+&lt;p&gt;But what of the next stages when server administration is so light tough and infrastructure is delivered by coded workflow, well then you only need hire people who write code. It is within businesses evolved to this point where the term Site Reliability Engineers (SREs) comes in. These are engineers who know enough about programming languages, data structures and algorithms, and performance to properly review the working of an application to properly instrument, measure and alert on its running. Alongside these application skills they have knowledge of operational management to ensure the software continues to have these capabilities through its operational life which might include resilience of failures component, server and site (cloud provider), scalability to accommodate varying workload levels, and security patch management.&lt;/p&gt;
+&lt;p&gt;Over the years I&amp;rsquo;ve spoken to a lot of system administrators have come into their roles as an evolution as well maybe through help desk, various layers of support, or even just running computer systems at home and transitioning those skills into servers at work. It is pretty clear in my mind that the same evolutionary path won&amp;rsquo;t work for the transition into SRE, as the move towards the SRE role requires software engineering skills to understand the application itself these skills are classical and learned in a structured way. I have learned a lot about programmatic structure through working with Powershell however the discipline of a computer scientist or software engineer are still quite distant, programming at any level however is a good starting point to work from, and the more you look at programming and languages the more you understand of a developers view point.&lt;/p&gt;
+&lt;p&gt;Today many businesses are on a journey of evolution and right now only a handful are at the point in the journey were SREs are needed.  However right now every infrastructure would benefit from having its systems administrator having better programming skills, as such I will be looking to further advancing and formalizing my programming skills.  Bearing in mind the future I believe all sys admins should do the same!&lt;/p&gt;
+&lt;p&gt;Interesting article about the job from a &lt;a href=&#34;%22http://googleforstudents.blogspot.co.uk/2012/06/site-reliability-engineers-worlds-most.html&#34;&gt;Google Site Reliability Engineer&lt;/a&gt;.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Scrum Team Demystified</title>
+      <link>https://darrylcauldwell.com/post/devops-scrum/</link>
+      <pubDate>Tue, 26 Aug 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/devops-scrum/</guid>
+      <description>
+        
+          &lt;p&gt;While I worked with Agile as a software tester when the concept first came out in 2002 shortly afterwards I joined a new company in a new role in Infrastructure, IT operations if you will. My recollection of Agile is that it was not a process at all; rather, it’s a set of principles summarized by the Agile Manifesto.&lt;/p&gt;
+&lt;p&gt;This seems like a lifetime ago,  but its finally made a comeback to my work life as I now work in team looking to foster a DevOps culture in our workplace.  A DevOps culture is an extension of Agile culture which rather than focusing purely on application life-cycle management it looks to now encompass server life-cycle management too. It aims to achieve this by breaking down organizational barriers to become a single cohesive team delivering a application service rather than discreet silo team structure.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/devops-scrum.png&#34; alt=&#34;DevOps&#34;&gt;&lt;/p&gt;
+&lt;p&gt;While Agile and DevOps are cultural changes and not methodologies in themselves there are methodologies which embody the principles such as Scrum, again there is no formal definition of a Scrum but industry members have formed frameworks such as &lt;a href=&#34;http://www.mountaingoatsoftware.com/agile/scrum&#34;&gt;Mike Cohen&lt;/a&gt;. A scrum team is a strong informal collaboration of engineers and developers, within the loose role construct of a Scrum team.The team ideally are co-located, in same building, or at least same timezone so they can work closely and all be aware of each others work. The other ideal is that business or product owner while not sitting within the Scrum team is very close to them, and the team is given wide discretion to develop and innovate in order to reflect their informal understanding of the customer&amp;rsquo;s real desire which is validated.&lt;/p&gt;
+&lt;p&gt;In support of this new way of working you can also use tools which support these frameworks.  One such tool is from Atlassian which includes Jira which is a tracker for team planning, it is used to capture and organize issues, assign work, and follow team activity. Atlassian provide an Agile plugin for Jira to give the schema extensions to give the console the concept of Sprint, Theme, Epic and Stories as a way to organize the issues and work, it also enables all of these things to be measured for velocity with regards to team performance.  At the side of Jira sits Atlassian Confluence essentially a Wiki for the creation of the evolving design documentation.&lt;/p&gt;
+&lt;p&gt;I mentioned above Sprint, Theme, Epic and Stories.  My loose definition of these terms stems from Mike Cohn&amp;rsquo;s &lt;a href=&#34;http://www.mountaingoatsoftware.com/agile&#34;&gt;Agile template&lt;/a&gt;. Where Scrum story is a user requirement definition,  a Scrum epic is a large user story, there is no threshold at where a story becomes a Epic it is just a big story,  potentially an Epic is a large story waiting to be more clearly defined and broken down into stories. A Scrum theme is a collection of Stories and \ or Epics. A Scrum sprint is a collection of Epics and \ or Stories which we hope to do within a set time frame. So we might have 100 stories pending,  and if our Sprint window is one week we might say this week we have these people engaged and can therefore complete these 10 stories. In practical terms for a sprint, we therefore draw a loose line in the sand that a Story should be achievable within a Sprint and an Epic a story which spans Sprints. Within Atlassian Jira story dependencies can be formed,  so if a Story hits an issue or hits a block the impact of this can be seen further up the dependency tree.&lt;/p&gt;
+&lt;p&gt;As well as managing the tasks and workload with Jira another key part is harnessing automation to give predictable and repeatable delivery of your application service.With the cloud comes the decoupling of operating systems from physical servers, storage and networking,  and with containers the further decoupling of application from operating systems. With self service software defined data center and OpenStack cloud management platform cloud style infrastructure deployments is becoming more accessible to the traditional private data centers too.  With so many configuration items required to deliver a application service within software defined infrastructure as well as the application itself.  It can be useful to harness desired state tooling such as &lt;a href=&#34;https://www.chef.io/chef/&#34;&gt;Chef&lt;/a&gt; and &lt;a href=&#34;http://puppetlabs.com/&#34;&gt;Puppet&lt;/a&gt;, and leveraging distributed version control systems like &lt;a href=&#34;https://github.com/&#34;&gt;GitHub&lt;/a&gt;, to manage, deploy and enforce your configuration.&lt;/p&gt;
+&lt;p&gt;A neat video on Jira, Agile, Scrum and Kanban&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=NrHpXvDXVrw&#34;&gt;https://www.youtube.com/watch?v=NrHpXvDXVrw&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

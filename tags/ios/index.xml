@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ios on </title>
+    <link>https://darrylcauldwell.com/tags/ios/</link>
+    <description>Recent content in ios on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 06 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/ios/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Running Linux on iPhone</title>
+      <link>https://darrylcauldwell.com/post/ish/</link>
+      <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/ish/</guid>
+      <description>
+        
+          &lt;p&gt;iSH is a &lt;a href=&#34;https://github.com/ish-app/ish&#34;&gt;project&lt;/a&gt; which offers a Linux shell environment on iOS using a usermode x86 emulator.&lt;/p&gt;
+&lt;p&gt;The emulator is based on Alpine Linux but does not ship with SSH or APK the Alpine Linux package manager. To install the package manager with iSH and ultimately other tools we can download this with Safari from following URL.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86/apk-tools-static-2.10.5-r1.apk
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The emulator does not by default have access to iCloud Drive files, but this can be mounted by running following.  Note when mounting iCloud Drive you get prompted which folder,  you can select root or Downloads folder where APK install file would be located.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mount -t ios . /mnt
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the iCloud Drive mounted to emulator we can look to unpack and then create a symbolic link.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd /mnt/Downloads
+tar xvzf apk-tools-static-2.10.5-r1.apk -C /
+ln -s /sbin/apk.static /sbin/apk
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the package manager client installed we can install things like OpenSSH.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apk add --no-cache openssh 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then use the SSH client to connect to any network reachable IP running SSH server.&lt;/p&gt;
+&lt;p&gt;While exploring iSH I found another interesting thing is that it seems to share the network stack.  So if you run a web server within iSH like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apk add --no-cache python3
+echo &#39;Hello from iSH&#39; &amp;gt;&amp;gt; index.html
+python3 -m http.server
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When you see the ‘Serving HTTP on 0.0.0.0 port 8000’ message, you can then switch to safari and browse localhost.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://127.0.0.1:8000
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pretty cool.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

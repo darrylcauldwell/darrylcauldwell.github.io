@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hpe on </title>
+    <link>https://darrylcauldwell.com/tags/hpe/</link>
+    <description>Recent content in hpe on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 27 Mar 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/hpe/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HP C7000 Interconnect Bay Mapping</title>
+      <link>https://darrylcauldwell.com/post/hpe-c7000-interconnects/</link>
+      <pubDate>Thu, 27 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/hpe-c7000-interconnects/</guid>
+      <description>
+        
+          &lt;p&gt;Here I address the most common query people have when using HP C7000 chassis, namely how do the bay
+mappings work.&lt;/p&gt;
+&lt;h2 id=&#34;half-height-blades&#34;&gt;Half Height Blades&lt;/h2&gt;
+&lt;p&gt;HP supply blades which occupy single or double slots,  the single height blades map in the following way.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Device&lt;/th&gt;
+&lt;th&gt;Interconnect Bay Mapping&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;OnBoard NIC1&lt;/td&gt;
+&lt;td&gt;Bay 1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OnBoard NIC2&lt;/td&gt;
+&lt;td&gt;Bay 2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mezz1 HBA1&lt;/td&gt;
+&lt;td&gt;Bay 3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mezz1 HBA2&lt;/td&gt;
+&lt;td&gt;Bay 4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mezz2 NIC1&lt;/td&gt;
+&lt;td&gt;Bay 5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mezz2 NIC2&lt;/td&gt;
+&lt;td&gt;Bay 6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mezz2 NIC3&lt;/td&gt;
+&lt;td&gt;Bay 7&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mezz2 NIC4&lt;/td&gt;
+&lt;td&gt;Bay 8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/hpe-c7000-mapping-half.png&#34; alt=&#34;Half Height Blade Mappings&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;full-height-blades&#34;&gt;Full Height Blades&lt;/h2&gt;
+&lt;p&gt;For dual height blade server such as BL680c the mappings work the same way although each server has two mappings to each for example slot one maps to ports one and nine in each interconnect bay as opposed to just bay port one if in slot one and port nine if in slot nine.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/hpe-c7000-mapping-full.gif&#34; alt=&#34;Full Height Blade Mappings&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

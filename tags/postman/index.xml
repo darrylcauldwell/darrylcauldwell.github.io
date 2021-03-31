@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>postman on </title>
+    <link>https://darrylcauldwell.com/tags/postman/</link>
+    <description>Recent content in postman on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 18 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/postman/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Orchestrating configuration of vROps via REST API with Postman</title>
+      <link>https://darrylcauldwell.com/post/vrops_rest/</link>
+      <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/vrops_rest/</guid>
+      <description>
+        
+          &lt;p&gt;vRealize Operations Manager (vROps) exposes some of its configuration via RESTful API. With this we can look to programatically control its configuration. My workflow is to use a REST client to explore API and validate payload formatting before moving to script the steps. My REST client of choice is &lt;a href=&#34;https://www.postman.com/&#34;&gt;Postman&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Performing any REST configuration in vRealize Operations Manager requires at least two steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Authenticate&lt;/li&gt;
+&lt;li&gt;Perform action, like configure a new vCenter adapter&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To faciliate running a sequence of actions I start by creating a POSTMAN collection. Requests stored within the collection can be played in sequence. Using the example of configuring a new vCenter adapter we might create a collection called &amp;lsquo;vROps - New vCenter Adapter&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;In case we have multiple environments and want to export our collection and reuse we  want to store environmental specifics as variables. To faciliate this we can create a POSTMAN envrionment. For example we might create a environment called &amp;lsquo;Homelab&amp;rsquo; which has variable vrops-fqdn and both initial and current value of vrops01.example.local&lt;/p&gt;
+&lt;p&gt;vRealize Operations Manager REST API documentation describes how we can &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Operations-Manager/8.1/com.vmware.vcom.api.doc/GUID-C3F0A911-A587-40F7-9998-13D4880A0C2B.html&#34;&gt;aquire an authentication token&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Create new reques in Postman with name &amp;lsquo;Aquire token&amp;rsquo;, set the request method to POST and set URL to use environment variable like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{% raw %}
+https://{{vrops-fqdn}}/suite-api/api/auth/token/acquire
+{% endraw %}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The documentation shows that two headers are required to be supplied so we must configure our request to pass these:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Content-Type: application/json
+Accept: application/json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The documentation also describes that we need to POST the vROps logon credentials as the body. Within Postman change body type to raw and paste below substrituing credentials appropriate to your environment.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;username&amp;quot;: &amp;quot;vRealize-username&amp;quot;,
+  &amp;quot;password&amp;quot;: &amp;quot;vRealize-password&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Successul processing of credential by the REST method returns a JSON body containing the token parameter. We want to capture this to use in the next step in our process. We can do this in Postman by running a script after the request is made which extracts the token value and sets this an environment variable. Change to the Test tab and add the following script.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var jsonData = JSON.parse(responseBody);
+postman.setEnvironmentVariable(&amp;quot;bearerToken&amp;quot;, jsonData.token);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can now look at the next step in our example is to add a vCenter adapter which is documented &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Operations-Manager/8.1/com.vmware.vcom.api.doc/GUID-18D17D09-628F-4974-AFE4-E94446E3462D.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Create new reques in Postman with name &amp;lsquo;Aquire token&amp;rsquo;, set the request method to POST and set URL to use environment variable like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{% raw %}
+https://{{vrops-fqdn}}/suite-api/api/adapters
+{% endraw %}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We require to apply three headers to this request, the ones to describe payload is in JSON format and an authentication header which passes the token value environment variable from previous step.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{% raw %}
+Content-Type: application/json
+Accept: application/json
+Authentication: vRealizeOpsToken {{bearerToken}}
+{% endraw %}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The documentation supplies an example body to post with some optional parameters. Similar to aquire step we place this in request body tab and ensure raw format is selected (ensuring you set envioronmentally values).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;name&amp;quot; : &amp;quot;New VC Adapter Instance&amp;quot;,
+  &amp;quot;collectorId&amp;quot; : &amp;quot;1&amp;quot;,
+  &amp;quot;adapterKindKey&amp;quot; : &amp;quot;VMWARE&amp;quot;,
+  &amp;quot;resourceIdentifiers&amp;quot; : [ 
+    {
+      &amp;quot;name&amp;quot; : &amp;quot;VCURL&amp;quot;,
+      &amp;quot;value&amp;quot; : &amp;quot;https://vcenter.example.local&amp;quot;
+    } 
+  ],
+  &amp;quot;credential&amp;quot; : {
+    &amp;quot;id&amp;quot; : null,
+    &amp;quot;name&amp;quot; : &amp;quot;VC-Credential-1&amp;quot;,
+    &amp;quot;adapterKindKey&amp;quot; : &amp;quot;VMWARE&amp;quot;,
+    &amp;quot;credentialKindKey&amp;quot; : &amp;quot;PRINCIPALCREDENTIAL&amp;quot;,
+    &amp;quot;fields&amp;quot; : [ 
+      {
+        &amp;quot;name&amp;quot; : &amp;quot;USER&amp;quot;,
+        &amp;quot;value&amp;quot; : &amp;quot;administrator@vsphere.local&amp;quot;
+      }, 
+      {
+        &amp;quot;name&amp;quot; : &amp;quot;PASSWORD&amp;quot;,
+        &amp;quot;value&amp;quot; : &amp;quot;VC-dummy-passwd&amp;quot;
+      } 
+    ],
+  },
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It is not essential but it is useful for troubleshooting of our request to output the token environment variable value to log prior to attempting to make the request. To do this we can use the &amp;lsquo;Pre-request script&amp;rsquo; tab and add the follwoing script.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;console.log(pm.environment.get(&amp;quot;bearerToken&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can now run the collection which will open &amp;lsquo;Postman runner&amp;rsquo; which will make the two requests. The summary detail is output to &amp;lsquo;Postman running&amp;rsquo; and you can get more detailed output in &amp;lsquo;Postman console&amp;rsquo; view.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

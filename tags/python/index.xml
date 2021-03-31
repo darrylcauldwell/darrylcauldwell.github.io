@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on </title>
+    <link>https://darrylcauldwell.com/tags/python/</link>
+    <description>Recent content in python on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pi Supercomputer</title>
+      <link>https://darrylcauldwell.com/post/homelab-pi-mpi/</link>
+      <pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/homelab-pi-mpi/</guid>
+      <description>
+        
+          &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.com/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I begin to look at Parrallel Programming.&lt;/p&gt;
+&lt;h2 id=&#34;parrallel-programming&#34;&gt;Parrallel Programming&lt;/h2&gt;
+&lt;p&gt;Each Raspberry Pi is a small unit of compute, one of my goals is to understand how operating many in a cluster. There are various approaches to parallel computational models, message-passing has proven to be an effective one. MPI the Message Passing Interface, is a standardized and portable message-passing system designed to function on a wide variety of parallel computers.&lt;/p&gt;
+&lt;p&gt;My prefered language is Python and usefully there is &lt;a href=&#34;https://mpi4py.readthedocs.io/en/stable/install.html&#34;&gt;MPI for Python&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get install -y libopenmpi-dev python-dev pip
+sudo pip install mpi4py
+mpirun --version
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;All the RPIs in the cluster will access each other via SSH, this communication needs to be passwordless. The first thing you need to do is generate an SSH key pair on first host.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ssh-keygen -t rsa -b 4096
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once key generated to enable passwordless access, upload a copy of the public key to the other three servers.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ssh-copy-id ubuntu@[server_ip_address]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Repeat keygen and copy public key process on all four hosts.&lt;/p&gt;
+&lt;p&gt;In order for mpi to distribute workload the node where execution occurs needs to understand which nodes are available.  The machinename parameter can be used to point to a text file containing list of nodes.&lt;/p&gt;
+&lt;p&gt;In order name we can use names we can add entries to hosts file.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo sh -c &#39;echo &amp;quot;192.168.1.100 rpi-0&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &amp;quot;192.168.1.101 rpi-1&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &amp;quot;192.168.1.102 rpi-2&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &amp;quot;192.168.1.103 rpi-3&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then create a file in home directory listing nodes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/machinefile
+rpi-0
+rpi-1
+rpi-2
+rpi-3
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The easiest way to run commands or code is with the mpirun command. This command, run in a shell, will launch multiple copies of your code, and set up communications between them. As each Pi has four cores and we have four we can specify number of processors to run as sixteen.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/mpirun_temp.png&#34; alt=&#34;MPIRUN Measure Temparature&#34;&gt;&lt;/p&gt;
+&lt;p&gt;While its interesting running individual commands across nodes the MPI for Python module exposes options for programs to spread load.  A simple test of this is where we scatter a bunch of elements, like those in a list, to processing nodes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/scatter.py
+from mpi4py import MPI
+
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()
+
+if rank == 0:
+   data = [(x+1)**x for x in range(size)]
+   print (&#39;we will be scattering:&#39;,data)
+else:
+   data = None
+   
+data = comm.scatter(data, root=0)
+print (&#39;rank&#39;,rank,&#39;has data:&#39;,data)
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once script created execute:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/mpirun_scatter.png&#34; alt=&#34;MPIRUN Scatter&#34;&gt;&lt;/p&gt;
+&lt;p&gt;While scattering elements of a list is interesting splitting up a processing problem and distributing to multiple processing nodes is more fun.  Calculating Pi is a nice example of this,  and its nice for a Pi cluster to calculate Pi with MPI.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#pi.py&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; mpi4py &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; MPI
+
+comm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;COMM_WORLD
+rank &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_rank()
+size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_size()
+
+slice_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000000&lt;/span&gt;
+total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# This is the controller node.&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; rank &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+    pi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+    slice &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+    process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (size)
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the first batch of processes to the nodes.&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+        slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        process &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;# Wait for the data to come back&lt;/span&gt;
+    received_processes &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; received_processes &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+        pi &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Recieved data from process&amp;#34;&lt;/span&gt;, process)
+        received_processes &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+            comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+            slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the shutdown signal&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,size):
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pi is&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pi)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# These are the worker nodes, where rank &amp;gt; 0. They do the real work&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; True:
+        start &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; start &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+
+        i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+        slice_value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; slice_size:
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+            i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice_value, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(rank, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execute script with mpi and watch it distribute the calculation around the nodes and aggregate these to final answer.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 pi.py
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pi/pi_with_mpi_on_pi.png&#34; alt=&#34;Pi with MPI on Pi&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Programaticly configuring VMware Storage Profile API with Python</title>
+      <link>https://darrylcauldwell.com/post/python_spbm/</link>
+      <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/python_spbm/</guid>
+      <description>
+        
+          &lt;p&gt;I was looking to programaticly configuring VMware Storage Profile recently. My scripting language of choice is Python, VMware maintain &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;pyVmomi&lt;/a&gt; is which is the Python SDK for the VMware vSphere API. pyVmomi can be used to form binding and configure the &lt;a href=&#34;https://code.vmware.com/apis/968/vsphere&#34;&gt;vSphere Web Services API&lt;/a&gt; and the &lt;a href=&#34;https://code.vmware.com/apis/971&#34;&gt;VMware Storage Policy API&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The Storage Policy API is exposed as a Web service, running on VMware vCenter server systems.  When I approached the requirement it wasn&amp;rsquo;t clear to me how to connect to the Storage Policy API Web service. I read the &lt;a href=&#34;https://code.vmware.com/docs/11900/vmware-storage-policy-sdk-programming-guide&#34;&gt;VMware Storage Policy SDK Programming Guide&lt;/a&gt; section on forming connection which describes using the session cookie from a vCenter Server session to establish the Storage Policy session.&lt;/p&gt;
+&lt;p&gt;pyVim is a client-side Python API which wraps pvVmomi these are made available as a package.  These are published to PyPI repository and as such can be installed easily with pip.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pip install --upgrade pyvmomi
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It we look at pyVmomi in GitHub we can see that &lt;a href=&#34;https://github.com/vmware/pyvmomi/blob/master/pyVim/connect.py&#34;&gt;pyVim.connect&lt;/a&gt; defines a function SmartConnect which can be used to form connection to the vSphere Web Services API.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python3
+# Connect to a VMOMI ServiceInstance.
+
+import ssl argparse atexit getpass
+from pyVim.connect import SmartConnect
+
+def get_args():
+    parser = argparse.ArgumentParser(
+        description=&#39;Arguments for talking to vCenter&#39;)
+
+    parser.add_argument(&#39;-s&#39;, &#39;--host&#39;,
+                        required=True,
+                        action=&#39;store&#39;,
+                        help=&#39;vCenter Server FQDN or IP address&#39;)
+
+    parser.add_argument(&#39;-o&#39;, &#39;--port&#39;,
+                        type=int,
+                        default=443,
+                        action=&#39;store&#39;,
+                        help=&#39;vCenter Server TCP port&#39;)
+
+    parser.add_argument(&#39;-u&#39;, &#39;--user&#39;,
+                        required=True,
+                        action=&#39;store&#39;,
+                        help=&#39;Username to login to vCenter Server&#39;)
+
+    parser.add_argument(&#39;-p&#39;, &#39;--password&#39;,
+                        required=False,
+                        action=&#39;store&#39;,
+                        help=&#39;Password to login to vCenter Server&#39;)
+
+    args = parser.parse_args()
+
+    if not args.password:
+        args.password = getpass.getpass(prompt=&#39;Enter password:&#39;)
+
+    return args
+
+def main():
+    args = get_args()
+
+    &amp;quot;&amp;quot;&amp;quot; connect to vcenter service instance &amp;quot;&amp;quot;&amp;quot;
+
+    context = None
+    if hasattr(ssl, &amp;quot;_create_unverified_context&amp;quot;):
+        context = ssl._create_unverified_context()
+
+    serviceInstance = SmartConnect(
+                    host=args.host,
+                    user=args.user,
+                    pwd=args.password,
+                    port=args.port,
+                    sslContext=context)
+
+    atexit.register(Disconnect, serviceInstance)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To connect to the VMware Storage Policy API we need to get the session cookie. The &lt;a href=&#34;https://github.com/vmware/pyvmomi/blob/master/pyVmomi/VmomiSupport.py&#34;&gt;VmomiSupport&lt;/a&gt; provides us helper functions to do things like gather the context which includes session cookie details. With this we can form a stub session to the Storage Policy API.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    &amp;quot;&amp;quot;&amp;quot; connect to pbm service instance &amp;quot;&amp;quot;&amp;quot;
+
+    VmomiSupport.GetRequestContext()[&amp;quot;vcSessionCookie&amp;quot;] = \
+    serviceInstance._stub.cookie.split(&#39;&amp;quot;&#39;)[1]
+    hostname = serviceInstance._stub.host.split(&amp;quot;:&amp;quot;)[0]
+    pbmStub = SoapStubAdapter(
+        host=hostname,
+        version=&amp;quot;pbm.version.version1&amp;quot;,
+        path=&amp;quot;/pbm/sdk&amp;quot;,
+        poolSize=0,
+        sslContext=ssl._create_unverified_context())
+    pbmServiceInstance = pbm.ServiceInstance(&amp;quot;ServiceInstance&amp;quot;, pbmStub)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With this connection in place we can make our request, in this example pull back all of the Storage Profiles.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+    &amp;quot;&amp;quot;&amp;quot; get profiles &amp;quot;&amp;quot;&amp;quot;
+
+    profileManager = pbmServiceInstance.RetrieveContent().profileManager
+    profiles = profileManager.PbmQueryProfile(resourceType=pbm.profile.ResourceType(resourceType=&amp;quot;STORAGE&amp;quot;))
+    print(profiles)
+
+if __name__ == &#39;__main__&#39;:
+    main()
+&lt;/code&gt;&lt;/pre&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Controlling vSphere &amp; NSX-V With Python</title>
+      <link>https://darrylcauldwell.com/post/nsx-python/</link>
+      <pubDate>Mon, 15 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-python/</guid>
+      <description>
+        
+          &lt;p&gt;My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere, so its here I shall start. Since then NSX for vSphere has also an open source library NSX RAML Client provided by VMware so I&amp;rsquo;ll then move to that.&lt;/p&gt;
+&lt;p&gt;I am performing this learning exercise in my home lab  using is vSphere 6.5, vSAN 6.5, NSX6.3, with Python 2.7.10, although this should work the same with other versions.&lt;/p&gt;
+&lt;p&gt;Install pyVmomi and open vCenter connection and then initiate an interactive python environment&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/vmware/pyvmomi.git
+sudo pip install -r ~/pyvmomi/requirements.txt
+python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Import the pyVim, pyVmomi &amp;amp; SSL libraries we are using,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; ssl
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; pyVim &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; connect
+&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; pyVmomi &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; vim, vmodl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Open connection to vCenter then gather contents as an object&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;vcenter &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; connect&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;SmartConnect(
+    host&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;192.168.1.13&amp;#39;&lt;/span&gt;,
+    user&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;administrator@vsphere.local&amp;#39;&lt;/span&gt;,
+    pwd&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VMware1!&amp;#39;&lt;/span&gt;,
+    port&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;443&lt;/span&gt;,
+    sslContext&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ssl&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;_create_unverified_context()
+)
+content &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; vcenter&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;RetrieveContent()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;basic-get-of-information&#34;&gt;Basic get of information&lt;/h1&gt;
+&lt;p&gt;Once we have vCenter Object Model as content object we can output any part of this data&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;content.about.fullName
+&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VMware vCenter Server 6.5.0 build-5178943&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can also explore the Object Model which is well descrived here in the &lt;a href=&#34;http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html&#34;&gt;vSphere SDK API Docs&lt;/a&gt; and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VirtualMachine],True)
+vmList &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view
+objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Destroy()
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  vm &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; vmList:
+    vm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;summary&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;basic-put-of-configuration-information&#34;&gt;Basic put of configuration information&lt;/h1&gt;
+&lt;p&gt;As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;HostSystem],True)
+hostList &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view
+objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Destroy()
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; host &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; hostList:
+    optionManager &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; host&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;configManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;advancedOption
+    option &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;option&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;OptionValue(key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VSAN.ClomRepairDelay&amp;#39;&lt;/span&gt;, value&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;long(&lt;span style=&#34;color:#ae81ff&#34;&gt;120&lt;/span&gt;))
+    optionManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;UpdateOptions(changedValue&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[option])
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;nsx-for-vsphere&#34;&gt;NSX for vSphere&lt;/h1&gt;
+&lt;p&gt;So we have the pyVmomi library for vSphere, in addition to this VMware have provided open source library for &lt;a href=&#34;https://github.com/vmware/nsxramlclient&#34;&gt;NSX for vSphere&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll first make sure the packages are installed along with the additional packages for managing NSX.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo pip install nsxramlclient pyvim pyvmomi lxml requests
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The NSX for vSphere REST API changes with each version, so in order to use the nsxramlclient library we will need a RAML file specific to version of NSX-V we are connecting to. The RAML file also produces nice &lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/vmware/nsxraml/blob/6.3/html-version/nsxvapi.html&#34;&gt;dynamic documentation of the NSX APIs&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/vmware/nsxraml
+cd nsxraml
+git checkout 6.3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now we can try and connect and get some information about anything described in the API document, like NSX Controllers.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; nsxramlclient.client &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; NsxClient
+nsx_manager &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.1.18&amp;#34;&lt;/span&gt;
+nsx_username &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;admin&amp;#34;&lt;/span&gt;
+nsx_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;VMware1!VMware1!&amp;#34;&lt;/span&gt;
+nsxraml_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;nsxvapi.raml&amp;#39;&lt;/span&gt;
+nsx_manager_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsx_manager, nsx_username, nsx_password)
+nsx_controllers &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;nsxControllers&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;read&amp;#39;&lt;/span&gt;)
+nsx_controllers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When it comes to putting and posting information getting the formatting right can be a challenge. To this end with the library it is possible to create a template python dictionary using extract_resource_body_example.  Once we have this we can display the output structure but more usefully we can also substitute values into the template.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;new_ls &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;extract_resource_body_example(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;logicalSwitches&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;create&amp;#39;&lt;/span&gt;)
+nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view_body_dict(new_ls)
+new_ls[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;virtualWireCreateSpec&amp;#39;&lt;/span&gt;][&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;name&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;TestLogicalSwitch1&amp;#39;&lt;/span&gt;
+new_ls[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;virtualWireCreateSpec&amp;#39;&lt;/span&gt;][&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;description&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;TestLogicalSwitch1&amp;#39;&lt;/span&gt;
+new_ls[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;virtualWireCreateSpec&amp;#39;&lt;/span&gt;][&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tenantId&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Tenant1&amp;#39;&lt;/span&gt;
+new_ls[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;virtualWireCreateSpec&amp;#39;&lt;/span&gt;][&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;controlPlaneMode&amp;#39;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;UNICAST_MODE&amp;#39;&lt;/span&gt;
+nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view_body_dict(new_ls)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we have out body template correctly describing what we want we can post this and if all goes to plan create a new Logical Switch. In this example I am passing in the scopeId (transport zone) manually to keep it a simple example.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;new_ls_response &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;create(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;logicalSwitches&amp;#39;&lt;/span&gt;, uri_parameters&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;scopeId&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;vdnscope-1&amp;#39;&lt;/span&gt;}, request_body_dict&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;new_ls)
+nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view_response(new_ls_response)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
+&lt;p&gt;It looks like with our new found friend the VMware Python libraries we can easily create and deploy a VMware configuration &amp;lsquo;infrastructure as code&amp;rsquo;.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>DynamoDB Python Test Environment with Cloud Formations</title>
+      <link>https://darrylcauldwell.com/post/dynamodb-python/</link>
+      <pubDate>Fri, 31 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/dynamodb-python/</guid>
+      <description>
+        
+          &lt;p&gt;The goal of this post is to walk through the creation of a AWS test environment which I use to explore the Python SDK interactions with DyanmoDB. For learning I use the free tier and so used to create the environment as needed manually. After doing this once I decided to encapsulate the configuration in a Cloud Formations template and then deploy the stack when I needed it.&lt;/p&gt;
+&lt;h1 id=&#34;environment-configuration&#34;&gt;Environment Configuration&lt;/h1&gt;
+&lt;p&gt;The resources I require the Cloud Formation template to create&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DynamoDB Table&lt;/li&gt;
+&lt;li&gt;Identify Access Management Policy Documents with rights to Put items into DDB and Scan items in DDB&lt;/li&gt;
+&lt;li&gt;Identify Access Management Role linked to the policy document&lt;/li&gt;
+&lt;li&gt;EC2 Security Group allowing SSH inbound from any IP address&lt;/li&gt;
+&lt;li&gt;EC2 Instance with the IAM Role and EC2 Security Group attached, which on boot performs a yum update and installs the AWS Python SDK&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Cloud Formation template I created to meet this requirement is &lt;a href=&#34;https://s3-eu-west-1.amazonaws.com/cfpythdynamo/PythonDynamoDict.json&#34;&gt;here on s3&lt;/a&gt;,  so we can first get this.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl https://s3-eu-west-1.amazonaws.com/cfpythdynamo/PythonDynamoDict.json -o PythonDynamoDict.json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To note in order to use this CF template it requires an EC2 access key,  if you pull down the json then search and replace &amp;ldquo;MyEC2&amp;rdquo; with the name of your EC2 access key before creating a stack. Assuming your laptop has AWS credentials configured to allow you rights to deploy Cloud Formation templates and create IAM.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws cloudformation deploy --template-file PythonDynamoDict.json --stack-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;PythonDDB&amp;#34;&lt;/span&gt; --capabilities &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CAPABILITY_IAM&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This should take less than five minutes and output&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;Waiting &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; changeset to be created..
+Waiting &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; stack create/update to complete
+Successfully created/updated stack - PythonDDB
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;connect-python-session-to-ddb&#34;&gt;Connect Python session to DDB&lt;/h1&gt;
+&lt;p&gt;Open an SSD session to the EC2 instance, once session is open,  open a interactive python session&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then within the python session we can connect to and do stuff with DDB, I&amp;rsquo;ve included some simple transactions.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Import the boto3 and json library&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; boto3&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; json
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Create an object to DynamoDB created by Cloud Formations in Ireland&lt;/span&gt;
+
+dynamodb &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; boto3&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;resource(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;dynamodb&amp;#39;&lt;/span&gt;, region_name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;eu-west-1&amp;#39;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Create an object to the DDB Table created by Cloud Formations&lt;/span&gt;
+
+table &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dynamodb&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Table(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myTestDB&amp;#39;&lt;/span&gt;)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Clear any previously created values from items object&lt;/span&gt;
+
+items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+item_dict &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dict()
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Define a helper class to convert a DynamoDB item to JSON&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;DecimalEncoder&lt;/span&gt;(json&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;JSONEncoder):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;default&lt;/span&gt;(self, o):
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; isinstance(o, decimal&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Decimal):
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; o &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; float(o)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; int(o)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; super(DecimalEncoder, self)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;default(o)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Create some DDB Table items&lt;/span&gt;
+
+table&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;put_item(
+   Item&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ForeName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Bobby&amp;#39;&lt;/span&gt;,
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;FamilyName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Johnson&amp;#39;&lt;/span&gt;,
+    },
+)
+table&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;put_item(
+    Item&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ForeName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Sam&amp;#39;&lt;/span&gt;,
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;FamilyName&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Smith&amp;#39;&lt;/span&gt;,
+    }
+)
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Perform a table scan to return all items&lt;/span&gt;
+
+response &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; table&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;scan()
+items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; response[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Items&amp;#39;&lt;/span&gt;]
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Cycle through item decobe the json and store the decoded item in a python dictionary named item_dict&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# here also updating formatting so only the values are stored.&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; item &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; items:
+    decoded_item &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (json&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;dumps(item, cls&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;DecimalEncoder))
+    item_part_format &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; decoded_item&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#34;FamilyName&amp;#34;: &amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+    item_str_formatted &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; item_part_format&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;, &amp;#34;ForeName&amp;#34;: &amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;)
+    item_dict&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;update(json&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;loads(item_str_formatted))
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# If we print the dictionary we get the two key pairs&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; item_dict
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Simple REST API For DynamoDB Using Lambda</title>
+      <link>https://darrylcauldwell.com/post/lambda-dynamodb/</link>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/lambda-dynamodb/</guid>
+      <description>
+        
+          &lt;p&gt;My goal here is to setup a simple RESTful API which accepts GET and POST methods to trigger a Lambda Function to read and put information into DynamoDB.&lt;/p&gt;
+&lt;p&gt;First we&amp;rsquo;ll create a test DynamoDB table and put some items into it,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws dynamodb create-table --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --attribute-definitions &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[{&amp;#34;AttributeName&amp;#34;: &amp;#34;Name&amp;#34;, &amp;#34;AttributeType&amp;#34;: &amp;#34;S&amp;#34;}]&amp;#39;&lt;/span&gt; --key-schema &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[{&amp;#34;AttributeName&amp;#34;: &amp;#34;Name&amp;#34;, &amp;#34;KeyType&amp;#34;: &amp;#34;HASH&amp;#34;}]&amp;#39;&lt;/span&gt; --provisioned-throughput &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;ReadCapacityUnits&amp;#34;: &amp;#39;&lt;/span&gt;5&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;, &amp;#34;WriteCapacityUnits&amp;#34;: &amp;#39;&lt;/span&gt;5&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;}&amp;#39;&lt;/span&gt;
+
+aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --item &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Name&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;David&amp;#34;},&amp;#34;Age&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;42&amp;#34;}}&amp;#39;&lt;/span&gt;
+
+aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --item &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Name&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;Brian&amp;#34;},&amp;#34;Age&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;22&amp;#34;}}&amp;#39;&lt;/span&gt;
+
+aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;MyTable&amp;#39;&lt;/span&gt; --item &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;{&amp;#34;Name&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;Sean&amp;#34;},&amp;#34;Age&amp;#34;: {&amp;#34;S&amp;#34;: &amp;#34;35&amp;#34;}}&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then if we select Lambda in AWS console, and create a new function, then at &amp;lsquo;Select blueprint&amp;rsquo; select the blueprint named &amp;lsquo;Blank Function&amp;rsquo;. At next page click dashed box to configure a API Gateway trigger and change it to have Open security. Specify the name as &amp;lsquo;myTestLambda&amp;rsquo;, the runtime as &amp;lsquo;Python 2.7&amp;rsquo;, the Role as &amp;lsquo;Create new role from template(s), the role name as &amp;lsquo;myTestLambdaRole&amp;rsquo;, the Policy template as &amp;lsquo;Simple Microservice permissions&amp;rsquo; and the handler as &amp;lsquo;lambda_function.handler&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;Paste the following as Lambda code&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; __future__ &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; print_function
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; boto3
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; json
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(event, context):
+    operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;operation&amp;#39;&lt;/span&gt;]
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tableName&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; event:
+        dynamo &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; boto3&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;resource(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;dynamodb&amp;#39;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Table(event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tableName&amp;#39;&lt;/span&gt;])
+    operations &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;create&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;put_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;read&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;update&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;update_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;delete&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;delete_item(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;list&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: dynamo&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;scan(&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;x),
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;echo&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: x,
+        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ping&amp;#39;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;lambda&lt;/span&gt; x: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;pong&amp;#39;&lt;/span&gt;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; operation &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; operations:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; operations[operation](event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;payload&amp;#39;&lt;/span&gt;))
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ValueError&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Unrecognized operation &amp;#34;{}&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(operation))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then test that we can pull back a specific database item for example the Brian record, select &amp;lsquo;Action \ Configure test event&amp;rsquo; and paste in the following.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;operation&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;read&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;tableName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyTable&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;payload&amp;#34;&lt;/span&gt;: { &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Key&amp;#34;&lt;/span&gt;: {&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Brian&amp;#34;&lt;/span&gt;}}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By clicking Test we can do an internal test of the function and pull back the DynamoDB item.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Item&amp;#34;&lt;/span&gt;: {
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Age&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;22&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Brian&amp;#34;&lt;/span&gt;
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To do a table scan rather than targetted get,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;operation&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;list&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;tableName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyTable&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;payload&amp;#34;&lt;/span&gt;: { &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;TableName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;MyTable&amp;#34;&lt;/span&gt;}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The query can be adjusted to perform any operation on the database.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Deploying NSX-V With Ansible</title>
+      <link>https://darrylcauldwell.com/post/nsx-install-ansible/</link>
+      <pubDate>Wed, 08 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-install-ansible/</guid>
+      <description>
+        
+          &lt;p&gt;Here I will describe the steps taken to deploy NSX Manager using the &lt;a href=&#34;https://github.com/vmware/nsxansible&#34;&gt;Ansible NSX Module&lt;/a&gt;. The NSX Ansible module is written by VMware and is provided opensource on GitHub. To work properly this depends on the &lt;a href=&#34;https://github.com/vmware/nsxraml&#34;&gt;NSX RAML Specification&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/nsxramlclient&#34;&gt;NSX RAML Python Client&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;vSphere API Python Bindings&lt;/a&gt; and the &lt;a href=&#34;https://www.vmware.com/support/developer/ovf/&#34;&gt;OVF Tool&lt;/a&gt; all being installed on the Ansible server.&lt;/p&gt;
+&lt;p&gt;The following assumes you have a working Ansible installation already, and a vSphere environmentto install NSX to. If you don&amp;rsquo;t yet have these you can see how I performed my &lt;a href=&#34;%7B%7Bsite.url%7D%7D/how-to-setup-an-ansible-test-lab-for-windows-managed-nodes-custom-windows-modules/&#34;&gt;Ansible Installation&lt;/a&gt; in this earlier blog post.&lt;/p&gt;
+&lt;h2 id=&#34;nsx-raml-specification&#34;&gt;NSX RAML Specification&lt;/h2&gt;
+&lt;p&gt;As the NSX REST API changes with each release the REST API Markup Language (RAML) specification for NSX is provided as a different branch of the GitHub repository.  In my environment I will be using NSX 6.2.2 so first I ensure the git client is installed to my Ansible server and then I use this to take a clone of the correct branch.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum install git-all
+git clone -b 6.2.2 https://github.com/vmware/nsxraml.git /nsxraml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;nsx-raml-python-client&#34;&gt;NSX RAML Python Client&lt;/h2&gt;
+&lt;p&gt;The NSX RAML python client is series of functions which can be used standalone or in our case called by the Ansible NSX module.  To install these we need to ensure the &amp;lsquo;Python Package Manger&amp;rsquo; and some other tools are installed and available on our Ansible server.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum install python-pip gcc libxslt-devel python-devel pyOpenSSL
+pip install --upgrade pip
+pip install lxml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once thes pre-requiste components are in place we can then install the NSX RAML python client. Similar to the RAML specification, the client functions are also dependant on version. The version which works with NSX RAML Specification 6.2.2 is Python client 1.0.4.  To install this version from Python package manager we use.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip install nsxramlclient&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1.0.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you have NSX Manager already deployed you can create a session to this using the python client.  First start python by running&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;then you can run the commands similar to this to create a session.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; nsxramlclient.client &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; NsxClient
+nsxraml_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/nsxraml/nsxvapi.raml&amp;#39;&lt;/span&gt;
+nsxmanager &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;nsx.darrylcauldwell.local&amp;#39;&lt;/span&gt;
+nsx_username &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;admin&amp;#39;&lt;/span&gt;
+nsx_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VMware!&amp;#39;&lt;/span&gt;
+client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;False)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you can then see the session by running the following command in python session&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;client_session
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;vmware-vsphere-api-python-bindings&#34;&gt;VMware vSphere API Python Bindings&lt;/h2&gt;
+&lt;p&gt;As well as the NSX Python client the Ansible NSX Module also depends on the VMware vSphere API Python Bindings (pyVmomi. pyVmomi is the Python SDK for the VMware vSphere API that allows you to manage ESX, ESXi, and vCenter. This is similarly installed with the python package manager using command like.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip install pyvmomi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;ovf-tool&#34;&gt;OVF Tool&lt;/h2&gt;
+&lt;p&gt;The final thing to be installed for the NSX Module to operate correctly is the VMware OVF Tool. The OVF tool for Linux version 4.1.0 is &lt;a href=&#34;https://my.vmware.com/group/vmware/details?downloadGroup=OVFTOOL410&amp;amp;productId=491#&#34;&gt;available here&lt;/a&gt;, please note a VMware login is required to get this.&lt;/p&gt;
+&lt;p&gt;Once downloaded to the Ansbile server, we need to ensure it has execute attribute and then execute it to start the install, the commands to do this for the current version 4.1.0 are.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod +x VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
+./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-ovftool.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once the install is running you have to agree to EULA, to get to the end of the text, hold down the Space bar. When prompted &lt;em&gt;Do you agree?&lt;/em&gt; type yes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-ovftool2.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once OVF Tool is installed we can use SCP to copy the NSX OVA, VMware-NSX-Manager-6.2.2-3604087.ova, to Ansible server I placed this in folder named /OVAs.&lt;/p&gt;
+&lt;h2 id=&#34;ansible-nsx-module&#34;&gt;Ansible NSX Module&lt;/h2&gt;
+&lt;p&gt;We already have Git installed for dowlnloading the NSX RAML Specification so we can use this to clone the NSX Ansible repository.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/vmware/nsxansible.git /nsxansible
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deploy-nsx-manager&#34;&gt;Deploy NSX Manager&lt;/h2&gt;
+&lt;p&gt;The NSX Module comes supplied with some example playbooks for performing common tasks, we’ll first take a copy of the example to deploy NSX Manager&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp /nsxansible/test_deploynsxova.yml /nsxansible/darryl_deploynsxova.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then edit the contents to match the variables we plan to deploy in environment. While most of playbook contents are environmental specific varibles its worth noting that we run this module against the Ansible server itself as this is where the OVA and ovftool are located so hosts: value will always be localhost.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-NSXmgr.jpg&#34; alt=&#34;Deploy NSX Manager&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once we have our environmental specific entries set we can execute the playbook with Ansible.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook darryl_deploynsxova.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-playbook.jpg&#34; alt=&#34;Deploy NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We see this deploys ‘NSX Manager’ and configures the setting specified in the playbook.&lt;/p&gt;
+&lt;h2 id=&#34;deploy-nsx-manager-and-register-with-vcenter-and-sso&#34;&gt;Deploy NSX Manager and register with vCenter and SSO&lt;/h2&gt;
+&lt;p&gt;As with any Ansible playbook we can put common variables in a central location and call these from playbooks. An example is provided called answerfile-deployLab.yml. Variable names are overlapped between parts of the NSX Modules, in order that they are unique in the central answer file the names vary but its very easy to match these.&lt;/p&gt;
+&lt;p&gt;An example of my playbook to deploy NSX Manager and then register this with vCenter and SSO.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-mgr-cfg.jpg&#34; alt=&#34;Deploy and Configure NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Ansibile NSX Configuration - Infrastructure As Code</title>
+      <link>https://darrylcauldwell.com/post/nsx-ansible-iac/</link>
+      <pubDate>Tue, 07 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/nsx-ansible-iac/</guid>
+      <description>
+        
+          &lt;p&gt;With the rise of DevOps culture and the ethos of automate all the things. Using test driven development techniques to apply application configuration declaratively has become widespread. The ever closer working relations of developers and infrastructure operations staff to become an application centric delivery and management unit has lead to many benefits.  One of the benefits is the shared empathy for each others pain points and understanding of how each approaches tackling these. It is clear that managing configuration as code has many benefits for consistent repeated delivery of applications.&lt;/p&gt;
+&lt;p&gt;Tools which are commonly used for deploying applications with declarative configuration include Puppet, Chef and Ansible. The processes for distributed source control are also mature and with Git, Bitbucket and Apache Subversion there is a DVCS for most use-cases. As we work as one delivery team sharing tools and repositories is natural as with this we can look to deploy our infrastructure and application configuration with a single tool and avoid issues with interoperability and hand off.&lt;/p&gt;
+&lt;p&gt;VMware NSX offers many things to many people with this rich feature set comes complexity in configuration.  At VMworld Europe 2015 I was introduced to Yves Fauser and attended his session &lt;a href=&#34;https://vmworld2015.lanyonevents.com/connect/sessionDetail.ww?SESSION_ID=4972&amp;amp;tclass=popup&#34;&gt;‘NET4972 – Incorporating VMware NSX in your DevOps Toolchain – Network Programmability with Python and Ansible‘.&lt;/a&gt;  He had created an [NSX RAML specification]((&lt;a href=&#34;http://github.com/vmware/nsxraml),&#34;&gt;http://github.com/vmware/nsxraml),&lt;/a&gt; a &lt;a href=&#34;http://github.com/vmware/nsxramlclient.&#34;&gt;Python NSX RAML client&lt;/a&gt; he then brings these altogether into a usable form by way of an &lt;a href=&#34;https://github.com/vmware/nsxansible&#34;&gt;NSX Ansible module.&lt;/a&gt;  The &lt;a href=&#34;https://github.com/vmware/nsxansible&#34;&gt;Ansible module&lt;/a&gt; offers examples which give the ability to NSX Manager, configure NSX to vCenter integration, configure VXLAN, deploy NSX Controllers and then deploy some logical switches.&lt;/p&gt;
+&lt;p&gt;I explorered this capability in [this follow up post.]({{ site.url }}/deploy-nsx-from-ansible)&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

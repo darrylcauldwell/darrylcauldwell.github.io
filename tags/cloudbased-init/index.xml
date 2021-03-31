@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cloudbased-init on </title>
+    <link>https://darrylcauldwell.com/tags/cloudbased-init/</link>
+    <description>Recent content in cloudbased-init on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/cloudbased-init/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cloudbased-init For vSphere</title>
+      <link>https://darrylcauldwell.com/post/cloudbased-init/</link>
+      <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/cloudbased-init/</guid>
+      <description>
+        
+          &lt;p&gt;vRealize Automation Cloud and 8.x allows you to deploy and configure cloud agnostic virtual machines. To achieve agnostic in-guest OS customization capability across for on-premises vSphere, AWS, GCP and Azure endpoints &lt;a href=&#34;https://cloud-init.io/&#34;&gt;cloud-init&lt;/a&gt; is used for Linux guests and &lt;a href=&#34;https://cloudbase.it/cloudbase-init/&#34;&gt;cloudbase-init&lt;/a&gt; is used for Windows guests.&lt;/p&gt;
+&lt;h2 id=&#34;inital-attempt-all-defaults&#34;&gt;Inital Attempt All Defaults&lt;/h2&gt;
+&lt;p&gt;In vSphere I created a Windows 2019 VM with defaults except for mapping ISO as CD/ROM. I then ran through installer to install Standard edition with Desktop experience, installed VMware Tools, disabled firewall and enabled Remote Desktop. I installed Cloudbased- init 0.9.12.dev76 and optional Carbon PowerShell module to default location. For configuration options I left the default Admin user be created into Administrators group, in addition I selected option to ‘Run Cloudbased-Init service as LocalSystem’. I chose options to &amp;lsquo;Run Sysprep to create a generalized image&amp;rsquo; and &amp;lsquo;Shutdown when Sysprep terminates&amp;rsquo;. When complete I change virtual machine to be a virtual machine template.&lt;/p&gt;
+&lt;p&gt;I connect to vRealize Automation Cloud &amp;gt; Infrastructure &amp;gt; Cloud Accounts &amp;gt; {my account} and run &amp;lsquo;Sync Images&amp;rsquo;.  Once image sync is completed vRealize Automation Cloud &amp;gt; Infrastructure &amp;gt; Image Mappings and create &amp;lsquo;New Image Mapping&amp;rsquo;. Create a Blueprint with single Cloud Agnostic Machine linked to the image mapping.&lt;/p&gt;
+&lt;p&gt;When I provision a vRA Cloud blueprint to deploy a VM&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;formatVersion: 1
+inputs: {}
+resources:
+Cloud_Machine_1:
+    type: Cloud.Machine
+    properties:
+    image: dc-win2019
+    flavor: small
+    cloudConfig: |
+        #cloud-config
+        hostname: i-got-a-new-name
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The VM powers on and cloud-data gets passed by vRealize Automation Cloud as an OVF which is mounted as CDROM with CDROM contents ovf-env.xml in its root.&lt;/p&gt;
+&lt;p&gt;Cloud-init runs on startup but appears to fail to do what it is asked, Cloudbase-init.log contains error.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;2019-09-26 16:00:15.041 4360 ERROR cloudbaseinit.metadata.services.base [-] HTTPConnectionPool(host=&#39;169.254.169.254&#39;, port=80): Max retries exceeded with url: /openstack/latest/meta_data.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;adding-ovf-metadata-service&#34;&gt;Adding OVF Metadata Service&lt;/h2&gt;
+&lt;p&gt;Looking at the error suggested to me that Cloudbase-Init was not finding the OVF and file. I read through some of the Cloudbase-Init documentation and found that metadata service configuration was specified in,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Checking the default configuration file does not include the &lt;a href=&#34;https://cloudbase-init.readthedocs.io/en/latest/services.html&#34;&gt;OvfService metadata service&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;metadata_services=cloudbaseinit.metadata.services.configdrive.ConfigDriveService,cloudbaseinit.metadata.services.httpservice.HttpService,cloudbaseinit.metadata.services.ec2service.EC2Service,cloudbaseinit.metadata.services.maasservice.MaaSHttpService
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If I follow similar steps to before to creeate templat but during install of Cloudbase-init but DO NOT chose wizard options &amp;lsquo;Sysprep and Shutdown&amp;rsquo;.  Instead I update the metadata_services entry in the cloudbase-init-unattend.conf file include OvfService like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Other Cloudbase-Init &lt;a href=&#34;https://cloudbase-init.readthedocs.io/en/latest/plugins.html#plugins&#34;&gt;plugins&lt;/a&gt; which require reading metadata, such that which sets the hostname, pickup their configuration from this config file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The default installation of cloudbase-init.conf does not have a metadata_services entry at all. To allow the plugins be capable of reading metadata from OVF source add the following line to the file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When both files have been updated execute sysprep passing the same parameters as the Cloudbase-Init installer wizard would:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd “C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\”
+C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unattend:unattend.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Performing a deployment of thee vRealize Automation Cloud blueprint example from earlier now deploys a VM with its hostname updated.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

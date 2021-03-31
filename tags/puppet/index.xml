@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>puppet on </title>
+    <link>https://darrylcauldwell.com/tags/puppet/</link>
+    <description>Recent content in puppet on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 23 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/puppet/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Configuring Puppet</title>
+      <link>https://darrylcauldwell.com/post/puppet/</link>
+      <pubDate>Mon, 23 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.com/post/puppet/</guid>
+      <description>
+        
+          &lt;p&gt;I&amp;rsquo;m a traditional wintel vmware engineer working in the UK in a team focusing on platform configuration automation for virtual and physical Windows hosted solutions. This video of how &lt;a href=&#34;http://www.youtube.com/watch?v=UUgoiwEFe1A&#34;&gt;Puppet can be used to manage Amazon EC2&lt;/a&gt;. Shortly after watching this VMware Hybrid Cloud Services launched and on watching Nicholas Weavers video from PuppetConf 2013](&lt;a href=&#34;http://www.youtube.com/watch?v=tp_1N3RSyUY)&#34;&gt;http://www.youtube.com/watch?v=tp_1N3RSyUY)&lt;/a&gt;. From this point on I decided that I needed to look into Puppet and how it could help me,  on initial looking it became clear that Puppet is traditionally *nix but does function on Windows so I thought I&amp;rsquo;d start here.&lt;/p&gt;
+&lt;h2 id=&#34;environmental-summary&#34;&gt;Environmental Summary&lt;/h2&gt;
+&lt;p&gt;VMWare Workstation - 8.0.6 build-1035888&lt;br&gt;
+Puppet Learning VM (1.5GB vRAM 1x vCPU 4.5GB HDD), &lt;a href=&#34;http://info.puppetlabs.com/download-learning-puppet-VM.html&#34;&gt;Download Here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;puppet-learning-vm---configuration&#34;&gt;Puppet Learning VM - Configuration&lt;/h2&gt;
+&lt;p&gt;Once the Puppet Enterprise Learning VM is deployed from the OVF.  Its pretty intuitive setup I only changed to a bridged network connection for vNIC and installed VMware tools.&lt;/p&gt;
+&lt;p&gt;VMware tools install command syntax used&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum -y install perl
+mkdir /mnt/cdrom
+mount /dev/cdrom /mnt/cdrom
+cp /mnt/cdrom/VMwareTools-*.tar.gz /tmp
+umount /mnt/cdrom
+tar -zxf /tmp/VMwareTools-*.tar.gz -C /tmp
+cd /
+./tmp/vmware-tools-distrib/vmware-install.pl --default
+rm -f /tmp/VMwareTools-*.tar.gz
+rm -rf /tmp/vmware-tools-distrib
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
