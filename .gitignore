@@ -46,3 +46,16 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+
+### Hugo ###
+# Generated files by hugo
+/public/
+/resources/_gen/
+hugo_stats.json
+
+# Executable may be added to repository
+hugo.exe
+hugo.darwin
+hugo.linux
+
+# End of https://www.toptal.com/developers/gitignore/api/hugo
