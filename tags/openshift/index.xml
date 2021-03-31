@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>openshift on </title>
-    <link>https://darrylcauldwell.com/tags/openshift/</link>
+    <link>http://darrylcauldwell.com/tags/openshift/</link>
     <description>Recent content in openshift on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 28 Jul 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/openshift/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 28 Jul 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/openshift/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>NSX-T for OpenShift</title>
-      <link>https://darrylcauldwell.com/post/nsx-openshift/</link>
+      <link>http://darrylcauldwell.com/post/nsx-openshift/</link>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-openshift/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-openshift/</guid>
       <description>
         
           &lt;p&gt;While looking at the various documentation sets I found it difficult to understand the NSX-T and OpenShift integration. A lot was masked by configuration performed by Ansible scripts. Here I try and record my understanding of the technology and then work through getting this running in a capacity constrained lab environment.&lt;/p&gt;
@@ -22,7 +22,7 @@
 &lt;h2 id=&#34;container-networking-framework-background&#34;&gt;Container Networking Framework Background&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/docker/libnetwork/blob/master/docs/design.md&#34;&gt;Libnetwork&lt;/a&gt; is the canonical implementation Container Network Model (CNM) which formalizes the steps required to provide networking for containers while providing an abstraction that can be used to support multiple network drivers. Libnetwork provides an interface between the Docker daemon and network drivers. Container Network Model (CNM) is designed to support the Docker runtime engine only.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/containernetworking/cni&#34;&gt;Container Network Interface&lt;/a&gt; (CNI), consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins. Container Network Interface (CNI) supports integration with any container runtime.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-cni.jpeg&#34; alt=&#34;Container Network Interface (CNI) Integration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-cni.jpeg&#34; alt=&#34;Container Network Interface (CNI) Integration&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vmware-nsx-and-kubernetes-integration&#34;&gt;VMware NSX and Kubernetes Integration&lt;/h2&gt;
 &lt;p&gt;VMware provide an &lt;a href=&#34;https://my.vmware.com/group/vmware/details?downloadGroup=NSX-T-PKS-221&amp;amp;productId=673&#34;&gt;NSX Container Plugin package&lt;/a&gt; which contains the required modules to integrate NSX-T with Kubernetes.&lt;/p&gt;
 &lt;ul&gt;
@@ -36,12 +36,12 @@
 &lt;li&gt;NSX Container Network Interface (CNI) - is an executable which allow the integration of NSX into Kubernetes.&lt;/li&gt;
 &lt;li&gt;Open vSwitch&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp.jpeg&#34; alt=&#34;NSX and Kubernetes Integration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp.jpeg&#34; alt=&#34;NSX and Kubernetes Integration&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-for-openshift&#34;&gt;NSX For OpenShift&lt;/h2&gt;
 &lt;p&gt;NSX implements a discreet network topology per Kubernetes namespace. NSX maps logical network elements like logical switches and distributed logical router to Kubernetes namespaces. Each of those network topologies can be directly routed, or privately addressed and behind NAT.&lt;/p&gt;
 &lt;h2 id=&#34;nsx-for-openshift-homelab&#34;&gt;NSX For OpenShift Homelab&lt;/h2&gt;
 &lt;p&gt;For the rest of this blog post I am aiming to create a NSX OpenShift integration. I aiming for two namespaces, each with a logical router and three subnets. The namespaces will use private address ranges and the tier-0 router will provide SNAT connectivity to the routed network.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-topology.jpeg&#34; alt=&#34;NSX Topology&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-topology.jpeg&#34; alt=&#34;NSX Topology&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;starting-point-homelab-configuration&#34;&gt;Starting point homelab configuration&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;1GbE Switch (Layer 2 only)
@@ -66,12 +66,12 @@
 &lt;/ul&gt;
 &lt;h2 id=&#34;nsx-management-plane&#34;&gt;NSX Management Plane&lt;/h2&gt;
 &lt;p&gt;Deploy a small NSX unifed appliance specifying the nsx-manager role. Once deployed link this to vCenter, to do this add vCenter in &amp;lsquo;Fabric / Compute Manager&amp;rsquo;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-compute-manager.jpeg&#34; alt=&#34;NSX-T Management Plane&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-compute-manager.jpeg&#34; alt=&#34;NSX-T Management Plane&#34;&gt;&lt;/p&gt;
 &lt;p&gt;With the manager in place we now need to create the management plane, to do this we need to install the management plane agent (MPA) on each host so they are added as usable Fabric Nodes.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-nodes.jpeg&#34; alt=&#34;NSX-T Fabric Nodes&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-nodes.jpeg&#34; alt=&#34;NSX-T Fabric Nodes&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;tunnel-endpoint-ip-pool&#34;&gt;Tunnel Endpoint IP Pool&lt;/h2&gt;
 &lt;p&gt;We create an IP pool one for the Transort Nodes to communicate for my scenario the three ESXi hosts and an edge will all participate so I create an IP Pool with four addresses. Navigate to Inventory &amp;gt; Groups &amp;gt; IP Pools and click add.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ip-pool.png&#34; alt=&#34;NSX-T IP Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-ip-pool.png&#34; alt=&#34;NSX-T IP Pool&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-control-plane&#34;&gt;NSX Control Plane&lt;/h2&gt;
 &lt;p&gt;In order to create an overlay network we need an NSX Controller to manage the hosts. NSX Controllers serve as the central control point got all hosts, logical switches, and logical routers.&lt;/p&gt;
 &lt;p&gt;While NSX Manager can deploy and configure NSX Controllers the size cannot be selected. As lab is resource constrained I only want a small NSX Controller, the &amp;lsquo;NSX Controller for VMware ESXi&amp;rsquo; is a separate OVA download where size can be selected.&lt;/p&gt;
@@ -83,22 +83,22 @@
 set control-cluster security-model shared-secret
 
 initialize control-cluster
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This should then be viewable in NSX Manager&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;overlay-transport-zone&#34;&gt;Overlay Transport Zone&lt;/h2&gt;
 &lt;p&gt;All the virtual network objects will need to communicate across an overlay network. To faciliate this the three esxi hosts and edges need to be part of an Overlay Transport Zone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport.jpeg&#34; alt=&#34;NSX-T Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-transport.jpeg&#34; alt=&#34;NSX-T Transport Zone&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once we have a Transport Zone we can add our NSX fabric nodes as transport nodes. Navigate menu to Select Fabric &amp;gt; Transport Nodes and click Add.  A wizard will open on the general tab select first Node (host), give appropriate name for that host and select the openshift transport zone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport-node.jpeg&#34; alt=&#34;NSX-T Transport Node&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-transport-node.jpeg&#34; alt=&#34;NSX-T Transport Node&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Change to N-VDS tab, create N-VDS for openshift, select default NIOC, select default hostswitch Uplink profile, select transport IP Pool and enter Physical NIC identifier for Uplink-1.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order that the NSX Container Plugin can find the correct NSX objects all of the NSX objects created require a tag applying. For this lab build I am using tag dc-openshift. Navigate within NSX Manager to Fabric &amp;gt; Transport Zones, select overlay network then Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vlan-transport-zone&#34;&gt;VLAN Transport Zone&lt;/h2&gt;
 &lt;p&gt;As well as connecting to the overlay network the Edges running Tier-0 routing functions also needs to be able to connect to the physical network. This connectivity is achieved by using a Transport Zone of type VLAN.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-vlan-transport.png&#34; alt=&#34;NSX-T VLAN Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-vlan-transport.png&#34; alt=&#34;NSX-T VLAN Transport Zone&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-edge&#34;&gt;NSX Edge&lt;/h2&gt;
 &lt;p&gt;We need some way for the logical container overlay network to communicate with the physical network. AN NSX Edge can host services which provide this connectivity.&lt;/p&gt;
 &lt;p&gt;The NSX Edge has 4 network adapters, the first is used by the management network, the other 3 interfaces (fp-eth0, fp-eth1 and fp-eth2) can then be used for connecting to overlay networks or for routing. Within my lab I have a single flat physical network so all NSX Edge interfaces connect to the same Port Group.&lt;/p&gt;
@@ -138,35 +138,35 @@ initialize control-cluster
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge.jpeg&#34; alt=&#34;NSX-T Add Edge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge.jpeg&#34; alt=&#34;NSX-T Add Edge&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The NSX Edge needs to participate in the Overlay Transport Zone so we need to first configure this as Transport Node.  This is very similar process to how we setup ESXi hosts as Transport Nodes except on N-VDS tab we add to both overlay and vlan transport zones,  we use the edge-vm Uplink profile and for Virtual NIC select appropriate NIC as per table above.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-nvds.png&#34; alt=&#34;NSX-T Edge N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge-nvds.png&#34; alt=&#34;NSX-T Edge N-VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order we can deploy Tier-0 router the Edge needs to be a member of an Edge Cluster.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-cluster.jpeg&#34; alt=&#34;NSX-T Add Edge Cluster&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge-cluster.jpeg&#34; alt=&#34;NSX-T Add Edge Cluster&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;tier-0-router&#34;&gt;Tier-0 Router&lt;/h2&gt;
 &lt;p&gt;Once the Edge Cluster is created we can create the tier-0 router.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Router&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Router&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In my lab I have 192.168.1.0 /24 and will be using the 172.16.0.0 /16 address space for NSX. I would like to use network address translation (NAT) and allocate a separate SNAT IP on the 192.168.1.0 network for each OpenShift namespace on the 172.16.0.0 network.  To achieve this I need to configure a redistribution criteria of type Tier-0 NAT.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-redist.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Route Redist&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0-route-redist.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Route Redist&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The next step requires an NSX Logical Switch so we create that.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-logical-switch.jpeg&#34; alt=&#34;NSX-T Add Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-logical-switch.jpeg&#34; alt=&#34;NSX-T Add Logical Switch&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can now configure the Router Port,  selecting the Transport Node and Logical Switch.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This will be used by OpenShift to once created navigate to Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-block-kubernetes-pods&#34;&gt;IP Block Kubernetes Pods&lt;/h2&gt;
 &lt;p&gt;In order to create the topology we are aiming for we need to create an IP Blocks for each of our two namespaces.  Within each IP Block we need to create the three subnets. In the end you should end up with something which looks like this, and all IP Block needs to have the ncp/cluster tag.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ddi-blocks.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-ddi-blocks.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-pool-snat&#34;&gt;IP Pool SNAT&lt;/h2&gt;
 &lt;p&gt;We create an IP pool for the tier-0 router to issue SNAT and provide external (floating) IPs to OpenShift.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once created add the following two tags,&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
 Scope = ncp/external and Tag = true
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;red-hat-openshift-origin&#34;&gt;Red Hat OpenShift Origin&lt;/h2&gt;
 &lt;p&gt;OpenShift Origin is a computer software product from Red Hat for container-based software deployment and management. It is a supported distribution of Kubernetes using Docker containers and DevOps tools for accelerated application development.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift.jpeg&#34; alt=&#34;Openshift Stack&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift.jpeg&#34; alt=&#34;Openshift Stack&#34;&gt;&lt;/p&gt;
 &lt;p&gt;OpenShift Origin is the upstream community project used in &lt;a href=&#34;https://www.openshift.com/products/online/&#34;&gt;OpenShift Online&lt;/a&gt;, &lt;a href=&#34;https://www.openshift.com/products/dedicated/&#34;&gt;OpenShift Dedicated&lt;/a&gt;, and &lt;a href=&#34;https://www.openshift.com/products/container-platform/&#34;&gt;OpenShift Container Platform (formerly known as OpenShift Enterprise)&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;VMware provides &lt;a href=&#34;https://github.com/vmware/nsx-integration-for-openshift&#34;&gt;Red Hat Ansible playbooks for installing NSX-T for OpenShift Container Platform&lt;/a&gt;. However, OpenShift Container Platform is a licensed product and this deploys a scaled-out deployment. Neither of these lend itself to a home lab deployment, my goal for the rest of this blog post is to detail the steps I follow for a cutdown installation.&lt;/p&gt;
 &lt;h2 id=&#34;create-openshift-origin-base-vm&#34;&gt;Create OpenShift Origin Base VM&lt;/h2&gt;

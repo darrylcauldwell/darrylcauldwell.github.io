@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>windows on </title>
-    <link>https://darrylcauldwell.com/tags/windows/</link>
+    <link>http://darrylcauldwell.com/tags/windows/</link>
     <description>Recent content in windows on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 28 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 28 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/windows/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Patching Windows EC2 Instances</title>
-      <link>https://darrylcauldwell.com/post/ec2-win-patching/</link>
+      <link>http://darrylcauldwell.com/post/ec2-win-patching/</link>
       <pubDate>Wed, 28 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/ec2-win-patching/</guid>
+      <guid>http://darrylcauldwell.com/post/ec2-win-patching/</guid>
       <description>
         
           &lt;p&gt;Amazon EC2 Systems Manager is a collection of capabilities that helps you automate management tasks such as collecting system inventory, applying operating system (OS) patches, automating the creation of Amazon Machine Images (AMIs), and configuring operating systems (OSs) and applications at scale.&lt;/p&gt;
@@ -52,10 +52,10 @@ aws ssm register-task-with-maintenance-window --window-id &amp;lt;your-maintenan
     
     <item>
       <title>Migrate VMware VMs to AWS EC2 using Server Migration Services (SMS)</title>
-      <link>https://darrylcauldwell.com/post/aws-sms/</link>
+      <link>http://darrylcauldwell.com/post/aws-sms/</link>
       <pubDate>Tue, 01 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/aws-sms/</guid>
+      <guid>http://darrylcauldwell.com/post/aws-sms/</guid>
       <description>
         
           &lt;p&gt;The &lt;a href=&#34;https://aws.amazon.com/server-migration-service/&#34;&gt;AWS Server Migration Service&lt;/a&gt; simplifies and streamlines the process of migrating existing virtualized applications to Amazon EC2. AWS SMS allows you to automate, schedule, and track incremental replications of live server volumes, making it easier for you to coordinate large-scale server migrations. Presently this only supports migrating from VMware with support for other hypervisors and physical servers is coming soon.&lt;/p&gt;
@@ -63,12 +63,12 @@ aws ssm register-task-with-maintenance-window --window-id &amp;lt;your-maintenan
 &lt;p&gt;The size of virtual machine images is such that the upload process might well take a long time, and during this time you might well want to keep the virtual machine running. The changes made during this time therefore will not be reflected in the initial AMI created. As such AWS SMS offers the option of running the replication job again, but rather than the job creating a full new virtual machine it takes an incremental snapshot.  Once the upload of this is completed the SMS service processes the initial upload with the incremental to form a new AMI.&lt;/p&gt;
 &lt;h2 id=&#34;how-to-configure-server-migration-services-sms&#34;&gt;How To: Configure Server Migration Services (SMS)&lt;/h2&gt;
 &lt;p&gt;The process is pretty straight forwards,  first task is to download the AWS Server Migration Connector from &lt;a href=&#34;https://s3.amazonaws.com/sms-connector/AWS-SMS-Connector.ova&#34;&gt;S3&lt;/a&gt;, then deploy the OVA.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-ova-deploy.jpeg&#34; alt=&#34;Deploy OVF Template&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-ova-deploy-final.jpeg&#34; alt=&#34;Deploy OVF Ready to complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-ova-deploy.jpeg&#34; alt=&#34;Deploy OVF Template&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-ova-deploy-final.jpeg&#34; alt=&#34;Deploy OVF Ready to complete&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The SMS Connector needst to connect to your AWS account and therefore we need to create a user with the &amp;ldquo;ServerMigrationConnector&amp;rdquo; role attached.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-account.jpeg&#34; alt=&#34;MigrationUser Role Mapping&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-account.jpeg&#34; alt=&#34;MigrationUser Role Mapping&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the SMS connector appliance is deployed connect to the web UI by opening the browser to https://dhcp-addr&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-wiz.jpeg&#34; alt=&#34;AWS Server Migration Service Splash&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-cfg-wiz.jpeg&#34; alt=&#34;AWS Server Migration Service Splash&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Work through the wizard to configure all,&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Step 1: License Agreement&lt;/li&gt;
@@ -78,12 +78,12 @@ aws ssm register-task-with-maintenance-window --window-id &amp;lt;your-maintenan
 &lt;li&gt;Step 5: Server Migration Service&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Once configuration is complete the connection to AWS and vCenter should show good in the connector configuration.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-complete.jpeg&#34; alt=&#34;AWS Server Migration Service Configuration Complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-cfg-complete.jpeg&#34; alt=&#34;AWS Server Migration Service Configuration Complete&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we then connect to AWS we can see the connector.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-cfg-complete-console.jpeg&#34; alt=&#34;AWS Server Migration Service Complete Console&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-cfg-complete-console.jpeg&#34; alt=&#34;AWS Server Migration Service Complete Console&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order to create the first replication job we need to import the list of vCenter VMs by using the &amp;lsquo;Import server catalog&amp;rsquo; function.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-import.jpeg&#34; alt=&#34;AWS Server Migration Service Import Server Catalog&#34;&gt;&lt;/p&gt;
-&lt;p&gt;There is not a default role supplied which the SMS services can use to form AMI&amp;rsquo;s from the uploaded VMware snapshots. To do this download this file &lt;a href=&#34;https://darrylcauldwell.com/attachments/trust-policy.json&#34;&gt;trust-policy.json&lt;/a&gt; and this file &lt;a href=&#34;https://darrylcauldwell.com/attachments/role-policy.json&#34;&gt;role-policy.json&lt;/a&gt;. Then at a command prompt, go to the directory where you stored the two JSON files, and run the following commands to create the SMS service role:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-import.jpeg&#34; alt=&#34;AWS Server Migration Service Import Server Catalog&#34;&gt;&lt;/p&gt;
+&lt;p&gt;There is not a default role supplied which the SMS services can use to form AMI&amp;rsquo;s from the uploaded VMware snapshots. To do this download this file &lt;a href=&#34;http://darrylcauldwell.com/attachments/trust-policy.json&#34;&gt;trust-policy.json&lt;/a&gt; and this file &lt;a href=&#34;http://darrylcauldwell.com/attachments/role-policy.json&#34;&gt;role-policy.json&lt;/a&gt;. Then at a command prompt, go to the directory where you stored the two JSON files, and run the following commands to create the SMS service role:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-role --role-name sms --assume-role-policy-document file://trust-policy.json
 aws iam put-role-policy --role-name sms --policy-name sms --policy-document file://role-policy.json
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;how-to-migrate-virtual-machine&#34;&gt;How To: Migrate Virtual Machine&lt;/h2&gt;
@@ -104,14 +104,14 @@ aws iam put-role-policy --role-name sms --policy-name sms --policy-document file
 &lt;li&gt;Step 4: Review&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Once the job schedules,  the first task the job performs is to create a VMware snapshot, it&amp;rsquo;s important to remember to have enough disk capacity to hold snapshots.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-seed-snapshot.jpeg&#34; alt=&#34;AWS Server Migration Service Seeding Snapshot&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-seed-snapshot.jpeg&#34; alt=&#34;AWS Server Migration Service Seeding Snapshot&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The AWS console doesn&amp;rsquo;t update very well, so its best to view the progress via the AWS CLI. First list all of the replication jobs and from this you can find the JobID then to make it easier to read target the output to the specific JobID.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-jobs  
 aws sms get-replication-jobs --replication-job-id sms-job-2ca54045  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A replication job refers to the server being migrated,  as we mentioned earlier multiple replications can occur for example the initial seed and an incremental.  Therefore within a replication job there might be various replication runs.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-runs --replication-job-id sms-job-2ca54045  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following example we can see this has three runs in the runlist, the initial seed which has completed, an incrememental which has completed, it also has a pending job as I had left the default replication job values to schedule a daily incremental.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-sms-repl-runs.jpeg&#34; alt=&#34;AWS Server Migration Service Replication Runs&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-repl-runs.jpeg&#34; alt=&#34;AWS Server Migration Service Replication Runs&#34;&gt;&lt;/p&gt;
 &lt;p&gt;When a job is running you would see the state roll through the various stages&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Pending&lt;/li&gt;
@@ -137,10 +137,10 @@ aws sms get-replication-jobs --replication-job-id sms-job-2ca54045
     
     <item>
       <title>Ansible For Windows Managed Nodes</title>
-      <link>https://darrylcauldwell.com/post/ansible-windows/</link>
+      <link>http://darrylcauldwell.com/post/ansible-windows/</link>
       <pubDate>Tue, 27 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/ansible-windows/</guid>
+      <guid>http://darrylcauldwell.com/post/ansible-windows/</guid>
       <description>
         
           &lt;p&gt;On starting to look at learning using Ansible to manage Windows hosts, first step was to setup a test lab.&lt;/p&gt;
@@ -244,10 +244,10 @@ ansible windows -i host -m get_host
     
     <item>
       <title>Windows Server 2012 - SAN Performance</title>
-      <link>https://darrylcauldwell.com/post/win2012-san-perf/</link>
+      <link>http://darrylcauldwell.com/post/win2012-san-perf/</link>
       <pubDate>Mon, 03 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/win2012-san-perf/</guid>
+      <guid>http://darrylcauldwell.com/post/win2012-san-perf/</guid>
       <description>
         
           &lt;p&gt;In a newly deployed Windows Server 2012 HyperV environment with around sixty nodes, running a couple of hundred Windows Server 2012 virtual machines running various applications.  We found the EMC VMX storage which underpinned this became massively busy with Write IO at around 3am,  the Write IO was mostly coming from TRIM and Unmap commands,  the amount has a dramatic impact and leads to lots of 153 errors on the server estate,  after one to two hours the Write IO subsided. I wrote a script to audit the estate to identify if there was any pattern to the errors. We found the errors correlated to the 3am Window also.&lt;/p&gt;
@@ -259,7 +259,7 @@ ansible windows -i host -m get_host
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 01:00.&lt;/p&gt;
 &lt;p&gt;The Action for these tasks is “Custom Handler”, Microsoft publish no details on what these tasks do. We logged a call with Microsoft and they also did not know what these, but they did say that tasks with a “Custom Handler” are umbrella’s for other tasks.&lt;/p&gt;
 &lt;p&gt;As Regular Maintenance appeared to be the most likely due to execution time, I viewed its Last Run Time.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I then manually worked through each Windows task in Task Scheduler and took note of which Tasks had Last Run Time which matched that of “Regular Maintenance”.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
 \Microsoft\Windows\.NET Framework.Net Framework NGEN v4.0.30319 64

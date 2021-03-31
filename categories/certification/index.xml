@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>certification on </title>
-    <link>https://darrylcauldwell.com/categories/certification/</link>
+    <link>http://darrylcauldwell.com/categories/certification/</link>
     <description>Recent content in certification on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/categories/certification/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/categories/certification/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VCDX6-DCV Defence Experience</title>
-      <link>https://darrylcauldwell.com/post/vcdx-fail/</link>
+      <link>http://darrylcauldwell.com/post/vcdx-fail/</link>
       <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vcdx-fail/</guid>
+      <guid>http://darrylcauldwell.com/post/vcdx-fail/</guid>
       <description>
         
           &lt;p&gt;In 2013 I was a systems engineer,  I worked mostly on automation scripting for consistently delivering virtualized infrastructure on VMware. A job I&amp;rsquo;d enjoyed but was ready to move my career forwards, my at the time colleague &lt;a href=&#34;https://twitter.com/virtRich&#34;&gt;Richard Dowling&lt;/a&gt; and I started looked into pursuing advanced VMware certification. In early 2014 we attended a VCDX workshop hosted by &lt;a href=&#34;https://twitter.com/vcdx001&#34;&gt;John Arrasjid&lt;/a&gt; at VMware EMEA HQ in Frimley. Also in the workshop was &lt;a href=&#34;https://twitter.com/pmcsharry&#34;&gt;Paul McSharry&lt;/a&gt; who John knew and who had recently had published &lt;a href=&#34;https://www.amazon.co.uk/VCAP5-DCD-Official-Cert-Guide-Certification/dp/078975018X&#34;&gt;VCAP5-DCD Official Cert Guide&lt;/a&gt;.  I ordered the book that evening and this began my journey from engineer to architect.&lt;/p&gt;
@@ -88,10 +88,10 @@
     
     <item>
       <title>VMware Certified Advanced Professional - Data Center Virtualization Design</title>
-      <link>https://darrylcauldwell.com/post/vcap-dcv-design/</link>
+      <link>http://darrylcauldwell.com/post/vcap-dcv-design/</link>
       <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vcap-dcv-design/</guid>
+      <guid>http://darrylcauldwell.com/post/vcap-dcv-design/</guid>
       <description>
         
           &lt;p&gt;Having passed the VCAP5-DCD exam with little to no studying only eighteen months ago and VCIX6-NV since. All things considered I was pretty confident of doing well in the VCAP6-DCV Design exam, and when I completed exam I was pretty sure I&amp;rsquo;d passed. To my surprise I failed the exam with a 285, to make matters worse during the drive home I couldn&amp;rsquo;t fathom in my mind where it had gone wrong.
@@ -173,10 +173,10 @@ Luckily on readin the score report it highlights the blueprint objectives relati
     
     <item>
       <title>AWS Certified Solutions Architect Professional - Study Link O&#39;Rama</title>
-      <link>https://darrylcauldwell.com/post/aws-sa-study/</link>
+      <link>http://darrylcauldwell.com/post/aws-sa-study/</link>
       <pubDate>Wed, 19 Oct 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/aws-sa-study/</guid>
+      <guid>http://darrylcauldwell.com/post/aws-sa-study/</guid>
       <description>
         
           &lt;p&gt;While studying to become a &lt;a href=&#34;https://aws.amazon.com/certification/certified-solutions-architect-professional/&#34;&gt;AWS Certified Solutions Architect - Professional&lt;/a&gt; I have been passed and found lots of resources, in this post I am trying to store the links which are useful. I started my journey with the &lt;a href=&#34;https://d0.awsstatic.com/training-and-certification/docs-sa-pro/AWS_certified_solutions_architect_professional_blueprint.pdf&#34;&gt;AWS exam blueprint&lt;/a&gt;. This is I believe the perfect place to start to study as it describes when exactly is covered by the exam and the weighted value of each skill being measured. I&amp;rsquo;ve then categorised the many study links I have been passed under each knowledge domain.&lt;/p&gt;
@@ -412,46 +412,46 @@ Luckily on readin the score report it highlights the blueprint objectives relati
     
     <item>
       <title>Configuring NSX Edge to DLR OSPF</title>
-      <link>https://darrylcauldwell.com/post/nsx-edge-ospf/</link>
+      <link>http://darrylcauldwell.com/post/nsx-edge-ospf/</link>
       <pubDate>Mon, 23 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-edge-ospf/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-edge-ospf/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I’ve given myself task of exploring in my new home lab all parts of NSX which I&amp;rsquo;m still not fully comfortable.  One of these things is OSPF,  to investigate this I came up with a test scenario and then worked through the steps to achieve a solution to meet the scenario design.&lt;/p&gt;
 &lt;h2 id=&#34;scenario-design&#34;&gt;Scenario Design&lt;/h2&gt;
 &lt;p&gt;We will replicate a typical development environment secured with an Edge Gateway.  Within the environment the developers will have ability to add and remove logical switches to the DLR and the automatic updating of the Edge Gateway routing table.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test.jpg&#34; alt=&#34;NSX Edge OSPF Test&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test.jpg&#34; alt=&#34;NSX Edge OSPF Test&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;deploy-edge-transit-logical-switch-and-distributed-logical-router&#34;&gt;Deploy Edge, Transit Logical Switch and Distributed Logical Router&lt;/h2&gt;
 &lt;p&gt;The lab has VXLAN capability during my NSX core home lab configuration, so has hosts prepared, VNI pool and deployed Controller.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll first deploy the Transit logical switch.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-ls.jpg&#34; alt=&#34;NSX Edge Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-ls.jpg&#34; alt=&#34;NSX Edge Logical Switch&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create Edge Gateway with an Uplink interface on the OOB network  (192.168.1.43) and on the Transit network (192.168.2.1) .&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-edge-deploy.jpg&#34; alt=&#34;NSX Edge Deploy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-edge-deploy.jpg&#34; alt=&#34;NSX Edge Deploy&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create DLR initially with a single uplink on Transit network (192.168.2.254) , do not configure a default gateway.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-dlr.jpg&#34; alt=&#34;NSX Edge DLR&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-dlr.jpg&#34; alt=&#34;NSX Edge DLR&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;configure-ospf-area&#34;&gt;Configure OSPF Area&lt;/h2&gt;
 &lt;p&gt;An OSPF area is a logical collection of OSPF networks, routers, and links that have the same area identification. The simulated development environment we are using RFC1918 address space in order that the IP address schema can overlap as such our OSPF routing will be internal so we will create an OSPF area which is type Stub.&lt;/p&gt;
 &lt;p&gt;On Edge Gateway Enable Dynamic Routing Configuration on the Transit interface.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-dynamic.jpg&#34; alt=&#34;NSX Edge OSPF Dynamic&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-dynamic.jpg&#34; alt=&#34;NSX Edge OSPF Dynamic&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Then we need to enable OSPF&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-enable.jpg&#34; alt=&#34;NSX Edge OSPF Enable&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-enable.jpg&#34; alt=&#34;NSX Edge OSPF Enable&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We require a stub OSPF area, and usefully Area ID 51 is configured already so we&amp;rsquo;ll use this.  We just need to associate this with the Transit interface in order it can communicate with DLR.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-mapping.jpg&#34; alt=&#34;NSX Edge OSPF Mapping&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-mapping.jpg&#34; alt=&#34;NSX Edge OSPF Mapping&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Repeat the steps used for configuring OSPF on the Edge on the DLR, when enabling OSPF enter the forwarding address to match the Transit network IP interface and the protocol address to be another available IP address on the Transit network.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-ProFwd.jpg&#34; alt=&#34;NSX Edge OSPF Protocol Forward&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-ProFwd.jpg&#34; alt=&#34;NSX Edge OSPF Protocol Forward&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;route-distribution&#34;&gt;Route Distribution&lt;/h2&gt;
 &lt;p&gt;The default Route Redistribution configuration for DLR is to distribute information about networks it is connected to.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-RouteDistribute.jpg&#34; alt=&#34;OSPF Route Redistribution&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-RouteDistribute.jpg&#34; alt=&#34;OSPF Route Redistribution&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we now check the Edge Gateway routing table we can see all routing is of type C (directly connected) or S (static entry for default gateway).&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-RouteTable.jpg&#34; alt=&#34;OSPF Route Table&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-RouteTable.jpg&#34; alt=&#34;OSPF Route Table&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If I now simulate a developer creating a new Logical Switch for network 192.168.3.0/24 which is attached to DLR as internal interface 192.168.3.1.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 DLR&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 DLR&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then check the Edge Gateway routing table again.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 Edge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 Edge&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We see a new route added type O (ospf derived) N2 (OSPF NSSA external type 2).  Which directs this traffic to the DLR interface on Transit network.&lt;/p&gt;
 &lt;p&gt;If we then simulate the developer adding the test2 and test3 networks. We see the other routes populated.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test2-3.jpg&#34; alt=&#34;OSPF Test 2-3&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test2-3.jpg&#34; alt=&#34;OSPF Test 2-3&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -459,52 +459,52 @@ Luckily on readin the score report it highlights the blueprint objectives relati
     
     <item>
       <title>NSX Backup and Restore</title>
-      <link>https://darrylcauldwell.com/post/nsx-backup-restore/</link>
+      <link>http://darrylcauldwell.com/post/nsx-backup-restore/</link>
       <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-backup-restore/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-backup-restore/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring in my new home lab all parts of NSX which I don&amp;rsquo;t use at work. One of these things is NSX Backup and Restore,  its not that we don&amp;rsquo;t use these function but that its relatively high impacting if it goes wrong.  To investigate this I came up with a list of networking configuration to test backup and restore of and the steps to I followed to perform each backup and restore type.&lt;/p&gt;
 &lt;h2 id=&#34;scenario-1---distributed-firewall&#34;&gt;Scenario 1 - Distributed Firewall&lt;/h2&gt;
 &lt;p&gt;To backup and restore distributed firewall rules is relatively straight forwards to do.  I&amp;rsquo;m starting with no rules created.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-BlankRuleset.jpg&#34; alt=&#34;NSX Firewall Blank Ruleset&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-BlankRuleset.jpg&#34; alt=&#34;NSX Firewall Blank Ruleset&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Then create a new section.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-BandR.jpg&#34; alt=&#34;NSX Firewall New Section&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-BandR.jpg&#34; alt=&#34;NSX Firewall New Section&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Add some rules for example any to WEB on HTTP Service and WEB to DB on SQL Service.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-testRules.jpg&#34; alt=&#34;NSX Firewall New Rules&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-testRules.jpg&#34; alt=&#34;NSX Firewall New Rules&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Click Export and save these as a file.&lt;/p&gt;
 &lt;p&gt;Delete the WEB to DB rule.&lt;/p&gt;
 &lt;p&gt;To perform a restore we do this from the Saved Configuration tab,  we see that there are only auto saved backups.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore1.jpg&#34; alt=&#34;NSX Firewall Auto-Saved&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Restore1.jpg&#34; alt=&#34;NSX Firewall Auto-Saved&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order to restore from the file backup we need to import this into the Saved Configurations.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore2.jpg&#34; alt=&#34;NSX Firewall Import Saved&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Restore2.jpg&#34; alt=&#34;NSX Firewall Import Saved&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now we can change back to the Configuration tab and use &amp;lsquo;Load Saved Configuration&amp;rsquo; option to restore the exported file based backup.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore3.jpg&#34; alt=&#34;NSX Firewall Restore&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Restore3.jpg&#34; alt=&#34;NSX Firewall Restore&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The deleted rule then gets added back.&lt;/p&gt;
 &lt;h2 id=&#34;scenario-2---nsx-manager&#34;&gt;Scenario 2 - NSX Manager&lt;/h2&gt;
 &lt;p&gt;To backup and restore NSX Manager it depends on having access to a FTP or SFTP to store the configuration in.&lt;/p&gt;
 &lt;p&gt;Previously I&amp;rsquo;d created a CentOS7 virtual machine template,  I deployed one of these and then followed this procedure to configure FTP.&lt;/p&gt;
 &lt;p&gt;Configure the FTP server settings in NSX.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-nsxBackup.jpg&#34; alt=&#34;NSX Manager Configuration Backup&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-nsxBackup.jpg&#34; alt=&#34;NSX Manager Configuration Backup&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once backup location is configured click Backup to create a backup.&lt;/p&gt;
 &lt;p&gt;Check the FTP server and it should have a folder called nsx created and within a file prefixed with nsx followed by the date and time stamp.&lt;/p&gt;
 &lt;p&gt;Make a change to NSX configuration,  for example assign the NSX Manager the primary role.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-PrimaryRole.jpg&#34; alt=&#34;NSX Manager Assign Primary Role&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-PrimaryRole.jpg&#34; alt=&#34;NSX Manager Assign Primary Role&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Check role is applied.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Primary.jpg&#34; alt=&#34;NSX Manager Is Primary&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Primary.jpg&#34; alt=&#34;NSX Manager Is Primary&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we now restore the configuration from the NSX Backup we should see the NSX Manager revert to running the Standalone role.&lt;/p&gt;
 &lt;p&gt;Select the backup created prior to making the configuration change and click Restore.  The NSX Manager will restore and then restart the Management Services so will take a minute or two. We can then check the role is reverted to Standalone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Standalone.jpg&#34; alt=&#34;NSX Manager Is Standalone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Standalone.jpg&#34; alt=&#34;NSX Manager Is Standalone&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;scenario-3---vsphere-distributed-switch&#34;&gt;Scenario 3 - vSphere Distributed Switch&lt;/h2&gt;
 &lt;p&gt;I have in lab a vSphere Distributed Switch configured with some Distributed Portgroups and Logical Switches created on.  Otherwise you might need to create some configuration.&lt;/p&gt;
 &lt;p&gt;Use the context menu of the vDistributed Switch to Export the configuration to a file.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Export-vDS.jpg&#34; alt=&#34;Export VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Export-vDS.jpg&#34; alt=&#34;Export VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This creates a compressed zip file,  most files within this are not readable except for an xml file which appears to be a manifest of the zip file.&lt;/p&gt;
 &lt;p&gt;To test that the configuration is restored add an additional distributed portgroup named TestRestore1.&lt;/p&gt;
 &lt;p&gt;Use the context menu of the vDistributed Switch to Restore the configuration from the file.  Interesting we find that the Portgroup created post backup is not removed.&lt;/p&gt;
 &lt;p&gt;If we export the configuration again to include the new TestRestore1 Portgroup. Then delete the TestRestore1 Portgroup. Then Restore the configuration we find the TestRestore1 Portgroup is added back.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-TestRestore.jpg&#34; alt=&#34;Restored VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-TestRestore.jpg&#34; alt=&#34;Restored VDS&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -512,10 +512,10 @@ Luckily on readin the score report it highlights the blueprint objectives relati
     
     <item>
       <title>NSX-V Load Balancer As A Service LBaaS</title>
-      <link>https://darrylcauldwell.com/post/nsx-lbaas/</link>
+      <link>http://darrylcauldwell.com/post/nsx-lbaas/</link>
       <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-lbaas/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-lbaas/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring in my homelab all parts of NSX which I don&amp;rsquo;t use
@@ -524,44 +524,44 @@ scenario and then worked through the steps to achieve a solution to meet the des
 &lt;h2 id=&#34;load-balancer-scenariodesign&#34;&gt;Load Balancer Scenario Design&lt;/h2&gt;
 &lt;p&gt;I started by reading the &lt;a href=&#34;http://pubs.vmware.com/NSX-62/index.jsp#com.vmware.nsx.admin.doc/GUID-412635AE-1F2C-4CEC-979F-CC5B5D866F53.html&#34;&gt;NSX Administration Guide&lt;/a&gt; section covering load balancer configuration.&lt;/p&gt;
 &lt;p&gt;Here is what I plan to achieve my client and browser will sit on the 192.168.1.0/24 out of band network.  I&amp;rsquo;ll create a new WEB VLAN 1000 to host 192.168.2.0/24 network,  the Edge Gateway will serve this network with DHCP and DHCP will issue gateway IP to be its own address,  two web server VMs will be assigned to this network.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-onearm.jpg&#34; alt=&#34;One Armed Load Balancer&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-onearm.jpg&#34; alt=&#34;One Armed Load Balancer&#34;&gt;&lt;/p&gt;
 &lt;p&gt;A destination network address translation (DNAT) rule will be configured to pass this OOB network IP address to the load balancerd address on the WEB network. The load balancer will round robin traffic between the two web servers. Port 80 will be monitored on web servers and when apache is stopped on one server all traffic should direct to the active server. The Edge firewall will be configured to block all traffic except for HTTP to the web servers.&lt;/p&gt;
 &lt;h2 id=&#34;configure-underlay&#34;&gt;Configure Underlay&lt;/h2&gt;
 &lt;p&gt;Create VLAN 1000 on physical switch and ensure this is allowed in the trunk presented to the virtual distributed switch ports.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-VLAN1000-Assignment.jpg&#34; alt=&#34;VLAN 1000 Assignment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-VLAN1000-Assignment.jpg&#34; alt=&#34;VLAN 1000 Assignment&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create a distributed portgroup for VLAN1000 and OOB.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-vDS-OOB-and-WEB.jpg&#34; alt=&#34;Distributed Portgroup&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-vDS-OOB-and-WEB.jpg&#34; alt=&#34;Distributed Portgroup&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;deploy-edge-gateway&#34;&gt;Deploy Edge Gateway&lt;/h2&gt;
 &lt;p&gt;Create a Compact NSX Edge Gateway with an &lt;em&gt;Uplink&lt;/em&gt; interface on the OOB with IP address 192.168.1.40 and &lt;em&gt;Internal&lt;/em&gt; interface on the WEB - VLAN1000 with IP address 192.168.2.254 .  Specify 192.168.1.254 as default gateway on the OOB interface. Ensure firewall is set to accept as default policy.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-EdgeSummary.jpg&#34; alt=&#34;Edge Deployment Summary&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-EdgeSummary.jpg&#34; alt=&#34;Edge Deployment Summary&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;create-dnat-rule&#34;&gt;Create DNAT Rule&lt;/h2&gt;
 &lt;p&gt;As 192.168.2.0/24 is not a network my home router is aware of I must create a Destination NAT rule on 192.168.1.0/24 network to map to the 192.168.2.0/24 address.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-DNAT.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-DNAT.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Ensure this is created by connecting SSH session to the Edge and viewing the NAT configuration by running&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;show nat
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-NAT-CLI.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-NAT-CLI.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;configure-web-server-dhcp&#34;&gt;Configure Web Server DHCP&lt;/h2&gt;
 &lt;p&gt;Enable DHCP and create a DHCP scope 192.168.2.10-192.168.2.50.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-DHCP.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-DHCP.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;create-web-servers&#34;&gt;Create Web Servers&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ll look to create two test web servers each will host a single web page with its actual IP address on.  When I connect to load balanced IP the page contents returned will flip between the two servers.&lt;/p&gt;
-&lt;p&gt;I created a &lt;a href=&#34;https://darrylcauldwell.com/post/vsphere-vm-templates&#34;&gt;CentOS 7 VM template&lt;/a&gt; previously in lab and so for this test scenario I provisioned two new VMs from this named web1 and web2.  I left both as DHCP and setup the web server using following commands.&lt;/p&gt;
+&lt;p&gt;I created a &lt;a href=&#34;http://darrylcauldwell.com/post/vsphere-vm-templates&#34;&gt;CentOS 7 VM template&lt;/a&gt; previously in lab and so for this test scenario I provisioned two new VMs from this named web1 and web2.  I left both as DHCP and setup the web server using following commands.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum install httpd -y
 service httpd start
 ifconfig | grep &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;inet&amp;#34;&lt;/span&gt; &amp;amp;gt; /var/www/html/test.html
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configure-load-balancer&#34;&gt;Configure Load Balancer&lt;/h2&gt;
 &lt;p&gt;Enable the load balance function on the Edge.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-Enable.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-Enable.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create a load balancer application profile called Web and mark is for HTTP traffic.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-AppProfile.jpg&#34; alt=&#34;Load Balancer AppProfile&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-AppProfile.jpg&#34; alt=&#34;Load Balancer AppProfile&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Add web1 and web2 virtual machines to a load balancer pool with monitor port 80.  If adding as VM object as per screenshot then you might have IPv6 issue see section below for solution,  alternatively enter IP address.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-PoolMembers.jpg&#34; alt=&#34;Load Balancer Pool Membership&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-PoolMembers.jpg&#34; alt=&#34;Load Balancer Pool Membership&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create a load balancer virtual server to link all the parts into a VIP.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-WebLB.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-WebLB.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once this is created you will be able to browse to http://192.168.1.40/test.html on the OOB network this will return a web page displaying IP address.  Refreshing the page will display a similar page but with alternate VM IP address.&lt;/p&gt;
 &lt;h2 id=&#34;nsx-loadbalancer-ipv6-issue&#34;&gt;NSX LoadBalancer IPv6 Issue&lt;/h2&gt;
 &lt;p&gt;I found when I configured this initially by selecting VM objects in the Virtual Server the loadbalancer tried to configure all IP addresses including the IPv6 addresses which are present by default in Centos7.  This caused a error in LoadBalancer and wouldn&amp;rsquo;t allow me to proceed.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalance-IPv6.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalance-IPv6.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I disabled IPv6 on both CentOS7 VMs by adding the following to /etc/sysctl.conf:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;net.ipv6.conf.all.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
@@ -570,13 +570,13 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;secure-solution&#34;&gt;Secure Solution&lt;/h2&gt;
 &lt;p&gt;Up to now we have had the Edge firewall default rule set to allow,  one of the first tasks we would want to do once web load balancing is working is to secure the solution.&lt;/p&gt;
 &lt;p&gt;To do this we create a new rule explicitly allowing HTTP traffic to the IP address it will enter the Edge on,  and once in place change default rule to Deny.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LB-Firewall.jpg&#34; alt=&#34;Load Balancer Firewall&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LB-Firewall.jpg&#34; alt=&#34;Load Balancer Firewall&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once in place test you still have access to the web page.&lt;/p&gt;
 &lt;h2 id=&#34;load-balance-monitoring&#34;&gt;Load Balance Monitoring&lt;/h2&gt;
 &lt;p&gt;When creating the Loadbalance configuration we specified to monitor port 80 was available in order to include the server in the balanced set. Before proceeding here ensure that when you connect to 192.168.1.40 and refresh load balancing is working correctly and returning IP addresses alternately.&lt;/p&gt;
 &lt;p&gt;We then stop the apache service on one of the VMs using:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;service httpd stop
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-apache-stop.jpg&#34; alt=&#34;Apache Stop&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-apache-stop.jpg&#34; alt=&#34;Apache Stop&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we now go back to browser and refresh a few times it will direct all traffic to one server IP address.  If we restart apache using&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;service httpd start
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and refresh the browser we find load balancing is returned and refreshes alternate the IP addresses.&lt;/p&gt;
@@ -587,10 +587,10 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
     
     <item>
       <title>NSX Activity Monitoring</title>
-      <link>https://darrylcauldwell.com/post/nsx-activity/</link>
+      <link>http://darrylcauldwell.com/post/nsx-activity/</link>
       <pubDate>Thu, 19 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-activity/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-activity/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring all parts of NSX which I don&amp;rsquo;t use at work. One of these things is NSX Activity Monitoring,  to investigate this I came up with a test scenario and then worked through the steps to achieve a solution to meet the scenario design.&lt;/p&gt;
@@ -599,26 +599,26 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
 &lt;h2 id=&#34;virtual-machine-configuration&#34;&gt;Virtual Machine Configuration&lt;/h2&gt;
 &lt;p&gt;I created a Windows 2012 R2 virtual machine template previously,  deploy two of these to a network with DHCP enabled for example in my lab the OOB network.&lt;/p&gt;
 &lt;p&gt;The Windows template I created has the VMware Tools typical installation performed. To use the NSX Activity Monitoring the Network File Introspection Driver (vnetflt.sys) is required.  To add this we need to re-run the VMware tools installer,  select modify and then add NSX Network File Introspection Driver.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-WindowsDriver.jpg&#34; alt=&#34;Install Windows Driver&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-WindowsDriver.jpg&#34; alt=&#34;Install Windows Driver&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Add IIS role to one of the hosts.&lt;/p&gt;
 &lt;p&gt;Add server to Active Directory domain and reboot.&lt;/p&gt;
 &lt;p&gt;In vSphere web client select each virtual machine in turn and enable NSX Activity Monitoring.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-EnableMonitoring.jpg&#34; alt=&#34;Enable Monitoring&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-EnableMonitoring.jpg&#34; alt=&#34;Enable Monitoring&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;deployactivity-monitor-appliances&#34;&gt;Deploy Activity Monitor Appliances&lt;/h2&gt;
 &lt;p&gt;From the Networking and Security menu, select Installation. Navigate to the Service Deployments tab and glick green add button.&lt;/p&gt;
 &lt;p&gt;In order to gather activity data virtual appliances are required to be deployed.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-DeployActivityServices.jpg&#34; alt=&#34;Deploy Virtual Appliances&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-DeployActivityServices.jpg&#34; alt=&#34;Deploy Virtual Appliances&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;register-a-windows-domain-with-nsx-manager&#34;&gt;Register a Windows Domain with NSX Manager&lt;/h2&gt;
 &lt;p&gt;In vSphere web client click Networking and Security and then click NSX Managers. Click an NSX Manager in the Name column and then click the Manage tab. Click the Domain tab and then click the Add domain (Add domain) icon.&lt;/p&gt;
 &lt;p&gt;Complete the domain details as per your Active Directory.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-Add-Domain.jpg&#34; alt=&#34;Add Domain&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-Add-Domain.jpg&#34; alt=&#34;Add Domain&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Wait for synchronization status to show SUCCESS.&lt;/p&gt;
 &lt;h2 id=&#34;generate-activity&#34;&gt;Generate Activity&lt;/h2&gt;
 &lt;p&gt;Connect to test virtual machine which &lt;!-- raw HTML omitted --&gt;does not&lt;!-- raw HTML omitted --&gt; have IIS installed and open browser to virtual machine with IIS installed.&lt;/p&gt;
 &lt;p&gt;Test data is being gathered by Activity Monitor.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-ActivityMonitorActivity.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-ActivityMonitorActivity.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Another easy test is to copy a file between the two virtual machines.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-ActivityMonitorSMB-CIFS.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-ActivityMonitorSMB-CIFS.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
 
         
       </description>

@@ -2,35 +2,35 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>dfw on </title>
-    <link>https://darrylcauldwell.com/tags/dfw/</link>
+    <link>http://darrylcauldwell.com/tags/dfw/</link>
     <description>Recent content in dfw on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 05 Jul 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/dfw/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Jul 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/dfw/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Safely Lockdown NSX Distributed Firewall (DFW) Ruleset</title>
-      <link>https://darrylcauldwell.com/post/nsx-dfw-lockdown/</link>
+      <link>http://darrylcauldwell.com/post/nsx-dfw-lockdown/</link>
       <pubDate>Tue, 05 Jul 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-dfw-lockdown/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-dfw-lockdown/</guid>
       <description>
         
           &lt;p&gt;A common dilemma when developing a solution with firewall is whether to change the Default rule to Deny at the start and develop the ruleset as part of development or leave the Default rule to Allow and secure it later. In modern agile teams its best to develop the ruleset as part of development ensuring the ruleset is tested with the product as introducing it later could well invalidate every bit of testing performed.&lt;/p&gt;
 &lt;p&gt;If however you find yourself in the situation where a NSX firewall solution is deployed with the Default rule to Allow and your asked to implement a ruleset to cover the traffic and change default to Deny. This is one possible solution to capture the required configuration.&lt;/p&gt;
 &lt;h2 id=&#34;enable-default-rule-logging&#34;&gt;Enable Default Rule Logging&lt;/h2&gt;
 &lt;p&gt;In order we can capture the active traffic we can first enable Logging on the default rule.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-EnableLogging.jpg&#34; alt=&#34;NSX Enable Logging&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-EnableLogging.jpg&#34; alt=&#34;NSX Enable Logging&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then operate the environment normally for a period of time which captures all business processes. This maybe a day, a week, a month or more.&lt;/p&gt;
 &lt;h2 id=&#34;centralize-logging&#34;&gt;Centralize Logging&lt;/h2&gt;
 &lt;p&gt;NSX data plane logging is written to the VMkernel.log files,  therefore if a logical firewall rule log is generated for a vNIC of a VM it is written to the ESX host log file which it was residing at that time.&lt;/p&gt;
 &lt;p&gt;The distributed firewall configuration can apply to the whole vCenter and all objects within. You must therefore configure the remote syslog server for each host in each cluster that has firewall enabled. The remote syslog server is specified in the &lt;em&gt;Syslog.global.logHost&lt;/em&gt; attribute. My preference is to use vRealize Log Insight for centralized syslog.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-EnableRemoteLogging.jpg&#34; alt=&#34;NSX Remote Logging&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-EnableRemoteLogging.jpg&#34; alt=&#34;NSX Remote Logging&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;identifying-traffic-hitting-default-allow&#34;&gt;Identifying Traffic Hitting Default Allow&lt;/h2&gt;
 &lt;p&gt;When we browse the firewall log entries we find that in order to narrow our search to the correct rule we need to establish the &lt;em&gt;vmw_nsx_firewall_ruleid&lt;/em&gt; for the default layer 3 rule which we are logging. The &lt;em&gt;vmw_nsx_firewall_ruleid&lt;/em&gt; is not displayed via the NSX Firewall GUI but can be easily got from the NSX REST API by running the GET method on this URL&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;https://&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;nsx-mgr-ip&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/api/4.0/firewall/globalroot-0/config?ruleType&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;LAYER3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-DefaultRuleID.jpg&#34; alt=&#34;NSX Default Rule ID&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-DefaultRuleID.jpg&#34; alt=&#34;NSX Default Rule ID&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We see in this example the &lt;em&gt;rule id=&amp;ldquo;1001&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Once we have this we can create a vRealize Log Insight query to list all logs generated by this rule.  To make this query easier to view I remove all columns except timestamp and vmw_nsx_firewall.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-LI-Query.jpg&#34; alt=&#34;Query Firewall Events Log Insight &#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-LI-Query.jpg&#34; alt=&#34;Query Firewall Events Log Insight &#34;&gt;&lt;/p&gt;
 &lt;p&gt;From this data we can then identify what traffic would be blocked if we changed the default rule to Deny. We can work through this data, identify valid traffic flows. We can then put in explicit allow rules for the valid traffic. When we are happy no traffic is being logged by the Default Rule we can change it to Deny.&lt;/p&gt;
 
         
@@ -39,10 +39,10 @@
     
     <item>
       <title>NSX Distributed Firewall Under The Covers</title>
-      <link>https://darrylcauldwell.com/post/nsx-dfw/</link>
+      <link>http://darrylcauldwell.com/post/nsx-dfw/</link>
       <pubDate>Tue, 21 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-dfw/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-dfw/</guid>
       <description>
         
           &lt;p&gt;An NSX distributed firewall (dFW) runs as an ESXi host as a kernel module added as a VMware Installation Bundle (VIB). The dFW rules operate on Layer 2 through Layer 4; although this can be extended through Layer 7 by integrating with a 3-Party vendor.&lt;/p&gt;
@@ -50,7 +50,7 @@
 &lt;li&gt;L2 rules are based on MAC address L2 protocols like ARP, RARP and LLDP etc.&lt;/li&gt;
 &lt;li&gt;L3 and 4 rules are based on IP source/destination and L4 uses a TCP or UDP ports.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW_TCP_OSI.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW_TCP_OSI.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The NSX dFW enforces a state full firewall service for VMs using the vNIC as the enforcement point. Every packet that leaves the VM (before VTEP encapsulation) or enters the VM (After VTEP de-encapsulation) can be inspected with a firewall policy.&lt;/p&gt;
 &lt;p&gt;The ruleset is created and managed via NSX Manager either API or UI. The ESXi host has two dFW specific modules vShield Statefull Firewall and VMware Internetworking Service Insertion Platform (vSIP). vShield Statefull Firewall performs the following roles.&lt;/p&gt;
 &lt;ul&gt;
@@ -61,7 +61,7 @@
 &lt;li&gt;Part of the host preparation process SSL related tasks from NSX manager&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;VMware Internetworking Service Insertion Platform is the distributed firewall kernel space module core component. The vSIP receives firewall rules via vShield State-full Firewall and downloads them down to each VMware-sfw. When VM connect to Logical switch there are security services each packet transverse which are implemented as IOChains processed at the Kernel level.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW_Slots.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW_Slots.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Slot 0: Distributed Virtual Filter (DVFilter): It monitors the incoming and outgoing traffic on the protected virtual NIC and performs stateless filtering.&lt;/li&gt;
 &lt;li&gt;Slot 1: Switch Security module (SW-sec): Learns VMs IP and MAC address. sw-sec is critical component capture DHCP Ack and ARP broadcast message and forward this info as unicast to NSX Controller to perform the ARP suppression feature. This is also the layer where NSX IP spoof guard is implemented.&lt;/li&gt;

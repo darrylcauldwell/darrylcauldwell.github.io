@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>nsx on </title>
-    <link>https://darrylcauldwell.com/tags/nsx/</link>
+    <link>http://darrylcauldwell.com/tags/nsx/</link>
     <description>Recent content in nsx on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 31 Dec 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/nsx/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 31 Dec 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/nsx/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction To Kubernetes Cluster Networking with NSX-T</title>
-      <link>https://darrylcauldwell.com/post/k8s-nsxt/</link>
+      <link>http://darrylcauldwell.com/post/k8s-nsxt/</link>
       <pubDate>Tue, 31 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/k8s-nsxt/</guid>
+      <guid>http://darrylcauldwell.com/post/k8s-nsxt/</guid>
       <description>
         
-          &lt;p&gt;When developing a cloud native application using Docker containers she soon needs to understand how Docker containers communicate. In previous &lt;a href=&#34;https://darrylcauldwell.com/post/docker-networking&#34;&gt;post&lt;/a&gt; I looked at how Docker containers communicate on a single host. When the developer wants to scaleout capacity of the hosting across multiple hosts or increase abailability she might look at deploying this on a Kubernetes cluster. The move from single Docker host to multiple hosts managed as Kubernetes Cluster introduces changes to the container networking model. The four distinct networking problems a Kubernetes Cluster needs to address:&lt;/p&gt;
+          &lt;p&gt;When developing a cloud native application using Docker containers she soon needs to understand how Docker containers communicate. In previous &lt;a href=&#34;http://darrylcauldwell.com/post/docker-networking&#34;&gt;post&lt;/a&gt; I looked at how Docker containers communicate on a single host. When the developer wants to scaleout capacity of the hosting across multiple hosts or increase abailability she might look at deploying this on a Kubernetes cluster. The move from single Docker host to multiple hosts managed as Kubernetes Cluster introduces changes to the container networking model. The four distinct networking problems a Kubernetes Cluster needs to address:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Highly-coupled container-to-container communications&lt;/li&gt;
 &lt;li&gt;Pod-to-Pod communications&lt;/li&gt;
@@ -24,7 +24,7 @@
 &lt;h2 id=&#34;what-is-a-kubernetes-pod&#34;&gt;What Is A Kubernetes Pod&lt;/h2&gt;
 &lt;p&gt;A Docker container is great for deploying a single atomic unit of software. This model can become a bit cumbersome when you want to run multiple pieces of software together. You often see this when developers create Docker images that use &lt;a href=&#34;https://docs.docker.com/config/containers/multi-service_container/&#34;&gt;supervisord&lt;/a&gt; as an entrypoint to start and manage multiple processes. Many have found that it is instead more useful to deploy those applications in groups of containers that are partially isolated and partially share an environment. It is possible to configure Docker to control the level of sharing between groups of containers by creating a parent container and manage the lifetime of those containers, however this is administratively complex. Kubernetes provides an abstraction called Pods for just this use case.&lt;/p&gt;
 &lt;p&gt;A Kubernetes Pod implements a &amp;lsquo;pause&amp;rsquo; container as the managing parent container, the Pod also contains one or more of  application containers. The &amp;lsquo;pause&amp;rsquo; container serves as the basis of Linux namespace sharing in the Pod the other containers are starterd within that namespace. Sharing a namespace includes sharing network stack and other resources such as volumes. Sharing a network namespace means containers within a Pod share an IP address and all containers within a Pod can all reach each other’s ports on localhost.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-pod.png&#34; alt=&#34;Kubernets Pod&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-pod.png&#34; alt=&#34;Kubernets Pod&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;what-is-a-kubernetes-service&#34;&gt;What Is A Kubernetes Service&lt;/h2&gt;
 &lt;p&gt;Typically a Kubernetes Deployment is used to When a Kubernetes Pod is deployed Pods. A Deployment describes a desired state it can create and destroy Pods dynamically. While each Pod gets its own IP address, the set of Pods running can change. A Kubernetes Service (sometimes called a micro-service) is an abstraction which defines a logical set of Pods. The Kubernetes API provides Service discovery to Pods, it also offers a method of exposing Services via network port or load balancer to external systems.&lt;/p&gt;
 &lt;h2 id=&#34;what-is-container-networking-interface-cni&#34;&gt;What Is Container Networking Interface (CNI)&lt;/h2&gt;
@@ -86,11 +86,11 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier0.png&#34; alt=&#34;NSX-T Tier-0 Router&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-tier0.png&#34; alt=&#34;NSX-T Tier-0 Router&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To communicate with the physical network the Tier-0 requires an uplink IP address.  In order to add uplink IP address we require creating a network segment backed by VLAN.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-physical-segment.png&#34; alt=&#34;VLAN Backed Segment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-physical-segment.png&#34; alt=&#34;VLAN Backed Segment&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can now configure an interface on the Tier-0 with IP address 192.168.1.17.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier0-uplink.png&#34; alt=&#34;NSX-T Tier-0 Uplink&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-tier0-uplink.png&#34; alt=&#34;NSX-T Tier-0 Uplink&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To enable ExternalIP routing from physical network add a static route to physical router directing 172.16.0.0/16 to 192.168.1.17.&lt;/p&gt;
 &lt;h3 id=&#34;nsx-ip-block-for-internal-clusterip&#34;&gt;NSX IP Block for internal ClusterIP&lt;/h3&gt;
 &lt;p&gt;NSX-T has an inbuilt capability for IP Management, in which we can allocate blocks of IP Addresses and create IP Pools.&lt;/p&gt;
@@ -114,10 +114,10 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-internal-block.png&#34; alt=&#34;Internal Block&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-internal-block.png&#34; alt=&#34;Internal Block&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-ip-pool-for-externalip&#34;&gt;NSX IP Pool for ExternalIP&lt;/h2&gt;
 &lt;p&gt;The NCP requires an IP Pool for issuing internal ExternalIP. First create an IP Block named &amp;lsquo;k8s-1-external&amp;rsquo; with CIDR 172.16.0.0/16. This IP Block is not accessed directly by NCP so does not need any tags.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-external-block.png&#34; alt=&#34;External Block&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-external-block.png&#34; alt=&#34;External Block&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the IP Block is in place create an IP Pool named &amp;lsquo;k8s-1-loadbalancer&amp;rsquo; which has a subnet issued from IP Block &amp;lsquo;k8s-1-external&amp;rsquo; which is sized at 128 the IP Pool.  The External IP Pool can be shared but should at least have tag applied like this:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -134,10 +134,10 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-external-pool.png&#34; alt=&#34;External Block Tag&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-external-pool.png&#34; alt=&#34;External Block Tag&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;node-logical-switch&#34;&gt;Node Logical Switch&lt;/h2&gt;
 &lt;p&gt;Network connectivity to the containers running in Kubernetes is provided by a NSX-T logical switch segment which is often referred to as the node logical switch. For this create a new segment called &amp;lsquo;node-logical-switch&amp;rsquo; within the &amp;lsquo;overlayTransportZone&amp;rsquo; connected to no gateway.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-node-logical-switch.png&#34; alt=&#34;Node Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-node-logical-switch.png&#34; alt=&#34;Node Logical Switch&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;kubernetes-master-vm&#34;&gt;Kubernetes Master VM&lt;/h2&gt;
 &lt;p&gt;Create a Ubuntu 18.04 VM with 2x CPU, 4GB RAM and 50GB vHDD named &amp;lsquo;k8s-master&amp;rsquo;. The VM should have two vNIC one which is used to communicate with NSX API and which will host Kubernetes API. The second connected to the node logical switch which will have the Open vSwitch (OVS) bridge configured to give connectivity to the Pods. In my lab first connected to &amp;lsquo;VM Network&amp;rsquo; enumerates as ens160 and the scond connected to &amp;lsquo;node-logical-switch&amp;rsquo; enumerates as ens192.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;cat /etc/netplan/01-netcfg.yaml 
@@ -176,7 +176,7 @@ network:
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-segment-port-tags.png&#34; alt=&#34;Segment Port Tags&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-segment-port-tags.png&#34; alt=&#34;Segment Port Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;install-and-configure-kubernetes&#34;&gt;Install and Configure Kubernetes&lt;/h2&gt;
 &lt;p&gt;Docker and Kubernetes require installation do this by running the following.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;sudo apt update -y
@@ -199,10 +199,10 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can now connect to cluster and check the state of the nodes, do this by running the following on the Master node.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get nodes
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-init-get-nodes.png&#34; alt=&#34;Init Get Nodes&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-init-get-nodes.png&#34; alt=&#34;Init Get Nodes&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The status of each Node will show &amp;lsquo;NotReady&amp;rsquo;,  we can get more details of why it is in this state by running the following on the Master node.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl describe nodes k8s-master | grep Conditions -A9
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-init-describe-node.png&#34; alt=&#34;Init Describe Nodes&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-init-describe-node.png&#34; alt=&#34;Init Describe Nodes&#34;&gt;&lt;/p&gt;
 &lt;p&gt;With this we can see this reason for the error is &amp;lsquo;NetworkPluginNotReady&amp;rsquo; that the cni plugin is not initiated.&lt;/p&gt;
 &lt;h2 id=&#34;install-and-configure-nsx-container-plug-in-ncp&#34;&gt;Install and Configure NSX Container Plug-in (NCP)&lt;/h2&gt;
 &lt;p&gt;The NSX Container Plug-in (NCP) provides integration between NSX-T and Kubernetes, it is a containerised application which manages communicates between NSX Manager and the Kubernetes control plane. The NSX Container Plug-in (NCP) application runs in Kubernetes it is supplied as .zip download. The configuration of the NCP applications is maintained in a Kubernetes manifest file.&lt;/p&gt;
@@ -324,10 +324,10 @@ ovs_uplink_port = ens192
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the manifest file is updated and docker image in local registry we can apply the NCP manifest. Applying the manifest takes a couple of minutes while as it creates various Pods we can watch their creation to view progress.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl apply --filename /home/ubuntu/ncp-ubuntu.yaml
 kubectl get pods --output wide --namespace nsx-system --watch
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-deploy-ncp.png&#34; alt=&#34;Deploy NCP&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-deploy-ncp.png&#34; alt=&#34;Deploy NCP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If all has gone well we can take a look at the objects created within the namespace.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get all --namespace nsx-system
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-deployed-ncp.png&#34; alt=&#34;Deployed NCP&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-deployed-ncp.png&#34; alt=&#34;Deployed NCP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now its running we can check health of the NCP, the NCP has a &lt;a href=&#34;https://docs.vmware.com/en/VMware-NSX-T-Data-Center/2.5/ncp-kubernetes/GUID-EA8E6CEE-36F4-423C-AD1E-DD6421A5FB1C.html&#34;&gt;CLI&lt;/a&gt; where we can run various commands including health checks.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl exec -it nsx-ncp-6978b9cb69-dj4k2 --namespace nsx-system -- /bin/bash 
 nsxcli
@@ -335,13 +335,13 @@ get ncp-k8s-api-server status
 get ncp-nsx status
 exit
 exit
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ncp-health.png&#34; alt=&#34;NCP Health&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-ncp-health.png&#34; alt=&#34;NCP Health&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-policy-ui-object-creation&#34;&gt;NSX Policy UI Object Creation&lt;/h2&gt;
 &lt;p&gt;With NSX integration when we deploy a Kubernetes namespace the NCP creates a corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.  If you open NSX Manager and view one of the object categories which should have objects created. Then create two Kubernetes namespaces one called development and one called production.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl create --filename https://k8s.io/examples/admin/namespace-dev.json
 kubectl create --filename https://k8s.io/examples/admin/namespace-prod.json
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you refresh view in NSX Manager you will see the new objects appear in the Policy UI.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier1s.png&#34; alt=&#34;NSX-T Tier-1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-tier1s.png&#34; alt=&#34;NSX-T Tier-1&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then remove these two namespaces the NCP removes the corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl delete -f https://k8s.io/examples/admin/namespace-prod.json
@@ -350,10 +350,10 @@ kubectl delete -f https://k8s.io/examples/admin/namespace-prod.json
 &lt;p&gt;Create a second and third VM with same hardware configuration as k8s-master but name these k8s-worker-1 / k8s-worker-2 and give IPs 192.168.1.28  / 192.168.1.29.  Ensure the NSX segment port attached to  VMs is tagged correctly. Ensure the NCP docker image is uploaded, imported to local docker registry and has tag applied.&lt;/p&gt;
 &lt;p&gt;To add the additional Node to the cluster first step is to create a token on master.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubeadm token create --print-join-command
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-token.png&#34; alt=&#34;Token&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-token.png&#34; alt=&#34;Token&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We use the output of command from the master to add the additional worker nodes to the cluster. The nsx-ncp-bootstap and nsx-node-agent are DaemonSets this ensures that all Nodes run a copy of a Pod. When we add the worker nodes to the cluster we can see the nsx-ncp-bootstrap Pods initialize and configure the Node and the nsx-node-agent Pods initialize.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get pods -o wide --namespace nsx-system --watch
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ncp-scale-out.png&#34; alt=&#34;NCP Scale Out&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-ncp-scale-out.png&#34; alt=&#34;NCP Scale Out&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-assignments&#34;&gt;IP Assignments&lt;/h2&gt;
 &lt;p&gt;When a Pod is deployed it can be exposed as a Service, the service&lt;/p&gt;
 &lt;p&gt;If we deploy an simple stateless application example like &lt;a href=&#34;https://kubernetes.io/docs/tutorials/stateless-application/guestbook/&#34;&gt;guestbook&lt;/a&gt;.&lt;/p&gt;
@@ -367,16 +367,16 @@ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployme
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When we configures the lab we created NSX managed IP Block 10.0.0.0/16. When created the development namespace got allocated a /24 subnet from this block. If we view the Pods get IP in correct range.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get pods --output wide
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-internal-ip-allocation.png&#34; alt=&#34;Internal IP Allocation&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-internal-ip-allocation.png&#34; alt=&#34;Internal IP Allocation&#34;&gt;&lt;/p&gt;
 &lt;p&gt;As well as Pod deployments the guestbook application installation also creates Service resources. A Service is an abstraction which defines a logical set of Pods. Our application runs three frontend pods and two Redis slaves the Service provides virtual IP. The kube-proxy is responsible for implementing the virtual IP for Services. We can see the ClusterIP are issued from the last /20 of the Pod address range. If we look in more detail at the Service resource we can see the three internal IP addresses behind it.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get services --namespace development
 kubectl cluster-info dump | grep -m 1 service-cluster-ip-range
 kubectl describe service frontend
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-clusterip.png&#34; alt=&#34;Cluster IP&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-clusterip.png&#34; alt=&#34;Cluster IP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To facilitate communications between Pods the NCP is configuring the Open vSwitch on each Node. The Open vSwitch user space daemon runs on a container named nsx-ovs within the nsx-node-agent Pods. The Open vSwitch bridge name can be specified in the ncp.ini but defaults to br-int. If we connect to this container we can view the Open vSwitch flows .&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl exec -it nsx-node-agent-llf2c -c nsx-ovs bash --namespace nsx-system
 ovs-ofctl dump-flows br-int
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ovs-flows.png&#34; alt=&#34;OVS Flows&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-ovs-flows.png&#34; alt=&#34;OVS Flows&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then remove the namespace and all objects within.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-loadbalancer&#34;&gt;NSX Loadbalancer&lt;/h2&gt;
@@ -439,10 +439,10 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
     
     <item>
       <title>NSX-T for Planespotter</title>
-      <link>https://darrylcauldwell.com/post/nsx-planespotter/</link>
+      <link>http://darrylcauldwell.com/post/nsx-planespotter/</link>
       <pubDate>Thu, 14 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-planespotter/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-planespotter/</guid>
       <description>
         
           &lt;p&gt;Moving towards application centric infrastructure suitable for microservices applications requires a good example application to work with.  I saw an NSX demo presented by &lt;a href=&#34;https://github.com/yfauser&#34;&gt;Yves Fauser&lt;/a&gt; where he used just such an application called planespotter.&lt;/p&gt;
@@ -450,21 +450,21 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
 &lt;h2 id=&#34;homelab-core&#34;&gt;Homelab Core&lt;/h2&gt;
 &lt;p&gt;My homelab networking is very simple, I have a domestic BT broadband router, this connects a Cisco SB200 8-port L2 only switch. Each port connected to ESXi is configured with MTU 9216 and has the VLAN passed untagged.&lt;/p&gt;
 &lt;p&gt;Connected to this are a pair of Intel NUCs each has onboard 1GB NIC and two USB 1GB NICs.  The lab is used for other things so the on-board vmnic0 NIC is assigned to a VSS which has default &amp;lsquo;VM Network&amp;rsquo; portgroup. This leaves both vusb0 and vusb1 free to be used for N-VDS.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-esxi.png&#34; alt=&#34;ESXi Networking&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/planespotter-esxi.png&#34; alt=&#34;ESXi Networking&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The NUCs are single socket, dual core i5s running at 1.8GHz and each has only 32GB of RAM, these currently run vSphere 6.7 Update 1 and shared storage is all-flash VSAN with no data protection.&lt;/p&gt;
 &lt;h2 id=&#34;nsx-t-base&#34;&gt;NSX-T Base&lt;/h2&gt;
 &lt;p&gt;Download OVA&amp;rsquo;s and perform initial deployment of NSX Manager,  NSX Controller and NSX Edge.  As lab only has a single L2 all get deployed with all vNICs connected to the portgroup &amp;lsquo;VM Network&amp;rsquo;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-edge.png&#34; alt=&#34;NSX-T Base&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/planespotter-edge.png&#34; alt=&#34;NSX-T Base&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-t-routing&#34;&gt;NSX-T Routing&lt;/h2&gt;
 &lt;p&gt;One of the biggest differences between NSX for vSphere and NSX-T is the routing architecture. The services are split between service router (SR) and distributed router (DR), the service router functions are run on the NSX edge and the distributed router (DR) is a kernel module running on the ESXi hosts. My lab setup uses defaults for all transit switches, it is importanrt to understand the relationship when we look at packets flow through these various hops.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-edge-arch.png&#34; alt=&#34;NSX-T Routing&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/planespotter-edge-arch.png&#34; alt=&#34;NSX-T Routing&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;planespotter&#34;&gt;Planespotter&lt;/h2&gt;
 &lt;p&gt;The planespotter application is made up of various microservices and database. For this NSX-T setup each is installed on a VM. The application can be installed by following &lt;a href=&#34;https://github.com/darrylcauldwell/planespotter/blob/master/docs/vm_deployment/README.md&#34;&gt;this guide&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-logical-switches.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/planespotter-logical-switches.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;planespotter-fe-to-api-traceflow&#34;&gt;Planespotter FE to API Traceflow&lt;/h2&gt;
 &lt;p&gt;One neat feature of NSX-T and geneve is to inject data into the header and use this to trace flows. The traceflow feature helps inspect the path of a packet as it travels from one logical port to a single or multiple logical ports.&lt;/p&gt;
 &lt;p&gt;So if we select the port connected to planespotter frontend and port connected to planespotter api, we get a nice visual represenation of the path.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/planespotter-traceflow.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/planespotter-traceflow.png&#34; alt=&#34;NSX-T Logical Switches&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -472,10 +472,10 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
     
     <item>
       <title>Controlling NSX-T with Terraform</title>
-      <link>https://darrylcauldwell.com/post/nsx-terraform/</link>
+      <link>http://darrylcauldwell.com/post/nsx-terraform/</link>
       <pubDate>Mon, 07 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-terraform/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-terraform/</guid>
       <description>
         
           &lt;p&gt;Hashicorp Terraform is a tool which enables you to safely and predictably create, change, and improve infrastructure by defining its configuration as code.&lt;/p&gt;
@@ -597,10 +597,10 @@ rm -f nsx.tf
     
     <item>
       <title>NSX-T for OpenShift</title>
-      <link>https://darrylcauldwell.com/post/nsx-openshift/</link>
+      <link>http://darrylcauldwell.com/post/nsx-openshift/</link>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-openshift/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-openshift/</guid>
       <description>
         
           &lt;p&gt;While looking at the various documentation sets I found it difficult to understand the NSX-T and OpenShift integration. A lot was masked by configuration performed by Ansible scripts. Here I try and record my understanding of the technology and then work through getting this running in a capacity constrained lab environment.&lt;/p&gt;
@@ -611,7 +611,7 @@ rm -f nsx.tf
 &lt;h2 id=&#34;container-networking-framework-background&#34;&gt;Container Networking Framework Background&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/docker/libnetwork/blob/master/docs/design.md&#34;&gt;Libnetwork&lt;/a&gt; is the canonical implementation Container Network Model (CNM) which formalizes the steps required to provide networking for containers while providing an abstraction that can be used to support multiple network drivers. Libnetwork provides an interface between the Docker daemon and network drivers. Container Network Model (CNM) is designed to support the Docker runtime engine only.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/containernetworking/cni&#34;&gt;Container Network Interface&lt;/a&gt; (CNI), consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins. Container Network Interface (CNI) supports integration with any container runtime.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-cni.jpeg&#34; alt=&#34;Container Network Interface (CNI) Integration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-cni.jpeg&#34; alt=&#34;Container Network Interface (CNI) Integration&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vmware-nsx-and-kubernetes-integration&#34;&gt;VMware NSX and Kubernetes Integration&lt;/h2&gt;
 &lt;p&gt;VMware provide an &lt;a href=&#34;https://my.vmware.com/group/vmware/details?downloadGroup=NSX-T-PKS-221&amp;amp;productId=673&#34;&gt;NSX Container Plugin package&lt;/a&gt; which contains the required modules to integrate NSX-T with Kubernetes.&lt;/p&gt;
 &lt;ul&gt;
@@ -625,12 +625,12 @@ rm -f nsx.tf
 &lt;li&gt;NSX Container Network Interface (CNI) - is an executable which allow the integration of NSX into Kubernetes.&lt;/li&gt;
 &lt;li&gt;Open vSwitch&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp.jpeg&#34; alt=&#34;NSX and Kubernetes Integration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp.jpeg&#34; alt=&#34;NSX and Kubernetes Integration&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-for-openshift&#34;&gt;NSX For OpenShift&lt;/h2&gt;
 &lt;p&gt;NSX implements a discreet network topology per Kubernetes namespace. NSX maps logical network elements like logical switches and distributed logical router to Kubernetes namespaces. Each of those network topologies can be directly routed, or privately addressed and behind NAT.&lt;/p&gt;
 &lt;h2 id=&#34;nsx-for-openshift-homelab&#34;&gt;NSX For OpenShift Homelab&lt;/h2&gt;
 &lt;p&gt;For the rest of this blog post I am aiming to create a NSX OpenShift integration. I aiming for two namespaces, each with a logical router and three subnets. The namespaces will use private address ranges and the tier-0 router will provide SNAT connectivity to the routed network.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-topology.jpeg&#34; alt=&#34;NSX Topology&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-topology.jpeg&#34; alt=&#34;NSX Topology&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;starting-point-homelab-configuration&#34;&gt;Starting point homelab configuration&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;1GbE Switch (Layer 2 only)
@@ -655,12 +655,12 @@ rm -f nsx.tf
 &lt;/ul&gt;
 &lt;h2 id=&#34;nsx-management-plane&#34;&gt;NSX Management Plane&lt;/h2&gt;
 &lt;p&gt;Deploy a small NSX unifed appliance specifying the nsx-manager role. Once deployed link this to vCenter, to do this add vCenter in &amp;lsquo;Fabric / Compute Manager&amp;rsquo;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-compute-manager.jpeg&#34; alt=&#34;NSX-T Management Plane&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-compute-manager.jpeg&#34; alt=&#34;NSX-T Management Plane&#34;&gt;&lt;/p&gt;
 &lt;p&gt;With the manager in place we now need to create the management plane, to do this we need to install the management plane agent (MPA) on each host so they are added as usable Fabric Nodes.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-nodes.jpeg&#34; alt=&#34;NSX-T Fabric Nodes&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-nodes.jpeg&#34; alt=&#34;NSX-T Fabric Nodes&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;tunnel-endpoint-ip-pool&#34;&gt;Tunnel Endpoint IP Pool&lt;/h2&gt;
 &lt;p&gt;We create an IP pool one for the Transort Nodes to communicate for my scenario the three ESXi hosts and an edge will all participate so I create an IP Pool with four addresses. Navigate to Inventory &amp;gt; Groups &amp;gt; IP Pools and click add.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ip-pool.png&#34; alt=&#34;NSX-T IP Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-ip-pool.png&#34; alt=&#34;NSX-T IP Pool&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-control-plane&#34;&gt;NSX Control Plane&lt;/h2&gt;
 &lt;p&gt;In order to create an overlay network we need an NSX Controller to manage the hosts. NSX Controllers serve as the central control point got all hosts, logical switches, and logical routers.&lt;/p&gt;
 &lt;p&gt;While NSX Manager can deploy and configure NSX Controllers the size cannot be selected. As lab is resource constrained I only want a small NSX Controller, the &amp;lsquo;NSX Controller for VMware ESXi&amp;rsquo; is a separate OVA download where size can be selected.&lt;/p&gt;
@@ -672,22 +672,22 @@ rm -f nsx.tf
 set control-cluster security-model shared-secret
 
 initialize control-cluster
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This should then be viewable in NSX Manager&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;overlay-transport-zone&#34;&gt;Overlay Transport Zone&lt;/h2&gt;
 &lt;p&gt;All the virtual network objects will need to communicate across an overlay network. To faciliate this the three esxi hosts and edges need to be part of an Overlay Transport Zone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport.jpeg&#34; alt=&#34;NSX-T Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-transport.jpeg&#34; alt=&#34;NSX-T Transport Zone&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once we have a Transport Zone we can add our NSX fabric nodes as transport nodes. Navigate menu to Select Fabric &amp;gt; Transport Nodes and click Add.  A wizard will open on the general tab select first Node (host), give appropriate name for that host and select the openshift transport zone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport-node.jpeg&#34; alt=&#34;NSX-T Transport Node&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-transport-node.jpeg&#34; alt=&#34;NSX-T Transport Node&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Change to N-VDS tab, create N-VDS for openshift, select default NIOC, select default hostswitch Uplink profile, select transport IP Pool and enter Physical NIC identifier for Uplink-1.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order that the NSX Container Plugin can find the correct NSX objects all of the NSX objects created require a tag applying. For this lab build I am using tag dc-openshift. Navigate within NSX Manager to Fabric &amp;gt; Transport Zones, select overlay network then Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vlan-transport-zone&#34;&gt;VLAN Transport Zone&lt;/h2&gt;
 &lt;p&gt;As well as connecting to the overlay network the Edges running Tier-0 routing functions also needs to be able to connect to the physical network. This connectivity is achieved by using a Transport Zone of type VLAN.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-vlan-transport.png&#34; alt=&#34;NSX-T VLAN Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-vlan-transport.png&#34; alt=&#34;NSX-T VLAN Transport Zone&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-edge&#34;&gt;NSX Edge&lt;/h2&gt;
 &lt;p&gt;We need some way for the logical container overlay network to communicate with the physical network. AN NSX Edge can host services which provide this connectivity.&lt;/p&gt;
 &lt;p&gt;The NSX Edge has 4 network adapters, the first is used by the management network, the other 3 interfaces (fp-eth0, fp-eth1 and fp-eth2) can then be used for connecting to overlay networks or for routing. Within my lab I have a single flat physical network so all NSX Edge interfaces connect to the same Port Group.&lt;/p&gt;
@@ -727,35 +727,35 @@ initialize control-cluster
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge.jpeg&#34; alt=&#34;NSX-T Add Edge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge.jpeg&#34; alt=&#34;NSX-T Add Edge&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The NSX Edge needs to participate in the Overlay Transport Zone so we need to first configure this as Transport Node.  This is very similar process to how we setup ESXi hosts as Transport Nodes except on N-VDS tab we add to both overlay and vlan transport zones,  we use the edge-vm Uplink profile and for Virtual NIC select appropriate NIC as per table above.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-nvds.png&#34; alt=&#34;NSX-T Edge N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge-nvds.png&#34; alt=&#34;NSX-T Edge N-VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order we can deploy Tier-0 router the Edge needs to be a member of an Edge Cluster.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-cluster.jpeg&#34; alt=&#34;NSX-T Add Edge Cluster&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge-cluster.jpeg&#34; alt=&#34;NSX-T Add Edge Cluster&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;tier-0-router&#34;&gt;Tier-0 Router&lt;/h2&gt;
 &lt;p&gt;Once the Edge Cluster is created we can create the tier-0 router.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Router&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Router&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In my lab I have 192.168.1.0 /24 and will be using the 172.16.0.0 /16 address space for NSX. I would like to use network address translation (NAT) and allocate a separate SNAT IP on the 192.168.1.0 network for each OpenShift namespace on the 172.16.0.0 network.  To achieve this I need to configure a redistribution criteria of type Tier-0 NAT.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-redist.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Route Redist&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0-route-redist.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Route Redist&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The next step requires an NSX Logical Switch so we create that.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-logical-switch.jpeg&#34; alt=&#34;NSX-T Add Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-logical-switch.jpeg&#34; alt=&#34;NSX-T Add Logical Switch&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can now configure the Router Port,  selecting the Transport Node and Logical Switch.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This will be used by OpenShift to once created navigate to Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-block-kubernetes-pods&#34;&gt;IP Block Kubernetes Pods&lt;/h2&gt;
 &lt;p&gt;In order to create the topology we are aiming for we need to create an IP Blocks for each of our two namespaces.  Within each IP Block we need to create the three subnets. In the end you should end up with something which looks like this, and all IP Block needs to have the ncp/cluster tag.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ddi-blocks.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-ddi-blocks.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-pool-snat&#34;&gt;IP Pool SNAT&lt;/h2&gt;
 &lt;p&gt;We create an IP pool for the tier-0 router to issue SNAT and provide external (floating) IPs to OpenShift.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once created add the following two tags,&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
 Scope = ncp/external and Tag = true
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;red-hat-openshift-origin&#34;&gt;Red Hat OpenShift Origin&lt;/h2&gt;
 &lt;p&gt;OpenShift Origin is a computer software product from Red Hat for container-based software deployment and management. It is a supported distribution of Kubernetes using Docker containers and DevOps tools for accelerated application development.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift.jpeg&#34; alt=&#34;Openshift Stack&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift.jpeg&#34; alt=&#34;Openshift Stack&#34;&gt;&lt;/p&gt;
 &lt;p&gt;OpenShift Origin is the upstream community project used in &lt;a href=&#34;https://www.openshift.com/products/online/&#34;&gt;OpenShift Online&lt;/a&gt;, &lt;a href=&#34;https://www.openshift.com/products/dedicated/&#34;&gt;OpenShift Dedicated&lt;/a&gt;, and &lt;a href=&#34;https://www.openshift.com/products/container-platform/&#34;&gt;OpenShift Container Platform (formerly known as OpenShift Enterprise)&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;VMware provides &lt;a href=&#34;https://github.com/vmware/nsx-integration-for-openshift&#34;&gt;Red Hat Ansible playbooks for installing NSX-T for OpenShift Container Platform&lt;/a&gt;. However, OpenShift Container Platform is a licensed product and this deploys a scaled-out deployment. Neither of these lend itself to a home lab deployment, my goal for the rest of this blog post is to detail the steps I follow for a cutdown installation.&lt;/p&gt;
 &lt;h2 id=&#34;create-openshift-origin-base-vm&#34;&gt;Create OpenShift Origin Base VM&lt;/h2&gt;
@@ -1223,10 +1223,10 @@ oc logs nsx-ncp-9m2jl | grep ERROR
     
     <item>
       <title>Calling the NSX REST API with vRO and Navigating The XML Response</title>
-      <link>https://darrylcauldwell.com/post/vro-nsx-rest/</link>
+      <link>http://darrylcauldwell.com/post/vro-nsx-rest/</link>
       <pubDate>Wed, 20 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vro-nsx-rest/</guid>
+      <guid>http://darrylcauldwell.com/post/vro-nsx-rest/</guid>
       <description>
         
           &lt;p&gt;While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations. For example when creating an NSX Edge Services Gateway we use this method.&lt;/p&gt;
@@ -1286,10 +1286,10 @@ oc logs nsx-ncp-9m2jl | grep ERROR
     
     <item>
       <title>vRealize Orchestrator NSX Plug-in Troubleshooting</title>
-      <link>https://darrylcauldwell.com/post/vro-nsx-logging/</link>
+      <link>http://darrylcauldwell.com/post/vro-nsx-logging/</link>
       <pubDate>Tue, 06 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vro-nsx-logging/</guid>
+      <guid>http://darrylcauldwell.com/post/vro-nsx-logging/</guid>
       <description>
         
           &lt;p&gt;The NSX-V Plug-in for vRealize Orchestrator offers some great functionally, however creating custom workflows caused me some headaches.&lt;/p&gt;
@@ -1316,10 +1316,10 @@ oc logs nsx-ncp-9m2jl | grep ERROR
     
     <item>
       <title>Controlling vSphere &amp; NSX-V With Python</title>
-      <link>https://darrylcauldwell.com/post/nsx-python/</link>
+      <link>http://darrylcauldwell.com/post/nsx-python/</link>
       <pubDate>Mon, 15 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-python/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-python/</guid>
       <description>
         
           &lt;p&gt;My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere, so its here I shall start. Since then NSX for vSphere has also an open source library NSX RAML Client provided by VMware so I&amp;rsquo;ll then move to that.&lt;/p&gt;
@@ -1397,29 +1397,29 @@ nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view_
     
     <item>
       <title>Safely Lockdown NSX Distributed Firewall (DFW) Ruleset</title>
-      <link>https://darrylcauldwell.com/post/nsx-dfw-lockdown/</link>
+      <link>http://darrylcauldwell.com/post/nsx-dfw-lockdown/</link>
       <pubDate>Tue, 05 Jul 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-dfw-lockdown/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-dfw-lockdown/</guid>
       <description>
         
           &lt;p&gt;A common dilemma when developing a solution with firewall is whether to change the Default rule to Deny at the start and develop the ruleset as part of development or leave the Default rule to Allow and secure it later. In modern agile teams its best to develop the ruleset as part of development ensuring the ruleset is tested with the product as introducing it later could well invalidate every bit of testing performed.&lt;/p&gt;
 &lt;p&gt;If however you find yourself in the situation where a NSX firewall solution is deployed with the Default rule to Allow and your asked to implement a ruleset to cover the traffic and change default to Deny. This is one possible solution to capture the required configuration.&lt;/p&gt;
 &lt;h2 id=&#34;enable-default-rule-logging&#34;&gt;Enable Default Rule Logging&lt;/h2&gt;
 &lt;p&gt;In order we can capture the active traffic we can first enable Logging on the default rule.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-EnableLogging.jpg&#34; alt=&#34;NSX Enable Logging&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-EnableLogging.jpg&#34; alt=&#34;NSX Enable Logging&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then operate the environment normally for a period of time which captures all business processes. This maybe a day, a week, a month or more.&lt;/p&gt;
 &lt;h2 id=&#34;centralize-logging&#34;&gt;Centralize Logging&lt;/h2&gt;
 &lt;p&gt;NSX data plane logging is written to the VMkernel.log files,  therefore if a logical firewall rule log is generated for a vNIC of a VM it is written to the ESX host log file which it was residing at that time.&lt;/p&gt;
 &lt;p&gt;The distributed firewall configuration can apply to the whole vCenter and all objects within. You must therefore configure the remote syslog server for each host in each cluster that has firewall enabled. The remote syslog server is specified in the &lt;em&gt;Syslog.global.logHost&lt;/em&gt; attribute. My preference is to use vRealize Log Insight for centralized syslog.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-EnableRemoteLogging.jpg&#34; alt=&#34;NSX Remote Logging&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-EnableRemoteLogging.jpg&#34; alt=&#34;NSX Remote Logging&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;identifying-traffic-hitting-default-allow&#34;&gt;Identifying Traffic Hitting Default Allow&lt;/h2&gt;
 &lt;p&gt;When we browse the firewall log entries we find that in order to narrow our search to the correct rule we need to establish the &lt;em&gt;vmw_nsx_firewall_ruleid&lt;/em&gt; for the default layer 3 rule which we are logging. The &lt;em&gt;vmw_nsx_firewall_ruleid&lt;/em&gt; is not displayed via the NSX Firewall GUI but can be easily got from the NSX REST API by running the GET method on this URL&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;https://&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;nsx-mgr-ip&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/api/4.0/firewall/globalroot-0/config?ruleType&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;LAYER3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-DefaultRuleID.jpg&#34; alt=&#34;NSX Default Rule ID&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-DefaultRuleID.jpg&#34; alt=&#34;NSX Default Rule ID&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We see in this example the &lt;em&gt;rule id=&amp;ldquo;1001&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Once we have this we can create a vRealize Log Insight query to list all logs generated by this rule.  To make this query easier to view I remove all columns except timestamp and vmw_nsx_firewall.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW-LI-Query.jpg&#34; alt=&#34;Query Firewall Events Log Insight &#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW-LI-Query.jpg&#34; alt=&#34;Query Firewall Events Log Insight &#34;&gt;&lt;/p&gt;
 &lt;p&gt;From this data we can then identify what traffic would be blocked if we changed the default rule to Deny. We can work through this data, identify valid traffic flows. We can then put in explicit allow rules for the valid traffic. When we are happy no traffic is being logged by the Default Rule we can change it to Deny.&lt;/p&gt;
 
         
@@ -1428,10 +1428,10 @@ nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view_
     
     <item>
       <title>Deploying NSX-V With Ansible</title>
-      <link>https://darrylcauldwell.com/post/nsx-install-ansible/</link>
+      <link>http://darrylcauldwell.com/post/nsx-install-ansible/</link>
       <pubDate>Wed, 08 Jun 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-install-ansible/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-install-ansible/</guid>
       <description>
         
           &lt;p&gt;Here I will describe the steps taken to deploy NSX Manager using the &lt;a href=&#34;https://github.com/vmware/nsxansible&#34;&gt;Ansible NSX Module&lt;/a&gt;. The NSX Ansible module is written by VMware and is provided opensource on GitHub. To work properly this depends on the &lt;a href=&#34;https://github.com/vmware/nsxraml&#34;&gt;NSX RAML Specification&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/nsxramlclient&#34;&gt;NSX RAML Python Client&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;vSphere API Python Bindings&lt;/a&gt; and the &lt;a href=&#34;https://www.vmware.com/support/developer/ovf/&#34;&gt;OVF Tool&lt;/a&gt; all being installed on the Ansible server.&lt;/p&gt;
@@ -1458,7 +1458,7 @@ nsx_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
 client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;False)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you can then see the session by running the following command in python session&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;client_session
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vmware-vsphere-api-python-bindings&#34;&gt;VMware vSphere API Python Bindings&lt;/h2&gt;
 &lt;p&gt;As well as the NSX Python client the Ansible NSX Module also depends on the VMware vSphere API Python Bindings (pyVmomi. pyVmomi is the Python SDK for the VMware vSphere API that allows you to manage ESX, ESXi, and vCenter. This is similarly installed with the python package manager using command like.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip install pyvmomi
@@ -1467,9 +1467,9 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
 &lt;p&gt;Once downloaded to the Ansbile server, we need to ensure it has execute attribute and then execute it to start the install, the commands to do this for the current version 4.1.0 are.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod +x VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
 ./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-ovftool.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-ovftool.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the install is running you have to agree to EULA, to get to the end of the text, hold down the Space bar. When prompted &lt;em&gt;Do you agree?&lt;/em&gt; type yes.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-ovftool2.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-ovftool2.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once OVF Tool is installed we can use SCP to copy the NSX OVA, VMware-NSX-Manager-6.2.2-3604087.ova, to Ansible server I placed this in folder named /OVAs.&lt;/p&gt;
 &lt;h2 id=&#34;ansible-nsx-module&#34;&gt;Ansible NSX Module&lt;/h2&gt;
 &lt;p&gt;We already have Git installed for dowlnloading the NSX RAML Specification so we can use this to clone the NSX Ansible repository.&lt;/p&gt;
@@ -1478,15 +1478,15 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
 &lt;p&gt;The NSX Module comes supplied with some example playbooks for performing common tasks, we’ll first take a copy of the example to deploy NSX Manager&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp /nsxansible/test_deploynsxova.yml /nsxansible/darryl_deploynsxova.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then edit the contents to match the variables we plan to deploy in environment. While most of playbook contents are environmental specific varibles its worth noting that we run this module against the Ansible server itself as this is where the OVA and ovftool are located so hosts: value will always be localhost.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-NSXmgr.jpg&#34; alt=&#34;Deploy NSX Manager&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-NSXmgr.jpg&#34; alt=&#34;Deploy NSX Manager&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once we have our environmental specific entries set we can execute the playbook with Ansible.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook darryl_deploynsxova.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-playbook.jpg&#34; alt=&#34;Deploy NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-playbook.jpg&#34; alt=&#34;Deploy NSX Manager Playbook&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We see this deploys ‘NSX Manager’ and configures the setting specified in the playbook.&lt;/p&gt;
 &lt;h2 id=&#34;deploy-nsx-manager-and-register-with-vcenter-and-sso&#34;&gt;Deploy NSX Manager and register with vCenter and SSO&lt;/h2&gt;
 &lt;p&gt;As with any Ansible playbook we can put common variables in a central location and call these from playbooks. An example is provided called answerfile-deployLab.yml. Variable names are overlapped between parts of the NSX Modules, in order that they are unique in the central answer file the names vary but its very easy to match these.&lt;/p&gt;
 &lt;p&gt;An example of my playbook to deploy NSX Manager and then register this with vCenter and SSO.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-install-ansible-mgr-cfg.jpg&#34; alt=&#34;Deploy and Configure NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-mgr-cfg.jpg&#34; alt=&#34;Deploy and Configure NSX Manager Playbook&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -1494,10 +1494,10 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
     
     <item>
       <title>Ansibile NSX Configuration - Infrastructure As Code</title>
-      <link>https://darrylcauldwell.com/post/nsx-ansible-iac/</link>
+      <link>http://darrylcauldwell.com/post/nsx-ansible-iac/</link>
       <pubDate>Tue, 07 Jun 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-ansible-iac/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-ansible-iac/</guid>
       <description>
         
           &lt;p&gt;With the rise of DevOps culture and the ethos of automate all the things. Using test driven development techniques to apply application configuration declaratively has become widespread. The ever closer working relations of developers and infrastructure operations staff to become an application centric delivery and management unit has lead to many benefits.  One of the benefits is the shared empathy for each others pain points and understanding of how each approaches tackling these. It is clear that managing configuration as code has many benefits for consistent repeated delivery of applications.&lt;/p&gt;
@@ -1511,46 +1511,46 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
     
     <item>
       <title>Configuring NSX Edge to DLR OSPF</title>
-      <link>https://darrylcauldwell.com/post/nsx-edge-ospf/</link>
+      <link>http://darrylcauldwell.com/post/nsx-edge-ospf/</link>
       <pubDate>Mon, 23 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-edge-ospf/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-edge-ospf/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I’ve given myself task of exploring in my new home lab all parts of NSX which I&amp;rsquo;m still not fully comfortable.  One of these things is OSPF,  to investigate this I came up with a test scenario and then worked through the steps to achieve a solution to meet the scenario design.&lt;/p&gt;
 &lt;h2 id=&#34;scenario-design&#34;&gt;Scenario Design&lt;/h2&gt;
 &lt;p&gt;We will replicate a typical development environment secured with an Edge Gateway.  Within the environment the developers will have ability to add and remove logical switches to the DLR and the automatic updating of the Edge Gateway routing table.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test.jpg&#34; alt=&#34;NSX Edge OSPF Test&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test.jpg&#34; alt=&#34;NSX Edge OSPF Test&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;deploy-edge-transit-logical-switch-and-distributed-logical-router&#34;&gt;Deploy Edge, Transit Logical Switch and Distributed Logical Router&lt;/h2&gt;
 &lt;p&gt;The lab has VXLAN capability during my NSX core home lab configuration, so has hosts prepared, VNI pool and deployed Controller.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll first deploy the Transit logical switch.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-ls.jpg&#34; alt=&#34;NSX Edge Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-ls.jpg&#34; alt=&#34;NSX Edge Logical Switch&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create Edge Gateway with an Uplink interface on the OOB network  (192.168.1.43) and on the Transit network (192.168.2.1) .&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-edge-deploy.jpg&#34; alt=&#34;NSX Edge Deploy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-edge-deploy.jpg&#34; alt=&#34;NSX Edge Deploy&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create DLR initially with a single uplink on Transit network (192.168.2.254) , do not configure a default gateway.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-dlr.jpg&#34; alt=&#34;NSX Edge DLR&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-dlr.jpg&#34; alt=&#34;NSX Edge DLR&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;configure-ospf-area&#34;&gt;Configure OSPF Area&lt;/h2&gt;
 &lt;p&gt;An OSPF area is a logical collection of OSPF networks, routers, and links that have the same area identification. The simulated development environment we are using RFC1918 address space in order that the IP address schema can overlap as such our OSPF routing will be internal so we will create an OSPF area which is type Stub.&lt;/p&gt;
 &lt;p&gt;On Edge Gateway Enable Dynamic Routing Configuration on the Transit interface.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-dynamic.jpg&#34; alt=&#34;NSX Edge OSPF Dynamic&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-dynamic.jpg&#34; alt=&#34;NSX Edge OSPF Dynamic&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Then we need to enable OSPF&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-enable.jpg&#34; alt=&#34;NSX Edge OSPF Enable&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-enable.jpg&#34; alt=&#34;NSX Edge OSPF Enable&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We require a stub OSPF area, and usefully Area ID 51 is configured already so we&amp;rsquo;ll use this.  We just need to associate this with the Transit interface in order it can communicate with DLR.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-mapping.jpg&#34; alt=&#34;NSX Edge OSPF Mapping&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-mapping.jpg&#34; alt=&#34;NSX Edge OSPF Mapping&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Repeat the steps used for configuring OSPF on the Edge on the DLR, when enabling OSPF enter the forwarding address to match the Transit network IP interface and the protocol address to be another available IP address on the Transit network.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-ProFwd.jpg&#34; alt=&#34;NSX Edge OSPF Protocol Forward&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-ProFwd.jpg&#34; alt=&#34;NSX Edge OSPF Protocol Forward&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;route-distribution&#34;&gt;Route Distribution&lt;/h2&gt;
 &lt;p&gt;The default Route Redistribution configuration for DLR is to distribute information about networks it is connected to.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-RouteDistribute.jpg&#34; alt=&#34;OSPF Route Redistribution&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-RouteDistribute.jpg&#34; alt=&#34;OSPF Route Redistribution&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we now check the Edge Gateway routing table we can see all routing is of type C (directly connected) or S (static entry for default gateway).&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-RouteTable.jpg&#34; alt=&#34;OSPF Route Table&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-RouteTable.jpg&#34; alt=&#34;OSPF Route Table&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If I now simulate a developer creating a new Logical Switch for network 192.168.3.0/24 which is attached to DLR as internal interface 192.168.3.1.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 DLR&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 DLR&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then check the Edge Gateway routing table again.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 Edge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test1DLR.jpg&#34; alt=&#34;OSPF Test 1 Edge&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We see a new route added type O (ospf derived) N2 (OSPF NSSA external type 2).  Which directs this traffic to the DLR interface on Transit network.&lt;/p&gt;
 &lt;p&gt;If we then simulate the developer adding the test2 and test3 networks. We see the other routes populated.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-edge-ospf-test2-3.jpg&#34; alt=&#34;OSPF Test 2-3&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-edge-ospf-test2-3.jpg&#34; alt=&#34;OSPF Test 2-3&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -1558,52 +1558,52 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
     
     <item>
       <title>NSX Backup and Restore</title>
-      <link>https://darrylcauldwell.com/post/nsx-backup-restore/</link>
+      <link>http://darrylcauldwell.com/post/nsx-backup-restore/</link>
       <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-backup-restore/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-backup-restore/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring in my new home lab all parts of NSX which I don&amp;rsquo;t use at work. One of these things is NSX Backup and Restore,  its not that we don&amp;rsquo;t use these function but that its relatively high impacting if it goes wrong.  To investigate this I came up with a list of networking configuration to test backup and restore of and the steps to I followed to perform each backup and restore type.&lt;/p&gt;
 &lt;h2 id=&#34;scenario-1---distributed-firewall&#34;&gt;Scenario 1 - Distributed Firewall&lt;/h2&gt;
 &lt;p&gt;To backup and restore distributed firewall rules is relatively straight forwards to do.  I&amp;rsquo;m starting with no rules created.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-BlankRuleset.jpg&#34; alt=&#34;NSX Firewall Blank Ruleset&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-BlankRuleset.jpg&#34; alt=&#34;NSX Firewall Blank Ruleset&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Then create a new section.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-BandR.jpg&#34; alt=&#34;NSX Firewall New Section&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-BandR.jpg&#34; alt=&#34;NSX Firewall New Section&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Add some rules for example any to WEB on HTTP Service and WEB to DB on SQL Service.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-testRules.jpg&#34; alt=&#34;NSX Firewall New Rules&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-testRules.jpg&#34; alt=&#34;NSX Firewall New Rules&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Click Export and save these as a file.&lt;/p&gt;
 &lt;p&gt;Delete the WEB to DB rule.&lt;/p&gt;
 &lt;p&gt;To perform a restore we do this from the Saved Configuration tab,  we see that there are only auto saved backups.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore1.jpg&#34; alt=&#34;NSX Firewall Auto-Saved&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Restore1.jpg&#34; alt=&#34;NSX Firewall Auto-Saved&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order to restore from the file backup we need to import this into the Saved Configurations.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore2.jpg&#34; alt=&#34;NSX Firewall Import Saved&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Restore2.jpg&#34; alt=&#34;NSX Firewall Import Saved&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now we can change back to the Configuration tab and use &amp;lsquo;Load Saved Configuration&amp;rsquo; option to restore the exported file based backup.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Restore3.jpg&#34; alt=&#34;NSX Firewall Restore&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Restore3.jpg&#34; alt=&#34;NSX Firewall Restore&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The deleted rule then gets added back.&lt;/p&gt;
 &lt;h2 id=&#34;scenario-2---nsx-manager&#34;&gt;Scenario 2 - NSX Manager&lt;/h2&gt;
 &lt;p&gt;To backup and restore NSX Manager it depends on having access to a FTP or SFTP to store the configuration in.&lt;/p&gt;
 &lt;p&gt;Previously I&amp;rsquo;d created a CentOS7 virtual machine template,  I deployed one of these and then followed this procedure to configure FTP.&lt;/p&gt;
 &lt;p&gt;Configure the FTP server settings in NSX.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-nsxBackup.jpg&#34; alt=&#34;NSX Manager Configuration Backup&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-nsxBackup.jpg&#34; alt=&#34;NSX Manager Configuration Backup&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once backup location is configured click Backup to create a backup.&lt;/p&gt;
 &lt;p&gt;Check the FTP server and it should have a folder called nsx created and within a file prefixed with nsx followed by the date and time stamp.&lt;/p&gt;
 &lt;p&gt;Make a change to NSX configuration,  for example assign the NSX Manager the primary role.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-PrimaryRole.jpg&#34; alt=&#34;NSX Manager Assign Primary Role&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-PrimaryRole.jpg&#34; alt=&#34;NSX Manager Assign Primary Role&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Check role is applied.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Primary.jpg&#34; alt=&#34;NSX Manager Is Primary&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Primary.jpg&#34; alt=&#34;NSX Manager Is Primary&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we now restore the configuration from the NSX Backup we should see the NSX Manager revert to running the Standalone role.&lt;/p&gt;
 &lt;p&gt;Select the backup created prior to making the configuration change and click Restore.  The NSX Manager will restore and then restart the Management Services so will take a minute or two. We can then check the role is reverted to Standalone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Standalone.jpg&#34; alt=&#34;NSX Manager Is Standalone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Standalone.jpg&#34; alt=&#34;NSX Manager Is Standalone&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;scenario-3---vsphere-distributed-switch&#34;&gt;Scenario 3 - vSphere Distributed Switch&lt;/h2&gt;
 &lt;p&gt;I have in lab a vSphere Distributed Switch configured with some Distributed Portgroups and Logical Switches created on.  Otherwise you might need to create some configuration.&lt;/p&gt;
 &lt;p&gt;Use the context menu of the vDistributed Switch to Export the configuration to a file.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-Export-vDS.jpg&#34; alt=&#34;Export VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-Export-vDS.jpg&#34; alt=&#34;Export VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This creates a compressed zip file,  most files within this are not readable except for an xml file which appears to be a manifest of the zip file.&lt;/p&gt;
 &lt;p&gt;To test that the configuration is restored add an additional distributed portgroup named TestRestore1.&lt;/p&gt;
 &lt;p&gt;Use the context menu of the vDistributed Switch to Restore the configuration from the file.  Interesting we find that the Portgroup created post backup is not removed.&lt;/p&gt;
 &lt;p&gt;If we export the configuration again to include the new TestRestore1 Portgroup. Then delete the TestRestore1 Portgroup. Then Restore the configuration we find the TestRestore1 Portgroup is added back.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-backup-TestRestore.jpg&#34; alt=&#34;Restored VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-backup-TestRestore.jpg&#34; alt=&#34;Restored VDS&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -1611,10 +1611,10 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
     
     <item>
       <title>NSX-V Load Balancer As A Service LBaaS</title>
-      <link>https://darrylcauldwell.com/post/nsx-lbaas/</link>
+      <link>http://darrylcauldwell.com/post/nsx-lbaas/</link>
       <pubDate>Fri, 20 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-lbaas/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-lbaas/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring in my homelab all parts of NSX which I don&amp;rsquo;t use
@@ -1623,44 +1623,44 @@ scenario and then worked through the steps to achieve a solution to meet the des
 &lt;h2 id=&#34;load-balancer-scenariodesign&#34;&gt;Load Balancer Scenario Design&lt;/h2&gt;
 &lt;p&gt;I started by reading the &lt;a href=&#34;http://pubs.vmware.com/NSX-62/index.jsp#com.vmware.nsx.admin.doc/GUID-412635AE-1F2C-4CEC-979F-CC5B5D866F53.html&#34;&gt;NSX Administration Guide&lt;/a&gt; section covering load balancer configuration.&lt;/p&gt;
 &lt;p&gt;Here is what I plan to achieve my client and browser will sit on the 192.168.1.0/24 out of band network.  I&amp;rsquo;ll create a new WEB VLAN 1000 to host 192.168.2.0/24 network,  the Edge Gateway will serve this network with DHCP and DHCP will issue gateway IP to be its own address,  two web server VMs will be assigned to this network.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-onearm.jpg&#34; alt=&#34;One Armed Load Balancer&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-onearm.jpg&#34; alt=&#34;One Armed Load Balancer&#34;&gt;&lt;/p&gt;
 &lt;p&gt;A destination network address translation (DNAT) rule will be configured to pass this OOB network IP address to the load balancerd address on the WEB network. The load balancer will round robin traffic between the two web servers. Port 80 will be monitored on web servers and when apache is stopped on one server all traffic should direct to the active server. The Edge firewall will be configured to block all traffic except for HTTP to the web servers.&lt;/p&gt;
 &lt;h2 id=&#34;configure-underlay&#34;&gt;Configure Underlay&lt;/h2&gt;
 &lt;p&gt;Create VLAN 1000 on physical switch and ensure this is allowed in the trunk presented to the virtual distributed switch ports.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-VLAN1000-Assignment.jpg&#34; alt=&#34;VLAN 1000 Assignment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-VLAN1000-Assignment.jpg&#34; alt=&#34;VLAN 1000 Assignment&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create a distributed portgroup for VLAN1000 and OOB.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-vDS-OOB-and-WEB.jpg&#34; alt=&#34;Distributed Portgroup&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-vDS-OOB-and-WEB.jpg&#34; alt=&#34;Distributed Portgroup&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;deploy-edge-gateway&#34;&gt;Deploy Edge Gateway&lt;/h2&gt;
 &lt;p&gt;Create a Compact NSX Edge Gateway with an &lt;em&gt;Uplink&lt;/em&gt; interface on the OOB with IP address 192.168.1.40 and &lt;em&gt;Internal&lt;/em&gt; interface on the WEB - VLAN1000 with IP address 192.168.2.254 .  Specify 192.168.1.254 as default gateway on the OOB interface. Ensure firewall is set to accept as default policy.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-EdgeSummary.jpg&#34; alt=&#34;Edge Deployment Summary&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-EdgeSummary.jpg&#34; alt=&#34;Edge Deployment Summary&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;create-dnat-rule&#34;&gt;Create DNAT Rule&lt;/h2&gt;
 &lt;p&gt;As 192.168.2.0/24 is not a network my home router is aware of I must create a Destination NAT rule on 192.168.1.0/24 network to map to the 192.168.2.0/24 address.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-DNAT.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-DNAT.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Ensure this is created by connecting SSH session to the Edge and viewing the NAT configuration by running&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;show nat
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-NAT-CLI.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-NAT-CLI.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;configure-web-server-dhcp&#34;&gt;Configure Web Server DHCP&lt;/h2&gt;
 &lt;p&gt;Enable DHCP and create a DHCP scope 192.168.2.10-192.168.2.50.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-DHCP.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-DHCP.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;create-web-servers&#34;&gt;Create Web Servers&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ll look to create two test web servers each will host a single web page with its actual IP address on.  When I connect to load balanced IP the page contents returned will flip between the two servers.&lt;/p&gt;
-&lt;p&gt;I created a &lt;a href=&#34;https://darrylcauldwell.com/post/vsphere-vm-templates&#34;&gt;CentOS 7 VM template&lt;/a&gt; previously in lab and so for this test scenario I provisioned two new VMs from this named web1 and web2.  I left both as DHCP and setup the web server using following commands.&lt;/p&gt;
+&lt;p&gt;I created a &lt;a href=&#34;http://darrylcauldwell.com/post/vsphere-vm-templates&#34;&gt;CentOS 7 VM template&lt;/a&gt; previously in lab and so for this test scenario I provisioned two new VMs from this named web1 and web2.  I left both as DHCP and setup the web server using following commands.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum install httpd -y
 service httpd start
 ifconfig | grep &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;inet&amp;#34;&lt;/span&gt; &amp;amp;gt; /var/www/html/test.html
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configure-load-balancer&#34;&gt;Configure Load Balancer&lt;/h2&gt;
 &lt;p&gt;Enable the load balance function on the Edge.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-Enable.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-Enable.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create a load balancer application profile called Web and mark is for HTTP traffic.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-AppProfile.jpg&#34; alt=&#34;Load Balancer AppProfile&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-AppProfile.jpg&#34; alt=&#34;Load Balancer AppProfile&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Add web1 and web2 virtual machines to a load balancer pool with monitor port 80.  If adding as VM object as per screenshot then you might have IPv6 issue see section below for solution,  alternatively enter IP address.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-PoolMembers.jpg&#34; alt=&#34;Load Balancer Pool Membership&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalancer-PoolMembers.jpg&#34; alt=&#34;Load Balancer Pool Membership&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create a load balancer virtual server to link all the parts into a VIP.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-WebLB.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-WebLB.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once this is created you will be able to browse to http://192.168.1.40/test.html on the OOB network this will return a web page displaying IP address.  Refreshing the page will display a similar page but with alternate VM IP address.&lt;/p&gt;
 &lt;h2 id=&#34;nsx-loadbalancer-ipv6-issue&#34;&gt;NSX LoadBalancer IPv6 Issue&lt;/h2&gt;
 &lt;p&gt;I found when I configured this initially by selecting VM objects in the Virtual Server the loadbalancer tried to configure all IP addresses including the IPv6 addresses which are present by default in Centos7.  This caused a error in LoadBalancer and wouldn&amp;rsquo;t allow me to proceed.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LoadBalance-IPv6.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LoadBalance-IPv6.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I disabled IPv6 on both CentOS7 VMs by adding the following to /etc/sysctl.conf:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;net.ipv6.conf.all.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
@@ -1669,13 +1669,13 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;secure-solution&#34;&gt;Secure Solution&lt;/h2&gt;
 &lt;p&gt;Up to now we have had the Edge firewall default rule set to allow,  one of the first tasks we would want to do once web load balancing is working is to secure the solution.&lt;/p&gt;
 &lt;p&gt;To do this we create a new rule explicitly allowing HTTP traffic to the IP address it will enter the Edge on,  and once in place change default rule to Deny.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-LB-Firewall.jpg&#34; alt=&#34;Load Balancer Firewall&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-LB-Firewall.jpg&#34; alt=&#34;Load Balancer Firewall&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once in place test you still have access to the web page.&lt;/p&gt;
 &lt;h2 id=&#34;load-balance-monitoring&#34;&gt;Load Balance Monitoring&lt;/h2&gt;
 &lt;p&gt;When creating the Loadbalance configuration we specified to monitor port 80 was available in order to include the server in the balanced set. Before proceeding here ensure that when you connect to 192.168.1.40 and refresh load balancing is working correctly and returning IP addresses alternately.&lt;/p&gt;
 &lt;p&gt;We then stop the apache service on one of the VMs using:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;service httpd stop
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-lbaas-apache-stop.jpg&#34; alt=&#34;Apache Stop&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-lbaas-apache-stop.jpg&#34; alt=&#34;Apache Stop&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we now go back to browser and refresh a few times it will direct all traffic to one server IP address.  If we restart apache using&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;service httpd start
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and refresh the browser we find load balancing is returned and refreshes alternate the IP addresses.&lt;/p&gt;
@@ -1686,10 +1686,10 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
     
     <item>
       <title>NSX Activity Monitoring</title>
-      <link>https://darrylcauldwell.com/post/nsx-activity/</link>
+      <link>http://darrylcauldwell.com/post/nsx-activity/</link>
       <pubDate>Thu, 19 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-activity/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-activity/</guid>
       <description>
         
           &lt;p&gt;As part of study for VCIX-NV I&amp;rsquo;ve given myself task of exploring all parts of NSX which I don&amp;rsquo;t use at work. One of these things is NSX Activity Monitoring,  to investigate this I came up with a test scenario and then worked through the steps to achieve a solution to meet the scenario design.&lt;/p&gt;
@@ -1698,26 +1698,26 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
 &lt;h2 id=&#34;virtual-machine-configuration&#34;&gt;Virtual Machine Configuration&lt;/h2&gt;
 &lt;p&gt;I created a Windows 2012 R2 virtual machine template previously,  deploy two of these to a network with DHCP enabled for example in my lab the OOB network.&lt;/p&gt;
 &lt;p&gt;The Windows template I created has the VMware Tools typical installation performed. To use the NSX Activity Monitoring the Network File Introspection Driver (vnetflt.sys) is required.  To add this we need to re-run the VMware tools installer,  select modify and then add NSX Network File Introspection Driver.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-WindowsDriver.jpg&#34; alt=&#34;Install Windows Driver&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-WindowsDriver.jpg&#34; alt=&#34;Install Windows Driver&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Add IIS role to one of the hosts.&lt;/p&gt;
 &lt;p&gt;Add server to Active Directory domain and reboot.&lt;/p&gt;
 &lt;p&gt;In vSphere web client select each virtual machine in turn and enable NSX Activity Monitoring.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-EnableMonitoring.jpg&#34; alt=&#34;Enable Monitoring&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-EnableMonitoring.jpg&#34; alt=&#34;Enable Monitoring&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;deployactivity-monitor-appliances&#34;&gt;Deploy Activity Monitor Appliances&lt;/h2&gt;
 &lt;p&gt;From the Networking and Security menu, select Installation. Navigate to the Service Deployments tab and glick green add button.&lt;/p&gt;
 &lt;p&gt;In order to gather activity data virtual appliances are required to be deployed.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-DeployActivityServices.jpg&#34; alt=&#34;Deploy Virtual Appliances&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-DeployActivityServices.jpg&#34; alt=&#34;Deploy Virtual Appliances&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;register-a-windows-domain-with-nsx-manager&#34;&gt;Register a Windows Domain with NSX Manager&lt;/h2&gt;
 &lt;p&gt;In vSphere web client click Networking and Security and then click NSX Managers. Click an NSX Manager in the Name column and then click the Manage tab. Click the Domain tab and then click the Add domain (Add domain) icon.&lt;/p&gt;
 &lt;p&gt;Complete the domain details as per your Active Directory.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-Add-Domain.jpg&#34; alt=&#34;Add Domain&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-Add-Domain.jpg&#34; alt=&#34;Add Domain&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Wait for synchronization status to show SUCCESS.&lt;/p&gt;
 &lt;h2 id=&#34;generate-activity&#34;&gt;Generate Activity&lt;/h2&gt;
 &lt;p&gt;Connect to test virtual machine which &lt;!-- raw HTML omitted --&gt;does not&lt;!-- raw HTML omitted --&gt; have IIS installed and open browser to virtual machine with IIS installed.&lt;/p&gt;
 &lt;p&gt;Test data is being gathered by Activity Monitor.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-ActivityMonitorActivity.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-ActivityMonitorActivity.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Another easy test is to copy a file between the two virtual machines.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/nsx-activity-ActivityMonitorSMB-CIFS.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-activity-ActivityMonitorSMB-CIFS.jpg&#34; alt=&#34;Activity Monitor Activity&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -1725,10 +1725,10 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
     
     <item>
       <title>NSX Distributed Firewall Under The Covers</title>
-      <link>https://darrylcauldwell.com/post/nsx-dfw/</link>
+      <link>http://darrylcauldwell.com/post/nsx-dfw/</link>
       <pubDate>Tue, 21 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-dfw/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-dfw/</guid>
       <description>
         
           &lt;p&gt;An NSX distributed firewall (dFW) runs as an ESXi host as a kernel module added as a VMware Installation Bundle (VIB). The dFW rules operate on Layer 2 through Layer 4; although this can be extended through Layer 7 by integrating with a 3-Party vendor.&lt;/p&gt;
@@ -1736,7 +1736,7 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
 &lt;li&gt;L2 rules are based on MAC address L2 protocols like ARP, RARP and LLDP etc.&lt;/li&gt;
 &lt;li&gt;L3 and 4 rules are based on IP source/destination and L4 uses a TCP or UDP ports.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW_TCP_OSI.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW_TCP_OSI.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The NSX dFW enforces a state full firewall service for VMs using the vNIC as the enforcement point. Every packet that leaves the VM (before VTEP encapsulation) or enters the VM (After VTEP de-encapsulation) can be inspected with a firewall policy.&lt;/p&gt;
 &lt;p&gt;The ruleset is created and managed via NSX Manager either API or UI. The ESXi host has two dFW specific modules vShield Statefull Firewall and VMware Internetworking Service Insertion Platform (vSIP). vShield Statefull Firewall performs the following roles.&lt;/p&gt;
 &lt;ul&gt;
@@ -1747,7 +1747,7 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
 &lt;li&gt;Part of the host preparation process SSL related tasks from NSX manager&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;VMware Internetworking Service Insertion Platform is the distributed firewall kernel space module core component. The vSIP receives firewall rules via vShield State-full Firewall and downloads them down to each VMware-sfw. When VM connect to Logical switch there are security services each packet transverse which are implemented as IOChains processed at the Kernel level.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/dFW_Slots.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/dFW_Slots.png&#34; alt=&#34;TCP OSI&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Slot 0: Distributed Virtual Filter (DVFilter): It monitors the incoming and outgoing traffic on the protected virtual NIC and performs stateless filtering.&lt;/li&gt;
 &lt;li&gt;Slot 1: Switch Security module (SW-sec): Learns VMs IP and MAC address. sw-sec is critical component capture DHCP Ack and ARP broadcast message and forward this info as unicast to NSX Controller to perform the ARP suppression feature. This is also the layer where NSX IP spoof guard is implemented.&lt;/li&gt;

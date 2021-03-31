@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>cloud assembly on </title>
-    <link>https://darrylcauldwell.com/tags/cloud-assembly/</link>
+    <link>http://darrylcauldwell.com/tags/cloud-assembly/</link>
     <description>Recent content in cloud assembly on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 01 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/cloud-assembly/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/cloud-assembly/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cloud Assembly VM Guest Management With Ansible</title>
-      <link>https://darrylcauldwell.com/post/ansible-cloud-assembly/</link>
+      <link>http://darrylcauldwell.com/post/ansible-cloud-assembly/</link>
       <pubDate>Thu, 01 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/ansible-cloud-assembly/</guid>
+      <guid>http://darrylcauldwell.com/post/ansible-cloud-assembly/</guid>
       <description>
         
           &lt;p&gt;VMware &lt;a href=&#34;https://cloud.vmware.com/cloud-automation-services&#34;&gt;Cloud Automation Services&lt;/a&gt; is a product suite comprising three products, &lt;a href=&#34;https://cloud.vmware.com/cloud-assembly&#34;&gt;Cloud Assembly&lt;/a&gt;, &lt;a href=&#34;https://cloud.vmware.com/service-broker&#34;&gt;Service Broker&lt;/a&gt; and &lt;a href=&#34;https://cloud.vmware.com/code-stream&#34;&gt;Code Stream&lt;/a&gt;. Cloud Assembly provides a blueprinting engine and manages connectivity to multiple cloud endpoints. Service Broker provides a unified catalog for publishing blueprints with role-based policies. Code Stream provides a release pipeline with analytics.&lt;/p&gt;

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>netapp on </title>
-    <link>https://darrylcauldwell.com/tags/netapp/</link>
+    <link>http://darrylcauldwell.com/tags/netapp/</link>
     <description>Recent content in netapp on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 12 Dec 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/netapp/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 Dec 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/netapp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>NetApp Cloud OnTap For AWS</title>
-      <link>https://darrylcauldwell.com/post/aws-ontap/</link>
+      <link>http://darrylcauldwell.com/post/aws-ontap/</link>
       <pubDate>Fri, 12 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/aws-ontap/</guid>
+      <guid>http://darrylcauldwell.com/post/aws-ontap/</guid>
       <description>
         
           &lt;p&gt;NetApp has often been a pioneer of bleeding edge concepts in storage. When designing data ONTAP and the WAFL file system they were the first to look at creating a virtual control plane for data. They also pioneered fully non disruptive upgrades when the introduced clustered data ONTAP.  They then introduced ONTAP Edge for providing the really cool features of data ONTAP for non NetApp SANs. Recently the pioneering spirit has been continuing with the launch of Cloud ONTAP for AWS which takes the clustered data ONTAP features to overlay Amazon EC2 storage.&lt;/p&gt;
 &lt;p&gt;There are hundreds of business use cases which spring to mind when you begin to consider what this offers, however the total killer feature for this is using snap mirror to extend your data between private cloud and public cloud.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Using the public cloud makes great sense for standing up solutions quickly and without the up front capital expenditure and instead the operational usage charging. As your new product grows and becomes more popular it maybe your operational charges out weight the cost savings and you then want to bring it to private cloud.&lt;/p&gt;
 &lt;p&gt;Most applications have great agility for the application, simply stand up a new OS in other cloud provider and install application.  However application data agility is, until now, much harder to manage.&lt;/p&gt;
 &lt;p&gt;In this example you would simply build your private cloud and new application tier and use snap mirror to bring your data to your datacenter and keep it in sync with the application still running.  When all sync&amp;rsquo;d you would cutover by breaking the mirror all could be seam less to your customers.&lt;/p&gt;
@@ -30,10 +30,10 @@
     
     <item>
       <title>NetApp FAS IOPS Theoretical Maximum &amp; Workload Aggregate Load Balancing</title>
-      <link>https://darrylcauldwell.com/post/netapp-iops/</link>
+      <link>http://darrylcauldwell.com/post/netapp-iops/</link>
       <pubDate>Tue, 26 Aug 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/netapp-iops/</guid>
+      <guid>http://darrylcauldwell.com/post/netapp-iops/</guid>
       <description>
         
           &lt;p&gt;To achieve good performance for a virtualized workload your Storage Area Network (SAN) should deliver high IOps with a predictable low latency. If you are using a good flash system where IOps (Input/Output Operations Per Second) effectively become an unlimited resource then latency will probably be your limiting factor.&lt;/p&gt;

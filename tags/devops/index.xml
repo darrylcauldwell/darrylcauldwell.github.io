@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>devops on </title>
-    <link>https://darrylcauldwell.com/tags/devops/</link>
+    <link>http://darrylcauldwell.com/tags/devops/</link>
     <description>Recent content in devops on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 29 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 29 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/devops/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The DevOps Infrastructure Architect</title>
-      <link>https://darrylcauldwell.com/post/devops-architect/</link>
+      <link>http://darrylcauldwell.com/post/devops-architect/</link>
       <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/devops-architect/</guid>
+      <guid>http://darrylcauldwell.com/post/devops-architect/</guid>
       <description>
         
           &lt;p&gt;One common critisism of Agile teams is they are architecturally weak and disconnected from the operational realities of complex enterprise environments. Traditional enterprise architecture processes are viewed focusing on delivering documentation rather than delivering a working solution, slow, and focussed on delivering monolith design rather than continuous delivery of small incremental updates.&lt;/p&gt;
@@ -45,10 +45,10 @@
     
     <item>
       <title>DevOps != Products</title>
-      <link>https://darrylcauldwell.com/post/devops/</link>
+      <link>http://darrylcauldwell.com/post/devops/</link>
       <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/devops/</guid>
+      <guid>http://darrylcauldwell.com/post/devops/</guid>
       <description>
         
           &lt;p&gt;The last 10 to 20 years in the enterprise has been defined by increasing capital spending on fixed assets (CapEx) while reducing the cost of staffing and operations (OpEx).  Gartner report the growth of spend on enterprise application software (EAS) is continuing to grow and in 2015 will grow at &lt;a href=&#34;http://www.gartner.com/newsroom/id/3119717&#34;&gt;7.5% to $149.9 Billion&lt;/a&gt;.  According to the &lt;a href=&#34;https://hbr.org/2011/09/why-your-it-project-may-be-riskier-than-you-think/ar/1&#34;&gt;Harvard Business Review&lt;/a&gt; one in six IT projects had an average cost overrun of 200% and a schedule overrun of 70%.&lt;/p&gt;
@@ -64,10 +64,10 @@
     
     <item>
       <title>Is the future of sysadmin to be an SRE?</title>
-      <link>https://darrylcauldwell.com/post/devops-sre/</link>
+      <link>http://darrylcauldwell.com/post/devops-sre/</link>
       <pubDate>Thu, 22 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/devops-sre/</guid>
+      <guid>http://darrylcauldwell.com/post/devops-sre/</guid>
       <description>
         
           &lt;p&gt;I recently came across the role SRE, I didn&amp;rsquo;t know what this was so researched it a little and found that it refers to Site Reliability Engineers after reading around the subject here is my considered opinion.&lt;/p&gt;
@@ -83,15 +83,15 @@
     
     <item>
       <title>Scrum Team Demystified</title>
-      <link>https://darrylcauldwell.com/post/devops-scrum/</link>
+      <link>http://darrylcauldwell.com/post/devops-scrum/</link>
       <pubDate>Tue, 26 Aug 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/devops-scrum/</guid>
+      <guid>http://darrylcauldwell.com/post/devops-scrum/</guid>
       <description>
         
           &lt;p&gt;While I worked with Agile as a software tester when the concept first came out in 2002 shortly afterwards I joined a new company in a new role in Infrastructure, IT operations if you will. My recollection of Agile is that it was not a process at all; rather, it’s a set of principles summarized by the Agile Manifesto.&lt;/p&gt;
 &lt;p&gt;This seems like a lifetime ago,  but its finally made a comeback to my work life as I now work in team looking to foster a DevOps culture in our workplace.  A DevOps culture is an extension of Agile culture which rather than focusing purely on application life-cycle management it looks to now encompass server life-cycle management too. It aims to achieve this by breaking down organizational barriers to become a single cohesive team delivering a application service rather than discreet silo team structure.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/devops-scrum.png&#34; alt=&#34;DevOps&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/devops-scrum.png&#34; alt=&#34;DevOps&#34;&gt;&lt;/p&gt;
 &lt;p&gt;While Agile and DevOps are cultural changes and not methodologies in themselves there are methodologies which embody the principles such as Scrum, again there is no formal definition of a Scrum but industry members have formed frameworks such as &lt;a href=&#34;http://www.mountaingoatsoftware.com/agile/scrum&#34;&gt;Mike Cohen&lt;/a&gt;. A scrum team is a strong informal collaboration of engineers and developers, within the loose role construct of a Scrum team.The team ideally are co-located, in same building, or at least same timezone so they can work closely and all be aware of each others work. The other ideal is that business or product owner while not sitting within the Scrum team is very close to them, and the team is given wide discretion to develop and innovate in order to reflect their informal understanding of the customer&amp;rsquo;s real desire which is validated.&lt;/p&gt;
 &lt;p&gt;In support of this new way of working you can also use tools which support these frameworks.  One such tool is from Atlassian which includes Jira which is a tracker for team planning, it is used to capture and organize issues, assign work, and follow team activity. Atlassian provide an Agile plugin for Jira to give the schema extensions to give the console the concept of Sprint, Theme, Epic and Stories as a way to organize the issues and work, it also enables all of these things to be measured for velocity with regards to team performance.  At the side of Jira sits Atlassian Confluence essentially a Wiki for the creation of the evolving design documentation.&lt;/p&gt;
 &lt;p&gt;I mentioned above Sprint, Theme, Epic and Stories.  My loose definition of these terms stems from Mike Cohn&amp;rsquo;s &lt;a href=&#34;http://www.mountaingoatsoftware.com/agile&#34;&gt;Agile template&lt;/a&gt;. Where Scrum story is a user requirement definition,  a Scrum epic is a large user story, there is no threshold at where a story becomes a Epic it is just a big story,  potentially an Epic is a large story waiting to be more clearly defined and broken down into stories. A Scrum theme is a collection of Stories and \ or Epics. A Scrum sprint is a collection of Epics and \ or Stories which we hope to do within a set time frame. So we might have 100 stories pending,  and if our Sprint window is one week we might say this week we have these people engaged and can therefore complete these 10 stories. In practical terms for a sprint, we therefore draw a loose line in the sand that a Story should be achievable within a Sprint and an Epic a story which spans Sprints. Within Atlassian Jira story dependencies can be formed,  so if a Story hits an issue or hits a block the impact of this can be seen further up the dependency tree.&lt;/p&gt;

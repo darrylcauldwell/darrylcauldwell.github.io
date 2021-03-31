@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>peloton on </title>
-    <link>https://darrylcauldwell.com/tags/peloton/</link>
+    <link>http://darrylcauldwell.com/tags/peloton/</link>
     <description>Recent content in peloton on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/peloton/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/peloton/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Peloton bike on a budget</title>
-      <link>https://darrylcauldwell.com/post/peloton/</link>
+      <link>http://darrylcauldwell.com/post/peloton/</link>
       <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/peloton/</guid>
+      <guid>http://darrylcauldwell.com/post/peloton/</guid>
       <description>
         
           &lt;p&gt;I&amp;rsquo;d heard lots of great things about Peloton however it the basic bike costs £1,990. I really wanted to see what I had been missing out but couldn&amp;rsquo;t justify the cost so set about creating a custom solution.&lt;/p&gt;
@@ -22,21 +22,21 @@
 &lt;p&gt;Like most people I had in garage an old mountain bike, GT Tempest circa 1995. I gave it a basic service and got it back to being road rideable without much trouble.&lt;/p&gt;
 &lt;h2 id=&#34;turbo-trainer&#34;&gt;Turbo Trainer&lt;/h2&gt;
 &lt;p&gt;The Peloton workouts require capability of varying pedaling resistence multiple times during the workout, so the turbo-trainer I chose had to have a handlebar mounted resistance dial. From what I had read the Peloton bike has 100 levels of resistance, the bike I was using 24 gears so in theory if my turbo-trainer had at least four levels of resistance I would be able to be close enough. I chose for the Elite Volare Mag from &lt;a href=&#34;https://www.evanscycles.com/elite-volare-mag-turbo-trainer-00104161&#34;&gt;Evans Cycles £99&lt;/a&gt; which has five levels of resistance. For level 100 I use level five resistance and am in highest gear 3:8. For level 1 I use level one resistance and am in lowest gear 1:1.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pelo-turbo-train.jpeg&#34; alt=&#34;Volare Turbo Trainer&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pelo-turbo-train.jpeg&#34; alt=&#34;Volare Turbo Trainer&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;phone-mount&#34;&gt;Phone Mount&lt;/h2&gt;
 &lt;p&gt;The app presents the cycling workouts with a video stream of the instructor, paricipant list and stream of metrics around your heartrate, cadence and estimate of burned calories. The official Peloton bike comes with a huge screen yo display this, the app is available for Apple TV, iPad and iPhone. I wanted to use the solution in the garage or home office neither of these have a Apple TV or a TV, so this wasn&amp;rsquo;t an option for me. It is possible to get mounting bracket to attach iPad to bike handlebars.  I chose a phone mount so I could use this if ever I went for an outdoor bike ride. The Peloton app can be viewed in landscape or portrait so I opted to get the Visun mount which allowed 360 rotation for &lt;a href=&#34;https://www.amazon.co.uk/gp/product/B01JLX8N1O&#34;&gt;Amazon £18&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pelo-phone-mount.jpeg&#34; alt=&#34;Phone Mount&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pelo-phone-mount.jpeg&#34; alt=&#34;Phone Mount&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;heart-rate-monitor&#34;&gt;Heart Rate Monitor&lt;/h2&gt;
 &lt;p&gt;During workout the app can display your heart rate this gets sampled and at the end of the workout presents this data as a graph. To enable this in the app requires a compatible heart rate monitor. I wear an Apple Watch which has an in-built heart rate monitor so quickly able to enable permissions to the app to enable the data feed.&lt;/p&gt;
 &lt;h2 id=&#34;cadence-sensor&#34;&gt;Cadence Sensor&lt;/h2&gt;
 &lt;p&gt;Like a spinning class the instructors suggest cadence and resistance value changes for different sections of workout. I control resistance using combination of the turbo trainer and bike gears. To have the app display the cadence I needed a solution to stream this in format the app supports. I chose the  Wantacme MOOFIT Bicycle Cadence from &lt;a href=&#34;https://www.amazon.co.uk/gp/product/B085NMQ5QR&#34;&gt;Amazon £19.90&lt;/a&gt;. This clips to the crank arm, and when you push the pedals it activates the sensor and streams data over Bluetooth Low Energy 4.0. No bluetooth pairing required, the Peloton app just picks up he cadence data stream.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pelo-cadence.jpeg&#34; alt=&#34;Moofit Cadence Sensor&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pelo-cadence.jpeg&#34; alt=&#34;Moofit Cadence Sensor&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;seat-padding&#34;&gt;Seat Padding&lt;/h2&gt;
 &lt;p&gt;I aim to do a cycling workout every day even if its a quick 20 minute. Its not always practical to switch to cycling shorts to add a bit of padding. After a bit of research I found a great alternative, a gel seat cover. I went for the Ancocs silica gel and foam cushion &lt;a href=&#34;https://www.amazon.co.uk/gp/product/B07K9PS472&#34;&gt;Amazon £14.99&lt;/a&gt;, this slips over the seat and secured with a pair of velcro straps.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pelo-pad.jpeg&#34; alt=&#34;Seat Pad&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pelo-pad.jpeg&#34; alt=&#34;Seat Pad&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
 &lt;p&gt;Overal I&amp;rsquo;m really pleased with how the solution turned out. I do miss out on the Peloton leaderboard feature. Over the Peloton bike my solution has flexibility of me using one bike for both indoor or oudoor workout. The total for one-off costs was £153 so dramatic difference to £1,990 and recurring monthly £12.99 rather than £39.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/pelo-full.jpeg&#34; alt=&#34;Budget Peloton&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pelo-full.jpeg&#34; alt=&#34;Budget Peloton&#34;&gt;&lt;/p&gt;
 
         
       </description>

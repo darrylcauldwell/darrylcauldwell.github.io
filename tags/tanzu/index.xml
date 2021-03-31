@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tanzu on </title>
-    <link>https://darrylcauldwell.com/tags/tanzu/</link>
+    <link>http://darrylcauldwell.com/tags/tanzu/</link>
     <description>Recent content in tanzu on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 29 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/tanzu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 29 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/tanzu/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>vSphere with Kubernetes Homelab Build</title>
-      <link>https://darrylcauldwell.com/post/vsphere-k8s/</link>
+      <link>http://darrylcauldwell.com/post/vsphere-k8s/</link>
       <pubDate>Wed, 29 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vsphere-k8s/</guid>
+      <guid>http://darrylcauldwell.com/post/vsphere-k8s/</guid>
       <description>
         
           &lt;p&gt;I&amp;rsquo;d been exploring Project Pacific during its beta in my homelab for a while. When vSphere 7 and NSX-T 3.0 went GA I took chance to rebuild lab and consolidate much of the configuration I&amp;rsquo;d been applying iteratively.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/tanzu-vsphere.png&#34; alt=&#34;vSphere with Tanzu&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/tanzu-vsphere.png&#34; alt=&#34;vSphere with Tanzu&#34;&gt;&lt;/p&gt;
 &lt;p&gt;My lab hardware specification is a constraint so I&amp;rsquo;ve had to deviate from documentation in a few areas of configuration. During stand up and power up hosts experience CPU and RAM pressure but once everything is running in steady state it is tight but just fits.&lt;/p&gt;
 &lt;h2 id=&#34;single-vlan--subnet-lab-network&#34;&gt;Single VLAN / subnet Lab Network&lt;/h2&gt;
 &lt;p&gt;My lab has a very simple physical network namely a single subnet (192.168.1.0/24) with DHCP enabled and which has default route to the internet.&lt;/p&gt;
@@ -274,7 +274,7 @@ Image Cache                     vSAN Default Storage Policy
 &lt;p&gt;The progress messages available via UI aren&amp;rsquo;t superb its useful to SSH to VCSA and tail the log:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;tail -f /var/log/vmware/wcp/wcpsvc.logtail -f /var/log/vmware/wcp/wcpsvc.log
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If all has goes to plan an hour and a half or so later and if all gone to plan.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/tanzu-wcp.png&#34; alt=&#34;WCP Success&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/tanzu-wcp.png&#34; alt=&#34;WCP Success&#34;&gt;&lt;/p&gt;
 &lt;p&gt;From here I can begin to create and consume native Kubernetes namespaces and resources.&lt;/p&gt;
 
         

@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vm guest customization on </title>
-    <link>https://darrylcauldwell.com/tags/vm-guest-customization/</link>
+    <link>http://darrylcauldwell.com/tags/vm-guest-customization/</link>
     <description>Recent content in vm guest customization on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/vm-guest-customization/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vm-guest-customization/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cloudbased-init For vSphere</title>
-      <link>https://darrylcauldwell.com/post/cloudbased-init/</link>
+      <link>http://darrylcauldwell.com/post/cloudbased-init/</link>
       <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/cloudbased-init/</guid>
+      <guid>http://darrylcauldwell.com/post/cloudbased-init/</guid>
       <description>
         
           &lt;p&gt;vRealize Automation Cloud and 8.x allows you to deploy and configure cloud agnostic virtual machines. To achieve agnostic in-guest OS customization capability across for on-premises vSphere, AWS, GCP and Azure endpoints &lt;a href=&#34;https://cloud-init.io/&#34;&gt;cloud-init&lt;/a&gt; is used for Linux guests and &lt;a href=&#34;https://cloudbase.it/cloudbase-init/&#34;&gt;cloudbase-init&lt;/a&gt; is used for Windows guests.&lt;/p&gt;
@@ -55,10 +55,10 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
     
     <item>
       <title>Understanding VMware Guest OS Customization</title>
-      <link>https://darrylcauldwell.com/post/guest-customization/</link>
+      <link>http://darrylcauldwell.com/post/guest-customization/</link>
       <pubDate>Wed, 11 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/guest-customization/</guid>
+      <guid>http://darrylcauldwell.com/post/guest-customization/</guid>
       <description>
         
           &lt;p&gt;I recently began looking more closely at cloud-init for customizing VMware guest VMs. This caused me some heachaches! I took various notes while troubleshooting and researching around this.&lt;/p&gt;
@@ -113,10 +113,10 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
     
     <item>
       <title>Create VMware Virtual Machine Templates</title>
-      <link>https://darrylcauldwell.com/post/vsphere-vm-templates/</link>
+      <link>http://darrylcauldwell.com/post/vsphere-vm-templates/</link>
       <pubDate>Tue, 17 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vsphere-vm-templates/</guid>
+      <guid>http://darrylcauldwell.com/post/vsphere-vm-templates/</guid>
       <description>
         
           &lt;p&gt;When creating virtual machine templates I&amp;rsquo;d like to do this consistently as such I&amp;rsquo;ll try and keep this post up to date with the settings I am including.&lt;/p&gt;
@@ -148,10 +148,10 @@ sed &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/^HWADDR/d&amp;#34;&lt;/s
     
     <item>
       <title>OpenStack Windows Image</title>
-      <link>https://darrylcauldwell.com/post/openstack-glance-win/</link>
+      <link>http://darrylcauldwell.com/post/openstack-glance-win/</link>
       <pubDate>Thu, 23 Apr 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/openstack-glance-win/</guid>
+      <guid>http://darrylcauldwell.com/post/openstack-glance-win/</guid>
       <description>
         
           &lt;p&gt;While looking at OpenStack as the control plane for vSphere it appears there isn&amp;rsquo;t too much detail and I found it tricky to create my first OpenStack image.  Here are the steps I followed.&lt;/p&gt;
@@ -174,7 +174,7 @@ sed &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/^HWADDR/d&amp;#34;&lt;/s
 &lt;li&gt;Click Create Image&lt;/li&gt;
 &lt;li&gt;Complete form using this as an example,  for Image File,  open the OVF file and select the VMDK you exported earlier&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-Image-Create.png&#34; alt=&#34;Openstack Image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openstack-glance-win-Image-Create.png&#34; alt=&#34;Openstack Image&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;6&#34;&gt;
 &lt;li&gt;Click Create Image&lt;/li&gt;
 &lt;li&gt;Wait while file uploads, it takes a while, you&amp;rsquo;ll be returned to console when it completes&lt;/li&gt;
@@ -188,7 +188,7 @@ sed &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/^HWADDR/d&amp;#34;&lt;/s
 &lt;li&gt;Click Launch Instance in right pane&lt;/li&gt;
 &lt;li&gt;Complete Details Form&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-InstanceLaunch.png&#34; alt=&#34;Openstack Instance Launch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openstack-glance-win-InstanceLaunch.png&#34; alt=&#34;Openstack Instance Launch&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;6&#34;&gt;
 &lt;li&gt;Ensure correct Security Group selected on Access and Security Tab&lt;/li&gt;
 &lt;li&gt;Ensure correct Network is selected on Networking tab&lt;/li&gt;
@@ -209,7 +209,7 @@ sed &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/^HWADDR/d&amp;#34;&lt;/s
 &lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--is-public&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;True &lt;span style=&#34;color:#ae81ff&#34;&gt;\
 &lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/var/tmp/Windows2008R2-VM10-disk1.vmdk&amp;lt;/code&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should get output like&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openstack-glance-win-streamOptimized2.png&#34; alt=&#34;Stream Optimized&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openstack-glance-win-streamOptimized2.png&#34; alt=&#34;Stream Optimized&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If you have uploaded an image already and found that its not streamOptimized you can change the attribute.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glance image-update &amp;lt;image_name or uuid&amp;gt; --property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;

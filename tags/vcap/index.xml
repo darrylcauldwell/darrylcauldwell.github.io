@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vcap on </title>
-    <link>https://darrylcauldwell.com/tags/vcap/</link>
+    <link>http://darrylcauldwell.com/tags/vcap/</link>
     <description>Recent content in vcap on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/vcap/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vcap/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VMware Certified Advanced Professional - Data Center Virtualization Design</title>
-      <link>https://darrylcauldwell.com/post/vcap-dcv-design/</link>
+      <link>http://darrylcauldwell.com/post/vcap-dcv-design/</link>
       <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vcap-dcv-design/</guid>
+      <guid>http://darrylcauldwell.com/post/vcap-dcv-design/</guid>
       <description>
         
           &lt;p&gt;Having passed the VCAP5-DCD exam with little to no studying only eighteen months ago and VCIX6-NV since. All things considered I was pretty confident of doing well in the VCAP6-DCV Design exam, and when I completed exam I was pretty sure I&amp;rsquo;d passed. To my surprise I failed the exam with a 285, to make matters worse during the drive home I couldn&amp;rsquo;t fathom in my mind where it had gone wrong.

@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>kubernetes on </title>
-    <link>https://darrylcauldwell.com/tags/kubernetes/</link>
+    <link>http://darrylcauldwell.com/tags/kubernetes/</link>
     <description>Recent content in kubernetes on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 12 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction To Kubernetes Cluster Networking with Antrea</title>
-      <link>https://darrylcauldwell.com/post/antrea/</link>
+      <link>http://darrylcauldwell.com/post/antrea/</link>
       <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/antrea/</guid>
+      <guid>http://darrylcauldwell.com/post/antrea/</guid>
       <description>
         
-          &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/antrea-logo.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/antrea-logo.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;what-is-antrea&#34;&gt;What is Antrea&lt;/h2&gt;
 &lt;p&gt;Antrea is Container Network Interface (CNI) plugin for Kubernetes. The Antrea CNI leverages Open vSwitch (OVS) to provides an overlay network and security services for a Kubernetes cluster. The overlay encapsulation uses Virtual Extensible LAN (VXLAN) by default, although Generic Network Virtualization Encapsulation (GENEVE), Generic Routing Encapsulation (GRE) or Stateless Transport Tunneling (STT) encapsulation can be configured. Antrea is an open source project hosted on GitHub &lt;a href=&#34;https://github.com/vmware-tanzu/antrea&#34;&gt;here&lt;/a&gt;. Using OVS also introduces other standard network management capabilities such NetFlow, sFlow, IP Flow Information Export (IPFIX) and Remote SPAN (RSPAN).&lt;/p&gt;
 &lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
 &lt;p&gt;Antrea is composed of several components deployed as Pods in the kube-system namespace of the cluster. The Antrea Conroller monitors the addition and deletion of objects by watching the Kubernetes API. A daemonset is deployed which druns Antrea Agent on each node the Agent applys flow configuration to Open vSwitch (OVS).&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/antrea-architecture.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/antrea-architecture.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The network configration required by Kubernetes is configured in a collection of Open vSwitch (OVS) flow tables. To make it easy to interpret each type of network traffic is classified and each traffic classification is stored in its own flow table.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/antrea-ovs-pipeline.svg&#34; alt=&#34;OVS Pipeline&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/antrea-ovs-pipeline.svg&#34; alt=&#34;OVS Pipeline&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;creating-a-simple-antrea-lab&#34;&gt;Creating A Simple Antrea Lab&lt;/h2&gt;
 &lt;p&gt;We can create a lab to look at Antrea anywhere we can run some VMs so on either a public cloud or a homelab. Create three Ubuntu 19.10 VMs with 2x CPU, 4GB RAM and 50GB vHDD, use Netplan to configure NIC to static IP addressing like.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;cat /etc/netplan/01-netcfg.yaml 
@@ -195,14 +195,14 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
     
     <item>
       <title>vSphere with Kubernetes Homelab Build</title>
-      <link>https://darrylcauldwell.com/post/vsphere-k8s/</link>
+      <link>http://darrylcauldwell.com/post/vsphere-k8s/</link>
       <pubDate>Wed, 29 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vsphere-k8s/</guid>
+      <guid>http://darrylcauldwell.com/post/vsphere-k8s/</guid>
       <description>
         
           &lt;p&gt;I&amp;rsquo;d been exploring Project Pacific during its beta in my homelab for a while. When vSphere 7 and NSX-T 3.0 went GA I took chance to rebuild lab and consolidate much of the configuration I&amp;rsquo;d been applying iteratively.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/tanzu-vsphere.png&#34; alt=&#34;vSphere with Tanzu&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/tanzu-vsphere.png&#34; alt=&#34;vSphere with Tanzu&#34;&gt;&lt;/p&gt;
 &lt;p&gt;My lab hardware specification is a constraint so I&amp;rsquo;ve had to deviate from documentation in a few areas of configuration. During stand up and power up hosts experience CPU and RAM pressure but once everything is running in steady state it is tight but just fits.&lt;/p&gt;
 &lt;h2 id=&#34;single-vlan--subnet-lab-network&#34;&gt;Single VLAN / subnet Lab Network&lt;/h2&gt;
 &lt;p&gt;My lab has a very simple physical network namely a single subnet (192.168.1.0/24) with DHCP enabled and which has default route to the internet.&lt;/p&gt;
@@ -461,7 +461,7 @@ Image Cache                     vSAN Default Storage Policy
 &lt;p&gt;The progress messages available via UI aren&amp;rsquo;t superb its useful to SSH to VCSA and tail the log:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;tail -f /var/log/vmware/wcp/wcpsvc.logtail -f /var/log/vmware/wcp/wcpsvc.log
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If all has goes to plan an hour and a half or so later and if all gone to plan.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/tanzu-wcp.png&#34; alt=&#34;WCP Success&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/tanzu-wcp.png&#34; alt=&#34;WCP Success&#34;&gt;&lt;/p&gt;
 &lt;p&gt;From here I can begin to create and consume native Kubernetes namespaces and resources.&lt;/p&gt;
 
         
@@ -470,13 +470,13 @@ Image Cache                     vSAN Default Storage Policy
     
     <item>
       <title>Introduction To Kubernetes Cluster Networking with NSX-T</title>
-      <link>https://darrylcauldwell.com/post/k8s-nsxt/</link>
+      <link>http://darrylcauldwell.com/post/k8s-nsxt/</link>
       <pubDate>Tue, 31 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/k8s-nsxt/</guid>
+      <guid>http://darrylcauldwell.com/post/k8s-nsxt/</guid>
       <description>
         
-          &lt;p&gt;When developing a cloud native application using Docker containers she soon needs to understand how Docker containers communicate. In previous &lt;a href=&#34;https://darrylcauldwell.com/post/docker-networking&#34;&gt;post&lt;/a&gt; I looked at how Docker containers communicate on a single host. When the developer wants to scaleout capacity of the hosting across multiple hosts or increase abailability she might look at deploying this on a Kubernetes cluster. The move from single Docker host to multiple hosts managed as Kubernetes Cluster introduces changes to the container networking model. The four distinct networking problems a Kubernetes Cluster needs to address:&lt;/p&gt;
+          &lt;p&gt;When developing a cloud native application using Docker containers she soon needs to understand how Docker containers communicate. In previous &lt;a href=&#34;http://darrylcauldwell.com/post/docker-networking&#34;&gt;post&lt;/a&gt; I looked at how Docker containers communicate on a single host. When the developer wants to scaleout capacity of the hosting across multiple hosts or increase abailability she might look at deploying this on a Kubernetes cluster. The move from single Docker host to multiple hosts managed as Kubernetes Cluster introduces changes to the container networking model. The four distinct networking problems a Kubernetes Cluster needs to address:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Highly-coupled container-to-container communications&lt;/li&gt;
 &lt;li&gt;Pod-to-Pod communications&lt;/li&gt;
@@ -486,7 +486,7 @@ Image Cache                     vSAN Default Storage Policy
 &lt;h2 id=&#34;what-is-a-kubernetes-pod&#34;&gt;What Is A Kubernetes Pod&lt;/h2&gt;
 &lt;p&gt;A Docker container is great for deploying a single atomic unit of software. This model can become a bit cumbersome when you want to run multiple pieces of software together. You often see this when developers create Docker images that use &lt;a href=&#34;https://docs.docker.com/config/containers/multi-service_container/&#34;&gt;supervisord&lt;/a&gt; as an entrypoint to start and manage multiple processes. Many have found that it is instead more useful to deploy those applications in groups of containers that are partially isolated and partially share an environment. It is possible to configure Docker to control the level of sharing between groups of containers by creating a parent container and manage the lifetime of those containers, however this is administratively complex. Kubernetes provides an abstraction called Pods for just this use case.&lt;/p&gt;
 &lt;p&gt;A Kubernetes Pod implements a &amp;lsquo;pause&amp;rsquo; container as the managing parent container, the Pod also contains one or more of  application containers. The &amp;lsquo;pause&amp;rsquo; container serves as the basis of Linux namespace sharing in the Pod the other containers are starterd within that namespace. Sharing a namespace includes sharing network stack and other resources such as volumes. Sharing a network namespace means containers within a Pod share an IP address and all containers within a Pod can all reach each other’s ports on localhost.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-pod.png&#34; alt=&#34;Kubernets Pod&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-pod.png&#34; alt=&#34;Kubernets Pod&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;what-is-a-kubernetes-service&#34;&gt;What Is A Kubernetes Service&lt;/h2&gt;
 &lt;p&gt;Typically a Kubernetes Deployment is used to When a Kubernetes Pod is deployed Pods. A Deployment describes a desired state it can create and destroy Pods dynamically. While each Pod gets its own IP address, the set of Pods running can change. A Kubernetes Service (sometimes called a micro-service) is an abstraction which defines a logical set of Pods. The Kubernetes API provides Service discovery to Pods, it also offers a method of exposing Services via network port or load balancer to external systems.&lt;/p&gt;
 &lt;h2 id=&#34;what-is-container-networking-interface-cni&#34;&gt;What Is Container Networking Interface (CNI)&lt;/h2&gt;
@@ -548,11 +548,11 @@ Image Cache                     vSAN Default Storage Policy
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier0.png&#34; alt=&#34;NSX-T Tier-0 Router&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-tier0.png&#34; alt=&#34;NSX-T Tier-0 Router&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To communicate with the physical network the Tier-0 requires an uplink IP address.  In order to add uplink IP address we require creating a network segment backed by VLAN.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-physical-segment.png&#34; alt=&#34;VLAN Backed Segment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-physical-segment.png&#34; alt=&#34;VLAN Backed Segment&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can now configure an interface on the Tier-0 with IP address 192.168.1.17.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier0-uplink.png&#34; alt=&#34;NSX-T Tier-0 Uplink&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-tier0-uplink.png&#34; alt=&#34;NSX-T Tier-0 Uplink&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To enable ExternalIP routing from physical network add a static route to physical router directing 172.16.0.0/16 to 192.168.1.17.&lt;/p&gt;
 &lt;h3 id=&#34;nsx-ip-block-for-internal-clusterip&#34;&gt;NSX IP Block for internal ClusterIP&lt;/h3&gt;
 &lt;p&gt;NSX-T has an inbuilt capability for IP Management, in which we can allocate blocks of IP Addresses and create IP Pools.&lt;/p&gt;
@@ -576,10 +576,10 @@ Image Cache                     vSAN Default Storage Policy
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-internal-block.png&#34; alt=&#34;Internal Block&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-internal-block.png&#34; alt=&#34;Internal Block&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-ip-pool-for-externalip&#34;&gt;NSX IP Pool for ExternalIP&lt;/h2&gt;
 &lt;p&gt;The NCP requires an IP Pool for issuing internal ExternalIP. First create an IP Block named &amp;lsquo;k8s-1-external&amp;rsquo; with CIDR 172.16.0.0/16. This IP Block is not accessed directly by NCP so does not need any tags.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-external-block.png&#34; alt=&#34;External Block&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-external-block.png&#34; alt=&#34;External Block&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the IP Block is in place create an IP Pool named &amp;lsquo;k8s-1-loadbalancer&amp;rsquo; which has a subnet issued from IP Block &amp;lsquo;k8s-1-external&amp;rsquo; which is sized at 128 the IP Pool.  The External IP Pool can be shared but should at least have tag applied like this:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -596,10 +596,10 @@ Image Cache                     vSAN Default Storage Policy
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-external-pool.png&#34; alt=&#34;External Block Tag&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-external-pool.png&#34; alt=&#34;External Block Tag&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;node-logical-switch&#34;&gt;Node Logical Switch&lt;/h2&gt;
 &lt;p&gt;Network connectivity to the containers running in Kubernetes is provided by a NSX-T logical switch segment which is often referred to as the node logical switch. For this create a new segment called &amp;lsquo;node-logical-switch&amp;rsquo; within the &amp;lsquo;overlayTransportZone&amp;rsquo; connected to no gateway.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-node-logical-switch.png&#34; alt=&#34;Node Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-node-logical-switch.png&#34; alt=&#34;Node Logical Switch&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;kubernetes-master-vm&#34;&gt;Kubernetes Master VM&lt;/h2&gt;
 &lt;p&gt;Create a Ubuntu 18.04 VM with 2x CPU, 4GB RAM and 50GB vHDD named &amp;lsquo;k8s-master&amp;rsquo;. The VM should have two vNIC one which is used to communicate with NSX API and which will host Kubernetes API. The second connected to the node logical switch which will have the Open vSwitch (OVS) bridge configured to give connectivity to the Pods. In my lab first connected to &amp;lsquo;VM Network&amp;rsquo; enumerates as ens160 and the scond connected to &amp;lsquo;node-logical-switch&amp;rsquo; enumerates as ens192.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;cat /etc/netplan/01-netcfg.yaml 
@@ -638,7 +638,7 @@ network:
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;When applied it should look like:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-segment-port-tags.png&#34; alt=&#34;Segment Port Tags&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-segment-port-tags.png&#34; alt=&#34;Segment Port Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;install-and-configure-kubernetes&#34;&gt;Install and Configure Kubernetes&lt;/h2&gt;
 &lt;p&gt;Docker and Kubernetes require installation do this by running the following.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;sudo apt update -y
@@ -661,10 +661,10 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can now connect to cluster and check the state of the nodes, do this by running the following on the Master node.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get nodes
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-init-get-nodes.png&#34; alt=&#34;Init Get Nodes&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-init-get-nodes.png&#34; alt=&#34;Init Get Nodes&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The status of each Node will show &amp;lsquo;NotReady&amp;rsquo;,  we can get more details of why it is in this state by running the following on the Master node.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl describe nodes k8s-master | grep Conditions -A9
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-init-describe-node.png&#34; alt=&#34;Init Describe Nodes&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-init-describe-node.png&#34; alt=&#34;Init Describe Nodes&#34;&gt;&lt;/p&gt;
 &lt;p&gt;With this we can see this reason for the error is &amp;lsquo;NetworkPluginNotReady&amp;rsquo; that the cni plugin is not initiated.&lt;/p&gt;
 &lt;h2 id=&#34;install-and-configure-nsx-container-plug-in-ncp&#34;&gt;Install and Configure NSX Container Plug-in (NCP)&lt;/h2&gt;
 &lt;p&gt;The NSX Container Plug-in (NCP) provides integration between NSX-T and Kubernetes, it is a containerised application which manages communicates between NSX Manager and the Kubernetes control plane. The NSX Container Plug-in (NCP) application runs in Kubernetes it is supplied as .zip download. The configuration of the NCP applications is maintained in a Kubernetes manifest file.&lt;/p&gt;
@@ -786,10 +786,10 @@ ovs_uplink_port = ens192
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the manifest file is updated and docker image in local registry we can apply the NCP manifest. Applying the manifest takes a couple of minutes while as it creates various Pods we can watch their creation to view progress.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl apply --filename /home/ubuntu/ncp-ubuntu.yaml
 kubectl get pods --output wide --namespace nsx-system --watch
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-deploy-ncp.png&#34; alt=&#34;Deploy NCP&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-deploy-ncp.png&#34; alt=&#34;Deploy NCP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If all has gone well we can take a look at the objects created within the namespace.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get all --namespace nsx-system
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-deployed-ncp.png&#34; alt=&#34;Deployed NCP&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-deployed-ncp.png&#34; alt=&#34;Deployed NCP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now its running we can check health of the NCP, the NCP has a &lt;a href=&#34;https://docs.vmware.com/en/VMware-NSX-T-Data-Center/2.5/ncp-kubernetes/GUID-EA8E6CEE-36F4-423C-AD1E-DD6421A5FB1C.html&#34;&gt;CLI&lt;/a&gt; where we can run various commands including health checks.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl exec -it nsx-ncp-6978b9cb69-dj4k2 --namespace nsx-system -- /bin/bash 
 nsxcli
@@ -797,13 +797,13 @@ get ncp-k8s-api-server status
 get ncp-nsx status
 exit
 exit
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ncp-health.png&#34; alt=&#34;NCP Health&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-ncp-health.png&#34; alt=&#34;NCP Health&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-policy-ui-object-creation&#34;&gt;NSX Policy UI Object Creation&lt;/h2&gt;
 &lt;p&gt;With NSX integration when we deploy a Kubernetes namespace the NCP creates a corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.  If you open NSX Manager and view one of the object categories which should have objects created. Then create two Kubernetes namespaces one called development and one called production.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl create --filename https://k8s.io/examples/admin/namespace-dev.json
 kubectl create --filename https://k8s.io/examples/admin/namespace-prod.json
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you refresh view in NSX Manager you will see the new objects appear in the Policy UI.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-tier1s.png&#34; alt=&#34;NSX-T Tier-1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-tier1s.png&#34; alt=&#34;NSX-T Tier-1&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then remove these two namespaces the NCP removes the corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl delete -f https://k8s.io/examples/admin/namespace-prod.json
@@ -812,10 +812,10 @@ kubectl delete -f https://k8s.io/examples/admin/namespace-prod.json
 &lt;p&gt;Create a second and third VM with same hardware configuration as k8s-master but name these k8s-worker-1 / k8s-worker-2 and give IPs 192.168.1.28  / 192.168.1.29.  Ensure the NSX segment port attached to  VMs is tagged correctly. Ensure the NCP docker image is uploaded, imported to local docker registry and has tag applied.&lt;/p&gt;
 &lt;p&gt;To add the additional Node to the cluster first step is to create a token on master.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubeadm token create --print-join-command
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-token.png&#34; alt=&#34;Token&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-token.png&#34; alt=&#34;Token&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We use the output of command from the master to add the additional worker nodes to the cluster. The nsx-ncp-bootstap and nsx-node-agent are DaemonSets this ensures that all Nodes run a copy of a Pod. When we add the worker nodes to the cluster we can see the nsx-ncp-bootstrap Pods initialize and configure the Node and the nsx-node-agent Pods initialize.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get pods -o wide --namespace nsx-system --watch
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ncp-scale-out.png&#34; alt=&#34;NCP Scale Out&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-ncp-scale-out.png&#34; alt=&#34;NCP Scale Out&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-assignments&#34;&gt;IP Assignments&lt;/h2&gt;
 &lt;p&gt;When a Pod is deployed it can be exposed as a Service, the service&lt;/p&gt;
 &lt;p&gt;If we deploy an simple stateless application example like &lt;a href=&#34;https://kubernetes.io/docs/tutorials/stateless-application/guestbook/&#34;&gt;guestbook&lt;/a&gt;.&lt;/p&gt;
@@ -829,16 +829,16 @@ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployme
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When we configures the lab we created NSX managed IP Block 10.0.0.0/16. When created the development namespace got allocated a /24 subnet from this block. If we view the Pods get IP in correct range.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get pods --output wide
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-internal-ip-allocation.png&#34; alt=&#34;Internal IP Allocation&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-internal-ip-allocation.png&#34; alt=&#34;Internal IP Allocation&#34;&gt;&lt;/p&gt;
 &lt;p&gt;As well as Pod deployments the guestbook application installation also creates Service resources. A Service is an abstraction which defines a logical set of Pods. Our application runs three frontend pods and two Redis slaves the Service provides virtual IP. The kube-proxy is responsible for implementing the virtual IP for Services. We can see the ClusterIP are issued from the last /20 of the Pod address range. If we look in more detail at the Service resource we can see the three internal IP addresses behind it.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl get services --namespace development
 kubectl cluster-info dump | grep -m 1 service-cluster-ip-range
 kubectl describe service frontend
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-clusterip.png&#34; alt=&#34;Cluster IP&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-clusterip.png&#34; alt=&#34;Cluster IP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;To facilitate communications between Pods the NCP is configuring the Open vSwitch on each Node. The Open vSwitch user space daemon runs on a container named nsx-ovs within the nsx-node-agent Pods. The Open vSwitch bridge name can be specified in the ncp.ini but defaults to br-int. If we connect to this container we can view the Open vSwitch flows .&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl exec -it nsx-node-agent-llf2c -c nsx-ovs bash --namespace nsx-system
 ovs-ofctl dump-flows br-int
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/k8s-nsxt-ovs-flows.png&#34; alt=&#34;OVS Flows&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/k8s-nsxt-ovs-flows.png&#34; alt=&#34;OVS Flows&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then remove the namespace and all objects within.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-loadbalancer&#34;&gt;NSX Loadbalancer&lt;/h2&gt;
@@ -901,10 +901,10 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
     
     <item>
       <title>NSX-T for OpenShift</title>
-      <link>https://darrylcauldwell.com/post/nsx-openshift/</link>
+      <link>http://darrylcauldwell.com/post/nsx-openshift/</link>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/nsx-openshift/</guid>
+      <guid>http://darrylcauldwell.com/post/nsx-openshift/</guid>
       <description>
         
           &lt;p&gt;While looking at the various documentation sets I found it difficult to understand the NSX-T and OpenShift integration. A lot was masked by configuration performed by Ansible scripts. Here I try and record my understanding of the technology and then work through getting this running in a capacity constrained lab environment.&lt;/p&gt;
@@ -915,7 +915,7 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
 &lt;h2 id=&#34;container-networking-framework-background&#34;&gt;Container Networking Framework Background&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/docker/libnetwork/blob/master/docs/design.md&#34;&gt;Libnetwork&lt;/a&gt; is the canonical implementation Container Network Model (CNM) which formalizes the steps required to provide networking for containers while providing an abstraction that can be used to support multiple network drivers. Libnetwork provides an interface between the Docker daemon and network drivers. Container Network Model (CNM) is designed to support the Docker runtime engine only.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/containernetworking/cni&#34;&gt;Container Network Interface&lt;/a&gt; (CNI), consists of a specification and libraries for writing plugins to configure network interfaces in Linux containers, along with a number of supported plugins. Container Network Interface (CNI) supports integration with any container runtime.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-cni.jpeg&#34; alt=&#34;Container Network Interface (CNI) Integration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-cni.jpeg&#34; alt=&#34;Container Network Interface (CNI) Integration&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vmware-nsx-and-kubernetes-integration&#34;&gt;VMware NSX and Kubernetes Integration&lt;/h2&gt;
 &lt;p&gt;VMware provide an &lt;a href=&#34;https://my.vmware.com/group/vmware/details?downloadGroup=NSX-T-PKS-221&amp;amp;productId=673&#34;&gt;NSX Container Plugin package&lt;/a&gt; which contains the required modules to integrate NSX-T with Kubernetes.&lt;/p&gt;
 &lt;ul&gt;
@@ -929,12 +929,12 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
 &lt;li&gt;NSX Container Network Interface (CNI) - is an executable which allow the integration of NSX into Kubernetes.&lt;/li&gt;
 &lt;li&gt;Open vSwitch&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp.jpeg&#34; alt=&#34;NSX and Kubernetes Integration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp.jpeg&#34; alt=&#34;NSX and Kubernetes Integration&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-for-openshift&#34;&gt;NSX For OpenShift&lt;/h2&gt;
 &lt;p&gt;NSX implements a discreet network topology per Kubernetes namespace. NSX maps logical network elements like logical switches and distributed logical router to Kubernetes namespaces. Each of those network topologies can be directly routed, or privately addressed and behind NAT.&lt;/p&gt;
 &lt;h2 id=&#34;nsx-for-openshift-homelab&#34;&gt;NSX For OpenShift Homelab&lt;/h2&gt;
 &lt;p&gt;For the rest of this blog post I am aiming to create a NSX OpenShift integration. I aiming for two namespaces, each with a logical router and three subnets. The namespaces will use private address ranges and the tier-0 router will provide SNAT connectivity to the routed network.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-topology.jpeg&#34; alt=&#34;NSX Topology&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-topology.jpeg&#34; alt=&#34;NSX Topology&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;starting-point-homelab-configuration&#34;&gt;Starting point homelab configuration&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;1GbE Switch (Layer 2 only)
@@ -959,12 +959,12 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
 &lt;/ul&gt;
 &lt;h2 id=&#34;nsx-management-plane&#34;&gt;NSX Management Plane&lt;/h2&gt;
 &lt;p&gt;Deploy a small NSX unifed appliance specifying the nsx-manager role. Once deployed link this to vCenter, to do this add vCenter in &amp;lsquo;Fabric / Compute Manager&amp;rsquo;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-compute-manager.jpeg&#34; alt=&#34;NSX-T Management Plane&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-compute-manager.jpeg&#34; alt=&#34;NSX-T Management Plane&#34;&gt;&lt;/p&gt;
 &lt;p&gt;With the manager in place we now need to create the management plane, to do this we need to install the management plane agent (MPA) on each host so they are added as usable Fabric Nodes.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-nodes.jpeg&#34; alt=&#34;NSX-T Fabric Nodes&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-nodes.jpeg&#34; alt=&#34;NSX-T Fabric Nodes&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;tunnel-endpoint-ip-pool&#34;&gt;Tunnel Endpoint IP Pool&lt;/h2&gt;
 &lt;p&gt;We create an IP pool one for the Transort Nodes to communicate for my scenario the three ESXi hosts and an edge will all participate so I create an IP Pool with four addresses. Navigate to Inventory &amp;gt; Groups &amp;gt; IP Pools and click add.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ip-pool.png&#34; alt=&#34;NSX-T IP Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-ip-pool.png&#34; alt=&#34;NSX-T IP Pool&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-control-plane&#34;&gt;NSX Control Plane&lt;/h2&gt;
 &lt;p&gt;In order to create an overlay network we need an NSX Controller to manage the hosts. NSX Controllers serve as the central control point got all hosts, logical switches, and logical routers.&lt;/p&gt;
 &lt;p&gt;While NSX Manager can deploy and configure NSX Controllers the size cannot be selected. As lab is resource constrained I only want a small NSX Controller, the &amp;lsquo;NSX Controller for VMware ESXi&amp;rsquo; is a separate OVA download where size can be selected.&lt;/p&gt;
@@ -976,22 +976,22 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
 set control-cluster security-model shared-secret
 
 initialize control-cluster
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This should then be viewable in NSX Manager&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;overlay-transport-zone&#34;&gt;Overlay Transport Zone&lt;/h2&gt;
 &lt;p&gt;All the virtual network objects will need to communicate across an overlay network. To faciliate this the three esxi hosts and edges need to be part of an Overlay Transport Zone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport.jpeg&#34; alt=&#34;NSX-T Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-transport.jpeg&#34; alt=&#34;NSX-T Transport Zone&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once we have a Transport Zone we can add our NSX fabric nodes as transport nodes. Navigate menu to Select Fabric &amp;gt; Transport Nodes and click Add.  A wizard will open on the general tab select first Node (host), give appropriate name for that host and select the openshift transport zone.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-transport-node.jpeg&#34; alt=&#34;NSX-T Transport Node&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-transport-node.jpeg&#34; alt=&#34;NSX-T Transport Node&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Change to N-VDS tab, create N-VDS for openshift, select default NIOC, select default hostswitch Uplink profile, select transport IP Pool and enter Physical NIC identifier for Uplink-1.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order that the NSX Container Plugin can find the correct NSX objects all of the NSX objects created require a tag applying. For this lab build I am using tag dc-openshift. Navigate within NSX Manager to Fabric &amp;gt; Transport Zones, select overlay network then Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vlan-transport-zone&#34;&gt;VLAN Transport Zone&lt;/h2&gt;
 &lt;p&gt;As well as connecting to the overlay network the Edges running Tier-0 routing functions also needs to be able to connect to the physical network. This connectivity is achieved by using a Transport Zone of type VLAN.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-vlan-transport.png&#34; alt=&#34;NSX-T VLAN Transport Zone&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-vlan-transport.png&#34; alt=&#34;NSX-T VLAN Transport Zone&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-edge&#34;&gt;NSX Edge&lt;/h2&gt;
 &lt;p&gt;We need some way for the logical container overlay network to communicate with the physical network. AN NSX Edge can host services which provide this connectivity.&lt;/p&gt;
 &lt;p&gt;The NSX Edge has 4 network adapters, the first is used by the management network, the other 3 interfaces (fp-eth0, fp-eth1 and fp-eth2) can then be used for connecting to overlay networks or for routing. Within my lab I have a single flat physical network so all NSX Edge interfaces connect to the same Port Group.&lt;/p&gt;
@@ -1031,35 +1031,35 @@ initialize control-cluster
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge.jpeg&#34; alt=&#34;NSX-T Add Edge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge.jpeg&#34; alt=&#34;NSX-T Add Edge&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The NSX Edge needs to participate in the Overlay Transport Zone so we need to first configure this as Transport Node.  This is very similar process to how we setup ESXi hosts as Transport Nodes except on N-VDS tab we add to both overlay and vlan transport zones,  we use the edge-vm Uplink profile and for Virtual NIC select appropriate NIC as per table above.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-nvds.png&#34; alt=&#34;NSX-T Edge N-VDS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge-nvds.png&#34; alt=&#34;NSX-T Edge N-VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order we can deploy Tier-0 router the Edge needs to be a member of an Edge Cluster.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-edge-cluster.jpeg&#34; alt=&#34;NSX-T Add Edge Cluster&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-edge-cluster.jpeg&#34; alt=&#34;NSX-T Add Edge Cluster&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;tier-0-router&#34;&gt;Tier-0 Router&lt;/h2&gt;
 &lt;p&gt;Once the Edge Cluster is created we can create the tier-0 router.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Router&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Router&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In my lab I have 192.168.1.0 /24 and will be using the 172.16.0.0 /16 address space for NSX. I would like to use network address translation (NAT) and allocate a separate SNAT IP on the 192.168.1.0 network for each OpenShift namespace on the 172.16.0.0 network.  To achieve this I need to configure a redistribution criteria of type Tier-0 NAT.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-redist.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Route Redist&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0-route-redist.jpeg&#34; alt=&#34;NSX-T Add Edge Tier-0 Route Redist&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The next step requires an NSX Logical Switch so we create that.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-logical-switch.jpeg&#34; alt=&#34;NSX-T Add Logical Switch&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-logical-switch.jpeg&#34; alt=&#34;NSX-T Add Logical Switch&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can now configure the Router Port,  selecting the Transport Node and Logical Switch.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This will be used by OpenShift to once created navigate to Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-block-kubernetes-pods&#34;&gt;IP Block Kubernetes Pods&lt;/h2&gt;
 &lt;p&gt;In order to create the topology we are aiming for we need to create an IP Blocks for each of our two namespaces.  Within each IP Block we need to create the three subnets. In the end you should end up with something which looks like this, and all IP Block needs to have the ncp/cluster tag.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-ddi-blocks.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-ddi-blocks.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-pool-snat&#34;&gt;IP Pool SNAT&lt;/h2&gt;
 &lt;p&gt;We create an IP pool for the tier-0 router to issue SNAT and provide external (floating) IPs to OpenShift.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once created add the following two tags,&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
 Scope = ncp/external and Tag = true
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;red-hat-openshift-origin&#34;&gt;Red Hat OpenShift Origin&lt;/h2&gt;
 &lt;p&gt;OpenShift Origin is a computer software product from Red Hat for container-based software deployment and management. It is a supported distribution of Kubernetes using Docker containers and DevOps tools for accelerated application development.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/openshift.jpeg&#34; alt=&#34;Openshift Stack&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/openshift.jpeg&#34; alt=&#34;Openshift Stack&#34;&gt;&lt;/p&gt;
 &lt;p&gt;OpenShift Origin is the upstream community project used in &lt;a href=&#34;https://www.openshift.com/products/online/&#34;&gt;OpenShift Online&lt;/a&gt;, &lt;a href=&#34;https://www.openshift.com/products/dedicated/&#34;&gt;OpenShift Dedicated&lt;/a&gt;, and &lt;a href=&#34;https://www.openshift.com/products/container-platform/&#34;&gt;OpenShift Container Platform (formerly known as OpenShift Enterprise)&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;VMware provides &lt;a href=&#34;https://github.com/vmware/nsx-integration-for-openshift&#34;&gt;Red Hat Ansible playbooks for installing NSX-T for OpenShift Container Platform&lt;/a&gt;. However, OpenShift Container Platform is a licensed product and this deploys a scaled-out deployment. Neither of these lend itself to a home lab deployment, my goal for the rest of this blog post is to detail the steps I follow for a cutdown installation.&lt;/p&gt;
 &lt;h2 id=&#34;create-openshift-origin-base-vm&#34;&gt;Create OpenShift Origin Base VM&lt;/h2&gt;

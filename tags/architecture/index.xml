@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>architecture on </title>
-    <link>https://darrylcauldwell.com/tags/architecture/</link>
+    <link>http://darrylcauldwell.com/tags/architecture/</link>
     <description>Recent content in architecture on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 29 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/architecture/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 29 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/architecture/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The DevOps Infrastructure Architect</title>
-      <link>https://darrylcauldwell.com/post/devops-architect/</link>
+      <link>http://darrylcauldwell.com/post/devops-architect/</link>
       <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/devops-architect/</guid>
+      <guid>http://darrylcauldwell.com/post/devops-architect/</guid>
       <description>
         
           &lt;p&gt;One common critisism of Agile teams is they are architecturally weak and disconnected from the operational realities of complex enterprise environments. Traditional enterprise architecture processes are viewed focusing on delivering documentation rather than delivering a working solution, slow, and focussed on delivering monolith design rather than continuous delivery of small incremental updates.&lt;/p&gt;
@@ -45,10 +45,10 @@
     
     <item>
       <title>AWS Certified Solutions Architect Professional - Study Link O&#39;Rama</title>
-      <link>https://darrylcauldwell.com/post/aws-sa-study/</link>
+      <link>http://darrylcauldwell.com/post/aws-sa-study/</link>
       <pubDate>Wed, 19 Oct 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/aws-sa-study/</guid>
+      <guid>http://darrylcauldwell.com/post/aws-sa-study/</guid>
       <description>
         
           &lt;p&gt;While studying to become a &lt;a href=&#34;https://aws.amazon.com/certification/certified-solutions-architect-professional/&#34;&gt;AWS Certified Solutions Architect - Professional&lt;/a&gt; I have been passed and found lots of resources, in this post I am trying to store the links which are useful. I started my journey with the &lt;a href=&#34;https://d0.awsstatic.com/training-and-certification/docs-sa-pro/AWS_certified_solutions_architect_professional_blueprint.pdf&#34;&gt;AWS exam blueprint&lt;/a&gt;. This is I believe the perfect place to start to study as it describes when exactly is covered by the exam and the weighted value of each skill being measured. I&amp;rsquo;ve then categorised the many study links I have been passed under each knowledge domain.&lt;/p&gt;

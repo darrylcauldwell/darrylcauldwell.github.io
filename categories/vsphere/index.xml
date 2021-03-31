@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vsphere on </title>
-    <link>https://darrylcauldwell.com/categories/vsphere/</link>
+    <link>http://darrylcauldwell.com/categories/vsphere/</link>
     <description>Recent content in vsphere on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 04 Jun 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/categories/vsphere/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 04 Jun 2015 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/categories/vsphere/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Docker On Photon On vCloud Air</title>
-      <link>https://darrylcauldwell.com/post/docker-photon/</link>
+      <link>http://darrylcauldwell.com/post/docker-photon/</link>
       <pubDate>Thu, 04 Jun 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/docker-photon/</guid>
+      <guid>http://darrylcauldwell.com/post/docker-photon/</guid>
       <description>
         
           &lt;p&gt;There has been a lot of industry noise around Docker and VMware project Photon so these have been on the agenda to explore as well.  I generally perform my little research projects running nested ESXi on VMware Fusion on my laptop, but VMware are &lt;a href=&#34;http://vcloud.vmware.com/uk/service-offering/virtual-private-cloud-ondemand&#34;&gt;offering £300 of free service credits&lt;/a&gt; for trialing vCloud Air OnDemand.  Here is my how to guide of the steps I used.&lt;/p&gt;
@@ -31,7 +31,7 @@
 &lt;/ol&gt;
 &lt;h2 id=&#34;base-photon-configuration&#34;&gt;Base Photon Configuration&lt;/h2&gt;
 &lt;p&gt;Open remote console to the Photon VM and it should be at boot menu.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon.jpg&#34; alt=&#34;Photon OS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon.jpg&#34; alt=&#34;Photon OS&#34;&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;From boot menu select Install&lt;/li&gt;
 &lt;li&gt;Accept EULA,  and defaults through disk partitioning&lt;/li&gt;
@@ -45,34 +45,34 @@
 &lt;li&gt;Use &lt;a href=&#34;http://www.virten.net/2015/04/basic-commands-for-vmware-photon-and-docker/&#34;&gt;this post&lt;/a&gt; to enable SSH and set static IP address to 192.168.109.100/24 with gateway of 192.168.109.1.&lt;/li&gt;
 &lt;li&gt;If we navigate to vCloud Director view &amp;lsquo;Administration&amp;rsquo; tab,  select vDC in the left pane and choose &amp;lsquo;Edge Gateway&amp;rsquo; in the right pane.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon-vCD_Gateway.jpg&#34; alt=&#34;vCloud Director Gateway&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-vCD_Gateway.jpg&#34; alt=&#34;vCloud Director Gateway&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;4&#34;&gt;
 &lt;li&gt;Select &amp;lsquo;gateway&amp;rsquo; and select the Action for &amp;lsquo;External IP Allocations&amp;rsquo;,  note down the external IP address.&lt;/li&gt;
 &lt;li&gt;Ensure &amp;lsquo;gateway&amp;rsquo; still selected and select the Action for &amp;lsquo;Edge Gateway Services&amp;rsquo;,  change to the NAT tab,  and click &amp;lsquo;Add DNAT&amp;rsquo;,  change applied to to your network add the External IP address as you noted just before,  select port 22 (SSH) for Outgoing and Translated ports,  and give the Photon IP address as the Internal IP.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon-Air_NAT.jpg&#34; alt=&#34;vCloud Director NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-Air_NAT.jpg&#34; alt=&#34;vCloud Director NAT&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;6&#34;&gt;
 &lt;li&gt;Ensure &amp;lsquo;gateway&amp;rsquo; still selected and select the Action for &amp;lsquo;Edge Gateway Services&amp;rsquo;,  change to the firewall tab and add ingress firewall rule called SSH-In from external to specific IP 192.168.109.100 port 22.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon-Air_FW.jpg&#34; alt=&#34;vCloud Director Firewall&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-Air_FW.jpg&#34; alt=&#34;vCloud Director Firewall&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;7&#34;&gt;
 &lt;li&gt;If all has gone to plan you should now be able to connect from a remote SSH client.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon-Remote_SSH.jpg&#34; alt=&#34;SSH Remote Shell&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-Remote_SSH.jpg&#34; alt=&#34;SSH Remote Shell&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;enable-vcloud-air-vm-internet-access&#34;&gt;Enable vCloud Air VM Internet Access&lt;/h2&gt;
 &lt;p&gt;To enable our vCloud Air VMs to access the internet we need to configure a NAT rule to handle the private to public address and also a firewall rule to allow the traffic.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Add a source NAT rule,  for Original Source enter 192.168.109.0/24 and for Translated Source select your public IP address.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon-SNAT.png&#34; alt=&#34;Source NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-SNAT.png&#34; alt=&#34;Source NAT&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;2&#34;&gt;
 &lt;li&gt;Add a firewall rule to allow all traffic outbound,  give it name Any-Out,  Source as &amp;lsquo;Internal&amp;rsquo; and destination &amp;lsquo;External&amp;rsquo;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon-FW_Out.png&#34; alt=&#34;Outbound Firewall&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-FW_Out.png&#34; alt=&#34;Outbound Firewall&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;3&#34;&gt;
 &lt;li&gt;Your Photon VM should now be able to talk to the Internet&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.com/images/docker-photon-nslookup.png&#34; alt=&#34;Outbound Connectivity Test&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-nslookup.png&#34; alt=&#34;Outbound Connectivity Test&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;docker&#34;&gt;Docker&lt;/h2&gt;
 &lt;p&gt;Docker itself is included in the Photon image so with Internet connectivity you can pull things from public repositories and away you go.&lt;/p&gt;
 

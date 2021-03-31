@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vpc on </title>
-    <link>https://darrylcauldwell.com/tags/vpc/</link>
+    <link>http://darrylcauldwell.com/tags/vpc/</link>
     <description>Recent content in vpc on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 14 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Setup VPC Peering With Ansible</title>
-      <link>https://darrylcauldwell.com/post/vpc-ansible/</link>
+      <link>http://darrylcauldwell.com/post/vpc-ansible/</link>
       <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/vpc-ansible/</guid>
+      <guid>http://darrylcauldwell.com/post/vpc-ansible/</guid>
       <description>
         
           &lt;p&gt;In this post I look at setting up &lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/vpc-peering-overview.html&#34;&gt;AWS VPC peering&lt;/a&gt; using Ansible. To do this we will start simple and add complexity to our configuration, we will start with peering within a single account and then move to script across accounts.&lt;/p&gt;

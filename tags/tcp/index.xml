@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tcp on </title>
-    <link>https://darrylcauldwell.com/tags/tcp/</link>
+    <link>http://darrylcauldwell.com/tags/tcp/</link>
     <description>Recent content in tcp on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 24 Jul 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.com/tags/tcp/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 24 Jul 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/tcp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Optimal TCP Window Size For Long Distance WAN Link</title>
-      <link>https://darrylcauldwell.com/post/tcp-optimal/</link>
+      <link>http://darrylcauldwell.com/post/tcp-optimal/</link>
       <pubDate>Thu, 24 Jul 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://darrylcauldwell.com/post/tcp-optimal/</guid>
+      <guid>http://darrylcauldwell.com/post/tcp-optimal/</guid>
       <description>
         
           &lt;p&gt;If you have a requirement to copy large amounts of data along way around the world you may find that despite your link being 60Mb/s if its 5,000 miles away you only can transfer files at much less like 10Mb/s. The cause of this is generally the TCP Window Size is optimized by OS and FTP clients by default to work on networks with less distance and less network round trip latency.&lt;/p&gt;
