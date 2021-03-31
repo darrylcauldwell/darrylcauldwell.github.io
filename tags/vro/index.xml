@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vro on </title>
-    <link>http://darrylcauldwell.com/tags/vro/</link>
+    <link>https://darrylcauldwell.github.io/tags/vro/</link>
     <description>Recent content in vro on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 20 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vro/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vro/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Calling the NSX REST API with vRO and Navigating The XML Response</title>
-      <link>http://darrylcauldwell.com/post/vro-nsx-rest/</link>
+      <link>https://darrylcauldwell.github.io/post/vro-nsx-rest/</link>
       <pubDate>Wed, 20 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vro-nsx-rest/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vro-nsx-rest/</guid>
       <description>
         
           &lt;p&gt;While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations. For example when creating an NSX Edge Services Gateway we use this method.&lt;/p&gt;
@@ -71,10 +71,10 @@
     
     <item>
       <title>vRealize Orchestrator NSX Plug-in Troubleshooting</title>
-      <link>http://darrylcauldwell.com/post/vro-nsx-logging/</link>
+      <link>https://darrylcauldwell.github.io/post/vro-nsx-logging/</link>
       <pubDate>Tue, 06 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vro-nsx-logging/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vro-nsx-logging/</guid>
       <description>
         
           &lt;p&gt;The NSX-V Plug-in for vRealize Orchestrator offers some great functionally, however creating custom workflows caused me some headaches.&lt;/p&gt;
@@ -101,37 +101,37 @@
     
     <item>
       <title>vRealize Orchestrator 7 (vRO) Install</title>
-      <link>http://darrylcauldwell.com/post/vro-install/</link>
+      <link>https://darrylcauldwell.github.io/post/vro-install/</link>
       <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vro-install/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vro-install/</guid>
       <description>
         
           &lt;p&gt;While attempting to setup vRealize Orchestrator 7 at home it soon became clear the documentation isn&amp;rsquo;t great after much flipping between documents and blog posts I got this installed and working. Here I are the steps I followed.&lt;/p&gt;
 &lt;h2 id=&#34;deploy-vrealize-orchestrator&#34;&gt;Deploy vRealize Orchestrator&lt;/h2&gt;
 &lt;p&gt;Deploy the OVA via web client and specify network details appropriate to your home lab,  ensure a DNS A and PTR record are created for the vRealize Orchestrator appliance.  The Orchestrator client relies on a Java Runtime so while OVA deploys its a good time to install this if its not already.&lt;/p&gt;
 &lt;p&gt;Once deployed the various interfaces to vRO can be accessed from the main menu screen https://vro-fqdn:8281/vco/.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROstartPage.jpg&#34; alt=&#34;vRO Start Page&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROstartPage.jpg&#34; alt=&#34;vRO Start Page&#34;&gt;&lt;/p&gt;
 &lt;p&gt;From the menu select &amp;lsquo;Orchestrator Control Center&amp;rsquo; from the start menu and authenticate with the account named root with the password you specified during OVA deployment.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROcontrolCenter.jpg&#34; alt=&#34;vRO Control Center&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROcontrolCenter.jpg&#34; alt=&#34;vRO Control Center&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;configure-vcenter-connection&#34;&gt;Configure vCenter Connection&lt;/h2&gt;
 &lt;p&gt;The first thing to do once vRealize Orchestrator is deployed is to import the vCenter SSL certitificate. Select the Control Center &amp;lsquo;Manage \ Certificates&amp;rsquo; menu item.  Within trusted certificates tab click &amp;lsquo;Import \ Import from URL&amp;rsquo;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROtrustVcenter.jpg&#34; alt=&#34;vRO Trust vCenter&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROtrustVcenter.jpg&#34; alt=&#34;vRO Trust vCenter&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Within this wizard enter the FQDN of your vCenter and at next wizard screen
 click Import.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROimportCert.jpg&#34; alt=&#34;vRO Import Certificate&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROimportCert.jpg&#34; alt=&#34;vRO Import Certificate&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I use vCenter as an appliance with embedded Platform Services Controller, I&amp;rsquo;d prefer to manage vRealize Orchestrator using the same Single Sign On account.  To do this use the vRealize Orchestrator Control Center menu option &amp;lsquo;Manage \ Configure Authentication Provider&amp;rsquo;.&lt;/p&gt;
 &lt;p&gt;Select &amp;lsquo;Authentication mode&amp;rsquo; to be vSphere,  enter FQDN of vCenter and click Connect.  Your then asked for a User name and password, this account is used to bind to Single Sign On so enter your logon details and click Register. Your then asked to enter an Admin group, start to type Administrator and click the Search button to the right and it should list all available groups from SSO with Administrator in the name.  Select &amp;lsquo;vsphere.local\Administrators&amp;rsquo; and click Save.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROauth.jpg&#34; alt=&#34;vRO Authentication Mode&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROauth.jpg&#34; alt=&#34;vRO Authentication Mode&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once added the vRO service needs to be restarted there is a link presented once configuration is saved,  or this can be selected from &amp;lsquo;Mange \ Startup Options&amp;rsquo;.&lt;/p&gt;
 &lt;p&gt;You should now be able to open the main menu and start the vRO Client, login with your SSO credentials and start having fun.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROclientStart.jpg&#34; alt=&#34;vRO Client Start&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROclientStart.jpg&#34; alt=&#34;vRO Client Start&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;redirect-syslog-to-log-insight&#34;&gt;Redirect Syslog to Log Insight&lt;/h2&gt;
 &lt;p&gt;I use vRealize Log Insight to to centralize all my lab log files. To set Log Insight as a remote syslog use &amp;lsquo;Control Center \ Log \ Logging Integration&amp;rsquo;.  Complete the details of Log Insight server.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROlogInsight.jpg&#34; alt=&#34;vRO Log Insight&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROlogInsight.jpg&#34; alt=&#34;vRO Log Insight&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;configure-ntp&#34;&gt;Configure NTP&lt;/h2&gt;
 &lt;p&gt;I sync time from Active Directory in my homelab,  this is done from the appliance configuration application located https://&lt;!-- raw HTML omitted --&gt;:5480. Within this go to the &amp;lsquo;Admin \ Time Settings&amp;rsquo; menu option and enter the NTP server IP address.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vROconfigurator.jpg&#34; alt=&#34;vRO Configurator&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vROconfigurator.jpg&#34; alt=&#34;vRO Configurator&#34;&gt;&lt;/p&gt;
 
         
       </description>

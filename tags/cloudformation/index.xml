@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>cloudformation on </title>
-    <link>http://darrylcauldwell.com/tags/cloudformation/</link>
+    <link>https://darrylcauldwell.github.io/tags/cloudformation/</link>
     <description>Recent content in cloudformation on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 09 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/cloudformation/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/cloudformation/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How To Use AWS CloudFormation With Ansible</title>
-      <link>http://darrylcauldwell.com/post/ansible-clouformation/</link>
+      <link>https://darrylcauldwell.github.io/post/ansible-clouformation/</link>
       <pubDate>Wed, 09 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/ansible-clouformation/</guid>
+      <guid>https://darrylcauldwell.github.io/post/ansible-clouformation/</guid>
       <description>
         
           &lt;p&gt;AWS CloudFormation gives developers and systems administrators an easy way to create and manage a collection of related AWS resources, provisioning and updating them in an orderly and predictable fashion. Ansible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs. Ansible uses no agents and no additional custom security infrastructure, so it&amp;rsquo;s easy to deploy, it uses a very simple language which allows you to describe your automation jobs in a way that approaches plain English.&lt;/p&gt;

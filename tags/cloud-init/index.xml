@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>cloud-init on </title>
-    <link>http://darrylcauldwell.com/tags/cloud-init/</link>
+    <link>https://darrylcauldwell.github.io/tags/cloud-init/</link>
     <description>Recent content in cloud-init on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 11 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/cloud-init/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 11 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/cloud-init/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Understanding VMware Guest OS Customization</title>
-      <link>http://darrylcauldwell.com/post/guest-customization/</link>
+      <link>https://darrylcauldwell.github.io/post/guest-customization/</link>
       <pubDate>Wed, 11 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/guest-customization/</guid>
+      <guid>https://darrylcauldwell.github.io/post/guest-customization/</guid>
       <description>
         
           &lt;p&gt;I recently began looking more closely at cloud-init for customizing VMware guest VMs. This caused me some heachaches! I took various notes while troubleshooting and researching around this.&lt;/p&gt;

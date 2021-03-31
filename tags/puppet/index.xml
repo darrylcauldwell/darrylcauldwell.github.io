@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>puppet on </title>
-    <link>http://darrylcauldwell.com/tags/puppet/</link>
+    <link>https://darrylcauldwell.github.io/tags/puppet/</link>
     <description>Recent content in puppet on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 23 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/puppet/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/puppet/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Configuring Puppet</title>
-      <link>http://darrylcauldwell.com/post/puppet/</link>
+      <link>https://darrylcauldwell.github.io/post/puppet/</link>
       <pubDate>Mon, 23 Sep 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/puppet/</guid>
+      <guid>https://darrylcauldwell.github.io/post/puppet/</guid>
       <description>
         
           &lt;p&gt;I&amp;rsquo;m a traditional wintel vmware engineer working in the UK in a team focusing on platform configuration automation for virtual and physical Windows hosted solutions. This video of how &lt;a href=&#34;http://www.youtube.com/watch?v=UUgoiwEFe1A&#34;&gt;Puppet can be used to manage Amazon EC2&lt;/a&gt;. Shortly after watching this VMware Hybrid Cloud Services launched and on watching Nicholas Weavers video from PuppetConf 2013](&lt;a href=&#34;http://www.youtube.com/watch?v=tp_1N3RSyUY)&#34;&gt;http://www.youtube.com/watch?v=tp_1N3RSyUY)&lt;/a&gt;. From this point on I decided that I needed to look into Puppet and how it could help me,  on initial looking it became clear that Puppet is traditionally *nix but does function on Windows so I thought I&amp;rsquo;d start here.&lt;/p&gt;

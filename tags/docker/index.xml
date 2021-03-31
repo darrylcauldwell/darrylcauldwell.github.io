@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>docker on </title>
-    <link>http://darrylcauldwell.com/tags/docker/</link>
+    <link>https://darrylcauldwell.github.io/tags/docker/</link>
     <description>Recent content in docker on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 18 Nov 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Nov 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction To Docker Container Networking</title>
-      <link>http://darrylcauldwell.com/post/docker-networking/</link>
+      <link>https://darrylcauldwell.github.io/post/docker-networking/</link>
       <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/docker-networking/</guid>
+      <guid>https://darrylcauldwell.github.io/post/docker-networking/</guid>
       <description>
         
           &lt;p&gt;When developing a cloud native application using Docker containers understanding network connectivity between containers and non-Docker workloads such as other servers and cloud APIs is essential. Docker’s networking subsystem is pluggable using drivers, several drivers exist by default, and others can be added easily.&lt;/p&gt;
@@ -177,10 +177,10 @@ docker exec -it my_nodeapp ping -c 1 mongodb
     
     <item>
       <title>Docker Networking</title>
-      <link>http://darrylcauldwell.com/post/docker-net/</link>
+      <link>https://darrylcauldwell.github.io/post/docker-net/</link>
       <pubDate>Tue, 08 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/docker-net/</guid>
+      <guid>https://darrylcauldwell.github.io/post/docker-net/</guid>
       <description>
         
           &lt;p&gt;Hear I describe Docker networking from the very basic through to extending it by pluggin in alternative drivers. In order to follow along with this post you will require Docker capability on your laptop to do this follow &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34;&gt;these instructions&lt;/a&gt;.&lt;/p&gt;
@@ -315,7 +315,7 @@ PING 172.17.0.3 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;172.17.0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We have focussed on the shipped bridge driver, however since &lt;a href=&#34;https://github.com/docker/libnetwork&#34;&gt;LibNetwork project&lt;/a&gt; got integrated into docker the driver became plugable. Some of the Docker networking ecosystems, include Weave, Nuage, Cisco, Microsoft, Calico, Midokura, and VMware.&lt;/p&gt;
 &lt;p&gt;Upto now we have looked at networking between containers on the same host by bridging to the network interface card. You will probably want to extend the layer 2 networking capacibility so containers on different hosts can communicate. To do this we would use &lt;a href=&#34;https://docs.docker.com/swarm/networking/&#34;&gt;Docker Swarm&lt;/a&gt; which includes the multi-host networking feature and allows the creation of custom container networks which span multiple Docker hosts. By default it does this by use of the &amp;lsquo;overlay&amp;rsquo; network driver&lt;/p&gt;
 &lt;p&gt;An interesting option to use as a Docker networking driver is &lt;a href=&#34;https://github.com/projectcalico/calico-containers&#34;&gt;Project Calico for Containers&lt;/a&gt; as the overlay networking expands across more and more hosts it can experience performance issues. Project Calico aims to over come this issue but allow container connectivity across hosts by having each container route directly at Layer 3 rather than Layer 2.  It does this by having a calico-node container installed and running on each host which manages the network routing etc.&lt;/p&gt;
-&lt;p&gt;As in my previous post about &lt;a href=&#34;http://darrylcauldwell.com/install-vic/&#34;&gt;vSphere Integrated Containers&lt;/a&gt; its interesting to see VMware integrating with Docker and I&amp;rsquo;d expect it won&amp;rsquo;t be too long until we discover how NSX will plug into Docker Networking.&lt;/p&gt;
+&lt;p&gt;As in my previous post about &lt;a href=&#34;https://darrylcauldwell.github.io/install-vic/&#34;&gt;vSphere Integrated Containers&lt;/a&gt; its interesting to see VMware integrating with Docker and I&amp;rsquo;d expect it won&amp;rsquo;t be too long until we discover how NSX will plug into Docker Networking.&lt;/p&gt;
 
         
       </description>
@@ -323,10 +323,10 @@ PING 172.17.0.3 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;172.17.0
     
     <item>
       <title>Installing vSphere Integrated Containers In Five Minutes</title>
-      <link>http://darrylcauldwell.com/post/vic/</link>
+      <link>https://darrylcauldwell.github.io/post/vic/</link>
       <pubDate>Wed, 13 Jul 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vic/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vic/</guid>
       <description>
         
           &lt;p&gt;As it looks like vSphere Integrated Containers will feature a lot at the upcoming VMworld I took the chance to install this and find out more.&lt;/p&gt;
@@ -357,11 +357,11 @@ PING 172.17.0.3 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;172.17.0
 &lt;/table&gt;
 &lt;p&gt;My homelab is vCenter, single cluster of two ESX hosts, storage VSAN and networking NSX. Security is not important in my homelab and TLS adds complication so I chose not to add this. There are great syntaxt examples to follow in the documentation, but here are options I used.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;./vic-machine-darwin create --target 192.168.1.13 --user Administrator@vsphere.local --password VMware1! --compute-resource ElectricChair --image-datastore vsanDatastore --bridge-network DPortGroup --name vch
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vic-install.jpg&#34; alt=&#34;vSphere Integrated Containers Install&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-install.jpg&#34; alt=&#34;vSphere Integrated Containers Install&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order to use vSphere Integrated Containers you&amp;rsquo;ll need a Docker client, for Mac there is the choice of &lt;a href=&#34;https://www.docker.com/products/docker-toolbox&#34;&gt;Docker Toolbox&lt;/a&gt; or the newer &lt;a href=&#34;https://docs.docker.com/docker-for-mac/&#34;&gt;Beta Docker for Mac&lt;/a&gt;. I had the beta installed, and found I needed to remove this and replace with Docker Toolbox.&lt;/p&gt;
 &lt;p&gt;The first thing to do is ensure that you can connect and that it looks healthy, to do this run&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker -H ipaddress-vch:2375 info
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vic-info.jpg&#34; alt=&#34;vSphere Integrated Containers Info&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-info.jpg&#34; alt=&#34;vSphere Integrated Containers Info&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Its always useful to look in the log files when your setting something up for the first time, however SSH is disabled on the VCH host so I enabled SSH for current session.  Logon via console using &lt;em&gt;root&lt;/em&gt; with password of &lt;em&gt;password&lt;/em&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;systemctl start sshd
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are five log files I found so far&lt;/p&gt;
@@ -372,19 +372,19 @@ PING 172.17.0.3 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;172.17.0
 /var/log/vic/vicadmin.log
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now we&amp;rsquo;re running and can access logs the next thing to do is pull a container&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker -H paddress-vch:2375 pull vmwarecna/nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vic-nginx.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-nginx.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once its local we can start it up,  we&amp;rsquo;ll start it in the background and put a port mapping of port 80 in place and then view it.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;docker -H ipaddress-vch:2375 run -d -p 80:80 vmwarecna/nginx
 docker -H ipaddress-vch:2375 ps
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vic-nginx-go.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX Go&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-nginx-go.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX Go&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then also see that a new VM has been created in vCenter with VM name matching the UID of the docker container.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vic-nginx-vm.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX VM&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-nginx-vm.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX VM&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then stop this and tidy up our test container&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker -H ipaddress-vch:2375 stop container-id
 docker -H ipaddress-vch:2375 rm container-id
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As its so easy to install and configure its probably worth while removing VCH and when you come to use it pull the latest to remove is as easy as installing.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./vic-machine-darwin delete --target vcenter.darrylcauldwell.local --user Administrator@vsphere.local --password VMware1! --name vch --force
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vic-bye.jpg&#34; alt=&#34;vSphere Integrated Containers Bye!&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-bye.jpg&#34; alt=&#34;vSphere Integrated Containers Bye!&#34;&gt;&lt;/p&gt;
 &lt;p&gt;There is a little bug just now and the image files don&amp;rsquo;t seem to get removed by uninstall process but these are easy enough to delete along with the VIC folder from the datatore.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m disappointed in myself for waiting so long to look at this, what was putting me off was the thought it might be complex but it proved to be very much straight forwards.&lt;/p&gt;
 
@@ -394,19 +394,19 @@ docker -H ipaddress-vch:2375 rm container-id
     
     <item>
       <title>Project Bonneville - vSphere Integrated Containers</title>
-      <link>http://darrylcauldwell.com/post/vic-bonneville/</link>
+      <link>https://darrylcauldwell.github.io/post/vic-bonneville/</link>
       <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vic-bonneville/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vic-bonneville/</guid>
       <description>
         
           &lt;p&gt;Working for a company which develops software for business I&amp;rsquo;ve been keen on following the story of containers unfold. The explosion of containers and microservices in the software development space has been a revolution in the way applications can be architected and deployed. This has put a great deal of power in the hands of the developer but with great power comes great responsibility for operational management.&lt;/p&gt;
 &lt;p&gt;Working in the operational side the key words to my working life are Availability, Reliability, Maintainability, Supportability and Security. The operational model to effectively run containers in production requires a paradigm shift where the approach and underlying assumptions are revisited. Working in a company promoting DevOps culture and values we in the operational side are beginning to gain greater empathy to the challenges a developer faces and how they believe containers will help. Gaining a technical understanding of Docker has therefore become a priority so I can ensure the infrastructure I design and engineer can help the developer deliver not only velocity but help them to deliver Availability, Reliability, Maintainability, Supportability and Security.&lt;/p&gt;
-&lt;p&gt;During &lt;a href=&#34;http://darrylcauldwell.com/post/fargo&#34;&gt;VMworld 2014 project Fargo (VMfork)&lt;/a&gt; was described which has become the Instant Clone feature of vSphere 6. At the time I didn&amp;rsquo;t take too much notice as this was signed to virtual desktop space.  During April this year VMware released project Photon which is essentially a minimal Linux container host,  at the time this was confusing to me as RedHat Atomic, Ubuntu Snappy and CoreOS seemed to have all bases covered in this space. That is until two months later when Ben Corrie of VMware announced project Bonneville to the world.&lt;/p&gt;
+&lt;p&gt;During &lt;a href=&#34;https://darrylcauldwell.github.io/post/fargo&#34;&gt;VMworld 2014 project Fargo (VMfork)&lt;/a&gt; was described which has become the Instant Clone feature of vSphere 6. At the time I didn&amp;rsquo;t take too much notice as this was signed to virtual desktop space.  During April this year VMware released project Photon which is essentially a minimal Linux container host,  at the time this was confusing to me as RedHat Atomic, Ubuntu Snappy and CoreOS seemed to have all bases covered in this space. That is until two months later when Ben Corrie of VMware announced project Bonneville to the world.&lt;/p&gt;
 &lt;p&gt;The fundamental to this solution is a 1:1 model between container host and containers rather than one host with many containers. Project Bonneville is a Docker daemon that has custom drivers for networks and execution that is compatible with the Docker Client APIs, and that means a vSphere VM is treated exactly like a Docker container. With this it redefined a Docker container as a x86 hardware virtualised VM, (not tied to host running the Linux kernel), a Bonneville VM can theoretically run containers of any kernel version of any operating system and can do it fast and efficiently.&lt;/p&gt;
 &lt;p&gt;‘Instant Clone’ also known as VMfork or Project Fargo, gives the ability to clone and deploy virtual machines, as much as 10x faster than what is currently possible before. It does this by using rapid in-memory cloning of running virtual machines and copy-on-write to quickly deploy clones of a parent virtual machine. Using this clone method of the container host ensures the only changed blocks and memory pages are those used by container itself this.&lt;/p&gt;
 &lt;p&gt;A fantastic architecture flow of how Bonneville might work is described in this diagram as posted by George Hicken @hickeng.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vic-bonneville.png&#34; alt=&#34;vSphere Integrated Containers&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-bonneville.png&#34; alt=&#34;vSphere Integrated Containers&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The benefits this technology appears to offer appear fantastic and I am really looking forwards to attending Ben Corrie&amp;rsquo;s session &amp;lsquo;INF5229 — Docker and Fargo: Exploding the Linux Container Host&amp;rsquo; to solidify my understanding and learn more about how we can begin exploiting this to help our developers deliver Availability, Reliability, Maintainability, Supportability and Security alongside the awesome features they write.&lt;/p&gt;
 
         
@@ -415,14 +415,14 @@ docker -H ipaddress-vch:2375 rm container-id
     
     <item>
       <title>VMware Projects Fargo (VMFork) &amp; Meteor</title>
-      <link>http://darrylcauldwell.com/post/fargo/</link>
+      <link>https://darrylcauldwell.github.io/post/fargo/</link>
       <pubDate>Tue, 06 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/fargo/</guid>
+      <guid>https://darrylcauldwell.github.io/post/fargo/</guid>
       <description>
         
           &lt;p&gt;There was announced during VMworld a technology preview for Project Fargo (formerly VMFork) it is likely this will be launched with vSphere6. The aim of Fargo is to provides a fast, scalable differential clone of a running VM.  I see this as very similar to Redirect-on-Write (RoW) methodology used by NetApp snapshots where at the point of snap the existing blocks are frozen and any writes (creations/changes/deletions) are redirected to new blocks. However with Fargo rather than than a snapshot we are creating a Copy-on-Write(CoW) the difference being that with CoW the original data that is being written to is copied into a new file that is set aside for the snapshot before original data is overwritten. So before a write is allowed to a block, copy-on-write moves the original data block to the snapshot storage.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/fargo-cow.gif&#34; alt=&#34;Copy On Write&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/fargo-cow.gif&#34; alt=&#34;Copy On Write&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The key benefits of the use of this method is that its near instantaneous and can be done from a running VM,  so a new VM spawned would typically take less than 1 second and be in the same running state. As well as this as only changed blocks are written the solution will take up dramatically less disk space.&lt;/p&gt;
 &lt;p&gt;While there are many potential use cased for Fargo it was presented with virtual desktop in mind where providing an instant clone of running non-persistent desktop would avoid the boot storms to the storage subsystem.&lt;/p&gt;
 &lt;p&gt;So now you have quick provisioning of operating system you then need to deliver the right user applications to it quickly and this is I assume to be done by &lt;a href=&#34;http://blogs.vmware.com/euc/2014/08/cloudvolumes.html&#34;&gt;CloudVolumes&lt;/a&gt; where applications are abstracted and layered onto the users operating system.  The combination of these two tools appears to be known as Project Meteor.&lt;/p&gt;
@@ -433,10 +433,10 @@ docker -H ipaddress-vch:2375 rm container-id
     
     <item>
       <title>Docker On Photon On vCloud Air</title>
-      <link>http://darrylcauldwell.com/post/docker-photon/</link>
+      <link>https://darrylcauldwell.github.io/post/docker-photon/</link>
       <pubDate>Thu, 04 Jun 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/docker-photon/</guid>
+      <guid>https://darrylcauldwell.github.io/post/docker-photon/</guid>
       <description>
         
           &lt;p&gt;There has been a lot of industry noise around Docker and VMware project Photon so these have been on the agenda to explore as well.  I generally perform my little research projects running nested ESXi on VMware Fusion on my laptop, but VMware are &lt;a href=&#34;http://vcloud.vmware.com/uk/service-offering/virtual-private-cloud-ondemand&#34;&gt;offering £300 of free service credits&lt;/a&gt; for trialing vCloud Air OnDemand.  Here is my how to guide of the steps I used.&lt;/p&gt;
@@ -456,7 +456,7 @@ docker -H ipaddress-vch:2375 rm container-id
 &lt;/ol&gt;
 &lt;h2 id=&#34;base-photon-configuration&#34;&gt;Base Photon Configuration&lt;/h2&gt;
 &lt;p&gt;Open remote console to the Photon VM and it should be at boot menu.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon.jpg&#34; alt=&#34;Photon OS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon.jpg&#34; alt=&#34;Photon OS&#34;&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;From boot menu select Install&lt;/li&gt;
 &lt;li&gt;Accept EULA,  and defaults through disk partitioning&lt;/li&gt;
@@ -470,34 +470,34 @@ docker -H ipaddress-vch:2375 rm container-id
 &lt;li&gt;Use &lt;a href=&#34;http://www.virten.net/2015/04/basic-commands-for-vmware-photon-and-docker/&#34;&gt;this post&lt;/a&gt; to enable SSH and set static IP address to 192.168.109.100/24 with gateway of 192.168.109.1.&lt;/li&gt;
 &lt;li&gt;If we navigate to vCloud Director view &amp;lsquo;Administration&amp;rsquo; tab,  select vDC in the left pane and choose &amp;lsquo;Edge Gateway&amp;rsquo; in the right pane.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-vCD_Gateway.jpg&#34; alt=&#34;vCloud Director Gateway&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon-vCD_Gateway.jpg&#34; alt=&#34;vCloud Director Gateway&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;4&#34;&gt;
 &lt;li&gt;Select &amp;lsquo;gateway&amp;rsquo; and select the Action for &amp;lsquo;External IP Allocations&amp;rsquo;,  note down the external IP address.&lt;/li&gt;
 &lt;li&gt;Ensure &amp;lsquo;gateway&amp;rsquo; still selected and select the Action for &amp;lsquo;Edge Gateway Services&amp;rsquo;,  change to the NAT tab,  and click &amp;lsquo;Add DNAT&amp;rsquo;,  change applied to to your network add the External IP address as you noted just before,  select port 22 (SSH) for Outgoing and Translated ports,  and give the Photon IP address as the Internal IP.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-Air_NAT.jpg&#34; alt=&#34;vCloud Director NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon-Air_NAT.jpg&#34; alt=&#34;vCloud Director NAT&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;6&#34;&gt;
 &lt;li&gt;Ensure &amp;lsquo;gateway&amp;rsquo; still selected and select the Action for &amp;lsquo;Edge Gateway Services&amp;rsquo;,  change to the firewall tab and add ingress firewall rule called SSH-In from external to specific IP 192.168.109.100 port 22.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-Air_FW.jpg&#34; alt=&#34;vCloud Director Firewall&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon-Air_FW.jpg&#34; alt=&#34;vCloud Director Firewall&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;7&#34;&gt;
 &lt;li&gt;If all has gone to plan you should now be able to connect from a remote SSH client.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-Remote_SSH.jpg&#34; alt=&#34;SSH Remote Shell&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon-Remote_SSH.jpg&#34; alt=&#34;SSH Remote Shell&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;enable-vcloud-air-vm-internet-access&#34;&gt;Enable vCloud Air VM Internet Access&lt;/h2&gt;
 &lt;p&gt;To enable our vCloud Air VMs to access the internet we need to configure a NAT rule to handle the private to public address and also a firewall rule to allow the traffic.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Add a source NAT rule,  for Original Source enter 192.168.109.0/24 and for Translated Source select your public IP address.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-SNAT.png&#34; alt=&#34;Source NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon-SNAT.png&#34; alt=&#34;Source NAT&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;2&#34;&gt;
 &lt;li&gt;Add a firewall rule to allow all traffic outbound,  give it name Any-Out,  Source as &amp;lsquo;Internal&amp;rsquo; and destination &amp;lsquo;External&amp;rsquo;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-FW_Out.png&#34; alt=&#34;Outbound Firewall&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon-FW_Out.png&#34; alt=&#34;Outbound Firewall&#34;&gt;&lt;/p&gt;
 &lt;ol start=&#34;3&#34;&gt;
 &lt;li&gt;Your Photon VM should now be able to talk to the Internet&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/docker-photon-nslookup.png&#34; alt=&#34;Outbound Connectivity Test&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/docker-photon-nslookup.png&#34; alt=&#34;Outbound Connectivity Test&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;docker&#34;&gt;Docker&lt;/h2&gt;
 &lt;p&gt;Docker itself is included in the Photon image so with Internet connectivity you can pull things from public repositories and away you go.&lt;/p&gt;
 

@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>rest on </title>
-    <link>http://darrylcauldwell.com/tags/rest/</link>
+    <link>https://darrylcauldwell.github.io/tags/rest/</link>
     <description>Recent content in rest on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 18 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/rest/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 18 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/rest/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Orchestrating configuration of vROps via REST API with Postman</title>
-      <link>http://darrylcauldwell.com/post/vrops_rest/</link>
+      <link>https://darrylcauldwell.github.io/post/vrops_rest/</link>
       <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vrops_rest/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vrops_rest/</guid>
       <description>
         
           &lt;p&gt;vRealize Operations Manager (vROps) exposes some of its configuration via RESTful API. With this we can look to programatically control its configuration. My workflow is to use a REST client to explore API and validate payload formatting before moving to script the steps. My REST client of choice is &lt;a href=&#34;https://www.postman.com/&#34;&gt;Postman&lt;/a&gt;.&lt;/p&gt;
@@ -87,10 +87,10 @@ Authentication: vRealizeOpsToken {{bearerToken}}
     
     <item>
       <title>Calling the NSX REST API with vRO and Navigating The XML Response</title>
-      <link>http://darrylcauldwell.com/post/vro-nsx-rest/</link>
+      <link>https://darrylcauldwell.github.io/post/vro-nsx-rest/</link>
       <pubDate>Wed, 20 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vro-nsx-rest/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vro-nsx-rest/</guid>
       <description>
         
           &lt;p&gt;While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations. For example when creating an NSX Edge Services Gateway we use this method.&lt;/p&gt;

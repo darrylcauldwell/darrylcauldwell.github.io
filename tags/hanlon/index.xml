@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>hanlon on </title>
-    <link>http://darrylcauldwell.com/tags/hanlon/</link>
+    <link>https://darrylcauldwell.github.io/tags/hanlon/</link>
     <description>Recent content in hanlon on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 04 Apr 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/hanlon/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 04 Apr 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/hanlon/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Setup Hanlon</title>
-      <link>http://darrylcauldwell.com/post/hanlon/</link>
+      <link>https://darrylcauldwell.github.io/post/hanlon/</link>
       <pubDate>Fri, 04 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/hanlon/</guid>
+      <guid>https://darrylcauldwell.github.io/post/hanlon/</guid>
       <description>
         
           &lt;p&gt;Since the company I work for CSC got a new CEO then CTO its changed direction and the latest change has been to &lt;a href=&#34;http://www.vdatacloud.com/blogs/2014/05/22/finding-value-in-opensource/&#34;&gt;participate with the Open Source community&lt;/a&gt;.  With this news shortly followed an updated version of a tool our new CTO &lt;a href=&#34;https://twitter.com/DanHushon&#34;&gt;Dan Hushon&lt;/a&gt; worked on at EMC with &lt;a href=&#34;https://twitter.com/lynxbat&#34;&gt;Nicholas Weaver&lt;/a&gt; it was formerly called &lt;a href=&#34;https://github.com/puppetlabs/Razor%22&#34;&gt;Razor&lt;/a&gt; and the new fork is &lt;a href=&#34;https://github.com/csc/Hanlon&#34;&gt;Hanlon&lt;/a&gt;.&lt;/p&gt;
@@ -70,7 +70,7 @@ next-server 172.25.1.10;
 /etc/init.d/dhcpd start
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Test ISC DHCP and option by creating a VM with no OS,  and with only a NIC on the
 private network and it should now pickup a PXE address.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/hanlon-PXE-Boot.gif&#34; alt=&#34;Hanlon PXE Boot&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/hanlon-PXE-Boot.gif&#34; alt=&#34;Hanlon PXE Boot&#34;&gt;&lt;/p&gt;
 &lt;p&gt;It will fail as there is no PXE or TFTP server setup yet on the Hanlon server. So next step is to add a PXE and TFTP server,  so first task is to install it.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum -y install tftp-server tftp
 

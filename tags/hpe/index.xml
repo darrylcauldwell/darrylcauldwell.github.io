@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>hpe on </title>
-    <link>http://darrylcauldwell.com/tags/hpe/</link>
+    <link>https://darrylcauldwell.github.io/tags/hpe/</link>
     <description>Recent content in hpe on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 27 Mar 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/hpe/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 27 Mar 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/hpe/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>HP C7000 Interconnect Bay Mapping</title>
-      <link>http://darrylcauldwell.com/post/hpe-c7000-interconnects/</link>
+      <link>https://darrylcauldwell.github.io/post/hpe-c7000-interconnects/</link>
       <pubDate>Thu, 27 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/hpe-c7000-interconnects/</guid>
+      <guid>https://darrylcauldwell.github.io/post/hpe-c7000-interconnects/</guid>
       <description>
         
           &lt;p&gt;Here I address the most common query people have when using HP C7000 chassis, namely how do the bay
@@ -60,10 +60,10 @@ mappings work.&lt;/p&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/hpe-c7000-mapping-half.png&#34; alt=&#34;Half Height Blade Mappings&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/hpe-c7000-mapping-half.png&#34; alt=&#34;Half Height Blade Mappings&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;full-height-blades&#34;&gt;Full Height Blades&lt;/h2&gt;
 &lt;p&gt;For dual height blade server such as BL680c the mappings work the same way although each server has two mappings to each for example slot one maps to ports one and nine in each interconnect bay as opposed to just bay port one if in slot one and port nine if in slot nine.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/hpe-c7000-mapping-full.gif&#34; alt=&#34;Full Height Blade Mappings&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/hpe-c7000-mapping-full.gif&#34; alt=&#34;Full Height Blade Mappings&#34;&gt;&lt;/p&gt;
 
         
       </description>

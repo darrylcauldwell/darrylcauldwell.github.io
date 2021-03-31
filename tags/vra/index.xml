@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vra on </title>
-    <link>http://darrylcauldwell.com/tags/vra/</link>
+    <link>https://darrylcauldwell.github.io/tags/vra/</link>
     <description>Recent content in vra on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vra/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vra/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cloudbased-init For vSphere</title>
-      <link>http://darrylcauldwell.com/post/cloudbased-init/</link>
+      <link>https://darrylcauldwell.github.io/post/cloudbased-init/</link>
       <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/cloudbased-init/</guid>
+      <guid>https://darrylcauldwell.github.io/post/cloudbased-init/</guid>
       <description>
         
           &lt;p&gt;vRealize Automation Cloud and 8.x allows you to deploy and configure cloud agnostic virtual machines. To achieve agnostic in-guest OS customization capability across for on-premises vSphere, AWS, GCP and Azure endpoints &lt;a href=&#34;https://cloud-init.io/&#34;&gt;cloud-init&lt;/a&gt; is used for Linux guests and &lt;a href=&#34;https://cloudbase.it/cloudbase-init/&#34;&gt;cloudbase-init&lt;/a&gt; is used for Windows guests.&lt;/p&gt;
@@ -55,10 +55,10 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
     
     <item>
       <title>Understanding VMware Guest OS Customization</title>
-      <link>http://darrylcauldwell.com/post/guest-customization/</link>
+      <link>https://darrylcauldwell.github.io/post/guest-customization/</link>
       <pubDate>Wed, 11 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/guest-customization/</guid>
+      <guid>https://darrylcauldwell.github.io/post/guest-customization/</guid>
       <description>
         
           &lt;p&gt;I recently began looking more closely at cloud-init for customizing VMware guest VMs. This caused me some heachaches! I took various notes while troubleshooting and researching around this.&lt;/p&gt;

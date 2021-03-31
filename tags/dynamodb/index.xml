@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>dynamodb on </title>
-    <link>http://darrylcauldwell.com/tags/dynamodb/</link>
+    <link>https://darrylcauldwell.github.io/tags/dynamodb/</link>
     <description>Recent content in dynamodb on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 31 Mar 2017 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/dynamodb/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 31 Mar 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/dynamodb/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DynamoDB Python Test Environment with Cloud Formations</title>
-      <link>http://darrylcauldwell.com/post/dynamodb-python/</link>
+      <link>https://darrylcauldwell.github.io/post/dynamodb-python/</link>
       <pubDate>Fri, 31 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/dynamodb-python/</guid>
+      <guid>https://darrylcauldwell.github.io/post/dynamodb-python/</guid>
       <description>
         
           &lt;p&gt;The goal of this post is to walk through the creation of a AWS test environment which I use to explore the Python SDK interactions with DyanmoDB. For learning I use the free tier and so used to create the environment as needed manually. After doing this once I decided to encapsulate the configuration in a Cloud Formations template and then deploy the stack when I needed it.&lt;/p&gt;
@@ -103,10 +103,10 @@ items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; response[&lt;span
     
     <item>
       <title>Simple REST API For DynamoDB Using Lambda</title>
-      <link>http://darrylcauldwell.com/post/lambda-dynamodb/</link>
+      <link>https://darrylcauldwell.github.io/post/lambda-dynamodb/</link>
       <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/lambda-dynamodb/</guid>
+      <guid>https://darrylcauldwell.github.io/post/lambda-dynamodb/</guid>
       <description>
         
           &lt;p&gt;My goal here is to setup a simple RESTful API which accepts GET and POST methods to trigger a Lambda Function to read and put information into DynamoDB.&lt;/p&gt;
@@ -168,10 +168,10 @@ aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&am
     
     <item>
       <title>DynamoDB With Powershell</title>
-      <link>http://darrylcauldwell.com/post/dynamodb-powershell/</link>
+      <link>https://darrylcauldwell.github.io/post/dynamodb-powershell/</link>
       <pubDate>Tue, 20 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/dynamodb-powershell/</guid>
+      <guid>https://darrylcauldwell.github.io/post/dynamodb-powershell/</guid>
       <description>
         
           &lt;p&gt;AWS dynamoDB is a really useful key-value store which is really easy to consume from scripts. However while the AWS Powershell module contains functions for &amp;lsquo;Managing Tables&amp;rsquo; it does not contain functions for &amp;lsquo;Reading Data&amp;rsquo; or &amp;lsquo;Modifying Data&amp;rsquo;.  I had found Julian Biddle had written a &lt;a href=&#34;https://anoriginalidea.wordpress.com/2015/01/20/using-amazon-aws-dynamodb-from-powershell/&#34;&gt;blog post&lt;/a&gt; about how this might be done by making direct calls to AWS AmazonDynamoDBClient SDK for .net. While this was a useful starting point I had to read around this alot to get it to work how I needed, this post is an explaination of my understanding.&lt;/p&gt;

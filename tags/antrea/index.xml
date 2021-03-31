@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>antrea on </title>
-    <link>http://darrylcauldwell.com/tags/antrea/</link>
+    <link>https://darrylcauldwell.github.io/tags/antrea/</link>
     <description>Recent content in antrea on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 12 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/antrea/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/antrea/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction To Kubernetes Cluster Networking with Antrea</title>
-      <link>http://darrylcauldwell.com/post/antrea/</link>
+      <link>https://darrylcauldwell.github.io/post/antrea/</link>
       <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/antrea/</guid>
+      <guid>https://darrylcauldwell.github.io/post/antrea/</guid>
       <description>
         
-          &lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/antrea-logo.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/antrea-logo.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;what-is-antrea&#34;&gt;What is Antrea&lt;/h2&gt;
 &lt;p&gt;Antrea is Container Network Interface (CNI) plugin for Kubernetes. The Antrea CNI leverages Open vSwitch (OVS) to provides an overlay network and security services for a Kubernetes cluster. The overlay encapsulation uses Virtual Extensible LAN (VXLAN) by default, although Generic Network Virtualization Encapsulation (GENEVE), Generic Routing Encapsulation (GRE) or Stateless Transport Tunneling (STT) encapsulation can be configured. Antrea is an open source project hosted on GitHub &lt;a href=&#34;https://github.com/vmware-tanzu/antrea&#34;&gt;here&lt;/a&gt;. Using OVS also introduces other standard network management capabilities such NetFlow, sFlow, IP Flow Information Export (IPFIX) and Remote SPAN (RSPAN).&lt;/p&gt;
 &lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
 &lt;p&gt;Antrea is composed of several components deployed as Pods in the kube-system namespace of the cluster. The Antrea Conroller monitors the addition and deletion of objects by watching the Kubernetes API. A daemonset is deployed which druns Antrea Agent on each node the Agent applys flow configuration to Open vSwitch (OVS).&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/antrea-architecture.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/antrea-architecture.png&#34; alt=&#34;Antrea Logo&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The network configration required by Kubernetes is configured in a collection of Open vSwitch (OVS) flow tables. To make it easy to interpret each type of network traffic is classified and each traffic classification is stored in its own flow table.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/antrea-ovs-pipeline.svg&#34; alt=&#34;OVS Pipeline&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/antrea-ovs-pipeline.svg&#34; alt=&#34;OVS Pipeline&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;creating-a-simple-antrea-lab&#34;&gt;Creating A Simple Antrea Lab&lt;/h2&gt;
 &lt;p&gt;We can create a lab to look at Antrea anywhere we can run some VMs so on either a public cloud or a homelab. Create three Ubuntu 19.10 VMs with 2x CPU, 4GB RAM and 50GB vHDD, use Netplan to configure NIC to static IP addressing like.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;cat /etc/netplan/01-netcfg.yaml 

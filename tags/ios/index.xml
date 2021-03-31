@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>ios on </title>
-    <link>http://darrylcauldwell.com/tags/ios/</link>
+    <link>https://darrylcauldwell.github.io/tags/ios/</link>
     <description>Recent content in ios on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 06 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/ios/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/ios/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Running Linux on iPhone</title>
-      <link>http://darrylcauldwell.com/post/ish/</link>
+      <link>https://darrylcauldwell.github.io/post/ish/</link>
       <pubDate>Fri, 06 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/ish/</guid>
+      <guid>https://darrylcauldwell.github.io/post/ish/</guid>
       <description>
         
           &lt;p&gt;iSH is a &lt;a href=&#34;https://github.com/ish-app/ish&#34;&gt;project&lt;/a&gt; which offers a Linux shell environment on iOS using a usermode x86 emulator.&lt;/p&gt;

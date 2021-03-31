@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vcd on </title>
-    <link>http://darrylcauldwell.com/tags/vcd/</link>
+    <link>https://darrylcauldwell.github.io/tags/vcd/</link>
     <description>Recent content in vcd on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 16 Jan 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vcd/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Jan 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vcd/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>vCloud Director REST API</title>
-      <link>http://darrylcauldwell.com/post/vcd-rest/</link>
+      <link>https://darrylcauldwell.github.io/post/vcd-rest/</link>
       <pubDate>Sat, 16 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vcd-rest/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vcd-rest/</guid>
       <description>
         
           &lt;p&gt;If you find the vCloud Director GUI a little annoying a nice way to get the information you need is via the REST API. Using the REST API you can gather information (GET), update information (PUT) and call operational methods like (POST).&lt;/p&gt;
@@ -29,7 +29,7 @@ Value:       application/*+xml;version&lt;span style=&#34;color:#f92672&#34;&gt;
 &lt;p&gt;Note where reads 5.5 could read 1.5 or 5.1 if your connecting to earlier versions of vCD.&lt;/p&gt;
 &lt;p&gt;Change Method To POST and enter URL https://{vcloud ip}/api/sessions&lt;/p&gt;
 &lt;p&gt;Your completed form should look a little like this.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/vcd-sessions.png&#34; alt=&#34;vCloud Director Sessions&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vcd-sessions.png&#34; alt=&#34;vCloud Director Sessions&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This should return a 200 OK and forms your a session token with VCD,  at this point your now authorized to perform any action via REST as your account allows via the GUI.&lt;/p&gt;
 &lt;p&gt;To test this you might want to list all vApps,  to do this you would ensure method is set to GET and enter a URL to:
 https://{vcloud ip}/api/vApps/query&lt;/p&gt;

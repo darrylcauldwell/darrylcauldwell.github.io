@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>macos on </title>
-    <link>http://darrylcauldwell.com/tags/macos/</link>
+    <link>https://darrylcauldwell.github.io/tags/macos/</link>
     <description>Recent content in macos on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 27 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/macos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/macos/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Customizing Zsh Prompt</title>
-      <link>http://darrylcauldwell.com/post/zsh/</link>
+      <link>https://darrylcauldwell.github.io/post/zsh/</link>
       <pubDate>Wed, 27 Jan 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/zsh/</guid>
+      <guid>https://darrylcauldwell.github.io/post/zsh/</guid>
       <description>
         
           &lt;p&gt;macOS 10.15 Catalina changed default Terminal from bash to zsh. When I first moved I tried Powerline extension but it was always a bit slow and really I all I need is a custom prompt. So today I revisited this and created a custom prompt for Zsh and learned a little along the way.&lt;/p&gt;
@@ -49,7 +49,7 @@ precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
 setopt prompt_subst
 PROMPT=&#39;%(?.%F{green}√.%F{red}?%?)%F{blue} %/ %F{yellow}${vcs_info_msg_0_}%F{magenta} %# &#39;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/zsh-profile.jpg&#34; alt=&#34;This is the end state&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/zsh-profile.jpg&#34; alt=&#34;This is the end state&#34;&gt;&lt;/p&gt;
 
         
       </description>

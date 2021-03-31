@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>aws on </title>
-    <link>http://darrylcauldwell.com/tags/aws/</link>
+    <link>https://darrylcauldwell.github.io/tags/aws/</link>
     <description>Recent content in aws on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 31 Mar 2017 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 31 Mar 2017 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DynamoDB Python Test Environment with Cloud Formations</title>
-      <link>http://darrylcauldwell.com/post/dynamodb-python/</link>
+      <link>https://darrylcauldwell.github.io/post/dynamodb-python/</link>
       <pubDate>Fri, 31 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/dynamodb-python/</guid>
+      <guid>https://darrylcauldwell.github.io/post/dynamodb-python/</guid>
       <description>
         
           &lt;p&gt;The goal of this post is to walk through the creation of a AWS test environment which I use to explore the Python SDK interactions with DyanmoDB. For learning I use the free tier and so used to create the environment as needed manually. After doing this once I decided to encapsulate the configuration in a Cloud Formations template and then deploy the stack when I needed it.&lt;/p&gt;
@@ -103,10 +103,10 @@ items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; response[&lt;span
     
     <item>
       <title>Simple REST API For DynamoDB Using Lambda</title>
-      <link>http://darrylcauldwell.com/post/lambda-dynamodb/</link>
+      <link>https://darrylcauldwell.github.io/post/lambda-dynamodb/</link>
       <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/lambda-dynamodb/</guid>
+      <guid>https://darrylcauldwell.github.io/post/lambda-dynamodb/</guid>
       <description>
         
           &lt;p&gt;My goal here is to setup a simple RESTful API which accepts GET and POST methods to trigger a Lambda Function to read and put information into DynamoDB.&lt;/p&gt;
@@ -168,10 +168,10 @@ aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&am
     
     <item>
       <title>Patching Windows EC2 Instances</title>
-      <link>http://darrylcauldwell.com/post/ec2-win-patching/</link>
+      <link>https://darrylcauldwell.github.io/post/ec2-win-patching/</link>
       <pubDate>Wed, 28 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/ec2-win-patching/</guid>
+      <guid>https://darrylcauldwell.github.io/post/ec2-win-patching/</guid>
       <description>
         
           &lt;p&gt;Amazon EC2 Systems Manager is a collection of capabilities that helps you automate management tasks such as collecting system inventory, applying operating system (OS) patches, automating the creation of Amazon Machine Images (AMIs), and configuring operating systems (OSs) and applications at scale.&lt;/p&gt;
@@ -212,10 +212,10 @@ aws ssm register-task-with-maintenance-window --window-id &amp;lt;your-maintenan
     
     <item>
       <title>DynamoDB With Powershell</title>
-      <link>http://darrylcauldwell.com/post/dynamodb-powershell/</link>
+      <link>https://darrylcauldwell.github.io/post/dynamodb-powershell/</link>
       <pubDate>Tue, 20 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/dynamodb-powershell/</guid>
+      <guid>https://darrylcauldwell.github.io/post/dynamodb-powershell/</guid>
       <description>
         
           &lt;p&gt;AWS dynamoDB is a really useful key-value store which is really easy to consume from scripts. However while the AWS Powershell module contains functions for &amp;lsquo;Managing Tables&amp;rsquo; it does not contain functions for &amp;lsquo;Reading Data&amp;rsquo; or &amp;lsquo;Modifying Data&amp;rsquo;.  I had found Julian Biddle had written a &lt;a href=&#34;https://anoriginalidea.wordpress.com/2015/01/20/using-amazon-aws-dynamodb-from-powershell/&#34;&gt;blog post&lt;/a&gt; about how this might be done by making direct calls to AWS AmazonDynamoDBClient SDK for .net. While this was a useful starting point I had to read around this alot to get it to work how I needed, this post is an explaination of my understanding.&lt;/p&gt;
@@ -300,10 +300,10 @@ putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExamp
     
     <item>
       <title>Setup VPC Peering With Ansible</title>
-      <link>http://darrylcauldwell.com/post/vpc-ansible/</link>
+      <link>https://darrylcauldwell.github.io/post/vpc-ansible/</link>
       <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vpc-ansible/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vpc-ansible/</guid>
       <description>
         
           &lt;p&gt;In this post I look at setting up &lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/vpc-peering-overview.html&#34;&gt;AWS VPC peering&lt;/a&gt; using Ansible. To do this we will start simple and add complexity to our configuration, we will start with peering within a single account and then move to script across accounts.&lt;/p&gt;
@@ -524,10 +524,10 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
     
     <item>
       <title>How To Use AWS CloudFormation With Ansible</title>
-      <link>http://darrylcauldwell.com/post/ansible-clouformation/</link>
+      <link>https://darrylcauldwell.github.io/post/ansible-clouformation/</link>
       <pubDate>Wed, 09 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/ansible-clouformation/</guid>
+      <guid>https://darrylcauldwell.github.io/post/ansible-clouformation/</guid>
       <description>
         
           &lt;p&gt;AWS CloudFormation gives developers and systems administrators an easy way to create and manage a collection of related AWS resources, provisioning and updating them in an orderly and predictable fashion. Ansible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs. Ansible uses no agents and no additional custom security infrastructure, so it&amp;rsquo;s easy to deploy, it uses a very simple language which allows you to describe your automation jobs in a way that approaches plain English.&lt;/p&gt;
@@ -631,10 +631,10 @@ localhost                  : ok&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/s
     
     <item>
       <title>Migrate VMware VMs to AWS EC2 using Server Migration Services (SMS)</title>
-      <link>http://darrylcauldwell.com/post/aws-sms/</link>
+      <link>https://darrylcauldwell.github.io/post/aws-sms/</link>
       <pubDate>Tue, 01 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/aws-sms/</guid>
+      <guid>https://darrylcauldwell.github.io/post/aws-sms/</guid>
       <description>
         
           &lt;p&gt;The &lt;a href=&#34;https://aws.amazon.com/server-migration-service/&#34;&gt;AWS Server Migration Service&lt;/a&gt; simplifies and streamlines the process of migrating existing virtualized applications to Amazon EC2. AWS SMS allows you to automate, schedule, and track incremental replications of live server volumes, making it easier for you to coordinate large-scale server migrations. Presently this only supports migrating from VMware with support for other hypervisors and physical servers is coming soon.&lt;/p&gt;
@@ -642,12 +642,12 @@ localhost                  : ok&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/s
 &lt;p&gt;The size of virtual machine images is such that the upload process might well take a long time, and during this time you might well want to keep the virtual machine running. The changes made during this time therefore will not be reflected in the initial AMI created. As such AWS SMS offers the option of running the replication job again, but rather than the job creating a full new virtual machine it takes an incremental snapshot.  Once the upload of this is completed the SMS service processes the initial upload with the incremental to form a new AMI.&lt;/p&gt;
 &lt;h2 id=&#34;how-to-configure-server-migration-services-sms&#34;&gt;How To: Configure Server Migration Services (SMS)&lt;/h2&gt;
 &lt;p&gt;The process is pretty straight forwards,  first task is to download the AWS Server Migration Connector from &lt;a href=&#34;https://s3.amazonaws.com/sms-connector/AWS-SMS-Connector.ova&#34;&gt;S3&lt;/a&gt;, then deploy the OVA.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-ova-deploy.jpeg&#34; alt=&#34;Deploy OVF Template&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-ova-deploy-final.jpeg&#34; alt=&#34;Deploy OVF Ready to complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-ova-deploy.jpeg&#34; alt=&#34;Deploy OVF Template&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-ova-deploy-final.jpeg&#34; alt=&#34;Deploy OVF Ready to complete&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The SMS Connector needst to connect to your AWS account and therefore we need to create a user with the &amp;ldquo;ServerMigrationConnector&amp;rdquo; role attached.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-account.jpeg&#34; alt=&#34;MigrationUser Role Mapping&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-account.jpeg&#34; alt=&#34;MigrationUser Role Mapping&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the SMS connector appliance is deployed connect to the web UI by opening the browser to https://dhcp-addr&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-cfg-wiz.jpeg&#34; alt=&#34;AWS Server Migration Service Splash&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-cfg-wiz.jpeg&#34; alt=&#34;AWS Server Migration Service Splash&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Work through the wizard to configure all,&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Step 1: License Agreement&lt;/li&gt;
@@ -657,12 +657,12 @@ localhost                  : ok&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/s
 &lt;li&gt;Step 5: Server Migration Service&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Once configuration is complete the connection to AWS and vCenter should show good in the connector configuration.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-cfg-complete.jpeg&#34; alt=&#34;AWS Server Migration Service Configuration Complete&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-cfg-complete.jpeg&#34; alt=&#34;AWS Server Migration Service Configuration Complete&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we then connect to AWS we can see the connector.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-cfg-complete-console.jpeg&#34; alt=&#34;AWS Server Migration Service Complete Console&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-cfg-complete-console.jpeg&#34; alt=&#34;AWS Server Migration Service Complete Console&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order to create the first replication job we need to import the list of vCenter VMs by using the &amp;lsquo;Import server catalog&amp;rsquo; function.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-import.jpeg&#34; alt=&#34;AWS Server Migration Service Import Server Catalog&#34;&gt;&lt;/p&gt;
-&lt;p&gt;There is not a default role supplied which the SMS services can use to form AMI&amp;rsquo;s from the uploaded VMware snapshots. To do this download this file &lt;a href=&#34;http://darrylcauldwell.com/attachments/trust-policy.json&#34;&gt;trust-policy.json&lt;/a&gt; and this file &lt;a href=&#34;http://darrylcauldwell.com/attachments/role-policy.json&#34;&gt;role-policy.json&lt;/a&gt;. Then at a command prompt, go to the directory where you stored the two JSON files, and run the following commands to create the SMS service role:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-import.jpeg&#34; alt=&#34;AWS Server Migration Service Import Server Catalog&#34;&gt;&lt;/p&gt;
+&lt;p&gt;There is not a default role supplied which the SMS services can use to form AMI&amp;rsquo;s from the uploaded VMware snapshots. To do this download this file &lt;a href=&#34;https://darrylcauldwell.github.io/attachments/trust-policy.json&#34;&gt;trust-policy.json&lt;/a&gt; and this file &lt;a href=&#34;https://darrylcauldwell.github.io/attachments/role-policy.json&#34;&gt;role-policy.json&lt;/a&gt;. Then at a command prompt, go to the directory where you stored the two JSON files, and run the following commands to create the SMS service role:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-role --role-name sms --assume-role-policy-document file://trust-policy.json
 aws iam put-role-policy --role-name sms --policy-name sms --policy-document file://role-policy.json
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;how-to-migrate-virtual-machine&#34;&gt;How To: Migrate Virtual Machine&lt;/h2&gt;
@@ -683,14 +683,14 @@ aws iam put-role-policy --role-name sms --policy-name sms --policy-document file
 &lt;li&gt;Step 4: Review&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Once the job schedules,  the first task the job performs is to create a VMware snapshot, it&amp;rsquo;s important to remember to have enough disk capacity to hold snapshots.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-seed-snapshot.jpeg&#34; alt=&#34;AWS Server Migration Service Seeding Snapshot&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-seed-snapshot.jpeg&#34; alt=&#34;AWS Server Migration Service Seeding Snapshot&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The AWS console doesn&amp;rsquo;t update very well, so its best to view the progress via the AWS CLI. First list all of the replication jobs and from this you can find the JobID then to make it easier to read target the output to the specific JobID.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-jobs  
 aws sms get-replication-jobs --replication-job-id sms-job-2ca54045  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A replication job refers to the server being migrated,  as we mentioned earlier multiple replications can occur for example the initial seed and an incremental.  Therefore within a replication job there might be various replication runs.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-runs --replication-job-id sms-job-2ca54045  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following example we can see this has three runs in the runlist, the initial seed which has completed, an incrememental which has completed, it also has a pending job as I had left the default replication job values to schedule a daily incremental.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-sms-repl-runs.jpeg&#34; alt=&#34;AWS Server Migration Service Replication Runs&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-repl-runs.jpeg&#34; alt=&#34;AWS Server Migration Service Replication Runs&#34;&gt;&lt;/p&gt;
 &lt;p&gt;When a job is running you would see the state roll through the various stages&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Pending&lt;/li&gt;
@@ -716,10 +716,10 @@ aws sms get-replication-jobs --replication-job-id sms-job-2ca54045
     
     <item>
       <title>AWS Certified Solutions Architect Professional - Study Link O&#39;Rama</title>
-      <link>http://darrylcauldwell.com/post/aws-sa-study/</link>
+      <link>https://darrylcauldwell.github.io/post/aws-sa-study/</link>
       <pubDate>Wed, 19 Oct 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/aws-sa-study/</guid>
+      <guid>https://darrylcauldwell.github.io/post/aws-sa-study/</guid>
       <description>
         
           &lt;p&gt;While studying to become a &lt;a href=&#34;https://aws.amazon.com/certification/certified-solutions-architect-professional/&#34;&gt;AWS Certified Solutions Architect - Professional&lt;/a&gt; I have been passed and found lots of resources, in this post I am trying to store the links which are useful. I started my journey with the &lt;a href=&#34;https://d0.awsstatic.com/training-and-certification/docs-sa-pro/AWS_certified_solutions_architect_professional_blueprint.pdf&#34;&gt;AWS exam blueprint&lt;/a&gt;. This is I believe the perfect place to start to study as it describes when exactly is covered by the exam and the weighted value of each skill being measured. I&amp;rsquo;ve then categorised the many study links I have been passed under each knowledge domain.&lt;/p&gt;
@@ -955,13 +955,13 @@ aws sms get-replication-jobs --replication-job-id sms-job-2ca54045
     
     <item>
       <title>AWSome Day - AWS Roadshow - Leeds 2016</title>
-      <link>http://darrylcauldwell.com/post/aws-awesome/</link>
+      <link>https://darrylcauldwell.github.io/post/aws-awesome/</link>
       <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/aws-awesome/</guid>
+      <guid>https://darrylcauldwell.github.io/post/aws-awesome/</guid>
       <description>
         
-          &lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-awsome-day-logo.jpeg&#34; alt=&#34;AWS Awesome Day Logo&#34;&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-awsome-day-logo.jpeg&#34; alt=&#34;AWS Awesome Day Logo&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The &amp;lsquo;AWSome Day&amp;rsquo; is a roadshow for people new to Amazon Web Services Cloud. I am about to change roles to work with customer solutions
 leveraging Amazon Web Services Cloud rather than VMware private cloud. I&amp;rsquo;ve just passed the entry level &amp;lsquo;AWS Business Professional&amp;rsquo; and
 &amp;lsquo;AWS Technology Professional&amp;rsquo; partner accreditations. I am presently self studying towards the associate level &amp;lsquo;Certified Solutions Archiect&amp;rsquo;.
@@ -997,15 +997,15 @@ or thinking about going on an AWS journey.&lt;/p&gt;
     
     <item>
       <title>NetApp Cloud OnTap For AWS</title>
-      <link>http://darrylcauldwell.com/post/aws-ontap/</link>
+      <link>https://darrylcauldwell.github.io/post/aws-ontap/</link>
       <pubDate>Fri, 12 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/aws-ontap/</guid>
+      <guid>https://darrylcauldwell.github.io/post/aws-ontap/</guid>
       <description>
         
           &lt;p&gt;NetApp has often been a pioneer of bleeding edge concepts in storage. When designing data ONTAP and the WAFL file system they were the first to look at creating a virtual control plane for data. They also pioneered fully non disruptive upgrades when the introduced clustered data ONTAP.  They then introduced ONTAP Edge for providing the really cool features of data ONTAP for non NetApp SANs. Recently the pioneering spirit has been continuing with the launch of Cloud ONTAP for AWS which takes the clustered data ONTAP features to overlay Amazon EC2 storage.&lt;/p&gt;
 &lt;p&gt;There are hundreds of business use cases which spring to mind when you begin to consider what this offers, however the total killer feature for this is using snap mirror to extend your data between private cloud and public cloud.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Using the public cloud makes great sense for standing up solutions quickly and without the up front capital expenditure and instead the operational usage charging. As your new product grows and becomes more popular it maybe your operational charges out weight the cost savings and you then want to bring it to private cloud.&lt;/p&gt;
 &lt;p&gt;Most applications have great agility for the application, simply stand up a new OS in other cloud provider and install application.  However application data agility is, until now, much harder to manage.&lt;/p&gt;
 &lt;p&gt;In this example you would simply build your private cloud and new application tier and use snap mirror to bring your data to your datacenter and keep it in sync with the application still running.  When all sync&amp;rsquo;d you would cutover by breaking the mirror all could be seam less to your customers.&lt;/p&gt;

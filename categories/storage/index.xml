@@ -2,23 +2,23 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>storage on </title>
-    <link>http://darrylcauldwell.com/categories/storage/</link>
+    <link>https://darrylcauldwell.github.io/categories/storage/</link>
     <description>Recent content in storage on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/categories/storage/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/categories/storage/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</title>
-      <link>http://darrylcauldwell.com/post/homelab-pi-storage/</link>
+      <link>https://darrylcauldwell.github.io/post/homelab-pi-storage/</link>
       <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/homelab-pi-storage/</guid>
+      <guid>https://darrylcauldwell.github.io/post/homelab-pi-storage/</guid>
       <description>
         
-          &lt;p&gt;Following on from &lt;a href=&#34;http://darrylcauldwell.com/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I look at the comparing the storage performance of SD and USB.&lt;/p&gt;
+          &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I look at the comparing the storage performance of SD and USB.&lt;/p&gt;
 &lt;h2 id=&#34;sd-card-performance&#34;&gt;SD Card Performance&lt;/h2&gt;
 &lt;p&gt;Linux FIO tool will be used to measure sequential write performance of a 4GB file:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pi/sd_reads.png&#34; alt=&#34;SD Card Read Performance&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/sd_reads.png&#34; alt=&#34;SD Card Read Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;IOPS=10.1k, BW=39.5MiB/s&lt;/li&gt;
@@ -28,7 +28,7 @@
 &lt;/ol&gt;
 &lt;p&gt;Similarly, the tool will be used to measure sequential read performance of a 4GB file:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pi/sd_writes.png&#34; alt=&#34;SD Card Write Performance&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/sd_writes.png&#34; alt=&#34;SD Card Write Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;IOPS=5429, BW=21.2MiB/s&lt;/li&gt;
@@ -50,7 +50,7 @@
 &lt;p&gt;Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;cd /mnt/ssd
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pi/usb_writes.png&#34; alt=&#34;USB Write Performance&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/usb_writes.png&#34; alt=&#34;USB Write Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;IOPS=14.5k, BW=56.6MiB/s&lt;/li&gt;
@@ -60,7 +60,7 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
 &lt;/ol&gt;
 &lt;pre&gt;&lt;code&gt;cd /mnt/ssd
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pi/usb_reads.png&#34; alt=&#34;USB Read Performance&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/usb_reads.png&#34; alt=&#34;USB Read Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;IOPS=33.3k, BW=130MiB/s&lt;/li&gt;
@@ -77,15 +77,15 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
     
     <item>
       <title>NetApp Cloud OnTap For AWS</title>
-      <link>http://darrylcauldwell.com/post/aws-ontap/</link>
+      <link>https://darrylcauldwell.github.io/post/aws-ontap/</link>
       <pubDate>Fri, 12 Dec 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/aws-ontap/</guid>
+      <guid>https://darrylcauldwell.github.io/post/aws-ontap/</guid>
       <description>
         
           &lt;p&gt;NetApp has often been a pioneer of bleeding edge concepts in storage. When designing data ONTAP and the WAFL file system they were the first to look at creating a virtual control plane for data. They also pioneered fully non disruptive upgrades when the introduced clustered data ONTAP.  They then introduced ONTAP Edge for providing the really cool features of data ONTAP for non NetApp SANs. Recently the pioneering spirit has been continuing with the launch of Cloud ONTAP for AWS which takes the clustered data ONTAP features to overlay Amazon EC2 storage.&lt;/p&gt;
 &lt;p&gt;There are hundreds of business use cases which spring to mind when you begin to consider what this offers, however the total killer feature for this is using snap mirror to extend your data between private cloud and public cloud.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-ontap.jpg&#34; alt=&#34;NetApp Cloud OnTap for AWS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Using the public cloud makes great sense for standing up solutions quickly and without the up front capital expenditure and instead the operational usage charging. As your new product grows and becomes more popular it maybe your operational charges out weight the cost savings and you then want to bring it to private cloud.&lt;/p&gt;
 &lt;p&gt;Most applications have great agility for the application, simply stand up a new OS in other cloud provider and install application.  However application data agility is, until now, much harder to manage.&lt;/p&gt;
 &lt;p&gt;In this example you would simply build your private cloud and new application tier and use snap mirror to bring your data to your datacenter and keep it in sync with the application still running.  When all sync&amp;rsquo;d you would cutover by breaking the mirror all could be seam less to your customers.&lt;/p&gt;
@@ -99,10 +99,10 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
     
     <item>
       <title>VMware Virtual Volumes Deep Dive</title>
-      <link>http://darrylcauldwell.com/post/vvols/</link>
+      <link>https://darrylcauldwell.github.io/post/vvols/</link>
       <pubDate>Fri, 24 Oct 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vvols/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vvols/</guid>
       <description>
         
           &lt;h2 id=&#34;how-vvols-will-help&#34;&gt;How vVols Will Help&lt;/h2&gt;
@@ -135,10 +135,10 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
     
     <item>
       <title>NetApp FAS IOPS Theoretical Maximum &amp; Workload Aggregate Load Balancing</title>
-      <link>http://darrylcauldwell.com/post/netapp-iops/</link>
+      <link>https://darrylcauldwell.github.io/post/netapp-iops/</link>
       <pubDate>Tue, 26 Aug 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/netapp-iops/</guid>
+      <guid>https://darrylcauldwell.github.io/post/netapp-iops/</guid>
       <description>
         
           &lt;p&gt;To achieve good performance for a virtualized workload your Storage Area Network (SAN) should deliver high IOps with a predictable low latency. If you are using a good flash system where IOps (Input/Output Operations Per Second) effectively become an unlimited resource then latency will probably be your limiting factor.&lt;/p&gt;
@@ -152,10 +152,10 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
     
     <item>
       <title>Windows Server 2012 - SAN Performance</title>
-      <link>http://darrylcauldwell.com/post/win2012-san-perf/</link>
+      <link>https://darrylcauldwell.github.io/post/win2012-san-perf/</link>
       <pubDate>Mon, 03 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/win2012-san-perf/</guid>
+      <guid>https://darrylcauldwell.github.io/post/win2012-san-perf/</guid>
       <description>
         
           &lt;p&gt;In a newly deployed Windows Server 2012 HyperV environment with around sixty nodes, running a couple of hundred Windows Server 2012 virtual machines running various applications.  We found the EMC VMX storage which underpinned this became massively busy with Write IO at around 3am,  the Write IO was mostly coming from TRIM and Unmap commands,  the amount has a dramatic impact and leads to lots of 153 errors on the server estate,  after one to two hours the Write IO subsided. I wrote a script to audit the estate to identify if there was any pattern to the errors. We found the errors correlated to the 3am Window also.&lt;/p&gt;
@@ -167,7 +167,7 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 01:00.&lt;/p&gt;
 &lt;p&gt;The Action for these tasks is “Custom Handler”, Microsoft publish no details on what these tasks do. We logged a call with Microsoft and they also did not know what these, but they did say that tasks with a “Custom Handler” are umbrella’s for other tasks.&lt;/p&gt;
 &lt;p&gt;As Regular Maintenance appeared to be the most likely due to execution time, I viewed its Last Run Time.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I then manually worked through each Windows task in Task Scheduler and took note of which Tasks had Last Run Time which matched that of “Regular Maintenance”.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
 \Microsoft\Windows\.NET Framework.Net Framework NGEN v4.0.30319 64

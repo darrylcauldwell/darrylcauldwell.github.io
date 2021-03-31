@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>python on </title>
-    <link>http://darrylcauldwell.com/tags/python/</link>
+    <link>https://darrylcauldwell.github.io/tags/python/</link>
     <description>Recent content in python on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Pi Supercomputer</title>
-      <link>http://darrylcauldwell.com/post/homelab-pi-mpi/</link>
+      <link>https://darrylcauldwell.github.io/post/homelab-pi-mpi/</link>
       <pubDate>Tue, 30 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/homelab-pi-mpi/</guid>
+      <guid>https://darrylcauldwell.github.io/post/homelab-pi-mpi/</guid>
       <description>
         
-          &lt;p&gt;Following on from &lt;a href=&#34;http://darrylcauldwell.com/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I begin to look at Parrallel Programming.&lt;/p&gt;
+          &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I begin to look at Parrallel Programming.&lt;/p&gt;
 &lt;h2 id=&#34;parrallel-programming&#34;&gt;Parrallel Programming&lt;/h2&gt;
 &lt;p&gt;Each Raspberry Pi is a small unit of compute, one of my goals is to understand how operating many in a cluster. There are various approaches to parallel computational models, message-passing has proven to be an effective one. MPI the Message Passing Interface, is a standardized and portable message-passing system designed to function on a wide variety of parallel computers.&lt;/p&gt;
 &lt;p&gt;My prefered language is Python and usefully there is &lt;a href=&#34;https://mpi4py.readthedocs.io/en/stable/install.html&#34;&gt;MPI for Python&lt;/a&gt;.&lt;/p&gt;
@@ -41,7 +41,7 @@ rpi-3
 EOF
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The easiest way to run commands or code is with the mpirun command. This command, run in a shell, will launch multiple copies of your code, and set up communications between them. As each Pi has four cores and we have four we can specify number of processors to run as sixteen.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pi/mpirun_temp.png&#34; alt=&#34;MPIRUN Measure Temparature&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/mpirun_temp.png&#34; alt=&#34;MPIRUN Measure Temparature&#34;&gt;&lt;/p&gt;
 &lt;p&gt;While its interesting running individual commands across nodes the MPI for Python module exposes options for programs to spread load.  A simple test of this is where we scatter a bunch of elements, like those in a list, to processing nodes.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/scatter.py
 from mpi4py import MPI
@@ -61,7 +61,7 @@ print (&#39;rank&#39;,rank,&#39;has data:&#39;,data)
 EOF
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once script created execute:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pi/mpirun_scatter.png&#34; alt=&#34;MPIRUN Scatter&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/mpirun_scatter.png&#34; alt=&#34;MPIRUN Scatter&#34;&gt;&lt;/p&gt;
 &lt;p&gt;While scattering elements of a list is interesting splitting up a processing problem and distributing to multiple processing nodes is more fun.  Calculating Pi is a nice example of this,  and its nice for a Pi cluster to calculate Pi with MPI.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#pi.py&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; mpi4py &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; MPI
@@ -126,7 +126,7 @@ total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
         comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(rank, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execute script with mpi and watch it distribute the calculation around the nodes and aggregate these to final answer.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 pi.py
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/pi/pi_with_mpi_on_pi.png&#34; alt=&#34;Pi with MPI on Pi&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/pi_with_mpi_on_pi.png&#34; alt=&#34;Pi with MPI on Pi&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -134,10 +134,10 @@ total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
     
     <item>
       <title>Programaticly configuring VMware Storage Profile API with Python</title>
-      <link>http://darrylcauldwell.com/post/python_spbm/</link>
+      <link>https://darrylcauldwell.github.io/post/python_spbm/</link>
       <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/python_spbm/</guid>
+      <guid>https://darrylcauldwell.github.io/post/python_spbm/</guid>
       <description>
         
           &lt;p&gt;I was looking to programaticly configuring VMware Storage Profile recently. My scripting language of choice is Python, VMware maintain &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;pyVmomi&lt;/a&gt; is which is the Python SDK for the VMware vSphere API. pyVmomi can be used to form binding and configure the &lt;a href=&#34;https://code.vmware.com/apis/968/vsphere&#34;&gt;vSphere Web Services API&lt;/a&gt; and the &lt;a href=&#34;https://code.vmware.com/apis/971&#34;&gt;VMware Storage Policy API&lt;/a&gt;.&lt;/p&gt;
@@ -230,10 +230,10 @@ if __name__ == &#39;__main__&#39;:
     
     <item>
       <title>Controlling vSphere &amp; NSX-V With Python</title>
-      <link>http://darrylcauldwell.com/post/nsx-python/</link>
+      <link>https://darrylcauldwell.github.io/post/nsx-python/</link>
       <pubDate>Mon, 15 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/nsx-python/</guid>
+      <guid>https://darrylcauldwell.github.io/post/nsx-python/</guid>
       <description>
         
           &lt;p&gt;My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere, so its here I shall start. Since then NSX for vSphere has also an open source library NSX RAML Client provided by VMware so I&amp;rsquo;ll then move to that.&lt;/p&gt;
@@ -311,10 +311,10 @@ nsx_manager_session&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view_
     
     <item>
       <title>DynamoDB Python Test Environment with Cloud Formations</title>
-      <link>http://darrylcauldwell.com/post/dynamodb-python/</link>
+      <link>https://darrylcauldwell.github.io/post/dynamodb-python/</link>
       <pubDate>Fri, 31 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/dynamodb-python/</guid>
+      <guid>https://darrylcauldwell.github.io/post/dynamodb-python/</guid>
       <description>
         
           &lt;p&gt;The goal of this post is to walk through the creation of a AWS test environment which I use to explore the Python SDK interactions with DyanmoDB. For learning I use the free tier and so used to create the environment as needed manually. After doing this once I decided to encapsulate the configuration in a Cloud Formations template and then deploy the stack when I needed it.&lt;/p&gt;
@@ -406,10 +406,10 @@ items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; response[&lt;span
     
     <item>
       <title>Simple REST API For DynamoDB Using Lambda</title>
-      <link>http://darrylcauldwell.com/post/lambda-dynamodb/</link>
+      <link>https://darrylcauldwell.github.io/post/lambda-dynamodb/</link>
       <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/lambda-dynamodb/</guid>
+      <guid>https://darrylcauldwell.github.io/post/lambda-dynamodb/</guid>
       <description>
         
           &lt;p&gt;My goal here is to setup a simple RESTful API which accepts GET and POST methods to trigger a Lambda Function to read and put information into DynamoDB.&lt;/p&gt;
@@ -471,10 +471,10 @@ aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&am
     
     <item>
       <title>Deploying NSX-V With Ansible</title>
-      <link>http://darrylcauldwell.com/post/nsx-install-ansible/</link>
+      <link>https://darrylcauldwell.github.io/post/nsx-install-ansible/</link>
       <pubDate>Wed, 08 Jun 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/nsx-install-ansible/</guid>
+      <guid>https://darrylcauldwell.github.io/post/nsx-install-ansible/</guid>
       <description>
         
           &lt;p&gt;Here I will describe the steps taken to deploy NSX Manager using the &lt;a href=&#34;https://github.com/vmware/nsxansible&#34;&gt;Ansible NSX Module&lt;/a&gt;. The NSX Ansible module is written by VMware and is provided opensource on GitHub. To work properly this depends on the &lt;a href=&#34;https://github.com/vmware/nsxraml&#34;&gt;NSX RAML Specification&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/nsxramlclient&#34;&gt;NSX RAML Python Client&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;vSphere API Python Bindings&lt;/a&gt; and the &lt;a href=&#34;https://www.vmware.com/support/developer/ovf/&#34;&gt;OVF Tool&lt;/a&gt; all being installed on the Ansible server.&lt;/p&gt;
@@ -501,7 +501,7 @@ nsx_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
 client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;False)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you can then see the session by running the following command in python session&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;client_session
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vmware-vsphere-api-python-bindings&#34;&gt;VMware vSphere API Python Bindings&lt;/h2&gt;
 &lt;p&gt;As well as the NSX Python client the Ansible NSX Module also depends on the VMware vSphere API Python Bindings (pyVmomi. pyVmomi is the Python SDK for the VMware vSphere API that allows you to manage ESX, ESXi, and vCenter. This is similarly installed with the python package manager using command like.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip install pyvmomi
@@ -510,9 +510,9 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
 &lt;p&gt;Once downloaded to the Ansbile server, we need to ensure it has execute attribute and then execute it to start the install, the commands to do this for the current version 4.1.0 are.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod +x VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
 ./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-ovftool.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-ovftool.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the install is running you have to agree to EULA, to get to the end of the text, hold down the Space bar. When prompted &lt;em&gt;Do you agree?&lt;/em&gt; type yes.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-ovftool2.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-ovftool2.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once OVF Tool is installed we can use SCP to copy the NSX OVA, VMware-NSX-Manager-6.2.2-3604087.ova, to Ansible server I placed this in folder named /OVAs.&lt;/p&gt;
 &lt;h2 id=&#34;ansible-nsx-module&#34;&gt;Ansible NSX Module&lt;/h2&gt;
 &lt;p&gt;We already have Git installed for dowlnloading the NSX RAML Specification so we can use this to clone the NSX Ansible repository.&lt;/p&gt;
@@ -521,15 +521,15 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
 &lt;p&gt;The NSX Module comes supplied with some example playbooks for performing common tasks, we’ll first take a copy of the example to deploy NSX Manager&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp /nsxansible/test_deploynsxova.yml /nsxansible/darryl_deploynsxova.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then edit the contents to match the variables we plan to deploy in environment. While most of playbook contents are environmental specific varibles its worth noting that we run this module against the Ansible server itself as this is where the OVA and ovftool are located so hosts: value will always be localhost.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-NSXmgr.jpg&#34; alt=&#34;Deploy NSX Manager&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-NSXmgr.jpg&#34; alt=&#34;Deploy NSX Manager&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once we have our environmental specific entries set we can execute the playbook with Ansible.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook darryl_deploynsxova.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-playbook.jpg&#34; alt=&#34;Deploy NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-playbook.jpg&#34; alt=&#34;Deploy NSX Manager Playbook&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We see this deploys ‘NSX Manager’ and configures the setting specified in the playbook.&lt;/p&gt;
 &lt;h2 id=&#34;deploy-nsx-manager-and-register-with-vcenter-and-sso&#34;&gt;Deploy NSX Manager and register with vCenter and SSO&lt;/h2&gt;
 &lt;p&gt;As with any Ansible playbook we can put common variables in a central location and call these from playbooks. An example is provided called answerfile-deployLab.yml. Variable names are overlapped between parts of the NSX Modules, in order that they are unique in the central answer file the names vary but its very easy to match these.&lt;/p&gt;
 &lt;p&gt;An example of my playbook to deploy NSX Manager and then register this with vCenter and SSO.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-mgr-cfg.jpg&#34; alt=&#34;Deploy and Configure NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-mgr-cfg.jpg&#34; alt=&#34;Deploy and Configure NSX Manager Playbook&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -537,10 +537,10 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
     
     <item>
       <title>Ansibile NSX Configuration - Infrastructure As Code</title>
-      <link>http://darrylcauldwell.com/post/nsx-ansible-iac/</link>
+      <link>https://darrylcauldwell.github.io/post/nsx-ansible-iac/</link>
       <pubDate>Tue, 07 Jun 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/nsx-ansible-iac/</guid>
+      <guid>https://darrylcauldwell.github.io/post/nsx-ansible-iac/</guid>
       <description>
         
           &lt;p&gt;With the rise of DevOps culture and the ethos of automate all the things. Using test driven development techniques to apply application configuration declaratively has become widespread. The ever closer working relations of developers and infrastructure operations staff to become an application centric delivery and management unit has lead to many benefits.  One of the benefits is the shared empathy for each others pain points and understanding of how each approaches tackling these. It is clear that managing configuration as code has many benefits for consistent repeated delivery of applications.&lt;/p&gt;

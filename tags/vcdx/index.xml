@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vcdx on </title>
-    <link>http://darrylcauldwell.com/tags/vcdx/</link>
+    <link>https://darrylcauldwell.github.io/tags/vcdx/</link>
     <description>Recent content in vcdx on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vcdx/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vcdx/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VCDX6-DCV Defence Experience</title>
-      <link>http://darrylcauldwell.com/post/vcdx-fail/</link>
+      <link>https://darrylcauldwell.github.io/post/vcdx-fail/</link>
       <pubDate>Thu, 07 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vcdx-fail/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vcdx-fail/</guid>
       <description>
         
           &lt;p&gt;In 2013 I was a systems engineer,  I worked mostly on automation scripting for consistently delivering virtualized infrastructure on VMware. A job I&amp;rsquo;d enjoyed but was ready to move my career forwards, my at the time colleague &lt;a href=&#34;https://twitter.com/virtRich&#34;&gt;Richard Dowling&lt;/a&gt; and I started looked into pursuing advanced VMware certification. In early 2014 we attended a VCDX workshop hosted by &lt;a href=&#34;https://twitter.com/vcdx001&#34;&gt;John Arrasjid&lt;/a&gt; at VMware EMEA HQ in Frimley. Also in the workshop was &lt;a href=&#34;https://twitter.com/pmcsharry&#34;&gt;Paul McSharry&lt;/a&gt; who John knew and who had recently had published &lt;a href=&#34;https://www.amazon.co.uk/VCAP5-DCD-Official-Cert-Guide-Certification/dp/078975018X&#34;&gt;VCAP5-DCD Official Cert Guide&lt;/a&gt;.  I ordered the book that evening and this began my journey from engineer to architect.&lt;/p&gt;

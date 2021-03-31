@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vvols on </title>
-    <link>http://darrylcauldwell.com/tags/vvols/</link>
+    <link>https://darrylcauldwell.github.io/tags/vvols/</link>
     <description>Recent content in vvols on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 24 Oct 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/vvols/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 Oct 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vvols/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VMware Virtual Volumes Deep Dive</title>
-      <link>http://darrylcauldwell.com/post/vvols/</link>
+      <link>https://darrylcauldwell.github.io/post/vvols/</link>
       <pubDate>Fri, 24 Oct 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vvols/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vvols/</guid>
       <description>
         
           &lt;h2 id=&#34;how-vvols-will-help&#34;&gt;How vVols Will Help&lt;/h2&gt;

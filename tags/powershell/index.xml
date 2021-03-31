@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>powershell on </title>
-    <link>http://darrylcauldwell.com/tags/powershell/</link>
+    <link>https://darrylcauldwell.github.io/tags/powershell/</link>
     <description>Recent content in powershell on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 20 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 20 Dec 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DynamoDB With Powershell</title>
-      <link>http://darrylcauldwell.com/post/dynamodb-powershell/</link>
+      <link>https://darrylcauldwell.github.io/post/dynamodb-powershell/</link>
       <pubDate>Tue, 20 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/dynamodb-powershell/</guid>
+      <guid>https://darrylcauldwell.github.io/post/dynamodb-powershell/</guid>
       <description>
         
           &lt;p&gt;AWS dynamoDB is a really useful key-value store which is really easy to consume from scripts. However while the AWS Powershell module contains functions for &amp;lsquo;Managing Tables&amp;rsquo; it does not contain functions for &amp;lsquo;Reading Data&amp;rsquo; or &amp;lsquo;Modifying Data&amp;rsquo;.  I had found Julian Biddle had written a &lt;a href=&#34;https://anoriginalidea.wordpress.com/2015/01/20/using-amazon-aws-dynamodb-from-powershell/&#34;&gt;blog post&lt;/a&gt; about how this might be done by making direct calls to AWS AmazonDynamoDBClient SDK for .net. While this was a useful starting point I had to read around this alot to get it to work how I needed, this post is an explaination of my understanding.&lt;/p&gt;
@@ -96,10 +96,10 @@ putDDBItem -tableName &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;myExamp
     
     <item>
       <title>Configuring Network Core Dump With PowerCLI</title>
-      <link>http://darrylcauldwell.com/post/core-dump/</link>
+      <link>https://darrylcauldwell.github.io/post/core-dump/</link>
       <pubDate>Wed, 17 Jun 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/core-dump/</guid>
+      <guid>https://darrylcauldwell.github.io/post/core-dump/</guid>
       <description>
         
           &lt;p&gt;The VMware vSphere Network Dump Collector service enables a host to transmit diagnostic information via the network to a remote netdump service, which stores it on disk. Network-based coredump collection can be configured in addition to or instead of disk-based coredump collection. This may be useful in stateless environments with no local disk usable for a diagnostic partition.&lt;/p&gt;
@@ -121,10 +121,10 @@ $esxcli.system.coredump.network.get()
     
     <item>
       <title>Post To Slack From Powershell</title>
-      <link>http://darrylcauldwell.com/post/slack-powershell/</link>
+      <link>https://darrylcauldwell.github.io/post/slack-powershell/</link>
       <pubDate>Thu, 09 Apr 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/slack-powershell/</guid>
+      <guid>https://darrylcauldwell.github.io/post/slack-powershell/</guid>
       <description>
         
           &lt;p&gt;Working in a technical team distributed across multiple time zones makes it difficult to collaborate and keep everyone on the same page. I’ve used various communications tools to try and help with this and today the team I am working with started to look at Slack.  Slack seems ideal for our needs as it provides easily searchable discussion forums and has apps available for Mac, Windows, iOS and Android, it has a free usage model with limitations which won’t effect our working and if we grow we can extend to a paid license.&lt;/p&gt;
@@ -132,7 +132,7 @@ $esxcli.system.coredump.network.get()
 &lt;h2 id=&#34;how-to&#34;&gt;How To&lt;/h2&gt;
 &lt;p&gt;While logged into slack use the following URL &lt;a href=&#34;https://api.slack.com/web#authentication&#34;&gt;https://api.slack.com/web#authentication&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;This should take you to screen to issue a OAuth2 token.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/slack-powershell-token.png&#34; alt=&#34;Slack OAuth2 Token&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/slack-powershell-token.png&#34; alt=&#34;Slack OAuth2 Token&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Click Create token and copy the text string for the token. We then need to format the message and call postMessage method with Powershell.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$postSlackMessage = @{token=&amp;quot;&amp;lt;your-token&amp;gt;&amp;quot;;channel=&amp;quot;#general&amp;quot;;txt=&amp;quot;Hello from PowerShell!&amp;quot;;username=&amp;quot;via API&amp;quot;}
 Invoke-RestMethod -Uri https://slack.com/api/chat.postMessage -Body $postSlackMessage

@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>cloudbased-init on </title>
-    <link>http://darrylcauldwell.com/tags/cloudbased-init/</link>
+    <link>https://darrylcauldwell.github.io/tags/cloudbased-init/</link>
     <description>Recent content in cloudbased-init on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/cloudbased-init/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/cloudbased-init/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cloudbased-init For vSphere</title>
-      <link>http://darrylcauldwell.com/post/cloudbased-init/</link>
+      <link>https://darrylcauldwell.github.io/post/cloudbased-init/</link>
       <pubDate>Thu, 26 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/cloudbased-init/</guid>
+      <guid>https://darrylcauldwell.github.io/post/cloudbased-init/</guid>
       <description>
         
           &lt;p&gt;vRealize Automation Cloud and 8.x allows you to deploy and configure cloud agnostic virtual machines. To achieve agnostic in-guest OS customization capability across for on-premises vSphere, AWS, GCP and Azure endpoints &lt;a href=&#34;https://cloud-init.io/&#34;&gt;cloud-init&lt;/a&gt; is used for Linux guests and &lt;a href=&#34;https://cloudbase.it/cloudbase-init/&#34;&gt;cloudbase-init&lt;/a&gt; is used for Windows guests.&lt;/p&gt;

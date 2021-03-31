@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>ansible on </title>
-    <link>http://darrylcauldwell.com/tags/ansible/</link>
+    <link>https://darrylcauldwell.github.io/tags/ansible/</link>
     <description>Recent content in ansible on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 01 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/ansible/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/ansible/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cloud Assembly VM Guest Management With Ansible</title>
-      <link>http://darrylcauldwell.com/post/ansible-cloud-assembly/</link>
+      <link>https://darrylcauldwell.github.io/post/ansible-cloud-assembly/</link>
       <pubDate>Thu, 01 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/ansible-cloud-assembly/</guid>
+      <guid>https://darrylcauldwell.github.io/post/ansible-cloud-assembly/</guid>
       <description>
         
           &lt;p&gt;VMware &lt;a href=&#34;https://cloud.vmware.com/cloud-automation-services&#34;&gt;Cloud Automation Services&lt;/a&gt; is a product suite comprising three products, &lt;a href=&#34;https://cloud.vmware.com/cloud-assembly&#34;&gt;Cloud Assembly&lt;/a&gt;, &lt;a href=&#34;https://cloud.vmware.com/service-broker&#34;&gt;Service Broker&lt;/a&gt; and &lt;a href=&#34;https://cloud.vmware.com/code-stream&#34;&gt;Code Stream&lt;/a&gt;. Cloud Assembly provides a blueprinting engine and manages connectivity to multiple cloud endpoints. Service Broker provides a unified catalog for publishing blueprints with role-based policies. Code Stream provides a release pipeline with analytics.&lt;/p&gt;
@@ -40,10 +40,10 @@
     
     <item>
       <title>Setup VPC Peering With Ansible</title>
-      <link>http://darrylcauldwell.com/post/vpc-ansible/</link>
+      <link>https://darrylcauldwell.github.io/post/vpc-ansible/</link>
       <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/vpc-ansible/</guid>
+      <guid>https://darrylcauldwell.github.io/post/vpc-ansible/</guid>
       <description>
         
           &lt;p&gt;In this post I look at setting up &lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/vpc-peering-overview.html&#34;&gt;AWS VPC peering&lt;/a&gt; using Ansible. To do this we will start simple and add complexity to our configuration, we will start with peering within a single account and then move to script across accounts.&lt;/p&gt;
@@ -264,10 +264,10 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
     
     <item>
       <title>How To Use AWS CloudFormation With Ansible</title>
-      <link>http://darrylcauldwell.com/post/ansible-clouformation/</link>
+      <link>https://darrylcauldwell.github.io/post/ansible-clouformation/</link>
       <pubDate>Wed, 09 Nov 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/ansible-clouformation/</guid>
+      <guid>https://darrylcauldwell.github.io/post/ansible-clouformation/</guid>
       <description>
         
           &lt;p&gt;AWS CloudFormation gives developers and systems administrators an easy way to create and manage a collection of related AWS resources, provisioning and updating them in an orderly and predictable fashion. Ansible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs. Ansible uses no agents and no additional custom security infrastructure, so it&amp;rsquo;s easy to deploy, it uses a very simple language which allows you to describe your automation jobs in a way that approaches plain English.&lt;/p&gt;
@@ -371,10 +371,10 @@ localhost                  : ok&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/s
     
     <item>
       <title>Deploying NSX-V With Ansible</title>
-      <link>http://darrylcauldwell.com/post/nsx-install-ansible/</link>
+      <link>https://darrylcauldwell.github.io/post/nsx-install-ansible/</link>
       <pubDate>Wed, 08 Jun 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/nsx-install-ansible/</guid>
+      <guid>https://darrylcauldwell.github.io/post/nsx-install-ansible/</guid>
       <description>
         
           &lt;p&gt;Here I will describe the steps taken to deploy NSX Manager using the &lt;a href=&#34;https://github.com/vmware/nsxansible&#34;&gt;Ansible NSX Module&lt;/a&gt;. The NSX Ansible module is written by VMware and is provided opensource on GitHub. To work properly this depends on the &lt;a href=&#34;https://github.com/vmware/nsxraml&#34;&gt;NSX RAML Specification&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/nsxramlclient&#34;&gt;NSX RAML Python Client&lt;/a&gt;, &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;vSphere API Python Bindings&lt;/a&gt; and the &lt;a href=&#34;https://www.vmware.com/support/developer/ovf/&#34;&gt;OVF Tool&lt;/a&gt; all being installed on the Ansible server.&lt;/p&gt;
@@ -401,7 +401,7 @@ nsx_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
 client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;False)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you can then see the session by running the following command in python session&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;client_session
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vmware-vsphere-api-python-bindings&#34;&gt;VMware vSphere API Python Bindings&lt;/h2&gt;
 &lt;p&gt;As well as the NSX Python client the Ansible NSX Module also depends on the VMware vSphere API Python Bindings (pyVmomi. pyVmomi is the Python SDK for the VMware vSphere API that allows you to manage ESX, ESXi, and vCenter. This is similarly installed with the python package manager using command like.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;pip install pyvmomi
@@ -410,9 +410,9 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
 &lt;p&gt;Once downloaded to the Ansbile server, we need to ensure it has execute attribute and then execute it to start the install, the commands to do this for the current version 4.1.0 are.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod +x VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
 ./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-ovftool.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-ovftool.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the install is running you have to agree to EULA, to get to the end of the text, hold down the Space bar. When prompted &lt;em&gt;Do you agree?&lt;/em&gt; type yes.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-ovftool2.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-ovftool2.jpg&#34; alt=&#34;OVFTool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once OVF Tool is installed we can use SCP to copy the NSX OVA, VMware-NSX-Manager-6.2.2-3604087.ova, to Ansible server I placed this in folder named /OVAs.&lt;/p&gt;
 &lt;h2 id=&#34;ansible-nsx-module&#34;&gt;Ansible NSX Module&lt;/h2&gt;
 &lt;p&gt;We already have Git installed for dowlnloading the NSX RAML Specification so we can use this to clone the NSX Ansible repository.&lt;/p&gt;
@@ -421,15 +421,15 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
 &lt;p&gt;The NSX Module comes supplied with some example playbooks for performing common tasks, we’ll first take a copy of the example to deploy NSX Manager&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cp /nsxansible/test_deploynsxova.yml /nsxansible/darryl_deploynsxova.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then edit the contents to match the variables we plan to deploy in environment. While most of playbook contents are environmental specific varibles its worth noting that we run this module against the Ansible server itself as this is where the OVA and ovftool are located so hosts: value will always be localhost.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-NSXmgr.jpg&#34; alt=&#34;Deploy NSX Manager&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-NSXmgr.jpg&#34; alt=&#34;Deploy NSX Manager&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once we have our environmental specific entries set we can execute the playbook with Ansible.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook darryl_deploynsxova.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-playbook.jpg&#34; alt=&#34;Deploy NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-playbook.jpg&#34; alt=&#34;Deploy NSX Manager Playbook&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We see this deploys ‘NSX Manager’ and configures the setting specified in the playbook.&lt;/p&gt;
 &lt;h2 id=&#34;deploy-nsx-manager-and-register-with-vcenter-and-sso&#34;&gt;Deploy NSX Manager and register with vCenter and SSO&lt;/h2&gt;
 &lt;p&gt;As with any Ansible playbook we can put common variables in a central location and call these from playbooks. An example is provided called answerfile-deployLab.yml. Variable names are overlapped between parts of the NSX Modules, in order that they are unique in the central answer file the names vary but its very easy to match these.&lt;/p&gt;
 &lt;p&gt;An example of my playbook to deploy NSX Manager and then register this with vCenter and SSO.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/nsx-install-ansible-mgr-cfg.jpg&#34; alt=&#34;Deploy and Configure NSX Manager Playbook&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-mgr-cfg.jpg&#34; alt=&#34;Deploy and Configure NSX Manager Playbook&#34;&gt;&lt;/p&gt;
 
         
       </description>
@@ -437,10 +437,10 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
     
     <item>
       <title>Ansibile NSX Configuration - Infrastructure As Code</title>
-      <link>http://darrylcauldwell.com/post/nsx-ansible-iac/</link>
+      <link>https://darrylcauldwell.github.io/post/nsx-ansible-iac/</link>
       <pubDate>Tue, 07 Jun 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/nsx-ansible-iac/</guid>
+      <guid>https://darrylcauldwell.github.io/post/nsx-ansible-iac/</guid>
       <description>
         
           &lt;p&gt;With the rise of DevOps culture and the ethos of automate all the things. Using test driven development techniques to apply application configuration declaratively has become widespread. The ever closer working relations of developers and infrastructure operations staff to become an application centric delivery and management unit has lead to many benefits.  One of the benefits is the shared empathy for each others pain points and understanding of how each approaches tackling these. It is clear that managing configuration as code has many benefits for consistent repeated delivery of applications.&lt;/p&gt;
@@ -454,10 +454,10 @@ client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClien
     
     <item>
       <title>Ansible For Windows Managed Nodes</title>
-      <link>http://darrylcauldwell.com/post/ansible-windows/</link>
+      <link>https://darrylcauldwell.github.io/post/ansible-windows/</link>
       <pubDate>Tue, 27 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/ansible-windows/</guid>
+      <guid>https://darrylcauldwell.github.io/post/ansible-windows/</guid>
       <description>
         
           &lt;p&gt;On starting to look at learning using Ansible to manage Windows hosts, first step was to setup a test lab.&lt;/p&gt;

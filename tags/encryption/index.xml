@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>encryption on </title>
-    <link>http://darrylcauldwell.com/tags/encryption/</link>
+    <link>https://darrylcauldwell.github.io/tags/encryption/</link>
     <description>Recent content in encryption on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 13 Apr 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://darrylcauldwell.com/tags/encryption/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 13 Apr 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/encryption/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VMware Data Encryption At Rest</title>
-      <link>http://darrylcauldwell.com/post/encryption-at-rest/</link>
+      <link>https://darrylcauldwell.github.io/post/encryption-at-rest/</link>
       <pubDate>Fri, 13 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://darrylcauldwell.com/post/encryption-at-rest/</guid>
+      <guid>https://darrylcauldwell.github.io/post/encryption-at-rest/</guid>
       <description>
         
           &lt;p&gt;Encryption of data at rest is a requirement for many customers,  with VMware hosted Virtual Machines (VMs) there are two ways to achieve this. VM data can be encrypted using vSAN whole-datastore encryption or using Storage Policy (VMcrypt). Both VM Encryption and vSAN Encryption require a Key Management Interoperability Protocol (KMIP) 1.1 compliant Key Management Server (KMS), the same KMS provider can be used for both types of encryption.&lt;/p&gt;
@@ -64,21 +64,21 @@
 &lt;/table&gt;
 &lt;h2 id=&#34;vm-encryption-vmcrypt&#34;&gt;VM Encryption (VMcrypt)&lt;/h2&gt;
 &lt;p&gt;Encryption is done in the hypervisor, “beneath” the virtual machine. As I/O comes out of the virtual disk controller in the VM it is immediately encrypted by a module in the kernel before being send to the kernel storage layer. Because encryption happens at the hypervisor level and not in the VM, the Guest OS and datastore type are not a factor. The encyrption is hardware accelerated when host CPU support &lt;a href=&#34;https://software.intel.com/en-us/articles/intel-advanced-encryption-standard-instructions-aes-ni&#34;&gt;Intel Advanced Encryption Standard Instructuctions (AES-NI)&lt;/a&gt;. The encryption option is exposed via Storage Policy, therefore it can be applied to only those VMs or groups of VMs which require it.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/encryption.jpg&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/encryption.jpg&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
 &lt;p&gt;VM Encryption is implemented through &lt;a href=&#34;https://code.vmware.com/programs/vsphere-apis-for-io-filtering&#34;&gt;vSphere APIs for IO Filters (VAIO)&lt;/a&gt;. The VAIO framework allows a filter driver to intercept IO that a VM sends down to a storage device. Ecryption occurs before any data is send across the wire.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/encryption-vaio-architecture.png&#34; alt=&#34;vSphere APIs for IO Architecture&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/encryption-vaio-architecture.png&#34; alt=&#34;vSphere APIs for IO Architecture&#34;&gt;&lt;/p&gt;
 &lt;p&gt;## VMcrypt VSAN Efficiency Consideration
 An important consideration when using VSAN is that, VMcrypt writes an encrypted data stream whereas vSAN encryption receives an unencrypted data stream and encrypts it during the write process. As the encrypted data written by VMcrypt appears to be random, it does not deduplicate well. If using VMcrypt with VSAN deduplication, expect deduplication efficiency to approach zero for encrypted VMs.&lt;/p&gt;
 &lt;h2 id=&#34;vsan-encyption&#34;&gt;VSAN Encyption&lt;/h2&gt;
 &lt;p&gt;With vSAN Encryption we can achieve “data encryption at rest” however the data travels to the destination unencrypted then when it reaches its destination it is encrypted, and it will be encrypted after it is deduplicated and/or compressed again. This allows the benefit of deduplicated and/or compressed space saving functionality.&lt;/p&gt;
 &lt;p&gt;Thie data encyption at rest method is a cluster wide option, which means that every VM will be encrypted.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/encryption-vsan-hytrust.png&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/encryption-vsan-hytrust.png&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;key-management-server-kms-topologies&#34;&gt;Key Management Server (KMS) Topologies&lt;/h2&gt;
 &lt;p&gt;Key Management Server (KMS) availability is a critical component when deploying encryption as without it all data access is not allowed. If you lose the keys, you’ve lost the data (unless you’ve backed it up).&lt;/p&gt;
 &lt;p&gt;Key Managers today are usually set up in a way that they replicate keys to one another. If I have three instances of a key manager, KMS-A, KMS-B and KMS-C, they replicate the keys between them. If I create a key on KMS-A it will show up in KMS-B &amp;amp; KMS-C at some point. Using this example, in vCenter I would create a key manager cluster/alias. In this example I’ll call it “KMSCluster” and add KMS-A, KMS-B and KMS-C into that KMS Cluster. I would then establish a trust with each of the key managers.&lt;/p&gt;
 &lt;p&gt;KMS can either be purchased as hardware appliances or virtual appliances. When using KMS virtual appliances avoid circular dependancy where the datastore hosting the appliance is encrypted using itself. The same is true for vCenter and PSC’s in a VM Encryption scenario. You shouldn’t encrypt them using VM Encryption because they would then need to boot up to get their encryption key to boot up.&lt;/p&gt;
 &lt;p&gt;If you have a single site then you probably want to have, at minimum, two replicating key managers. For multi-site,  you want all the KMS servers running and replicating across the sites.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://darrylcauldwell.com/images/encryption-multisite.png&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/encryption-multisite.png&#34; alt=&#34;VMware Encryption&#34;&gt;&lt;/p&gt;
 
         
       </description>
