@@ -70,4 +70,6 @@ When its not possible to shop locally rather than travel to a city I generally t
 
 [Vegan Outfitters](https://veganoutfitters.com/) general clothing.
 
+[LiveCoco](https://www.livecoco.com/) eco dental care products.
+
 These are not endorsements, just a collection of online stores I have either bought or considered buying something from.  If you have any recomendations of good places to shop online for delivery to UK do let me know.
