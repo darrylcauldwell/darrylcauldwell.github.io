@@ -74,4 +74,6 @@ When its not possible to shop locally rather than travel to a city I generally t
 
 [BBC Earth](https://bbcearth.teemill.com/circular-collection/) recycled tshirts.
 
+[Twisted Willow Creations](http://www.twisted-creations.co.uk/) garden willow sculptures.
+
 These are not endorsements, just a collection of online stores I have either bought or considered buying something from.  If you have any recomendations of good places to shop online for delivery to UK do let me know.
