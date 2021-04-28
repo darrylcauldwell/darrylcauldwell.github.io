@@ -13,7 +13,7 @@ thumbnail = "clarity-icons/code-144.svg"
 +++
 VMware Cloud Foundation provides automated initial deployment and ongoing lifecycle management upgrades. Here I am exploring lifecycle management upgrades and exploring ways to make this as efficient as possible.
 
-## Lifecycle Management Bundle Download
+## Bundle Download
 
 The SDDC Manager appliance controls the Cloud Foundation deployment. To upgrade the environment(s) requires the software packages. With each Cloud Foundation release, the required software packages are formed into bundles. The bundles are made available to download to licensed users via their 'My VMware' account. 
 
@@ -178,7 +178,7 @@ Not all issues require full remediation. In my nested lab environment, the vSAN 
 vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
 ```
 
-## Apply Bundles
+## Bundle Apply
 
 When you are happy with environmental health next to move to apply bundles. To move between Cloud Foundation versions can require applying multiple bundles.  For example, when moving from 3.5.1 to 3.7.1 following bundles are required.
 

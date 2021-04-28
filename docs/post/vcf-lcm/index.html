@@ -144,7 +144,7 @@
 
     
     <p>VMware Cloud Foundation provides automated initial deployment and ongoing lifecycle management upgrades. Here I am exploring lifecycle management upgrades and exploring ways to make this as efficient as possible.</p>
-<h2 id="lifecycle-management-bundle-download">Lifecycle Management Bundle Download</h2>
+<h2 id="bundle-download">Bundle Download</h2>
 <p>The SDDC Manager appliance controls the Cloud Foundation deployment. To upgrade the environment(s) requires the software packages. With each Cloud Foundation release, the required software packages are formed into bundles. The bundles are made available to download to licensed users via their &lsquo;My VMware&rsquo; account.</p>
 <p>There are two methods of downloading the bundles. SDDC Manager can be configured with &lsquo;My VMware&rsquo; account and the LCM service then polls the VMware depot to access update bundles. Alternatively, the Bundle Transfer utility can be used to manually download the bundles from the depot and then upload them to SDDC Manager.</p>
 <p>There is little control and limited UI visibility of bundle downloads using SDDC Manager. This is fine if you advanced plan and configure the account in time to poll available bundles and initiate downloads. The LCM service writes two files that can be useful in understanding progress.</p>
@@ -311,7 +311,7 @@ cd /opt/vmware/vcf/lcm/lcm-tools/bin
 /var/log/vmware/vcf/lcm/lcm-debug.log
 </code></pre></div><p>Not all issues require full remediation. In my nested lab environment, the vSAN HCL returns a red issue which can never be resolved. I can either just ignore the error and proceed or we can look to disable the particular check in the configuration.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
-</code></pre></div><h2 id="apply-bundles">Apply Bundles</h2>
+</code></pre></div><h2 id="bundle-apply">Bundle Apply</h2>
 <p>When you are happy with environmental health next to move to apply bundles. To move between Cloud Foundation versions can require applying multiple bundles.  For example, when moving from 3.5.1 to 3.7.1 following bundles are required.</p>
 <ul>
 <li>SDDC Manager
