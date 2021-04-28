@@ -5,7 +5,237 @@
     <link>https://darrylcauldwell.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 27 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VMware Cloud Foundation Lifecycle Management - VCF LCM</title>
+      <link>https://darrylcauldwell.github.io/post/vcf-lcm/</link>
+      <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/vcf-lcm/</guid>
+      <description>
+        
+          &lt;p&gt;VMware Cloud Foundation provides automated initial deployment and ongoing lifecycle management upgrades. Here I am exploring lifecycle management upgrades and exploring ways to make this as efficient as possible.&lt;/p&gt;
+&lt;h2 id=&#34;lifecycle-management-bundle-download&#34;&gt;Lifecycle Management Bundle Download&lt;/h2&gt;
+&lt;p&gt;The SDDC Manager appliance controls the Cloud Foundation deployment. To upgrade the environment(s) requires the software packages. With each Cloud Foundation release, the required software packages are formed into bundles. The bundles are made available to download to licensed users via their &amp;lsquo;My VMware&amp;rsquo; account.&lt;/p&gt;
+&lt;p&gt;There are two methods of downloading the bundles. SDDC Manager can be configured with &amp;lsquo;My VMware&amp;rsquo; account and the LCM service then polls the VMware depot to access update bundles. Alternatively, the Bundle Transfer utility can be used to manually download the bundles from the depot and then upload them to SDDC Manager.&lt;/p&gt;
+&lt;p&gt;There is little control and limited UI visibility of bundle downloads using SDDC Manager. This is fine if you advanced plan and configure the account in time to poll available bundles and initiate downloads. The LCM service writes two files that can be useful in understanding progress.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vmware/vcf/lcm/lcm.log
+/var/log/vmware/vcf/lcm/lcm-debug.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you have multiple Cloud Foundation deployments it can be more efficient to use the Bundle Transfer utility to download once and distribute internally. The Bundle Transfer utility is also useful to gain a little more control over the download process.&lt;/p&gt;
+&lt;p&gt;The LCM Bundle Transfer utility is shipped with the SDDC Manager appliance. The utility can be used to download various bundle versions. The utility has two elements, to ensure the utility downloads the appropriate bundles for your deployment the first extract environmental metadata from SDDC Manager.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC Manager&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;## Outputs required metadata in files&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;## ~/markerFile&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;## ~/markerFile.md5&lt;/span&gt;
+
+cd /opt/vmware/vcf/lcm/lcm-tools/bin
+./lcm-bundle-transfer-util --generateMarker
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The second step takes the metadata as input and performs the download. This step requires Java 8 (or later) to be installed but can be run on either Windows or Linux.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+scp -rp vcf@nest-1-sddc-manager.cork.local:/opt/vmware/vcf/lcm/lcm-tools F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile.md5 F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+cd F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\l&lt;/span&gt;cm-tools&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;in
+lcm-bundle-transfer-util --download --outputDirectory F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload -depotUser &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;your my.vmware.com username&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; --markerFile F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\m&lt;/span&gt;arkerFile --markerMd5File F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\m&lt;/span&gt;arkerFile.md5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the bundle downloads are complete we can copy them to SDDC Manager and import them into the repository.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## From Windows device used to download&lt;/span&gt;
+scp -pr F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload vcf@Snest-1-sddc-manager.cork.local:/nfs/vmware/vcf/nfs-mount/
+&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC Manager and set permissions&lt;/span&gt;
+chmod -R &lt;span style=&#34;color:#ae81ff&#34;&gt;0777&lt;/span&gt; /nfs/vmware/vcf/nfs-mount/bundleDownload
+cd /opt/vmware/vcf/lcm/lcm-tools/bin
+./lcm-bundle-transfer-util --upload --bundleDirectory /nfs/vmware/vcf/nfs-mount/bundleDownload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;update-pre-check&#34;&gt;Update Pre-check&lt;/h2&gt;
+&lt;p&gt;Once the bundles are uploaded successfully to the repository we can look towards installing them. Upgrades can fail to apply if the environment isn&amp;rsquo;t healthy. Upgrades can take a while to apply so it is better to avoid failure and rollback. A series of environmental health pre-checks are included which can be run to avoid failure to successfully deploy bundles.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Domain Manager
+&lt;ul&gt;
+&lt;li&gt;Common services availability check&lt;/li&gt;
+&lt;li&gt;Inventory status check&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM database data directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM log directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM system directory has enough disk space&lt;/li&gt;
+&lt;li&gt;Service availability check&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;SDDC Manager UI
+&lt;ul&gt;
+&lt;li&gt;Inventory status check&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM database data directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM log directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM system directory has enough disk space&lt;/li&gt;
+&lt;li&gt;Service availability check&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Operations Manager
+&lt;ul&gt;
+&lt;li&gt;Common services availability check&lt;/li&gt;
+&lt;li&gt;Inventory status check&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM database data directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM log directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM system directory has enough disk space&lt;/li&gt;
+&lt;li&gt;Service availability check&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Platform Services Controllers
+&lt;ul&gt;
+&lt;li&gt;PSC health&lt;/li&gt;
+&lt;li&gt;Credential availability&lt;/li&gt;
+&lt;li&gt;Inventory status check&lt;/li&gt;
+&lt;li&gt;LCM bundle repo available&lt;/li&gt;
+&lt;li&gt;NTP sync&lt;/li&gt;
+&lt;li&gt;PSC inventory status check&lt;/li&gt;
+&lt;li&gt;PSC SSO connection check&lt;/li&gt;
+&lt;li&gt;PSC vmdir service check&lt;/li&gt;
+&lt;li&gt;LCM bundle repo free space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;NSX Manager
+&lt;ul&gt;
+&lt;li&gt;Backup availability&lt;/li&gt;
+&lt;li&gt;Credential availability&lt;/li&gt;
+&lt;li&gt;Enter maintenance dryrun check&lt;/li&gt;
+&lt;li&gt;Inventory status check&lt;/li&gt;
+&lt;li&gt;LCM bundle repo available&lt;/li&gt;
+&lt;li&gt;NSX audit check&lt;/li&gt;
+&lt;li&gt;NSX manager inventory status check&lt;/li&gt;
+&lt;li&gt;NTP sync&lt;/li&gt;
+&lt;li&gt;NSX for vSphere plugin connectivity check&lt;/li&gt;
+&lt;li&gt;NSX precheck init&lt;/li&gt;
+&lt;li&gt;LCM bundle repo free space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;vCenter
+&lt;ul&gt;
+&lt;li&gt;vCenter health&lt;/li&gt;
+&lt;li&gt;Credential availability&lt;/li&gt;
+&lt;li&gt;Inventory status check&lt;/li&gt;
+&lt;li&gt;LCM bundle repo available&lt;/li&gt;
+&lt;li&gt;NTP sync&lt;/li&gt;
+&lt;li&gt;LCM bundle repo free space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;li&gt;vCenter inventory status&lt;/li&gt;
+&lt;li&gt;VIM API&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Common Services
+&lt;ul&gt;
+&lt;li&gt;Credential availability&lt;/li&gt;
+&lt;li&gt;Inventory status check&lt;/li&gt;
+&lt;li&gt;LCM bundle repo available&lt;/li&gt;
+&lt;li&gt;NGINX check&lt;/li&gt;
+&lt;li&gt;NTP sync&lt;/li&gt;
+&lt;li&gt;LCM bundle repo free space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM log directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM system directory has enough disk space&lt;/li&gt;
+&lt;li&gt;Service availability check&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;vSAN
+&lt;ul&gt;
+&lt;li&gt;Advanced configuration sync health&lt;/li&gt;
+&lt;li&gt;CLOMD liveness health&lt;/li&gt;
+&lt;li&gt;Cluster health&lt;/li&gt;
+&lt;li&gt;Encryption health&lt;/li&gt;
+&lt;li&gt;HCL age&lt;/li&gt;
+&lt;li&gt;HCL health&lt;/li&gt;
+&lt;li&gt;Network health&lt;/li&gt;
+&lt;li&gt;Object health&lt;/li&gt;
+&lt;li&gt;Health summary&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;LCM
+&lt;ul&gt;
+&lt;li&gt;Depot connection&lt;/li&gt;
+&lt;li&gt;Depot user&lt;/li&gt;
+&lt;li&gt;LCM bundle repo available&lt;/li&gt;
+&lt;li&gt;LCM database schema version&lt;/li&gt;
+&lt;li&gt;LCM directory permissions&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM database data directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM log directory has enough disk space&lt;/li&gt;
+&lt;li&gt;SDDC Manager VM system directory has enough disk space&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ESXi Hosts
+&lt;ul&gt;
+&lt;li&gt;Config check&lt;/li&gt;
+&lt;li&gt;Enter maintenance dryrun check&lt;/li&gt;
+&lt;li&gt;Inventory status&lt;/li&gt;
+&lt;li&gt;NSX sync&lt;/li&gt;
+&lt;li&gt;VIM API&lt;/li&gt;
+&lt;li&gt;LCM bundle repo available&lt;/li&gt;
+&lt;li&gt;LCM bundle repo freespace&lt;/li&gt;
+&lt;li&gt;Local filesystem check&lt;/li&gt;
+&lt;li&gt;vCenter Connection&lt;/li&gt;
+&lt;li&gt;VUM Health&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each check returns health state green, yellow or red if an issue is detected some information on impact and remediation is made available. Sometimes the information returned isn&amp;rsquo;t perfect. The LCM pre-checks output to two files which can be useful in the understanding issue.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vmware/vcf/lcm/lcm.log
+/var/log/vmware/vcf/lcm/lcm-debug.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Not all issues require full remediation. In my nested lab environment, the vSAN HCL returns a red issue which can never be resolved. I can either just ignore the error and proceed or we can look to disable the particular check in the configuration.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;apply-bundles&#34;&gt;Apply Bundles&lt;/h2&gt;
+&lt;p&gt;When you are happy with environmental health next to move to apply bundles. To move between Cloud Foundation versions can require applying multiple bundles.  For example, when moving from 3.5.1 to 3.7.1 following bundles are required.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SDDC Manager
+&lt;ul&gt;
+&lt;li&gt;3.5.1-12050813 to 3.7.0-12696026 (bundle-9775.tar)&lt;/li&gt;
+&lt;li&gt;3.7.0-12696026 to 3.7.0-12698020 (bundle-9776.tar)&lt;/li&gt;
+&lt;li&gt;3.7.0-12698020 to 3.7.1 (bundle-11811)&lt;/li&gt;
+&lt;li&gt;3.7.0-12698020 to 3.7.1 part 2 (bundle-11813)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Management domain
+&lt;ul&gt;
+&lt;li&gt;NSX 6.4.1 to 6.4.4 (bundle-6712)&lt;/li&gt;
+&lt;li&gt;vCenter 6.5 to 6.7.0-10244745 (bundle-6713)&lt;/li&gt;
+&lt;li&gt;vCenter 6.7.0-10244745 to vCenter 6.7.0-11726888 (bundle-9777)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Workload domain
+&lt;ul&gt;
+&lt;li&gt;NSX 6.4.1 to 6.4.4 (bundle-6712)&lt;/li&gt;
+&lt;li&gt;vCenter 6.5 to 6.7.0-10244745 (bundle-6713)&lt;/li&gt;
+&lt;li&gt;vCenter 6.7.0-10244745 to vCenter 6.7.0-11726888 (bundle-9777)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Some of the bundles can take a long time to apply and the UI isn&amp;rsquo;t very verbose. It is very useful to hold an SSH session to SDDC Manager to tail the summary log file to view progress when applying bundles.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;tail -f /var/log/vmware/vcf/lcm/lcm.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main workflow process spawns other processes so those main upgrade log files sometimes aren’t that verbose and often don’t help identify the issue. It is useful to understand that the spawned processes also log to folder UUID of the bundle apply task. The different bundles create sub-folders and write various logs examples.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vmware/vcf/lcm/upgrades/&amp;lt;upgrade_ID&amp;gt;/thirdparty/sddc-migration-app/logs
+/var/log/vmware/vcf/lcm/upgrades/&amp;lt;upgrade_ID&amp;gt;/sddcmanager-migration-app/logs/sddcmanager_migration_app_upgrade.log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;skip-level-upgrades&#34;&gt;Skip Level Upgrades&lt;/h2&gt;
+&lt;p&gt;As we found before moving between Cloud Foundation versions can lead to applying multiple bundles to the same product. The skip-level upgrade tool was introduced to allow easier uplift to 3.10.1.2 or 3.10.2. For NSX for vSphere based workload domains can uplift to 3.10 from 3.5 and for NSX-T can uplift from 3.7.1.&lt;/p&gt;
+&lt;h2 id=&#34;apache-cassandra&#34;&gt;Apache Cassandra&lt;/h2&gt;
+&lt;p&gt;The application uses a Apache Cassandra database to store data. When troubleshooting it can be useful to look through the contents.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC manager and open client&lt;/span&gt;
+cqlsh --cqlversion&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;3.4.4 127.0.0.1 &lt;span style=&#34;color:#ae81ff&#34;&gt;9042&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Get all keyspaces&lt;/span&gt;
+describe keyspaces;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Change to inventory&lt;/span&gt;
+use inventory;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Get all inventory tables&lt;/span&gt;
+describe tables;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;## Get all host entries from inventory table in json format&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; json * from host;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Pi Supercomputer</title>
       <link>https://darrylcauldwell.github.io/post/homelab-pi-mpi/</link>

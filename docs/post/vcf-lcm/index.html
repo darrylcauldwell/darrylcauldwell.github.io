@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>Controlling vSphere &amp; NSX-V With Python | </title>
+<title>VMware Cloud Foundation Lifecycle Management - VCF LCM | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Controlling vSphere &amp; NSX-V With Python">
+<meta name="description" content="VMware Cloud Foundation Lifecycle Upgrades - VCF LCM">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Controlling vSphere &amp; NSX-V With Python" />
-<meta property="og:url" content="https://darrylcauldwell.github.io/post/nsx-python/" />
-<meta property="og:title" content="Controlling vSphere &amp; NSX-V With Python" />
-<meta property="og:description" content="Controlling vSphere &amp; NSX-V With Python" />
+<meta name="twitter:title" content="VMware Cloud Foundation Lifecycle Management - VCF LCM" />
+<meta property="og:url" content="https://darrylcauldwell.github.io/post/vcf-lcm/" />
+<meta property="og:title" content="VMware Cloud Foundation Lifecycle Management - VCF LCM" />
+<meta property="og:description" content="VMware Cloud Foundation Lifecycle Upgrades - VCF LCM" />
 <meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
@@ -32,7 +32,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://darrylcauldwell.github.io/post/nsx-python/">
+<link rel="canonical" href="https://darrylcauldwell.github.io/post/vcf-lcm/">
 
     
 
@@ -104,28 +104,28 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">Controlling vSphere &amp; NSX-V With Python</h1><div class="post_meta">
+    <h1 class="post_title">VMware Cloud Foundation Lifecycle Management - VCF LCM</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      May 15, 2017</span>
-      <a href='https://darrylcauldwell.github.io/tags/nsx' title="nsx" class="post_tag button button_translucent">nsx
+      Apr 27, 2021</span>
+      <a href='https://darrylcauldwell.github.io/tags/vcf' title="vcf" class="post_tag button button_translucent">vcf
       </a>
-      <a href='https://darrylcauldwell.github.io/tags/python' title="python" class="post_tag button button_translucent">python
+      <a href='https://darrylcauldwell.github.io/tags/lcm' title="lcm" class="post_tag button button_translucent">lcm
       </a>
 </div>
 
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Controlling%20vSphere%20%26%20NSX-V%20With%20Python&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fnsx-python%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=VMware%20Cloud%20Foundation%20Lifecycle%20Management%20-%20VCF%20LCM&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fvcf-lcm%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fnsx-python%2f&t=Controlling%20vSphere%20%26%20NSX-V%20With%20Python" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fvcf-lcm%2f&t=VMware%20Cloud%20Foundation%20Lifecycle%20Management%20-%20VCF%20LCM" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -135,7 +135,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://darrylcauldwell.github.io/post/nsx-python/" title="Copy Link" class="link link_yank">
+    <a href="https://darrylcauldwell.github.io/post/vcf-lcm/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -143,75 +143,224 @@
   </div>
 
     
-    <p>My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere, so its here I shall start. Since then NSX for vSphere has also an open source library NSX RAML Client provided by VMware so I&rsquo;ll then move to that.</p>
-<p>I am performing this learning exercise in my home lab  using is vSphere 6.5, vSAN 6.5, NSX6.3, with Python 2.7.10, although this should work the same with other versions.</p>
-<p>Install pyVmomi and open vCenter connection and then initiate an interactive python environment</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/vmware/pyvmomi.git
-sudo pip install -r ~/pyvmomi/requirements.txt
-python
-</code></pre></div><p>Import the pyVim, pyVmomi &amp; SSL libraries we are using,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> ssl
-<span style="color:#f92672">from</span> pyVim <span style="color:#f92672">import</span> connect
-<span style="color:#f92672">from</span> pyVmomi <span style="color:#f92672">import</span> vim, vmodl
-</code></pre></div><p>Open connection to vCenter then gather contents as an object</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">vcenter <span style="color:#f92672">=</span> connect<span style="color:#f92672">.</span>SmartConnect(
-    host<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;192.168.1.13&#39;</span>,
-    user<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;administrator@vsphere.local&#39;</span>,
-    pwd<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;VMware1!&#39;</span>,
-    port<span style="color:#f92672">=</span><span style="color:#ae81ff">443</span>,
-    sslContext<span style="color:#f92672">=</span>ssl<span style="color:#f92672">.</span>_create_unverified_context()
-)
-content <span style="color:#f92672">=</span> vcenter<span style="color:#f92672">.</span>RetrieveContent()
-</code></pre></div><h1 id="basic-get-of-information">Basic get of information</h1>
-<p>Once we have vCenter Object Model as content object we can output any part of this data</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">content.about.fullName
-<span style="color:#e6db74">&#39;VMware vCenter Server 6.5.0 build-5178943&#39;</span>
-</code></pre></div><p>We can also explore the Object Model which is well descrived here in the <a href="http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html">vSphere SDK API Docs</a> and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>VirtualMachine],True)
-vmList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
-objView<span style="color:#f92672">.</span>Destroy()
-<span style="color:#66d9ef">for</span>  vm <span style="color:#f92672">in</span> vmList:
-    vm<span style="color:#f92672">.</span>summary<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>name
-</code></pre></div><h1 id="basic-put-of-configuration-information">Basic put of configuration information</h1>
-<p>As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>HostSystem],True)
-hostList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
-objView<span style="color:#f92672">.</span>Destroy()
-<span style="color:#66d9ef">for</span> host <span style="color:#f92672">in</span> hostList:
-    optionManager <span style="color:#f92672">=</span> host<span style="color:#f92672">.</span>configManager<span style="color:#f92672">.</span>advancedOption
-    option <span style="color:#f92672">=</span> vim<span style="color:#f92672">.</span>option<span style="color:#f92672">.</span>OptionValue(key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;VSAN.ClomRepairDelay&#39;</span>, value<span style="color:#f92672">=</span>long(<span style="color:#ae81ff">120</span>))
-    optionManager<span style="color:#f92672">.</span>UpdateOptions(changedValue<span style="color:#f92672">=</span>[option])
-</code></pre></div><h1 id="nsx-for-vsphere">NSX for vSphere</h1>
-<p>So we have the pyVmomi library for vSphere, in addition to this VMware have provided open source library for <a href="https://github.com/vmware/nsxramlclient">NSX for vSphere</a>.</p>
-<p>We&rsquo;ll first make sure the packages are installed along with the additional packages for managing NSX.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo pip install nsxramlclient pyvim pyvmomi lxml requests
-</code></pre></div><p>The NSX for vSphere REST API changes with each version, so in order to use the nsxramlclient library we will need a RAML file specific to version of NSX-V we are connecting to. The RAML file also produces nice <a href="https://htmlpreview.github.io/?https://github.com/vmware/nsxraml/blob/6.3/html-version/nsxvapi.html">dynamic documentation of the NSX APIs</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/vmware/nsxraml
-cd nsxraml
-git checkout 6.3
-</code></pre></div><p>So now we can try and connect and get some information about anything described in the API document, like NSX Controllers.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> nsxramlclient.client <span style="color:#f92672">import</span> NsxClient
-nsx_manager <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;192.168.1.18&#34;</span>
-nsx_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;admin&#34;</span>
-nsx_password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;VMware1!VMware1!&#34;</span>
-nsxraml_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;nsxvapi.raml&#39;</span>
-nsx_manager_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsx_manager, nsx_username, nsx_password)
-nsx_controllers <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>read(<span style="color:#e6db74">&#39;nsxControllers&#39;</span>, <span style="color:#e6db74">&#39;read&#39;</span>)
-nsx_controllers
-</code></pre></div><p>When it comes to putting and posting information getting the formatting right can be a challenge. To this end with the library it is possible to create a template python dictionary using extract_resource_body_example.  Once we have this we can display the output structure but more usefully we can also substitute values into the template.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">new_ls <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>extract_resource_body_example(<span style="color:#e6db74">&#39;logicalSwitches&#39;</span>, <span style="color:#e6db74">&#39;create&#39;</span>)
-nsx_manager_session<span style="color:#f92672">.</span>view_body_dict(new_ls)
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;name&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;TestLogicalSwitch1&#39;</span>
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;description&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;TestLogicalSwitch1&#39;</span>
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;tenantId&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Tenant1&#39;</span>
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;controlPlaneMode&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;UNICAST_MODE&#39;</span>
-nsx_manager_session<span style="color:#f92672">.</span>view_body_dict(new_ls)
-</code></pre></div><p>Once we have out body template correctly describing what we want we can post this and if all goes to plan create a new Logical Switch. In this example I am passing in the scopeId (transport zone) manually to keep it a simple example.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">new_ls_response <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>create(<span style="color:#e6db74">&#39;logicalSwitches&#39;</span>, uri_parameters<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;scopeId&#39;</span>: <span style="color:#e6db74">&#39;vdnscope-1&#39;</span>}, request_body_dict<span style="color:#f92672">=</span>new_ls)
-nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_response)
-</code></pre></div><h1 id="summary">Summary</h1>
-<p>It looks like with our new found friend the VMware Python libraries we can easily create and deploy a VMware configuration &lsquo;infrastructure as code&rsquo;.</p>
+    <p>VMware Cloud Foundation provides automated initial deployment and ongoing lifecycle management upgrades. Here I am exploring lifecycle management upgrades and exploring ways to make this as efficient as possible.</p>
+<h2 id="lifecycle-management-bundle-download">Lifecycle Management Bundle Download</h2>
+<p>The SDDC Manager appliance controls the Cloud Foundation deployment. To upgrade the environment(s) requires the software packages. With each Cloud Foundation release, the required software packages are formed into bundles. The bundles are made available to download to licensed users via their &lsquo;My VMware&rsquo; account.</p>
+<p>There are two methods of downloading the bundles. SDDC Manager can be configured with &lsquo;My VMware&rsquo; account and the LCM service then polls the VMware depot to access update bundles. Alternatively, the Bundle Transfer utility can be used to manually download the bundles from the depot and then upload them to SDDC Manager.</p>
+<p>There is little control and limited UI visibility of bundle downloads using SDDC Manager. This is fine if you advanced plan and configure the account in time to poll available bundles and initiate downloads. The LCM service writes two files that can be useful in understanding progress.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/var/log/vmware/vcf/lcm/lcm.log
+/var/log/vmware/vcf/lcm/lcm-debug.log
+</code></pre></div><p>When you have multiple Cloud Foundation deployments it can be more efficient to use the Bundle Transfer utility to download once and distribute internally. The Bundle Transfer utility is also useful to gain a little more control over the download process.</p>
+<p>The LCM Bundle Transfer utility is shipped with the SDDC Manager appliance. The utility can be used to download various bundle versions. The utility has two elements, to ensure the utility downloads the appropriate bundles for your deployment the first extract environmental metadata from SDDC Manager.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## SSH to SDDC Manager</span>
+<span style="color:#75715e">## Outputs required metadata in files</span>
+<span style="color:#75715e">## ~/markerFile</span>
+<span style="color:#75715e">## ~/markerFile.md5</span>
 
+cd /opt/vmware/vcf/lcm/lcm-tools/bin
+./lcm-bundle-transfer-util --generateMarker
+</code></pre></div><p>The second step takes the metadata as input and performs the download. This step requires Java 8 (or later) to be installed but can be run on either Windows or Linux.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+scp -rp vcf@nest-1-sddc-manager.cork.local:/opt/vmware/vcf/lcm/lcm-tools F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile.md5 F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+cd F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\l</span>cm-tools<span style="color:#ae81ff">\b</span>in
+lcm-bundle-transfer-util --download --outputDirectory F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload -depotUser <span style="color:#f92672">{</span>your my.vmware.com username<span style="color:#f92672">}</span> --markerFile F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\m</span>arkerFile --markerMd5File F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\m</span>arkerFile.md5
+</code></pre></div><p>Once the bundle downloads are complete we can copy them to SDDC Manager and import them into the repository.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## From Windows device used to download</span>
+scp -pr F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload vcf@Snest-1-sddc-manager.cork.local:/nfs/vmware/vcf/nfs-mount/
+<span style="color:#75715e">## SSH to SDDC Manager and set permissions</span>
+chmod -R <span style="color:#ae81ff">0777</span> /nfs/vmware/vcf/nfs-mount/bundleDownload
+cd /opt/vmware/vcf/lcm/lcm-tools/bin
+./lcm-bundle-transfer-util --upload --bundleDirectory /nfs/vmware/vcf/nfs-mount/bundleDownload
+</code></pre></div><h2 id="update-pre-check">Update Pre-check</h2>
+<p>Once the bundles are uploaded successfully to the repository we can look towards installing them. Upgrades can fail to apply if the environment isn&rsquo;t healthy. Upgrades can take a while to apply so it is better to avoid failure and rollback. A series of environmental health pre-checks are included which can be run to avoid failure to successfully deploy bundles.</p>
+<ul>
+<li>Domain Manager
+<ul>
+<li>Common services availability check</li>
+<li>Inventory status check</li>
+<li>SDDC Manager VM database data directory has enough disk space</li>
+<li>SDDC Manager VM has enough disk space</li>
+<li>SDDC Manager VM log directory has enough disk space</li>
+<li>SDDC Manager VM system directory has enough disk space</li>
+<li>Service availability check</li>
+</ul>
+</li>
+<li>SDDC Manager UI
+<ul>
+<li>Inventory status check</li>
+<li>SDDC Manager VM database data directory has enough disk space</li>
+<li>SDDC Manager VM has enough disk space</li>
+<li>SDDC Manager VM log directory has enough disk space</li>
+<li>SDDC Manager VM system directory has enough disk space</li>
+<li>Service availability check</li>
+</ul>
+</li>
+<li>Operations Manager
+<ul>
+<li>Common services availability check</li>
+<li>Inventory status check</li>
+<li>SDDC Manager VM database data directory has enough disk space</li>
+<li>SDDC Manager VM has enough disk space</li>
+<li>SDDC Manager VM log directory has enough disk space</li>
+<li>SDDC Manager VM system directory has enough disk space</li>
+<li>Service availability check</li>
+</ul>
+</li>
+<li>Platform Services Controllers
+<ul>
+<li>PSC health</li>
+<li>Credential availability</li>
+<li>Inventory status check</li>
+<li>LCM bundle repo available</li>
+<li>NTP sync</li>
+<li>PSC inventory status check</li>
+<li>PSC SSO connection check</li>
+<li>PSC vmdir service check</li>
+<li>LCM bundle repo free space</li>
+<li>SDDC Manager VM has enough disk space</li>
+</ul>
+</li>
+<li>NSX Manager
+<ul>
+<li>Backup availability</li>
+<li>Credential availability</li>
+<li>Enter maintenance dryrun check</li>
+<li>Inventory status check</li>
+<li>LCM bundle repo available</li>
+<li>NSX audit check</li>
+<li>NSX manager inventory status check</li>
+<li>NTP sync</li>
+<li>NSX for vSphere plugin connectivity check</li>
+<li>NSX precheck init</li>
+<li>LCM bundle repo free space</li>
+<li>SDDC Manager VM has enough disk space</li>
+</ul>
+</li>
+<li>vCenter
+<ul>
+<li>vCenter health</li>
+<li>Credential availability</li>
+<li>Inventory status check</li>
+<li>LCM bundle repo available</li>
+<li>NTP sync</li>
+<li>LCM bundle repo free space</li>
+<li>SDDC Manager VM has enough disk space</li>
+<li>vCenter inventory status</li>
+<li>VIM API</li>
+</ul>
+</li>
+<li>Common Services
+<ul>
+<li>Credential availability</li>
+<li>Inventory status check</li>
+<li>LCM bundle repo available</li>
+<li>NGINX check</li>
+<li>NTP sync</li>
+<li>LCM bundle repo free space</li>
+<li>SDDC Manager VM has enough disk space</li>
+<li>SDDC Manager VM log directory has enough disk space</li>
+<li>SDDC Manager VM system directory has enough disk space</li>
+<li>Service availability check</li>
+</ul>
+</li>
+<li>vSAN
+<ul>
+<li>Advanced configuration sync health</li>
+<li>CLOMD liveness health</li>
+<li>Cluster health</li>
+<li>Encryption health</li>
+<li>HCL age</li>
+<li>HCL health</li>
+<li>Network health</li>
+<li>Object health</li>
+<li>Health summary</li>
+</ul>
+</li>
+<li>LCM
+<ul>
+<li>Depot connection</li>
+<li>Depot user</li>
+<li>LCM bundle repo available</li>
+<li>LCM database schema version</li>
+<li>LCM directory permissions</li>
+<li>SDDC Manager VM database data directory has enough disk space</li>
+<li>SDDC Manager VM has enough disk space</li>
+<li>SDDC Manager VM log directory has enough disk space</li>
+<li>SDDC Manager VM system directory has enough disk space</li>
+</ul>
+</li>
+<li>ESXi Hosts
+<ul>
+<li>Config check</li>
+<li>Enter maintenance dryrun check</li>
+<li>Inventory status</li>
+<li>NSX sync</li>
+<li>VIM API</li>
+<li>LCM bundle repo available</li>
+<li>LCM bundle repo freespace</li>
+<li>Local filesystem check</li>
+<li>vCenter Connection</li>
+<li>VUM Health</li>
+</ul>
+</li>
+</ul>
+<p>Each check returns health state green, yellow or red if an issue is detected some information on impact and remediation is made available. Sometimes the information returned isn&rsquo;t perfect. The LCM pre-checks output to two files which can be useful in the understanding issue.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/var/log/vmware/vcf/lcm/lcm.log
+/var/log/vmware/vcf/lcm/lcm-debug.log
+</code></pre></div><p>Not all issues require full remediation. In my nested lab environment, the vSAN HCL returns a red issue which can never be resolved. I can either just ignore the error and proceed or we can look to disable the particular check in the configuration.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
+</code></pre></div><h2 id="apply-bundles">Apply Bundles</h2>
+<p>When you are happy with environmental health next to move to apply bundles. To move between Cloud Foundation versions can require applying multiple bundles.  For example, when moving from 3.5.1 to 3.7.1 following bundles are required.</p>
+<ul>
+<li>SDDC Manager
+<ul>
+<li>3.5.1-12050813 to 3.7.0-12696026 (bundle-9775.tar)</li>
+<li>3.7.0-12696026 to 3.7.0-12698020 (bundle-9776.tar)</li>
+<li>3.7.0-12698020 to 3.7.1 (bundle-11811)</li>
+<li>3.7.0-12698020 to 3.7.1 part 2 (bundle-11813)</li>
+</ul>
+</li>
+<li>Management domain
+<ul>
+<li>NSX 6.4.1 to 6.4.4 (bundle-6712)</li>
+<li>vCenter 6.5 to 6.7.0-10244745 (bundle-6713)</li>
+<li>vCenter 6.7.0-10244745 to vCenter 6.7.0-11726888 (bundle-9777)</li>
+</ul>
+</li>
+<li>Workload domain
+<ul>
+<li>NSX 6.4.1 to 6.4.4 (bundle-6712)</li>
+<li>vCenter 6.5 to 6.7.0-10244745 (bundle-6713)</li>
+<li>vCenter 6.7.0-10244745 to vCenter 6.7.0-11726888 (bundle-9777)</li>
+</ul>
+</li>
+</ul>
+<p>Some of the bundles can take a long time to apply and the UI isn&rsquo;t very verbose. It is very useful to hold an SSH session to SDDC Manager to tail the summary log file to view progress when applying bundles.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tail -f /var/log/vmware/vcf/lcm/lcm.log
+</code></pre></div><p>The main workflow process spawns other processes so those main upgrade log files sometimes aren’t that verbose and often don’t help identify the issue. It is useful to understand that the spawned processes also log to folder UUID of the bundle apply task. The different bundles create sub-folders and write various logs examples.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/var/log/vmware/vcf/lcm/upgrades/&lt;upgrade_ID&gt;/thirdparty/sddc-migration-app/logs
+/var/log/vmware/vcf/lcm/upgrades/&lt;upgrade_ID&gt;/sddcmanager-migration-app/logs/sddcmanager_migration_app_upgrade.log
+</code></pre></div><h2 id="skip-level-upgrades">Skip Level Upgrades</h2>
+<p>As we found before moving between Cloud Foundation versions can lead to applying multiple bundles to the same product. The skip-level upgrade tool was introduced to allow easier uplift to 3.10.1.2 or 3.10.2. For NSX for vSphere based workload domains can uplift to 3.10 from 3.5 and for NSX-T can uplift from 3.7.1.</p>
+<h2 id="apache-cassandra">Apache Cassandra</h2>
+<p>The application uses a Apache Cassandra database to store data. When troubleshooting it can be useful to look through the contents.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## SSH to SDDC manager and open client</span>
+cqlsh --cqlversion<span style="color:#f92672">=</span>3.4.4 127.0.0.1 <span style="color:#ae81ff">9042</span>
+
+<span style="color:#75715e">## Get all keyspaces</span>
+describe keyspaces;
+
+<span style="color:#75715e">## Change to inventory</span>
+use inventory;
+
+<span style="color:#75715e">## Get all inventory tables</span>
+describe tables;
+
+<span style="color:#75715e">## Get all host entries from inventory table in json format</span>
+<span style="color:#66d9ef">select</span> json * from host;
+</code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -240,9 +389,6 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://darrylcauldwell.github.io/post/vcf-lcm/" class="nav-link" title="VMware Cloud Foundation Lifecycle Management - VCF LCM">VMware Cloud Foundation Lifecycle Management - VCF LCM</a>
-      </li>
-      <li>
         <a href="https://darrylcauldwell.github.io/post/homelab-pi-mpi/" class="nav-link" title="Pi Supercomputer">Pi Supercomputer</a>
       </li>
       <li>
@@ -262,6 +408,9 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/avi/" class="nav-link" title="Avi Load Balancer">Avi Load Balancer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.github.io/post/antrea/" class="nav-link" title="Introduction To Kubernetes Cluster Networking with Antrea">Introduction To Kubernetes Cluster Networking with Antrea</a>
       </li>
     </ul>
     <div>

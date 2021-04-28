@@ -3,10 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://darrylcauldwell.github.io/</loc>
-    <lastmod>2021-03-30T00:00:00+00:00</lastmod>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/</loc>
-    <lastmod>2021-03-30T00:00:00+00:00</lastmod>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/tags/lcm/</loc>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/post/</loc>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/tags/</loc>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/tags/vcf/</loc>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/post/vcf-lcm/</loc>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/categories/vsphere/</loc>
+    <lastmod>2021-04-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/homelab/</loc>
     <lastmod>2021-03-30T00:00:00+00:00</lastmod>
@@ -17,9 +35,6 @@
     <loc>https://darrylcauldwell.github.io/post/homelab-pi-mpi/</loc>
     <lastmod>2021-03-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://darrylcauldwell.github.io/post/</loc>
-    <lastmod>2021-03-30T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://darrylcauldwell.github.io/tags/python/</loc>
     <lastmod>2021-03-30T00:00:00+00:00</lastmod>
   </url><url>
@@ -27,9 +42,6 @@
     <lastmod>2021-03-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/raspberry/</loc>
-    <lastmod>2021-03-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://darrylcauldwell.github.io/tags/</loc>
     <lastmod>2021-03-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/post/homelab-pi-storage/</loc>
@@ -372,9 +384,6 @@
     <lastmod>2015-06-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/post/docker-photon/</loc>
-    <lastmod>2015-06-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://darrylcauldwell.github.io/categories/vsphere/</loc>
     <lastmod>2015-06-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/post/vrli-openstack/</loc>
