@@ -213,6 +213,10 @@ The main workflow process spawns other processes so those main upgrade log files
 
 As we found before moving between Cloud Foundation versions can lead to applying multiple bundles to the same product. The skip-level upgrade tool was introduced to allow easier uplift to 3.10.1.2 or 3.10.2. For NSX for vSphere based workload domains can uplift to 3.10 from 3.5 and for NSX-T can uplift from 3.7.1.
 
+Here I am using the skip level upgrade tool to uplift a 3.5.1 NSX-V environment to 3.10.2 some twenty six bundles.
+
+![Skip Level Download](/images/vcf-lcm-skip-download.png)
+
 ## Apache Cassandra
 
 The application uses a Apache Cassandra database to store data. When troubleshooting it can be useful to look through the contents.

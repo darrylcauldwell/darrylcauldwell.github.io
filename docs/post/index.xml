@@ -215,6 +215,8 @@ cd /opt/vmware/vcf/lcm/lcm-tools/bin
 /var/log/vmware/vcf/lcm/upgrades/&amp;lt;upgrade_ID&amp;gt;/sddcmanager-migration-app/logs/sddcmanager_migration_app_upgrade.log
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;skip-level-upgrades&#34;&gt;Skip Level Upgrades&lt;/h2&gt;
 &lt;p&gt;As we found before moving between Cloud Foundation versions can lead to applying multiple bundles to the same product. The skip-level upgrade tool was introduced to allow easier uplift to 3.10.1.2 or 3.10.2. For NSX for vSphere based workload domains can uplift to 3.10 from 3.5 and for NSX-T can uplift from 3.7.1.&lt;/p&gt;
+&lt;p&gt;Here I am using the skip level upgrade tool to uplift a 3.5.1 NSX-V environment to 3.10.2 some twenty six bundles.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vcf-lcm-skip-download.png&#34; alt=&#34;Skip Level Download&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;apache-cassandra&#34;&gt;Apache Cassandra&lt;/h2&gt;
 &lt;p&gt;The application uses a Apache Cassandra database to store data. When troubleshooting it can be useful to look through the contents.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC manager and open client&lt;/span&gt;
