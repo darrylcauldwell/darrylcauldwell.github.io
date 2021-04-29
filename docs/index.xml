@@ -225,14 +225,14 @@ cqlsh --cqlversion&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;3.4.4 
 &lt;span style=&#34;color:#75715e&#34;&gt;## Get all keyspaces&lt;/span&gt;
 describe keyspaces;
 
-&lt;span style=&#34;color:#75715e&#34;&gt;## Change to inventory&lt;/span&gt;
-use inventory;
+&lt;span style=&#34;color:#75715e&#34;&gt;## Change to lcmkeyspace&lt;/span&gt;
+use lcmkeyspace;
 
-&lt;span style=&#34;color:#75715e&#34;&gt;## Get all inventory tables&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;## Get all lcmkeyspace tables&lt;/span&gt;
 describe tables;
 
-&lt;span style=&#34;color:#75715e&#34;&gt;## Get all host entries from inventory table in json format&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; json * from host;
+&lt;span style=&#34;color:#75715e&#34;&gt;## Get all host entries from upgrade_activity_log table in json format&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; json * from upgrade_activity_log;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>

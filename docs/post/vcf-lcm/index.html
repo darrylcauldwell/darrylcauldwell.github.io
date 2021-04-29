@@ -354,14 +354,14 @@ cqlsh --cqlversion<span style="color:#f92672">=</span>3.4.4 127.0.0.1 <span styl
 <span style="color:#75715e">## Get all keyspaces</span>
 describe keyspaces;
 
-<span style="color:#75715e">## Change to inventory</span>
-use inventory;
+<span style="color:#75715e">## Change to lcmkeyspace</span>
+use lcmkeyspace;
 
-<span style="color:#75715e">## Get all inventory tables</span>
+<span style="color:#75715e">## Get all lcmkeyspace tables</span>
 describe tables;
 
-<span style="color:#75715e">## Get all host entries from inventory table in json format</span>
-<span style="color:#66d9ef">select</span> json * from host;
+<span style="color:#75715e">## Get all host entries from upgrade_activity_log table in json format</span>
+<span style="color:#66d9ef">select</span> json * from upgrade_activity_log;
 </code></pre></div>
 
   </article>
