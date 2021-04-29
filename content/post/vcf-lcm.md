@@ -228,12 +228,12 @@ cqlsh --cqlversion=3.4.4 127.0.0.1 9042
 ## Get all keyspaces
 describe keyspaces;
 
-## Change to inventory
-use inventory;
+## Change to lcmkeyspace
+use lcmkeyspace;
 
-## Get all inventory tables
+## Get all lcmkeyspace tables
 describe tables;
 
-## Get all host entries from inventory table in json format
-select json * from host;
+## Get all host entries from upgrade_activity_log table in json format
+select json * from upgrade_activity_log;
 ```
