@@ -16,7 +16,7 @@ thumbnail = "clarity-icons/code-144.svg"
 
 The VMware Event Broker Appliance (VEBA) aims to facilitate event-driven automation based on vCenter Server events.
 
-## AWS Lambda and Step Functions
+## AWS Lambda and Step Functions
 
 When I worked as an architect working with AWS I used event-driven automation with AWS Lambda to integrate distributed systems. Some more complex requirements orchestration, maintaining state and sequencing of multiple functions achieved with AWS Step Functions. This event-driven automation allowed complex systems to be put in place very simply.
 
