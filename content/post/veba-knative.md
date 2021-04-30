@@ -1,6 +1,6 @@
 +++
 title = "VMware Event Broker Appliance (VEBA) - Knative"
-date = "2021-04-27"
+date = "2021-04-30"
 description = "VMware Event Broker Appliance (VEBA) - Knative"
 tags = [
     "kubernetes",
