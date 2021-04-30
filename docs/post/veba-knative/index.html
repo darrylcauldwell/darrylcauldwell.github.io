@@ -291,7 +291,7 @@ kubectl logs vmware-event-router-ccdfdc67f-t8wzs --namespace vmware-system
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> handler.ps1 handler.ps1<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;pwsh&#34;</span>,<span style="color:#e6db74">&#34;./server.ps1&#34;</span>]<span style="color:#960050;background-color:#1e0010">
-</span></code></pre></div><p>We can see the Dockerfile defines the Powershell environment but the entrypoint is to run server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which outputs event data.  Both of these Powershell scripts are copied into the container at point of creation.</p>
+</span></code></pre></div><p>We can see the Dockerfile defines the Powershell environment but the entrypoint is to run server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which in this case utputs event data.  Both of these Powershell scripts are copied into the container at point of creation.</p>
 <h3 id="knative-trigger-definition">Knative Trigger Definition</h3>
 <p>A Knative Trigger defines the vCenter Server events to subscribe from a given broker. By default, no filter is applied so all events are subscribed. The trigger defines the service as a subscriber based on service name.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e">## kn-trigger.yaml</span>
@@ -352,7 +352,9 @@ Cloud Event
   Subject: UserLoginSessionEvent
   Id: caf397c6-3188-4100-882a-982dd6abf239
 CloudEvent Data:
-</code></pre></div>
+</code></pre></div><h2 id="next-steps">Next Steps</h2>
+<p>Thinking forwards to next steps it should be possible to reuse majority of this Powershell example and simply adjust trigger filter and modify contents of handler.ps1 to perform desired onward action.</p>
+
 
   </article>
 <aside class="sidebar">

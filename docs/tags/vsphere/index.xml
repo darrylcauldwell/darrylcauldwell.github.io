@@ -158,7 +158,7 @@ kubectl logs vmware-event-router-ccdfdc67f-t8wzs --namespace vmware-system
 &lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;COPY&lt;/span&gt; handler.ps1 handler.ps1&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CMD&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pwsh&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./server.ps1&amp;#34;&lt;/span&gt;]&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can see the Dockerfile defines the Powershell environment but the entrypoint is to run server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which outputs event data.  Both of these Powershell scripts are copied into the container at point of creation.&lt;/p&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can see the Dockerfile defines the Powershell environment but the entrypoint is to run server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which in this case utputs event data.  Both of these Powershell scripts are copied into the container at point of creation.&lt;/p&gt;
 &lt;h3 id=&#34;knative-trigger-definition&#34;&gt;Knative Trigger Definition&lt;/h3&gt;
 &lt;p&gt;A Knative Trigger defines the vCenter Server events to subscribe from a given broker. By default, no filter is applied so all events are subscribed. The trigger defines the service as a subscriber based on service name.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## kn-trigger.yaml&lt;/span&gt;
@@ -219,7 +219,9 @@ Cloud Event
   Subject: UserLoginSessionEvent
   Id: caf397c6-3188-4100-882a-982dd6abf239
 CloudEvent Data:
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
+&lt;p&gt;Thinking forwards to next steps it should be possible to reuse majority of this Powershell example and simply adjust trigger filter and modify contents of handler.ps1 to perform desired onward action.&lt;/p&gt;
+
         
       </description>
     </item>

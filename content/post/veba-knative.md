@@ -199,7 +199,7 @@ COPY handler.ps1 handler.ps1
 CMD ["pwsh","./server.ps1"]
 ```
 
-We can see the Dockerfile defines the Powershell environment but the entrypoint is to run server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which outputs event data.  Both of these Powershell scripts are copied into the container at point of creation.
+We can see the Dockerfile defines the Powershell environment but the entrypoint is to run server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which in this case utputs event data.  Both of these Powershell scripts are copied into the container at point of creation.
 
 ### Knative Trigger Definition
 
@@ -278,3 +278,7 @@ Cloud Event
   Id: caf397c6-3188-4100-882a-982dd6abf239
 CloudEvent Data:
 ```
+
+## Next Steps
+
+Thinking forwards to next steps it should be possible to reuse majority of this Powershell example and simply adjust trigger filter and modify contents of handler.ps1 to perform desired onward action.
