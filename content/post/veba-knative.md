@@ -14,26 +14,27 @@ categories = [
 thumbnail = "clarity-icons/code-144.svg"
 +++
 
-The VMware Event Broker Appliance (VEBA) aims to facilitate event-driven automation based on vCenter Server events.
-
-## AWS Lambda and Step Functions
-
-When I worked as an architect working with AWS I used event-driven automation with AWS Lambda to integrate distributed systems. Some more complex requirements orchestration, maintaining state and sequencing of multiple functions achieved with AWS Step Functions. This event-driven automation allowed complex systems to be put in place very simply.
-
-## Knative
-
-Since getting engaged with the Kubernetes community it seemed the biggest barrier to entry for most people was complexity.  Knative looks to obfuscate some of that complexity and provide an extraction that aims to allow more focus on business functionality. Looking a little deeper Knative eventing components appears to provide many parallels with AWS Lambda and Step Functions.
+When I worked as an architect working with AWS I used event-driven automation with AWS Lambda to integrate distributed systems. This event-driven automation allowed me to put complex systems in place very simply. The VMware Event Broker Appliance (VEBA) aims to facilitate event-driven automation based on vCenter Server events.
 
 ## VMware Event Broker Appliance
 
-VMware provides the VMware Event Broker Appliance as a [fling](https://flings.vmware.com/vmware-event-broker-appliance). The [system architecture](https://vmweventbroker.io/kb/architecture) shows that the appliance is built on a Photon OS running Kubernetes with Contour acting as ingress controller. The event router appears to be composed of two components an event stream source that maintains a connection to vCenter Server and a choice of event stream processor Knative, OpenFaaS or AWS EventBridge. With version 0.6 the default deployment delivers embedded Knative.
+VMware provides the VMware Event Broker Appliance as a [fling](https://flings.vmware.com/vmware-event-broker-appliance). The [system architecture](https://vmweventbroker.io/kb/architecture) shows that the appliance is built on a Photon OS running Kubernetes with Contour acting as ingress controller. The event broker appliance is composed of two components an event router and a choice of event stream processor Knative, OpenFaaS or AWS EventBridge.
 
-### vCenter Event Provider Config
+### Knative Eventing Configuration
 
-The deployment of the appliance takes vCenter Server details as input and configures the provider. The [vcenter provider specification](https://github.com/vmware-samples/vcenter-event-broker-appliance/tree/development/vmware-event-router#provider-type-vcenter) has mostly intuitive naming. What wasn't immediately obvious to me was the checkpoint parameters it appears this is to control whether at-least-once delivery (true) or at-most-once delivery (false). I hadn't seen an option to configure this during OVA deployment but did some digging and found deployment appears to create a Kubernetes manifest file.
+Since getting engaged with the Kubernetes community it seemed the biggest barrier to entry for most people was complexity.  Knative looks to obfuscate some of that complexity and provide an abstraction that allows more focus on business functionality. It offers two core functions:
+
+* Serving - Run serverless containers on Kubernetes
+* Eventing - Universal subscription, delivery, and management of events
+
+Knative Eventing is composed of Knative Broker and Trigger objects which make it easy to filter events based on event attributes. A Broker provides a bucket of events which can be selected by attribute. It receives events and forwards them to subscribers defined by one or more matching Triggers.
+
+![Broker Trigger Architecture](/images/veba-knative-broker-trigger-overview.svg)
+
+The v0.6 default install generates configuration for binding to vCenter Server with embedded Knative eventing 'config/event-router-config.yml':
 
 ```yaml
-## SSH to VEBA
+## SSH to appliance
 cat config/event-router-config.yml
 
 apiVersion: event-router.vmware.com/v1alpha1
@@ -69,15 +70,6 @@ metricsProvider:
     bindAddress: 0.0.0.0:8082
   name: veba-metrics
   type: default
-```
-
-We can see that default appears to be at-most-once event delivery. Once delivered, there is no chance of delivering again. If the consumer is unable to handle the message due to some exception, the message is lost.
-
-## Knative Event Processor Config
-
-Within the same manifest, a knative event processor is also defined.
-
-```yaml
 eventProcessor:
   name: veba-knative
   type: knative
@@ -92,70 +84,29 @@ eventProcessor:
         namespace: vmware-functions
 ```
 
-## Kubernetes Pods
-
-It is worth taking a moment to look at the pods and relative namespaces.
-
-```bash
-kubectl get pods --all-namespaces
-
-NAMESPACE            NAME                                          READY   STATUS      RESTARTS   AGE
-contour-external     contour-5869594b-m8ttg                        1/1     Running     0          4d4h
-contour-external     contour-5869594b-s57c6                        1/1     Running     0          4d4h
-contour-external     contour-certgen-v1.10.0-nj5gh                 0/1     Completed   0          4d4h
-contour-external     envoy-ccp68                                   2/2     Running     0          4d4h
-contour-internal     contour-5d47766fd8-kcnt5                      1/1     Running     0          4d4h
-contour-internal     contour-5d47766fd8-p7ztf                      1/1     Running     0          4d4h
-contour-internal     contour-certgen-v1.10.0-r672b                 0/1     Completed   0          4d4h
-contour-internal     envoy-nt9d7                                   2/2     Running     0          4d4h
-knative-eventing     eventing-controller-658f454d9d-4xzcw          1/1     Running     0          4d4h
-knative-eventing     eventing-webhook-69fdcdf8d4-mhlh6             1/1     Running     0          4d4h
-knative-eventing     rabbitmq-broker-controller-88fc96b44-l6bp2    1/1     Running     0          4d4h
-knative-serving      activator-85cd6f6f9-qcvkm                     1/1     Running     0          4d4h
-knative-serving      autoscaler-7959969587-v72dr                   1/1     Running     0          4d4h
-knative-serving      contour-ingress-controller-6d5777577c-5zvxt   1/1     Running     0          4d4h
-knative-serving      controller-577558f799-hktb7                   1/1     Running     0          4d4h
-knative-serving      webhook-78f446786-htjfc                       1/1     Running     0          4d4h
-kube-system          antrea-agent-q8jxm                            2/2     Running     0          4d4h
-kube-system          antrea-controller-849fff8c5d-7g49p            1/1     Running     0          4d4h
-kube-system          coredns-74ff55c5b-ljfjq                       1/1     Running     0          4d4h
-kube-system          coredns-74ff55c5b-rbpfm                       1/1     Running     0          4d4h
-kube-system          etcd-veba.cork.local                          1/1     Running     0          4d4h
-kube-system          kube-apiserver-veba.cork.local                1/1     Running     0          4d4h
-kube-system          kube-controller-manager-veba.cork.local       1/1     Running     0          4d4h
-kube-system          kube-proxy-trt4x                              1/1     Running     0          4d4h
-kube-system          kube-scheduler-veba.cork.local                1/1     Running     0          4d4h
-local-path-storage   local-path-provisioner-5696dbb894-n5lw9       1/1     Running     0          4d4h
-rabbitmq-system      rabbitmq-cluster-operator-7bbbb8d559-cth75    1/1     Running     0          4d4h
-vmware-functions     default-broker-ingress-5c98bf68bc-whmj4       1/1     Running     0          4d4h
-vmware-functions     sockeye-65697bdfc4-n8ght                      1/1     Running     0          4d4h
-vmware-functions     sockeye-trigger-dispatcher-5fff8567fc-9v74l   1/1     Running     0          4d4h
-vmware-system        tinywww-dd88dc7db-q57rl                       1/1     Running     0          4d4h
-vmware-system        veba-rabbit-server-0                          1/1     Running     0          4d4h
-vmware-system        vmware-event-router-ccdfdc67f-t8wzs           1/1     Running     3          4d4h
-```
-
-As well as the vmware-functions namespace it is worth taking a look at vmware-system namespace. We can see a pod named vmware-event-router..... so we can take a look at its properties and logs.
-
-```bash
-kubectl get pod vmware-event-router-ccdfdc67f-t8wzs --namespace vmware-system -o json
-kubectl logs vmware-event-router-ccdfdc67f-t8wzs --namespace vmware-system
-```
-
-## Knative Eventing Anatomy
-
-Knative Broker and Trigger objects make it easy to filter events based on event attributes. A Broker provides a bucket of events which can be selected by attribute. It receives events and forwards them to subscribers defined by one or more matching Triggers.
-
-![Broker Trigger Architecture](/images/veba-knative-broker-trigger-overview.svg)
-
 ## Consuming Example Knative Function
 
 The GitHub repository contains a folder containing [example Knative functions](https://github.com/vmware-samples/vcenter-event-broker-appliance/tree/development/examples/knative).
 
-One example is a Powershell function which triggers echo response.
+If we look at the example function which triggers each of each all events to Pod console. To achieve this it defines a Knative eventing resource which has an unfiltered trigger on the default broker and defines Service named 'kn-ps-echo' as subscriber.
 
-### Knative Service
-The Knative service definition kn-service.yaml
+```yaml
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: veba-ps-echo-trigger
+  labels:
+    app: veba-ui
+spec:
+  broker: default
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: kn-ps-echo
+```
+
+To perform action the example defines a Knative servicing Service resource which calls container image. We can see the service definition pulls a container from the VMware public container registry named 'kn-ps-echo' version 1.0.
 
 ```yaml
 apiVersion: serving.knative.dev/v1
@@ -175,7 +126,7 @@ spec:
         - image: projects.registry.vmware.com/veba/kn-ps-echo:1.0
 ```
 
-We can see the service definition pulls a container from the VMware public container registry named 'kn-ps-echo' version 1.0.  The Dockerfile to create the container reads:
+Within the example folder is the Dockerfile used to create the container. We can see this defines a Powershell runtime environment with the [CloudEvents SDK](https://www.powershellgallery.com/packages/CloudEvents.Sdk) and [ThreadJob](https://www.powershellgallery.com/packages/ThreadJob) modules installed. When running the container executes server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which in this case is what outputs event contents.  Both of these Powershell scripts are copied into the container at point of creation.
 
 ```dockerfile
 FROM photon:3.0
@@ -199,55 +150,7 @@ COPY handler.ps1 handler.ps1
 CMD ["pwsh","./server.ps1"]
 ```
 
-We can see the Dockerfile defines the Powershell environment but the entrypoint is to run server.ps1 which starts a CloudEvent HTTP listener and if we look within that it calls handler.ps1 which in this case utputs event data.  Both of these Powershell scripts are copied into the container at point of creation.
-
-### Knative Trigger Definition
-
-A Knative Trigger defines the vCenter Server events to subscribe from a given broker. By default, no filter is applied so all events are subscribed. The trigger defines the service as a subscriber based on service name.
-
-```yaml
-## kn-trigger.yaml
-apiVersion: eventing.knative.dev/v1
-kind: Trigger
-metadata:
-  name: veba-ps-echo-trigger
-  labels:
-    app: veba-ui
-spec:
-  broker: default
-  subscriber:
-    ref:
-      apiVersion: serving.knative.dev/v1
-      kind: Service
-      name: kn-ps-echo
-```
-
-If event filtering is required it can be configured like.
-
-```yaml
-## kn-trigger.yaml
-apiVersion: eventing.knative.dev/v1
-kind: Trigger
-metadata:
-  name: veba-ps-echo-trigger
-  labels:
-    app: veba-ui
-spec:
-  broker: default
-  filter:
-    attributes:
-        type: com.vmware.event.router/event
-        subject: VmPoweredOffEvent
-  subscriber:
-    ref:
-      apiVersion: serving.knative.dev/v1
-      kind: Service
-      name: kn-ps-echo
-```
-
-### Testing Example Knative Function
-
-Pull and execute the manifest file.
+To test the example we can first pull and execute the manifest file.
 
 ```bash
 curl -O https://github.com/vmware-samples/vcenter-event-broker-appliance/blob/development/examples/knative/powershell/kn-ps-echo/function.yaml
@@ -257,7 +160,7 @@ service.serving.knative.dev/kn-ps-echo created
 trigger.eventing.knative.dev/kn-ps-echo-trigger created
 ```
 
-We can then check the vmware-functions namespace to get the pod name. There are two containers in the pod, the user-container runs the function so we can follow its logs and see the flow of vCenter events being echo'd.
+We see the service and eventing resources are created and we can check the vmware-functions namespace to get the kn-ps-echo function pod names. There are two containers in the pod, the user-container runs the function so we can follow its logs and see the flow of vCenter events being echo'd.
 
 ```bash
 kubectl get pods --namespace vmware-functions
@@ -271,14 +174,138 @@ sockeye-trigger-dispatcher-5fff8567fc-9v74l      1/1     Running   0          4d
 
 kubectl logs --namespace vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container --follow
 
+Server start listening on 'http://*:8080/'
+Cloud Event
+  Source: https://vcenter.cork.local/sdk
+  Type: com.vmware.event.router/event
+  Subject: UserLogoutSessionEvent
+  Id: b2cb5b99-baf2-4b0b-93e7-33795e56ec88
+CloudEvent Data:
+
+
+
 Cloud Event
   Source: https://vcenter.cork.local/sdk
   Type: com.vmware.event.router/event
   Subject: UserLoginSessionEvent
-  Id: caf397c6-3188-4100-882a-982dd6abf239
+  Id: 4256ead8-b86d-4bc0-96ac-92ccaae02605
+CloudEvent Data:
+
+
+
+Cloud Event
+  Source: https://vcenter.cork.local/sdk
+  Type: com.vmware.event.router/event
+  Subject: UserLogoutSessionEvent
+  Id: a160d7bd-542d-4729-98bd-bbb14d505373
 CloudEvent Data:
 ```
 
-## Next Steps
+So we can see all events are of the same Type: but the Subject: is populated with descriptive name. The subject contents maps to the vCenter Server event description a list of descriptions by vCenter Server version can be found [here](https://github.com/lamw/vcenter-event-mapping).
 
-Thinking forwards to next steps it should be possible to reuse majority of this Powershell example and simply adjust trigger filter and modify contents of handler.ps1 to perform desired onward action.
+## Creating A Knative Function
+
+So we can see it is easy to consume a pre-built function but I wonder how hard it is to create one to meet a bespoke need.  Pleased to report that it turns out that is also pretty easy.
+
+If we start off by defining problem,  maybe maintaining the synchronicity of state between two systems. When performing ESXi host lifecycle operations it is useful to mark this state in multiple systems. Setting object state to maintenance mode in vCenter Server can trigger vMotion work away from host and prevent scheduling of new workload on host. Setting object state to maintenance mode in vRealize Operations helps reduce amount of false positive issues relating to lifecycle operations. Host lifecycle operations like patching are typically initiated via vCenter Server so its likely maintenance mode will be set enabled and disabled correctly. It might be easy to miss mirroring this operation in vRealize Operations.
+
+So the first thing we need to do is identify the vCenter Server event created when a host is placed in maintenance mode. Checking the event documentaion we can find the two events are:
+
+* [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html)
+* [ExitMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.ExitMaintenanceModeEvent.html)
+
+If we look first at EnteredMaintenanceModeEvent we can create a container image. We can reuse the example Dockerfile and server.ps1 without change.
+
+```bash
+## Create folders and pull down reusable example files
+mkdir veba-knative-mm
+mkdir veba-knative-mm/enter
+mkdir veba-knative-mm/exit
+cd veba-knative-mm/enter
+curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
+curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
+```
+
+The [vRealize Operations Manager Suite API](https://code.vmware.com/apis/364/vrealize-operations) shows the two API calls which control Maintenance Mode.
+
+```bash
+## Enter Maintenance Mode
+PUT /api/resources/{id}/maintained
+DELETE /suite-api/api/resources/{id}/maintained
+```
+
+If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The [blog post from vMAN.ch](https://vman.ch/vrops-maintenance-mode-for-resources/) heavily influenced the following Powershell logic to control maintenance mode state.
+
+```powershell
+## handler.ps1
+Function Process-Handler {
+   param(
+      [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
+   )
+
+   Write-Host "Cloud Event"
+   Write-Host "  Source: $($cloudEvent.Source)"
+   Write-Host "  Type: $($cloudEvent.Type)"
+   Write-Host "  Subject: $($cloudEvent.Subject)"
+   Write-Host "  Id: $($cloudEvent.Id)"
+   Write-Host "  Host: $($cloudEvent.host)"
+
+   # Decode CloudEvent
+   $cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+   if($cloudEventData -eq $null) {
+      $cloudEventData = $cloudEvent | Read-CloudEventData
+   }
+
+   Write-Host "CloudEvent Data:"
+   Write-Host "$($cloudEventData | Out-String)"
+```
+
+With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.
+
+```bash
+docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
+```
+
+We can then look at a Knative service resource which links to container image:
+
+```yaml
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: enter-mm
+  labels:
+    app: veba-ui
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+        - image: ghcr.io/darrylcauldwell/veba-ps-enter-mm:latest
+```
+
+Finally we can create a Knative trigger resource with filter:
+
+```yaml
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: veba-ps-enter-mm-trigger
+  labels:
+    app: veba-ui
+spec:
+  broker: default
+  filter:
+    attributes:
+        type: com.vmware.event.router/event
+        subject: EnteredMaintenanceModeEvent
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: enter-mm
+```
+
