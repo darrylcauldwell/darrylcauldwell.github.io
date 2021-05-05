@@ -241,7 +241,7 @@ If we look at the object definition for EnteredMaintenanceModeEvent we can see i
 cat <<EOF > handler.ps1
 Function Process-Handler {
    param(
-      [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
+      [Parameter(Position=0,Mandatory=\$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
    )
 
    Write-Host "Cloud Event"
@@ -330,19 +330,39 @@ With the manifest files created these can now be applied to create the Pods.
 
 ```bash
 kubectl apply -f enter-mm-service.yml
-kubectl get kservice --namespace vmware-functions
 kubectl apply -f enter-mm-trigger.yml
-kubectl get triggers --namespace vmware-functions
 ```
 
+Once the container image has pulled down from repository can check the created resources.
+
+```bash
+kubectl get kservice --namespace vmware-functions
+
+NAME                       URL                                                                LATESTCREATED                    LATESTREADY                      READY   REASON
+kn-ps-echo                 http://kn-ps-echo.vmware-functions.veba.cork.local                 kn-ps-echo-00001                 kn-ps-echo-00001                 True
+veba-ps-enter-mm-service   http://veba-ps-enter-mm-service.vmware-functions.veba.cork.local   veba-ps-enter-mm-service-00001   veba-ps-enter-mm-service-00001   True
+
+kubectl get triggers --namespace vmware-functions
+
+NAME                       BROKER    SUBSCRIBER_URI                                                       AGE     READY   REASON
+kn-ps-echo-trigger         default   http://kn-ps-echo.vmware-functions.svc.cluster.local                 4d19h   True
+sockeye-trigger            default   http://sockeye.vmware-functions.svc.cluster.local/                   9d      True
+veba-ps-enter-mm-trigger   default   http://veba-ps-enter-mm-service.vmware-functions.svc.cluster.local   6m40s   True
 
 kubectl get pods --namespace vmware-functions
 
-NAME                                             READY   STATUS    RESTARTS   AGE
-default-broker-ingress-5c98bf68bc-whmj4          1/1     Running   0          4d6h
-kn-ps-echo-00001-deployment-6c9f77855c-ddz8w     2/2     Running   0          18m
-kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7   1/1     Running   0          18m
-sockeye-65697bdfc4-n8ght                         1/1     Running   0          4d6h
-sockeye-trigger-dispatcher-5fff8567fc-9v74l      1/1     Running   0          4d6h
+NAME                                                   READY   STATUS    RESTARTS   AGE
+default-broker-ingress-5c98bf68bc-whmj4                1/1     Running   0          9d
+kn-ps-echo-00001-deployment-6c9f77855c-ddz8w           2/2     Running   0          4d19h
+kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7         1/1     Running   0          4d19h
+sockeye-65697bdfc4-n8ght                               1/1     Running   0          9d
+sockeye-trigger-dispatcher-5fff8567fc-9v74l            1/1     Running   0          9d
+veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   0          2m
+veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   0          97s
+```
 
-kubectl logs --namespace vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container --follow
+I had left the handler.ps1 writing to Stdout so we can tail the log on the user-container in the service deployment Pod.
+
+```bash
+kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
+```

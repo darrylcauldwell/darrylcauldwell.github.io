@@ -195,7 +195,7 @@ DELETE /suite-api/api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/
 cat &amp;lt;&amp;lt;EOF &amp;gt; handler.ps1
 &lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;Process&lt;/span&gt;-Handler {
    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
-      [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
+      [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=\$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
    )
 
    Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Cloud Event&amp;#34;&lt;/span&gt;
@@ -268,18 +268,34 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
 &lt;span style=&#34;color:#ae81ff&#34;&gt;EOF&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the manifest files created these can now be applied to create the Pods.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f enter-mm-service.yml
-kubectl get kservice --namespace vmware-functions
 kubectl apply -f enter-mm-trigger.yml
-kubectl get triggers --namespace vmware-functions
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;kubectl get pods &amp;ndash;namespace vmware-functions&lt;/p&gt;
-&lt;p&gt;NAME                                             READY   STATUS    RESTARTS   AGE
-default-broker-ingress-5c98bf68bc-whmj4          1/1     Running   0          4d6h
-kn-ps-echo-00001-deployment-6c9f77855c-ddz8w     2/2     Running   0          18m
-kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7   1/1     Running   0          18m
-sockeye-65697bdfc4-n8ght                         1/1     Running   0          4d6h
-sockeye-trigger-dispatcher-5fff8567fc-9v74l      1/1     Running   0          4d6h&lt;/p&gt;
-&lt;p&gt;kubectl logs &amp;ndash;namespace vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container &amp;ndash;follow&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the container image has pulled down from repository can check the created resources.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get kservice --namespace vmware-functions
 
+NAME                       URL                                                                LATESTCREATED                    LATESTREADY                      READY   REASON
+kn-ps-echo                 http://kn-ps-echo.vmware-functions.veba.cork.local                 kn-ps-echo-00001                 kn-ps-echo-00001                 True
+veba-ps-enter-mm-service   http://veba-ps-enter-mm-service.vmware-functions.veba.cork.local   veba-ps-enter-mm-service-00001   veba-ps-enter-mm-service-00001   True
+
+kubectl get triggers --namespace vmware-functions
+
+NAME                       BROKER    SUBSCRIBER_URI                                                       AGE     READY   REASON
+kn-ps-echo-trigger         default   http://kn-ps-echo.vmware-functions.svc.cluster.local                 4d19h   True
+sockeye-trigger            default   http://sockeye.vmware-functions.svc.cluster.local/                   9d      True
+veba-ps-enter-mm-trigger   default   http://veba-ps-enter-mm-service.vmware-functions.svc.cluster.local   6m40s   True
+
+kubectl get pods --namespace vmware-functions
+
+NAME                                                   READY   STATUS    RESTARTS   AGE
+default-broker-ingress-5c98bf68bc-whmj4                1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          9d
+kn-ps-echo-00001-deployment-6c9f77855c-ddz8w           2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          4d19h
+kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7         1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          4d19h
+sockeye-65697bdfc4-n8ght                               1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          9d
+sockeye-trigger-dispatcher-5fff8567fc-9v74l            1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          9d
+veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          2m
+veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          97s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I had left the handler.ps1 writing to Stdout so we can tail the log on the user-container in the service deployment Pod.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>
