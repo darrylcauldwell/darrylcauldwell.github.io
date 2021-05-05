@@ -336,7 +336,7 @@ $cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyCon
 <span style="color:#66d9ef">if</span>($cloudEventData <span style="color:#f92672">-eq</span> $null) {
    $cloudEventData = $cloudEvent | Read-CloudEventData
    }
-Write-Host <span style="color:#e6db74">&#34;Full CloudEventData</span><span style="color:#ae81ff">`n</span><span style="color:#e6db74"> </span>$(${cloudEventData} | ConvertTo-Json)<span style="color:#ae81ff">`n</span><span style="color:#e6db74">&#34;</span>
+Write-Host <span style="color:#e6db74">&#34;Full contents of CloudEventData</span><span style="color:#ae81ff">`n</span><span style="color:#e6db74"> </span>$(${cloudEventData} | ConvertTo-Json)<span style="color:#ae81ff">`n</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#75715e"># Business logic</span>
 Write-Host <span style="color:#e6db74">&#34;Host &#34;</span> + $cloudEventData.Host.Name + <span style="color:#e6db74">&#34; has entered vCenter Maintenance Mode&#34;</span>
@@ -420,20 +420,45 @@ sockeye-65697bdfc4-n8ght                               1/1     Running   <span s
 sockeye-trigger-dispatcher-5fff8567fc-9v74l            1/1     Running   <span style="color:#ae81ff">0</span>          9d
 veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   <span style="color:#ae81ff">0</span>          2m
 veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   <span style="color:#ae81ff">0</span>          97s
-</code></pre></div><p>I had left the handler.ps1 writing to Stdout so we can tail the log on the user-container in the service deployment Pod.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
+</code></pre></div><p>If we begin tail on the user-container in the service deployment Pod and place host into maintenance mode.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">kubectl</span> <span style="color:#960050;background-color:#1e0010">logs</span> <span style="color:#960050;background-color:#1e0010">--namespace</span> <span style="color:#960050;background-color:#1e0010">vmware-functions</span> <span style="color:#960050;background-color:#1e0010">veba-ps-enter-mm-service</span><span style="color:#ae81ff">-00001</span><span style="color:#960050;background-color:#1e0010">-deployment</span><span style="color:#ae81ff">-858584</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#ae81ff">9</span><span style="color:#960050;background-color:#1e0010">f</span><span style="color:#ae81ff">6</span> <span style="color:#960050;background-color:#1e0010">user-container</span> <span style="color:#960050;background-color:#1e0010">--follow</span>
 
-Server start listening on <span style="color:#e6db74">&#39;http://*:8080/&#39;</span>
-Cloud Event
-  Source: https://vcenter.cork.local/sdk
-  Type: com.vmware.event.router/event
-  Subject: EnteredMaintenanceModeEvent
-  Id: ab5f9d2b-41e8-48ab-827e-008ebc9b8524
-  Host:
-CloudEvent Data:
-
-
-
+<span style="color:#960050;background-color:#1e0010">Server</span> <span style="color:#960050;background-color:#1e0010">start</span> <span style="color:#960050;background-color:#1e0010">listening</span> <span style="color:#960050;background-color:#1e0010">on</span> <span style="color:#960050;background-color:#1e0010">&#39;http://*:</span><span style="color:#ae81ff">8080</span><span style="color:#960050;background-color:#1e0010">/&#39;</span>
+<span style="color:#960050;background-color:#1e0010">Full</span> <span style="color:#960050;background-color:#1e0010">contents</span> <span style="color:#960050;background-color:#1e0010">of</span> <span style="color:#960050;background-color:#1e0010">CloudEventData</span>
+ {
+  <span style="color:#f92672">&#34;CreatedTime&#34;</span>: <span style="color:#e6db74">&#34;2021-05-05T11:07:02.275999Z&#34;</span>,
+  <span style="color:#f92672">&#34;Host&#34;</span>: {
+    <span style="color:#f92672">&#34;Host&#34;</span>: {
+      <span style="color:#f92672">&#34;Value&#34;</span>: <span style="color:#e6db74">&#34;host-11&#34;</span>,
+      <span style="color:#f92672">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;HostSystem&#34;</span>
+    },
+    <span style="color:#f92672">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;esx01.cork.local&#34;</span>
+  },
+  <span style="color:#f92672">&#34;Ds&#34;</span>: <span style="color:#66d9ef">null</span>,
+  <span style="color:#f92672">&#34;Dvs&#34;</span>: <span style="color:#66d9ef">null</span>,
+  <span style="color:#f92672">&#34;ChangeTag&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+  <span style="color:#f92672">&#34;Vm&#34;</span>: <span style="color:#66d9ef">null</span>,
+  <span style="color:#f92672">&#34;ComputeResource&#34;</span>: {
+    <span style="color:#f92672">&#34;ComputeResource&#34;</span>: {
+      <span style="color:#f92672">&#34;Value&#34;</span>: <span style="color:#e6db74">&#34;domain-c9&#34;</span>,
+      <span style="color:#f92672">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;ClusterComputeResource&#34;</span>
+    },
+    <span style="color:#f92672">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;VxRail-Virtual-SAN-Cluster-5425b3e6-6e38-4221-8804-500f1360c7a3&#34;</span>
+  },
+  <span style="color:#f92672">&#34;Key&#34;</span>: <span style="color:#ae81ff">8086191</span>,
+  <span style="color:#f92672">&#34;FullFormattedMessage&#34;</span>: <span style="color:#e6db74">&#34;Host esx01.cork.local in VxRail-Datacenter has entered maintenance mode&#34;</span>,
+  <span style="color:#f92672">&#34;UserName&#34;</span>: <span style="color:#e6db74">&#34;VSPHERE.LOCAL\\Administrator&#34;</span>,
+  <span style="color:#f92672">&#34;ChainId&#34;</span>: <span style="color:#ae81ff">8086180</span>,
+  <span style="color:#f92672">&#34;Datacenter&#34;</span>: {
+    <span style="color:#f92672">&#34;Datacenter&#34;</span>: {
+      <span style="color:#f92672">&#34;Value&#34;</span>: <span style="color:#e6db74">&#34;datacenter-3&#34;</span>,
+      <span style="color:#f92672">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;Datacenter&#34;</span>
+    },
+    <span style="color:#f92672">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;VxRail-Datacenter&#34;</span>
+  },
+  <span style="color:#f92672">&#34;Net&#34;</span>: <span style="color:#66d9ef">null</span>
+}
+<span style="color:#960050;background-color:#1e0010">Host</span> <span style="color:#960050;background-color:#1e0010">esx</span><span style="color:#ae81ff">01</span><span style="color:#960050;background-color:#1e0010">.cork.local</span> <span style="color:#960050;background-color:#1e0010">has</span> <span style="color:#960050;background-color:#1e0010">entered</span> <span style="color:#960050;background-color:#1e0010">vCenter</span> <span style="color:#960050;background-color:#1e0010">Maintenance</span> <span style="color:#960050;background-color:#1e0010">Mode</span>
 </code></pre></div>
 
   </article>

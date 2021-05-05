@@ -249,7 +249,7 @@ $cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyCon
 if($cloudEventData -eq $null) {
    $cloudEventData = $cloudEvent | Read-CloudEventData
    }
-Write-Host "Full CloudEventData`n $(${cloudEventData} | ConvertTo-Json)`n"
+Write-Host "Full contents of CloudEventData`n $(${cloudEventData} | ConvertTo-Json)`n"
 
 # Business logic
 Write-Host "Host " + $cloudEventData.Host.Name + " has entered vCenter Maintenance Mode"
@@ -355,20 +355,45 @@ veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   0      
 veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   0          97s
 ```
 
-I had left the handler.ps1 writing to Stdout so we can tail the log on the user-container in the service deployment Pod.
+If we begin tail on the user-container in the service deployment Pod and place host into maintenance mode.
 
-```bash
+```json
 kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
 
 Server start listening on 'http://*:8080/'
-Cloud Event
-  Source: https://vcenter.cork.local/sdk
-  Type: com.vmware.event.router/event
-  Subject: EnteredMaintenanceModeEvent
-  Id: ab5f9d2b-41e8-48ab-827e-008ebc9b8524
-  Host:
-CloudEvent Data:
-
-
-
+Full contents of CloudEventData
+ {
+  "CreatedTime": "2021-05-05T11:07:02.275999Z",
+  "Host": {
+    "Host": {
+      "Value": "host-11",
+      "Type": "HostSystem"
+    },
+    "Name": "esx01.cork.local"
+  },
+  "Ds": null,
+  "Dvs": null,
+  "ChangeTag": "",
+  "Vm": null,
+  "ComputeResource": {
+    "ComputeResource": {
+      "Value": "domain-c9",
+      "Type": "ClusterComputeResource"
+    },
+    "Name": "VxRail-Virtual-SAN-Cluster-5425b3e6-6e38-4221-8804-500f1360c7a3"
+  },
+  "Key": 8086191,
+  "FullFormattedMessage": "Host esx01.cork.local in VxRail-Datacenter has entered maintenance mode",
+  "UserName": "VSPHERE.LOCAL\\Administrator",
+  "ChainId": 8086180,
+  "Datacenter": {
+    "Datacenter": {
+      "Value": "datacenter-3",
+      "Type": "Datacenter"
+    },
+    "Name": "VxRail-Datacenter"
+  },
+  "Net": null
+}
+Host esx01.cork.local has entered vCenter Maintenance Mode
 ```
