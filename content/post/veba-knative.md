@@ -203,28 +203,27 @@ CloudEvent Data:
 
 So we can see all events are of the same Type: but the Subject: is populated with descriptive name. The subject contents maps to the vCenter Server event description a list of descriptions by vCenter Server version can be found [here](https://github.com/lamw/vcenter-event-mapping).
 
+Note: At the time of running the example didn't seem to be working correctly and did not output the CloudEvent Data.
+
 ## Creating A Knative Function
 
 So we can see it is easy to consume a pre-built function but I wonder how hard it is to create one to meet a bespoke need.  Pleased to report that it turns out that is also pretty easy.
 
 If we start off by defining problem,  maybe maintaining the synchronicity of state between two systems. When performing ESXi host lifecycle operations it is useful to mark this state in multiple systems. Setting object state to maintenance mode in vCenter Server can trigger vMotion work away from host and prevent scheduling of new workload on host. Setting object state to maintenance mode in vRealize Operations helps reduce amount of false positive issues relating to lifecycle operations. Host lifecycle operations like patching are typically initiated via vCenter Server so its likely maintenance mode will be set enabled and disabled correctly. It might be easy to miss mirroring this operation in vRealize Operations.
 
-So the first thing we need to do is identify the vCenter Server event created when a host is placed in maintenance mode. Checking the event documentaion we can find the two events are:
-
-* [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html)
-* [ExitMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.ExitMaintenanceModeEvent.html)
+So the first thing we need to do is identify the vCenter Server event created when a host is placed in maintenance mode. Checking the event documentaion we can find the two events are [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) and [ExitMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.ExitMaintenanceModeEvent.html).
 
 If we look first at EnteredMaintenanceModeEvent we can create a container image. We can reuse the example Dockerfile and server.ps1 without change.
 
 ```bash
 ## Create folders and pull down reusable example files
-mkdir veba-knative-mm
-cd veba-knative-mm
+mkdir veba-knative-mm-enter
+cd veba-knative-mm-enter
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
 ```
 
-The [vRealize Operations Manager Suite API](https://code.vmware.com/apis/364/vrealize-operations) shows the two API calls which control Maintenance Mode.
+The [vRealize Operations Manager Suite API](https://code.vmware.com/apis/364/vrealize-operations) shows the two API calls which control Maintenance Mode. Both of these calls require vROps ID of host so first we need to look to get this from CloudEvent data.
 
 ```bash
 ## Enter Maintenance Mode
@@ -234,14 +233,14 @@ DELETE /suite-api/api/resources/{id}/maintained
 
 If we look at the object definition for [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) it looks like it has the standard properties of [HostEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.HostEvent.html) and [Event](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.Event.html) object and extends these with additional maintenance mode related properties.
 
-Object model documentation can be outdated so first we can create a handler which outputs the full event to Stdout and looks to output what looks to be the hostname.
+Object model documentation can be outdated so first we can get a working handler which outputs the full event to Stdout and looks to output what looks to be the hostname.
 
 ```powershell
 # Note the following has \ to allow EOF to correctly process $
 cat <<EOF > handler.ps1
 Function Process-Handler {
    param(
-      [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]\$CloudEvent
+      [Parameter(Position=0,Mandatory=\$true)][CloudNative.CloudEvents.CloudEvent]\$CloudEvent
    )
 
 # Form cloudEventData object and output to console
@@ -249,15 +248,15 @@ Function Process-Handler {
 if(\$cloudEventData -eq \$null) {
    \$cloudEventData = \$cloudEvent | Read-CloudEventData
    }
-Write-Host "Full contents of CloudEventData`n \$(\${cloudEventData} | ConvertTo-Json)`n"
+Write-Host "Full contents of CloudEventData \$(\${cloudEventData} | ConvertTo-Json)"
 
 # Business logic
-Write-Host "Host " + \$cloudEventData.Host.Name + " has entered vCenter Maintenance Mode"
+Write-Host "Host" \$cloudEventData.Host.Name "has entered vCenter Maintenance Mode"
 }
 EOF
 ```
 
-With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.
+With the Dockerfile and scripts ready we can look to build the container image locally and then push this to a public container registry.
 
 ```bash
 # Build local image with tag for GitHub Container Registry
@@ -404,3 +403,31 @@ I've created two repositories which hold the latest versions of functions.
 
 [Enter Maintenance Mode](https://github.com/darrylcauldwell/veba-knative-mm-enter)
 [Exit Maintenance Mode](https://github.com/darrylcauldwell/veba-knative-mm-exit)
+
+To iteratively update use steps like:
+
+1. Clone to local repository:
+
+```bash
+git clone https://github.com/darrylcauldwell/veba-knative-mm.git
+```
+
+2. Update handler.ps1 with required business logic
+
+3. Create new local image and push to GitHub Container Registry incrementing the version in tag:
+
+```
+# Authenticate if not already done using docker login
+docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter:0.2 enter-Dockerfile
+docker push ghcr.io/darrylcauldwell/veba-ps-enter:0.2
+```
+
+4. Once the container is built and uploaded remove and recreate function.
+
+```bash
+# SSH to VEBA appliance
+kubectl delete -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-service.yml
+kubectl delete -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-trigger.yml
+kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-service.yml
+kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-trigger.yml
+```
