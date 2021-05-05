@@ -234,31 +234,25 @@ PUT /api/resources/{id}/maintained
 DELETE /suite-api/api/resources/{id}/maintained
 ```
 
-If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The [blog post from vMAN.ch](https://vman.ch/vrops-maintenance-mode-for-resources/) heavily influenced the following Powershell logic to control maintenance mode state.
+If we look at the object definition for [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) it looks like it has the standard properties of [HostEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.HostEvent.html) and [Event](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.Event.html) object and extends these with additional maintenance mode related properties.
 
 ```powershell
 # Note the following has \ to allow EOF to correctly process $
 cat <<EOF > handler.ps1
 Function Process-Handler {
    param(
-      [Parameter(Position=0,Mandatory=\$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
+      [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
    )
 
-   Write-Host "Cloud Event"
-   Write-Host "  Source: \$($cloudEvent.Source)"
-   Write-Host "  Type: \$($cloudEvent.Type)"
-   Write-Host "  Subject: \$($cloudEvent.Subject)"
-   Write-Host "  Id: \$($cloudEvent.Id)"
-   Write-Host "  Host: \$($cloudEvent.host)"
-
-   # Decode CloudEvent
-   \$cloudEventData = \$cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-   if(\$cloudEventData -eq \$null) {
-      \$cloudEventData = \$cloudEvent | Read-CloudEventData
+# Form cloudEventData object and output to console
+$cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+if($cloudEventData -eq $null) {
+   $cloudEventData = $cloudEvent | Read-CloudEventData
    }
+Write-Host "Full CloudEventData`n $(${cloudEventData} | ConvertTo-Json)`n"
 
-   Write-Host "CloudEvent Data:"
-   Write-Host "\$(\$cloudEventData | Out-String)"
+# Business logic
+Write-Host "Host " + $cloudEventData.Host.Name + " has entered vCenter Maintenance Mode"
 }
 EOF
 ```
@@ -365,4 +359,16 @@ I had left the handler.ps1 writing to Stdout so we can tail the log on the user-
 
 ```bash
 kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
+
+Server start listening on 'http://*:8080/'
+Cloud Event
+  Source: https://vcenter.cork.local/sdk
+  Type: com.vmware.event.router/event
+  Subject: EnteredMaintenanceModeEvent
+  Id: ab5f9d2b-41e8-48ab-827e-008ebc9b8524
+  Host:
+CloudEvent Data:
+
+
+
 ```

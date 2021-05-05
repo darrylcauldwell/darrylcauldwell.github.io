@@ -323,29 +323,23 @@ curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-ap
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## Enter Maintenance Mode</span>
 PUT /api/resources/<span style="color:#f92672">{</span>id<span style="color:#f92672">}</span>/maintained
 DELETE /suite-api/api/resources/<span style="color:#f92672">{</span>id<span style="color:#f92672">}</span>/maintained
-</code></pre></div><p>If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The <a href="https://vman.ch/vrops-maintenance-mode-for-resources/">blog post from vMAN.ch</a> heavily influenced the following Powershell logic to control maintenance mode state.</p>
+</code></pre></div><p>If we look at the object definition for <a href="https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html">EnteredMaintenanceModeEvent</a> it looks like it has the standard properties of <a href="https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.HostEvent.html">HostEvent</a> and <a href="https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.Event.html">Event</a> object and extends these with additional maintenance mode related properties.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e"># Note the following has \ to allow EOF to correctly process $</span>
 cat &lt;&lt;EOF &gt; handler.ps1
 <span style="color:#66d9ef">Function</span> <span style="color:#66d9ef">Process</span>-Handler {
    <span style="color:#66d9ef">param</span>(
-      [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span>=0,<span style="color:#66d9ef">Mandatory</span>=\$true)]<span style="color:#66d9ef">[CloudNative.CloudEvents.CloudEvent]</span>$CloudEvent
+      [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span>=0,<span style="color:#66d9ef">Mandatory</span>=$true)]<span style="color:#66d9ef">[CloudNative.CloudEvents.CloudEvent]</span>$CloudEvent
    )
 
-   Write-Host <span style="color:#e6db74">&#34;Cloud Event&#34;</span>
-   Write-Host <span style="color:#e6db74">&#34;  Source: \</span>$($cloudEvent.Source)<span style="color:#e6db74">&#34;</span>
-   Write-Host <span style="color:#e6db74">&#34;  Type: \</span>$($cloudEvent.Type)<span style="color:#e6db74">&#34;</span>
-   Write-Host <span style="color:#e6db74">&#34;  Subject: \</span>$($cloudEvent.Subject)<span style="color:#e6db74">&#34;</span>
-   Write-Host <span style="color:#e6db74">&#34;  Id: \</span>$($cloudEvent.Id)<span style="color:#e6db74">&#34;</span>
-   Write-Host <span style="color:#e6db74">&#34;  Host: \</span>$($cloudEvent.host)<span style="color:#e6db74">&#34;</span>
-
-   <span style="color:#75715e"># Decode CloudEvent</span>
-   \$cloudEventData = \$cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-   <span style="color:#66d9ef">if</span>(\$cloudEventData <span style="color:#f92672">-eq</span> \$null) {
-      \$cloudEventData = \$cloudEvent | Read-CloudEventData
+<span style="color:#75715e"># Form cloudEventData object and output to console</span>
+$cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+<span style="color:#66d9ef">if</span>($cloudEventData <span style="color:#f92672">-eq</span> $null) {
+   $cloudEventData = $cloudEvent | Read-CloudEventData
    }
+Write-Host <span style="color:#e6db74">&#34;Full CloudEventData</span><span style="color:#ae81ff">`n</span><span style="color:#e6db74"> </span>$(${cloudEventData} | ConvertTo-Json)<span style="color:#ae81ff">`n</span><span style="color:#e6db74">&#34;</span>
 
-   Write-Host <span style="color:#e6db74">&#34;CloudEvent Data:&#34;</span>
-   Write-Host <span style="color:#e6db74">&#34;\</span>$(\$cloudEventData | Out-String)<span style="color:#e6db74">&#34;</span>
+<span style="color:#75715e"># Business logic</span>
+Write-Host <span style="color:#e6db74">&#34;Host &#34;</span> + $cloudEventData.Host.Name + <span style="color:#e6db74">&#34; has entered vCenter Maintenance Mode&#34;</span>
 }
 EOF
 </code></pre></div><p>With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.</p>
@@ -428,6 +422,18 @@ veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   <span s
 veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   <span style="color:#ae81ff">0</span>          97s
 </code></pre></div><p>I had left the handler.ps1 writing to Stdout so we can tail the log on the user-container in the service deployment Pod.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
+
+Server start listening on <span style="color:#e6db74">&#39;http://*:8080/&#39;</span>
+Cloud Event
+  Source: https://vcenter.cork.local/sdk
+  Type: com.vmware.event.router/event
+  Subject: EnteredMaintenanceModeEvent
+  Id: ab5f9d2b-41e8-48ab-827e-008ebc9b8524
+  Host:
+CloudEvent Data:
+
+
+
 </code></pre></div>
 
   </article>
