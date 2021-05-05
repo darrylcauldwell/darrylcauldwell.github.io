@@ -191,27 +191,29 @@ curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-ap
 PUT /api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/maintained
 DELETE /suite-api/api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/maintained
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The &lt;a href=&#34;https://vman.ch/vrops-maintenance-mode-for-resources/&#34;&gt;blog post from vMAN.ch&lt;/a&gt; heavily influenced the following Powershell logic to control maintenance mode state.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;cat &amp;lt;&amp;lt;EOF &amp;gt; handler.ps1
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Note the following has \ to allow EOF to correctly process $&lt;/span&gt;
+cat &amp;lt;&amp;lt;EOF &amp;gt; handler.ps1
 &lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;Process&lt;/span&gt;-Handler {
    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
       [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
    )
 
    Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Cloud Event&amp;#34;&lt;/span&gt;
-   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Source: &lt;/span&gt;$($cloudEvent.Source)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
-   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Type: &lt;/span&gt;$($cloudEvent.Type)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
-   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Subject: &lt;/span&gt;$($cloudEvent.Subject)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
-   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Id: &lt;/span&gt;$($cloudEvent.Id)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
-   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Host: &lt;/span&gt;$($cloudEvent.host)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Source: \&lt;/span&gt;$($cloudEvent.Source)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Type: \&lt;/span&gt;$($cloudEvent.Type)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Subject: \&lt;/span&gt;$($cloudEvent.Subject)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Id: \&lt;/span&gt;$($cloudEvent.Id)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  Host: \&lt;/span&gt;$($cloudEvent.host)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
 
    &lt;span style=&#34;color:#75715e&#34;&gt;# Decode CloudEvent&lt;/span&gt;
-   $cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;($cloudEventData &lt;span style=&#34;color:#f92672&#34;&gt;-eq&lt;/span&gt; $null) {
-      $cloudEventData = $cloudEvent | Read-CloudEventData
+   \$cloudEventData = \$cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(\$cloudEventData &lt;span style=&#34;color:#f92672&#34;&gt;-eq&lt;/span&gt; \$null) {
+      \$cloudEventData = \$cloudEvent | Read-CloudEventData
    }
 
    Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CloudEvent Data:&amp;#34;&lt;/span&gt;
-   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$($cloudEventData | Out-String)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+   Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\&lt;/span&gt;$(\$cloudEventData | Out-String)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+}
 EOF
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Build local image with tag for GitHub Container Registry&lt;/span&gt;
@@ -229,9 +231,10 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
 &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;enter-mm&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-service&lt;/span&gt;
   &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
     &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
   &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
     &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
@@ -250,6 +253,7 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
   &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-trigger&lt;/span&gt;
   &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
     &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
   &lt;span style=&#34;color:#f92672&#34;&gt;broker&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
   &lt;span style=&#34;color:#f92672&#34;&gt;filter&lt;/span&gt;:
@@ -260,9 +264,22 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
     &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
       &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
       &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
-      &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;enter-mm&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-service&lt;/span&gt;
 &lt;span style=&#34;color:#ae81ff&#34;&gt;EOF&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the manifest files created these can now be applied to create the Pods.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f enter-mm-service.yml
+kubectl get kservice --namespace vmware-functions
+kubectl apply -f enter-mm-trigger.yml
+kubectl get triggers --namespace vmware-functions
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;kubectl get pods &amp;ndash;namespace vmware-functions&lt;/p&gt;
+&lt;p&gt;NAME                                             READY   STATUS    RESTARTS   AGE
+default-broker-ingress-5c98bf68bc-whmj4          1/1     Running   0          4d6h
+kn-ps-echo-00001-deployment-6c9f77855c-ddz8w     2/2     Running   0          18m
+kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7   1/1     Running   0          18m
+sockeye-65697bdfc4-n8ght                         1/1     Running   0          4d6h
+sockeye-trigger-dispatcher-5fff8567fc-9v74l      1/1     Running   0          4d6h&lt;/p&gt;
+&lt;p&gt;kubectl logs &amp;ndash;namespace vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container &amp;ndash;follow&lt;/p&gt;
+
         
       </description>
     </item>

@@ -237,6 +237,7 @@ DELETE /suite-api/api/resources/{id}/maintained
 If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The [blog post from vMAN.ch](https://vman.ch/vrops-maintenance-mode-for-resources/) heavily influenced the following Powershell logic to control maintenance mode state.
 
 ```powershell
+# Note the following has \ to allow EOF to correctly process $
 cat <<EOF > handler.ps1
 Function Process-Handler {
    param(
@@ -244,20 +245,21 @@ Function Process-Handler {
    )
 
    Write-Host "Cloud Event"
-   Write-Host "  Source: $($cloudEvent.Source)"
-   Write-Host "  Type: $($cloudEvent.Type)"
-   Write-Host "  Subject: $($cloudEvent.Subject)"
-   Write-Host "  Id: $($cloudEvent.Id)"
-   Write-Host "  Host: $($cloudEvent.host)"
+   Write-Host "  Source: \$($cloudEvent.Source)"
+   Write-Host "  Type: \$($cloudEvent.Type)"
+   Write-Host "  Subject: \$($cloudEvent.Subject)"
+   Write-Host "  Id: \$($cloudEvent.Id)"
+   Write-Host "  Host: \$($cloudEvent.host)"
 
    # Decode CloudEvent
-   $cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-   if($cloudEventData -eq $null) {
-      $cloudEventData = $cloudEvent | Read-CloudEventData
+   \$cloudEventData = \$cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+   if(\$cloudEventData -eq \$null) {
+      \$cloudEventData = \$cloudEvent | Read-CloudEventData
    }
 
    Write-Host "CloudEvent Data:"
-   Write-Host "$($cloudEventData | Out-String)"
+   Write-Host "\$(\$cloudEventData | Out-String)"
+}
 EOF
 ```
 
@@ -283,9 +285,10 @@ cat <<EOF > enter-mm-service.yml
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: enter-mm
+  name: veba-ps-enter-mm-service
   labels:
     app: veba-ui
+  namespace: vmware-functions
 spec:
   template:
     metadata:
@@ -308,6 +311,7 @@ metadata:
   name: veba-ps-enter-mm-trigger
   labels:
     app: veba-ui
+  namespace: vmware-functions
 spec:
   broker: default
   filter:
@@ -318,7 +322,27 @@ spec:
     ref:
       apiVersion: serving.knative.dev/v1
       kind: Service
-      name: enter-mm
+      name: veba-ps-enter-mm-service
 EOF
 ```
 
+With the manifest files created these can now be applied to create the Pods.
+
+```bash
+kubectl apply -f enter-mm-service.yml
+kubectl get kservice --namespace vmware-functions
+kubectl apply -f enter-mm-trigger.yml
+kubectl get triggers --namespace vmware-functions
+```
+
+
+kubectl get pods --namespace vmware-functions
+
+NAME                                             READY   STATUS    RESTARTS   AGE
+default-broker-ingress-5c98bf68bc-whmj4          1/1     Running   0          4d6h
+kn-ps-echo-00001-deployment-6c9f77855c-ddz8w     2/2     Running   0          18m
+kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7   1/1     Running   0          18m
+sockeye-65697bdfc4-n8ght                         1/1     Running   0          4d6h
+sockeye-trigger-dispatcher-5fff8567fc-9v74l      1/1     Running   0          4d6h
+
+kubectl logs --namespace vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container --follow
