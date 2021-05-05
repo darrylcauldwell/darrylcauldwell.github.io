@@ -191,7 +191,7 @@ curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-ap
 PUT /api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/maintained
 DELETE /suite-api/api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/maintained
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The &lt;a href=&#34;https://vman.ch/vrops-maintenance-mode-for-resources/&#34;&gt;blog post from vMAN.ch&lt;/a&gt; heavily influenced the following Powershell logic to control maintenance mode state.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## handler.ps1&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;cat &amp;lt;&amp;lt;EOF &amp;gt; handler.ps1
 &lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;Process&lt;/span&gt;-Handler {
    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
       [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
@@ -212,11 +212,21 @@ DELETE /suite-api/api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/
 
    Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CloudEvent Data:&amp;#34;&lt;/span&gt;
    Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$($cloudEventData | Out-String)&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+EOF
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Build local image with tag for GitHub Container Registry&lt;/span&gt;
+docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Generate GitHub Personal Access Token&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# Connect to GitHub Container Registry&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# Use Personal Access Token when prompted for password&lt;/span&gt;
+docker login ghcr.io -u darrylcauldwell
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# Push local image to GitHub Container Registry&lt;/span&gt;
 docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then look at a Knative service resource which links to container image:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the container is available in public repository we can look to create a Knative service resource which links to container image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;cat &amp;lt;&amp;lt;EOF &amp;gt; enter-mm-service.yml&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
   &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;enter-mm&lt;/span&gt;
@@ -230,9 +240,11 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
         &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/minScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
     &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
       &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
-        - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ghcr.io/darrylcauldwell/veba-ps-enter-mm:latest&lt;/span&gt;
+        - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;EOF&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally we can create a Knative trigger resource with filter:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;cat &amp;lt;&amp;lt;EOF &amp;gt; enter-mm-trigger.yml&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Trigger&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
   &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-trigger&lt;/span&gt;
@@ -249,6 +261,7 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
       &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
       &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
       &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;enter-mm&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;EOF&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>

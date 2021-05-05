@@ -324,7 +324,7 @@ curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-ap
 PUT /api/resources/<span style="color:#f92672">{</span>id<span style="color:#f92672">}</span>/maintained
 DELETE /suite-api/api/resources/<span style="color:#f92672">{</span>id<span style="color:#f92672">}</span>/maintained
 </code></pre></div><p>If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The <a href="https://vman.ch/vrops-maintenance-mode-for-resources/">blog post from vMAN.ch</a> heavily influenced the following Powershell logic to control maintenance mode state.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e">## handler.ps1</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">cat &lt;&lt;EOF &gt; handler.ps1
 <span style="color:#66d9ef">Function</span> <span style="color:#66d9ef">Process</span>-Handler {
    <span style="color:#66d9ef">param</span>(
       [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span>=0,<span style="color:#66d9ef">Mandatory</span>=$true)]<span style="color:#66d9ef">[CloudNative.CloudEvents.CloudEvent]</span>$CloudEvent
@@ -345,11 +345,21 @@ DELETE /suite-api/api/resources/<span style="color:#f92672">{</span>id<span styl
 
    Write-Host <span style="color:#e6db74">&#34;CloudEvent Data:&#34;</span>
    Write-Host <span style="color:#e6db74">&#34;</span>$($cloudEventData | Out-String)<span style="color:#e6db74">&#34;</span>
+EOF
 </code></pre></div><p>With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Build local image with tag for GitHub Container Registry</span>
+docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+
+<span style="color:#75715e"># Generate GitHub Personal Access Token</span>
+<span style="color:#75715e"># Connect to GitHub Container Registry</span>
+<span style="color:#75715e"># Use Personal Access Token when prompted for password</span>
+docker login ghcr.io -u darrylcauldwell
+
+<span style="color:#75715e"># Push local image to GitHub Container Registry</span>
 docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
-</code></pre></div><p>We can then look at a Knative service resource which links to container image:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">serving.knative.dev/v1</span>
+</code></pre></div><p>Once the container is available in public repository we can look to create a Knative service resource which links to container image:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; enter-mm-service.yml</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">serving.knative.dev/v1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
 <span style="color:#f92672">metadata</span>:
   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">enter-mm</span>
@@ -363,9 +373,11 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
         <span style="color:#f92672">autoscaling.knative.dev/minScale</span>: <span style="color:#e6db74">&#34;1&#34;</span>
     <span style="color:#f92672">spec</span>:
       <span style="color:#f92672">containers</span>:
-        - <span style="color:#f92672">image</span>: <span style="color:#ae81ff">ghcr.io/darrylcauldwell/veba-ps-enter-mm:latest</span>
+        - <span style="color:#f92672">image</span>: <span style="color:#ae81ff">ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1</span>
+<span style="color:#ae81ff">EOF</span>
 </code></pre></div><p>Finally we can create a Knative trigger resource with filter:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">eventing.knative.dev/v1</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#ae81ff">cat &lt;&lt;EOF &gt; enter-mm-trigger.yml</span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">eventing.knative.dev/v1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Trigger</span>
 <span style="color:#f92672">metadata</span>:
   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">veba-ps-enter-mm-trigger</span>
@@ -382,6 +394,7 @@ docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
       <span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">serving.knative.dev/v1</span>
       <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
       <span style="color:#f92672">name</span>: <span style="color:#ae81ff">enter-mm</span>
+<span style="color:#ae81ff">EOF</span>
 </code></pre></div>
 
   </article>

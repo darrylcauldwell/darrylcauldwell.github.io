@@ -237,7 +237,7 @@ DELETE /suite-api/api/resources/{id}/maintained
 If we look at the object definition for EnteredMaintenanceModeEvent we can see it has properties of event object and extends this with additional maintenance mode related properties. With these details we can update the handler.ps1 script to call vROps API. The [blog post from vMAN.ch](https://vman.ch/vrops-maintenance-mode-for-resources/) heavily influenced the following Powershell logic to control maintenance mode state.
 
 ```powershell
-## handler.ps1
+cat <<EOF > handler.ps1
 Function Process-Handler {
    param(
       [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
@@ -258,18 +258,28 @@ Function Process-Handler {
 
    Write-Host "CloudEvent Data:"
    Write-Host "$($cloudEventData | Out-String)"
+EOF
 ```
 
 With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.
 
 ```bash
+# Build local image with tag for GitHub Container Registry
 docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+
+# Generate GitHub Personal Access Token
+# Connect to GitHub Container Registry
+# Use Personal Access Token when prompted for password
+docker login ghcr.io -u darrylcauldwell
+
+# Push local image to GitHub Container Registry
 docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
 ```
 
-We can then look at a Knative service resource which links to container image:
+Once the container is available in public repository we can look to create a Knative service resource which links to container image:
 
 ```yaml
+cat <<EOF > enter-mm-service.yml
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
@@ -284,12 +294,14 @@ spec:
         autoscaling.knative.dev/minScale: "1"
     spec:
       containers:
-        - image: ghcr.io/darrylcauldwell/veba-ps-enter-mm:latest
+        - image: ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
+EOF
 ```
 
 Finally we can create a Knative trigger resource with filter:
 
 ```yaml
+cat <<EOF > enter-mm-trigger.yml
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:
@@ -307,5 +319,6 @@ spec:
       apiVersion: serving.knative.dev/v1
       kind: Service
       name: enter-mm
+EOF
 ```
 
