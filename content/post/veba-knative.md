@@ -219,9 +219,7 @@ If we look first at EnteredMaintenanceModeEvent we can create a container image.
 ```bash
 ## Create folders and pull down reusable example files
 mkdir veba-knative-mm
-mkdir veba-knative-mm/enter
-mkdir veba-knative-mm/exit
-cd veba-knative-mm/enter
+cd veba-knative-mm
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
 ```
@@ -236,23 +234,25 @@ DELETE /suite-api/api/resources/{id}/maintained
 
 If we look at the object definition for [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) it looks like it has the standard properties of [HostEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.HostEvent.html) and [Event](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.Event.html) object and extends these with additional maintenance mode related properties.
 
+Object model documentation can be outdated so first we can create a handler which outputs the full event to Stdout and looks to output what looks to be the hostname.
+
 ```powershell
 # Note the following has \ to allow EOF to correctly process $
 cat <<EOF > handler.ps1
 Function Process-Handler {
    param(
-      [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
+      [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]\$CloudEvent
    )
 
 # Form cloudEventData object and output to console
-$cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-if($cloudEventData -eq $null) {
-   $cloudEventData = $cloudEvent | Read-CloudEventData
+\$cloudEventData = \$cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+if(\$cloudEventData -eq \$null) {
+   \$cloudEventData = \$cloudEvent | Read-CloudEventData
    }
-Write-Host "Full contents of CloudEventData`n $(${cloudEventData} | ConvertTo-Json)`n"
+Write-Host "Full contents of CloudEventData`n \$(\${cloudEventData} | ConvertTo-Json)`n"
 
 # Business logic
-Write-Host "Host " + $cloudEventData.Host.Name + " has entered vCenter Maintenance Mode"
+Write-Host "Host " + \$cloudEventData.Host.Name + " has entered vCenter Maintenance Mode"
 }
 EOF
 ```
@@ -355,7 +355,7 @@ veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   0      
 veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   0          97s
 ```
 
-If we begin tail on the user-container in the service deployment Pod and place host into maintenance mode.
+If we follow the logs on the user-container in the service deployment Pod and place host into maintenance mode we get output like.
 
 ```json
 kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
@@ -397,3 +397,10 @@ Full contents of CloudEventData
 }
 Host esx01.cork.local has entered vCenter Maintenance Mode
 ```
+
+So we seem to be on the right track and have the first of the required inputs for making call to vRealize Operations Manager. An important part of developing and maintaining is being able to iterate and improve.  To do this we might want to introduce source control.
+
+I've created two repositories which hold the latest versions of functions.
+
+[Enter Maintenance Mode](https://github.com/darrylcauldwell/veba-knative-mm-enter)
+[Exit Maintenance Mode](https://github.com/darrylcauldwell/veba-knative-mm-exit)

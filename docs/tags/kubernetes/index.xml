@@ -181,9 +181,7 @@ CloudEvent Data:
 &lt;p&gt;If we look first at EnteredMaintenanceModeEvent we can create a container image. We can reuse the example Dockerfile and server.ps1 without change.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Create folders and pull down reusable example files&lt;/span&gt;
 mkdir veba-knative-mm
-mkdir veba-knative-mm/enter
-mkdir veba-knative-mm/exit
-cd veba-knative-mm/enter
+cd veba-knative-mm
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;a href=&#34;https://code.vmware.com/apis/364/vrealize-operations&#34;&gt;vRealize Operations Manager Suite API&lt;/a&gt; shows the two API calls which control Maintenance Mode.&lt;/p&gt;
@@ -191,22 +189,23 @@ curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-ap
 PUT /api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/maintained
 DELETE /suite-api/api/resources/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;id&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;/maintained
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we look at the object definition for &lt;a href=&#34;https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html&#34;&gt;EnteredMaintenanceModeEvent&lt;/a&gt; it looks like it has the standard properties of &lt;a href=&#34;https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.HostEvent.html&#34;&gt;HostEvent&lt;/a&gt; and &lt;a href=&#34;https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.Event.html&#34;&gt;Event&lt;/a&gt; object and extends these with additional maintenance mode related properties.&lt;/p&gt;
+&lt;p&gt;Object model documentation can be outdated so first we can create a handler which outputs the full event to Stdout and looks to output what looks to be the hostname.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Note the following has \ to allow EOF to correctly process $&lt;/span&gt;
 cat &amp;lt;&amp;lt;EOF &amp;gt; handler.ps1
 &lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;Process&lt;/span&gt;-Handler {
    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
-      [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
+      [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;\$CloudEvent
    )
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# Form cloudEventData object and output to console&lt;/span&gt;
-$cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;($cloudEventData &lt;span style=&#34;color:#f92672&#34;&gt;-eq&lt;/span&gt; $null) {
-   $cloudEventData = $cloudEvent | Read-CloudEventData
+\$cloudEventData = \$cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(\$cloudEventData &lt;span style=&#34;color:#f92672&#34;&gt;-eq&lt;/span&gt; \$null) {
+   \$cloudEventData = \$cloudEvent | Read-CloudEventData
    }
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full contents of CloudEventData&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;$(${cloudEventData} | ConvertTo-Json)&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full contents of CloudEventData&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; \&lt;/span&gt;$(\${cloudEventData} | ConvertTo-Json)&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# Business logic&lt;/span&gt;
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host &amp;#34;&lt;/span&gt; + $cloudEventData.Host.Name + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; has entered vCenter Maintenance Mode&amp;#34;&lt;/span&gt;
+Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host &amp;#34;&lt;/span&gt; + \$cloudEventData.Host.Name + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; has entered vCenter Maintenance Mode&amp;#34;&lt;/span&gt;
 }
 EOF
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the Dockerfile and scripts it copies in ready we can look to build the container image locally and then push this to a public container registry.&lt;/p&gt;
@@ -287,7 +286,7 @@ sockeye-65697bdfc4-n8ght                               1/1     Running   &lt;spa
 sockeye-trigger-dispatcher-5fff8567fc-9v74l            1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          9d
 veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          2m
 veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          97s
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we begin tail on the user-container in the service deployment Pod and place host into maintenance mode.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we follow the logs on the user-container in the service deployment Pod and place host into maintenance mode we get output like.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;kubectl&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;logs&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;--namespace&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;vmware-functions&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;veba-ps-enter-mm-service&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;-00001&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;-deployment&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;-858584&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;user-container&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;--follow&lt;/span&gt;
 
 &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;Server&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;start&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;listening&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;on&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;http://*:&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/&amp;#39;&lt;/span&gt;
@@ -326,7 +325,11 @@ veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   &lt;spa
   &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;Net&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;
 }
 &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;Host&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;esx&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;01&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;.cork.local&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;has&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;entered&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;vCenter&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;Maintenance&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;Mode&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So we seem to be on the right track and have the first of the required inputs for making call to vRealize Operations Manager. An important part of developing and maintaining is being able to iterate and improve.  To do this we might want to introduce source control.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;ve created two repositories which hold the latest versions of functions.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/darrylcauldwell/veba-knative-mm-enter&#34;&gt;Enter Maintenance Mode&lt;/a&gt;
+&lt;a href=&#34;https://github.com/darrylcauldwell/veba-knative-mm-exit&#34;&gt;Exit Maintenance Mode&lt;/a&gt;&lt;/p&gt;
+
         
       </description>
     </item>
