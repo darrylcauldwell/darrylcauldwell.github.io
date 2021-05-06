@@ -20,7 +20,7 @@ When I worked as an architect working with AWS I used event-driven automation wi
 
 VMware provides the VMware Event Broker Appliance as a [fling](https://flings.vmware.com/vmware-event-broker-appliance). The [system architecture](https://vmweventbroker.io/kb/architecture) shows that the appliance is built on a Photon OS running Kubernetes with Contour acting as ingress controller. The event broker appliance is composed of two components an event router and a choice of event stream processor Knative, OpenFaaS or AWS EventBridge.
 
-### Knative Eventing Configuration
+## Knative Eventing
 
 Since getting engaged with the Kubernetes community it seemed the biggest barrier to entry for most people was complexity.  Knative looks to obfuscate some of that complexity and provide an abstraction that allows more focus on business functionality. It offers two core functions:
 
@@ -314,7 +314,7 @@ With the Dockerfile and scripts in place we can look to build the container imag
 
 ```bash
 # Build local image with tag for GitHub Container Registry
-docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0 .
 
 # Generate GitHub Personal Access Token
 # Connect to GitHub Container Registry

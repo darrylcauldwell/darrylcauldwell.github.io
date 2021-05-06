@@ -17,7 +17,7 @@
           &lt;p&gt;When I worked as an architect working with AWS I used event-driven automation with AWS Lambda to integrate distributed systems. This event-driven automation allowed me to put complex systems in place very simply. The VMware Event Broker Appliance (VEBA) aims to facilitate event-driven automation based on vCenter Server events.&lt;/p&gt;
 &lt;h2 id=&#34;vmware-event-broker-appliance&#34;&gt;VMware Event Broker Appliance&lt;/h2&gt;
 &lt;p&gt;VMware provides the VMware Event Broker Appliance as a &lt;a href=&#34;https://flings.vmware.com/vmware-event-broker-appliance&#34;&gt;fling&lt;/a&gt;. The &lt;a href=&#34;https://vmweventbroker.io/kb/architecture&#34;&gt;system architecture&lt;/a&gt; shows that the appliance is built on a Photon OS running Kubernetes with Contour acting as ingress controller. The event broker appliance is composed of two components an event router and a choice of event stream processor Knative, OpenFaaS or AWS EventBridge.&lt;/p&gt;
-&lt;h3 id=&#34;knative-eventing-configuration&#34;&gt;Knative Eventing Configuration&lt;/h3&gt;
+&lt;h2 id=&#34;knative-eventing&#34;&gt;Knative Eventing&lt;/h2&gt;
 &lt;p&gt;Since getting engaged with the Kubernetes community it seemed the biggest barrier to entry for most people was complexity.  Knative looks to obfuscate some of that complexity and provide an abstraction that allows more focus on business functionality. It offers two core functions:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Serving - Run serverless containers on Kubernetes&lt;/li&gt;
@@ -259,7 +259,7 @@ Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Note: STARTED=Not 
   --from-literal=vropsPassword=&#39;VMware1!&#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the Dockerfile and scripts in place we can look to build the container image locally and then push this to a public container registry.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Build local image with tag for GitHub Container Registry&lt;/span&gt;
-docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0 .
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# Generate GitHub Personal Access Token&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;# Connect to GitHub Container Registry&lt;/span&gt;

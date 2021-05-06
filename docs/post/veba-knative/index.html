@@ -150,7 +150,7 @@
     <p>When I worked as an architect working with AWS I used event-driven automation with AWS Lambda to integrate distributed systems. This event-driven automation allowed me to put complex systems in place very simply. The VMware Event Broker Appliance (VEBA) aims to facilitate event-driven automation based on vCenter Server events.</p>
 <h2 id="vmware-event-broker-appliance">VMware Event Broker Appliance</h2>
 <p>VMware provides the VMware Event Broker Appliance as a <a href="https://flings.vmware.com/vmware-event-broker-appliance">fling</a>. The <a href="https://vmweventbroker.io/kb/architecture">system architecture</a> shows that the appliance is built on a Photon OS running Kubernetes with Contour acting as ingress controller. The event broker appliance is composed of two components an event router and a choice of event stream processor Knative, OpenFaaS or AWS EventBridge.</p>
-<h3 id="knative-eventing-configuration">Knative Eventing Configuration</h3>
+<h2 id="knative-eventing">Knative Eventing</h2>
 <p>Since getting engaged with the Kubernetes community it seemed the biggest barrier to entry for most people was complexity.  Knative looks to obfuscate some of that complexity and provide an abstraction that allows more focus on business functionality. It offers two core functions:</p>
 <ul>
 <li>Serving - Run serverless containers on Kubernetes</li>
@@ -392,7 +392,7 @@ Write-Host <span style="color:#e6db74">&#34;Note: STARTED=Not In Maintenance | M
   --from-literal=vropsPassword='VMware1!'
 </code></pre><p>With the Dockerfile and scripts in place we can look to build the container image locally and then push this to a public container registry.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Build local image with tag for GitHub Container Registry</span>
-docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
+docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0 .
 
 <span style="color:#75715e"># Generate GitHub Personal Access Token</span>
 <span style="color:#75715e"># Connect to GitHub Container Registry</span>
