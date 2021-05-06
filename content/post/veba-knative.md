@@ -203,7 +203,7 @@ CloudEvent Data:
 
 So we can see all events are of the same Type: but the Subject: is populated with descriptive name. The subject contents maps to the vCenter Server event description a list of descriptions by vCenter Server version can be found [here](https://github.com/lamw/vcenter-event-mapping).
 
-Note: At the time of running the example didn't seem to be working correctly and did not output the CloudEvent Data.
+Note: At the time of running the example didn't seem to be working correctly as it did not output the CloudEvent Data.
 
 ## Creating A Knative Function
 
@@ -212,6 +212,14 @@ So we can see it is easy to consume a pre-built function but I wonder how hard i
 If we start off by defining problem,  maybe maintaining the synchronicity of state between two systems. When performing ESXi host lifecycle operations it is useful to mark this state in multiple systems. Setting object state to maintenance mode in vCenter Server can trigger vMotion work away from host and prevent scheduling of new workload on host. Setting object state to maintenance mode in vRealize Operations helps reduce amount of false positive issues relating to lifecycle operations. Host lifecycle operations like patching are typically initiated via vCenter Server so its likely maintenance mode will be set enabled and disabled correctly. It might be easy to miss mirroring this operation in vRealize Operations.
 
 So the first thing we need to do is identify the vCenter Server event created when a host is placed in maintenance mode. Checking the event documentaion we can find the two events are [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) and [ExitMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.ExitMaintenanceModeEvent.html). The [vRealize Operations Manager Suite API](https://code.vmware.com/apis/364/vrealize-operations) shows the two API calls which control Maintenance Mode.
+
+```
+## Enter vROps Maintenance Mode
+PUT /api/resources/{id}/maintained
+
+## Exit vROps Maintenance Mode
+DELETE /suite-api/api/resources/{id}/maintained
+```
 
 I'll start by creating a container image for the enter event. We can reuse the example Dockerfile and server.ps1 without change.
 
