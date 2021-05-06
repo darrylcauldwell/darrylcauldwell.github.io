@@ -211,9 +211,9 @@ So we can see it is easy to consume a pre-built function but I wonder how hard i
 
 If we start off by defining problem,  maybe maintaining the synchronicity of state between two systems. When performing ESXi host lifecycle operations it is useful to mark this state in multiple systems. Setting object state to maintenance mode in vCenter Server can trigger vMotion work away from host and prevent scheduling of new workload on host. Setting object state to maintenance mode in vRealize Operations helps reduce amount of false positive issues relating to lifecycle operations. Host lifecycle operations like patching are typically initiated via vCenter Server so its likely maintenance mode will be set enabled and disabled correctly. It might be easy to miss mirroring this operation in vRealize Operations.
 
-So the first thing we need to do is identify the vCenter Server event created when a host is placed in maintenance mode. Checking the event documentaion we can find the two events are [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) and [ExitMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.ExitMaintenanceModeEvent.html).
+So the first thing we need to do is identify the vCenter Server event created when a host is placed in maintenance mode. Checking the event documentaion we can find the two events are [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) and [ExitMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.ExitMaintenanceModeEvent.html). The [vRealize Operations Manager Suite API](https://code.vmware.com/apis/364/vrealize-operations) shows the two API calls which control Maintenance Mode.
 
-If we look first at EnteredMaintenanceModeEvent we can create a container image. We can reuse the example Dockerfile and server.ps1 without change.
+I'll start by creating a container image for the enter event. We can reuse the example Dockerfile and server.ps1 without change.
 
 ```bash
 ## Create folders and pull down reusable example files
@@ -223,40 +223,86 @@ curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-ap
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
 ```
 
-The [vRealize Operations Manager Suite API](https://code.vmware.com/apis/364/vrealize-operations) shows the two API calls which control Maintenance Mode. Both of these calls require vROps ID of host so first we need to look to get this from CloudEvent data.
-
-```bash
-## Enter Maintenance Mode
-PUT /api/resources/{id}/maintained
-DELETE /suite-api/api/resources/{id}/maintained
-```
-
-If we look at the object definition for [EnteredMaintenanceModeEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html) it looks like it has the standard properties of [HostEvent](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.HostEvent.html) and [Event](https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.Event.html) object and extends these with additional maintenance mode related properties.
-
-Object model documentation can be outdated so first we can get a working handler which outputs the full event to Stdout and looks to output what looks to be the hostname.
+We can then create some Powershell which takes input from event and calls REST API of vROps.
 
 ```powershell
-# Note the following has \ to allow EOF to correctly process $
-cat <<EOF > handler.ps1
 Function Process-Handler {
    param(
-      [Parameter(Position=0,Mandatory=\$true)][CloudNative.CloudEvents.CloudEvent]\$CloudEvent
+      [Parameter(Position=0,Mandatory=$true)][CloudNative.CloudEvents.CloudEvent]$CloudEvent
    )
 
-# Form cloudEventData object and output to console
-\$cloudEventData = \$cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-if(\$cloudEventData -eq \$null) {
-   \$cloudEventData = \$cloudEvent | Read-CloudEventData
+# Form cloudEventData object and output to console for debugging
+$cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
+if($cloudEventData -eq $null) {
+   $cloudEventData = $cloudEvent | Read-CloudEventData
    }
-Write-Host "Full contents of CloudEventData \$(\${cloudEventData} | ConvertTo-Json)"
+Write-Host "Full contents of CloudEventData`n $(${cloudEventData} | ConvertTo-Json)`n"
 
-# Business logic
-Write-Host "Host" \$cloudEventData.Host.Name "has entered vCenter Maintenance Mode"
+# Perform onward action
+
+## vROps REST API documentation https://code.vmware.com/apis/364/vrealize-operations
+
+## Check secret in place which supplies vROps environment variables
+Write-Host "vropsFqdn:" ${env:vropsFqdn}
+Write-Host "vropsUser:" ${env:vropsUser}
+Write-Host "vropsPassword:" ${env:vropsPassword}
+
+## Form unauthorized headers payload
+$headers = @{
+   "Content-Type" = "application/json";
+   "Accept"  = "application/json"
+   }
+
+## Acquire bearer token
+$uri = "https://" + $env:vropsFqdn + "/suite-api/api/auth/token/acquire"
+$basicAuthBody = @{
+    username = $env:vropsUser;
+    password = $env:vropsPassword;
+    }
+$basicAuthBodyJson = $basicAuthBody | ConvertTo-Json -Depth 5
+Write-Host "Acquiring bearer token ..."
+$bearer = Invoke-WebRequest -Uri $uri -Method POST -Headers $headers -Body $basicAuthBodyJson -SkipCertificateCheck | ConvertFrom-Json
+Write-Host "Bearer token is" $bearer.token
+
+## Form authorized headers payload
+$authedHeaders = @{
+   "Content-Type" = "application/json";
+   "Accept"  = "application/json";
+   "Authorization" = "vRealizeOpsToken " + $bearer.token
+   }
+
+## Get host ResourceID
+$uri = "https://" + $env:vropsFqdn + "/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=" + $esxiHost
+Write-Host "Acquiring host ResourceID ..."
+$resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
+$resourceJson = $resource.Content | ConvertFrom-Json
+Write-Host "ResourceID of host is " $resourceJson.resourceList[0].identifier
+
+## Mark host as maintenance mode
+$uri = "https://" + $env:vropsFqdn + "/suite-api/api/resources/" + $resourceJson.resourceList[0].identifier + "/maintained"
+Write-Host "Marking host as vROps maintenance mode ..."
+Invoke-WebRequest -Uri $uri -Method PUT -Headers $authedHeaders -SkipCertificateCheck
+
+## Get host maintenance mode state
+$uri = "https://" + $env:vropsFqdn + "/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=" + $esxiHost
+Write-Host "Acquiring host maintenance mode state ..."
+$resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
+$resourceJson = $resource.Content | ConvertFrom-Json
+Write-Host "Host maintenence mode state is " $resourceJson.resourceList[0].resourceStatusStates[0].resourceState
+Write-Host "Note: STARTED=Not In Maintenance | MAINTAINED_MANUAL=In Maintenance"
 }
-EOF
 ```
 
-With the Dockerfile and scripts ready we can look to build the container image locally and then push this to a public container registry.
+In order to be environmentally agnositic I have the script use Environment Variables. We can store these in a Kubernetes Secret resource which can be associated with the containers and available at script runtime.
+
+```
+kubectl -n vmware-functions create secret generic veba-knative-mm-vrops \
+  --from-literal=vropsFqdn=vrops.cork.local \
+  --from-literal=vropsUser=admin \
+  --from-literal=vropsPassword='VMware1!'
+```
+
+With the Dockerfile and scripts in place we can look to build the container image locally and then push this to a public container registry.
 
 ```bash
 # Build local image with tag for GitHub Container Registry
@@ -268,13 +314,12 @@ docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1 .
 docker login ghcr.io -u darrylcauldwell
 
 # Push local image to GitHub Container Registry
-docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
+docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0
 ```
 
-Once the container is available in public repository we can look to create a Knative service resource which links to container image:
+Once the container is available in public repository I can look to create a Knative service and trigger resource which links to container image and has association with the secret:
 
 ```yaml
-cat <<EOF > enter-mm-service.yml
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
@@ -290,14 +335,11 @@ spec:
         autoscaling.knative.dev/minScale: "1"
     spec:
       containers:
-        - image: ghcr.io/darrylcauldwell/veba-ps-enter-mm:0.1
-EOF
-```
-
-Finally we can create a Knative trigger resource with filter:
-
-```yaml
-cat <<EOF > enter-mm-trigger.yml
+        - image: ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0
+          envFrom:
+            - secretRef:
+                name: veba-knative-mm-vrops
+---
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:
@@ -316,118 +358,98 @@ spec:
       apiVersion: serving.knative.dev/v1
       kind: Service
       name: veba-ps-enter-mm-service
-EOF
 ```
 
-With the manifest files created these can now be applied to create the Pods.
+The exit function is logically laid out the same but with different trigger filter and handler action. With the manifest files created both can now be applied.
 
 ```bash
-kubectl apply -f enter-mm-service.yml
-kubectl apply -f enter-mm-trigger.yml
+kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-enter/main/veba-knative-mm-enter.yml
+
+service.serving.knative.dev/veba-ps-enter-mm-service created
+trigger.eventing.knative.dev/veba-ps-enter-mm-trigger created
+
+kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-exit/master/veba-knative-mm-exit.yml
+
+service.serving.knative.dev/veba-ps-exit-mm-service created
+trigger.eventing.knative.dev/veba-ps-exit-mm-trigger created
 ```
 
 Once the container image has pulled down from repository can check the created resources.
 
 ```bash
-kubectl get kservice --namespace vmware-functions
+kubectl -n vmware-functions get kservice
 
 NAME                       URL                                                                LATESTCREATED                    LATESTREADY                      READY   REASON
 kn-ps-echo                 http://kn-ps-echo.vmware-functions.veba.cork.local                 kn-ps-echo-00001                 kn-ps-echo-00001                 True
 veba-ps-enter-mm-service   http://veba-ps-enter-mm-service.vmware-functions.veba.cork.local   veba-ps-enter-mm-service-00001   veba-ps-enter-mm-service-00001   True
+veba-ps-exit-mm-service    http://veba-ps-exit-mm-service.vmware-functions.veba.cork.local    veba-ps-exit-mm-service-00001    veba-ps-exit-mm-service-00001    True
 
-kubectl get triggers --namespace vmware-functions
+kubectl -n vmware-functions get triggers
 
-NAME                       BROKER    SUBSCRIBER_URI                                                       AGE     READY   REASON
-kn-ps-echo-trigger         default   http://kn-ps-echo.vmware-functions.svc.cluster.local                 4d19h   True
-sockeye-trigger            default   http://sockeye.vmware-functions.svc.cluster.local/                   9d      True
-veba-ps-enter-mm-trigger   default   http://veba-ps-enter-mm-service.vmware-functions.svc.cluster.local   6m40s   True
+NAME                       BROKER    SUBSCRIBER_URI                                                       AGE    READY   REASON
+kn-ps-echo-trigger         default   http://kn-ps-echo.vmware-functions.svc.cluster.local                 6d2h   True
+sockeye-trigger            default   http://sockeye.vmware-functions.svc.cluster.local/                   10d    True
+veba-ps-enter-mm-trigger   default   http://veba-ps-enter-mm-service.vmware-functions.svc.cluster.local   61s    True
+veba-ps-exit-mm-trigger    default   http://veba-ps-exit-mm-service.vmware-functions.svc.cluster.local    45s    True
 
-kubectl get pods --namespace vmware-functions
+kubectl -n vmware-functions get pods | grep mm
 
-NAME                                                   READY   STATUS    RESTARTS   AGE
-default-broker-ingress-5c98bf68bc-whmj4                1/1     Running   0          9d
-kn-ps-echo-00001-deployment-6c9f77855c-ddz8w           2/2     Running   0          4d19h
-kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7         1/1     Running   0          4d19h
-sockeye-65697bdfc4-n8ght                               1/1     Running   0          9d
-sockeye-trigger-dispatcher-5fff8567fc-9v74l            1/1     Running   0          9d
-veba-ps-enter-mm-service-00001-deployment-858584c9f6   2/2     Running   0          2m
-veba-ps-enter-mm-trigger-dispatcher-848ff8c858         1/1     Running   0          97s
+veba-ps-enter-mm-service-00001-deployment-d689d7fbd-9gtlv   2/2     Running   0          87s
+veba-ps-enter-mm-trigger-dispatcher-848ff8c858-qnxg8        1/1     Running   0          76s
+veba-ps-exit-mm-service-00001-deployment-b98b6f795-chqpx    2/2     Running   0          71s
+veba-ps-exit-mm-trigger-dispatcher-5fc8cbc978-6n2nf         1/1     Running   0          65s
 ```
 
-If we follow the logs on the user-container in the service deployment Pod and place host into maintenance mode we get output like.
+With the functions in place we can follow the logs on the container and place a host into maintenance mode to check it works.
 
-```json
-kubectl logs --namespace vmware-functions veba-ps-enter-mm-service-00001-deployment-858584c9f6 user-container --follow
+```bash
+kubectl -n vmware-functions logs veba-ps-enter-mm-service-00001-deployment-d689d7fbd-9gtlv user-container --follow
 
 Server start listening on 'http://*:8080/'
 Full contents of CloudEventData
  {
-  "CreatedTime": "2021-05-05T11:07:02.275999Z",
-  "Host": {
-    "Host": {
-      "Value": "host-11",
-      "Type": "HostSystem"
-    },
-    "Name": "esx01.cork.local"
-  },
-  "Ds": null,
-  "Dvs": null,
   "ChangeTag": "",
-  "Vm": null,
+  "ChainId": 8122827,
+  "Host": {
+    "Name": "esx02.cork.local",
+    "Host": {
+      "Value": "host-19",
+      "Type": "HostSystem"
+    }
+  },
   "ComputeResource": {
+    "Name": "VxRail-Virtual-SAN-Cluster-5425b3e6-6e38-4221-8804-500f1360c7a3",
     "ComputeResource": {
       "Value": "domain-c9",
       "Type": "ClusterComputeResource"
-    },
-    "Name": "VxRail-Virtual-SAN-Cluster-5425b3e6-6e38-4221-8804-500f1360c7a3"
+    }
   },
-  "Key": 8086191,
-  "FullFormattedMessage": "Host esx01.cork.local in VxRail-Datacenter has entered maintenance mode",
-  "UserName": "VSPHERE.LOCAL\\Administrator",
-  "ChainId": 8086180,
+  "Net": null,
   "Datacenter": {
+    "Name": "VxRail-Datacenter",
     "Datacenter": {
       "Value": "datacenter-3",
       "Type": "Datacenter"
-    },
-    "Name": "VxRail-Datacenter"
+    }
   },
-  "Net": null
+  "Vm": null,
+  "Dvs": null,
+  "UserName": "VSPHERE.LOCAL\\Administrator",
+  "CreatedTime": "2021-05-06T16:20:05.137999Z",
+  "FullFormattedMessage": "Host esx02.cork.local in VxRail-Datacenter has entered maintenance mode",
+  "Key": 8122856,
+  "Ds": null
 }
-Host esx01.cork.local has entered vCenter Maintenance Mode
-```
 
-So we seem to be on the right track and have the first of the required inputs for making call to vRealize Operations Manager. An important part of developing and maintaining is being able to iterate and improve.  To do this we might want to introduce source control.
-
-I've created two repositories which hold the latest versions of functions.
-
-[Enter Maintenance Mode](https://github.com/darrylcauldwell/veba-knative-mm-enter)
-[Exit Maintenance Mode](https://github.com/darrylcauldwell/veba-knative-mm-exit)
-
-To iteratively update use steps like:
-
-1. Clone to local repository:
-
-```bash
-git clone https://github.com/darrylcauldwell/veba-knative-mm.git
-```
-
-2. Update handler.ps1 with required business logic
-
-3. Create new local image and push to GitHub Container Registry incrementing the version in tag:
-
-```
-# Authenticate if not already done using docker login
-docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter:0.2 enter-Dockerfile
-docker push ghcr.io/darrylcauldwell/veba-ps-enter:0.2
-```
-
-4. Once the container is built and uploaded remove and recreate function.
-
-```bash
-# SSH to VEBA appliance
-kubectl delete -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-service.yml
-kubectl delete -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-trigger.yml
-kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-service.yml
-kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm/master/enter-mm-trigger.yml
+vropsFqdn: vrops.cork.local
+vropsUser: admin
+vropsPassword: VMware1!
+Acquiring bearer token ...
+Bearer token is b3898f1c-3a94-4dff-8b80-2ab835bd53bb::1c46ab4d-0e5e-44e4-ba4b-9898811bc645
+Acquiring host ResourceID ...
+ResourceID of host is  8f07b6de-9918-4849-af0f-7a1cca3ff5c7
+Marking host as vROps maintenance mode ...
+Acquiring host maintenance mode state ...
+Host maintenence mode state is  MAINTAINED_MANUAL
+Note: STARTED=Not In Maintenance | MAINTAINED_MANUAL=In Maintenance
 ```
