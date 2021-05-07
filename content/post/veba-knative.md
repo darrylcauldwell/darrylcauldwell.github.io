@@ -191,6 +191,10 @@ if($cloudEventData -eq $null) {
    }
 Write-Host "Full contents of CloudEventData`n $(${cloudEventData} | ConvertTo-Json)`n"
 
+# Extract hostname from CloudEventData object
+$esxiHost=$cloudEventData.Host.Name
+Write-Host "Hostname from CloudEventData" $esxiHost
+
 ## Check secret in place which supplies vROps environment variables
 Write-Host "vropsFqdn:" ${env:vropsFqdn}
 Write-Host "vropsUser:" ${env:vropsUser}
@@ -387,6 +391,7 @@ Full contents of CloudEventData
   "Ds": null
 }
 
+Hostname from CloudEventData esx01.cork.local
 vropsFqdn: vrops.cork.local
 vropsUser: admin
 vropsPassword: VMware1!
