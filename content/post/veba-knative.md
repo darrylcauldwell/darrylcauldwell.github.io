@@ -16,7 +16,7 @@ thumbnail = "clarity-icons/code-144.svg"
 
 When I worked as an architect working with AWS I used event-driven automation with AWS Lambda to integrate distributed systems. This event-driven automation allowed me to put complex systems in place very simply. The VMware Event Broker Appliance (VEBA) aims to facilitate event-driven automation based on vCenter Server events. The VMware Event Broker Appliance is made available as a [fling](https://flings.vmware.com/vmware-event-broker-appliance). The [system architecture](https://vmweventbroker.io/kb/architecture) shows that the appliance is built on a Photon OS running Kubernetes with Contour acting as ingress controller. The event broker appliance is composed of two components an event router and a choice of event stream processor Knative, OpenFaaS or AWS EventBridge.
 
-The appliance OVA installation takes parameters which configure the event router with a binding to vCenter Server. Once installed we can take a look at the resource description.
+The appliance OVA installation takes parameters that configure the event router with a binding to vCenter Server. Once installed we can take a look at the resource description.
 
 ```yaml
 ## SSH to appliance
@@ -71,15 +71,15 @@ eventProcessor:
 
 ## Knative
 
-Knative is an open source community project which extends a Kubernetes deploymemnt with components for deploying, running, and managing serverless applications. It consists of three core components, build, serving and eventing. The build component offers a flexible approach to building source code into containers. The serving component enables rapid deployment and automatic scaling of containers through a request-driven model for serving workloads based on demand. The eventing component enabkles universal subscription, delivery, and management of events. Knative eventing is composed of Knative Broker and Trigger objects which make it easy to filter events based on event attributes. A Broker provides a bucket of events which can be selected by attribute. It receives events and forwards them to subscribers defined by one or more matching Triggers.
+Knative is an open-source community project which extends a Kubernetes deployment with components for deploying, running, and managing serverless applications. It consists of three core components, build, serving and eventing. The build component offers a flexible approach to building source code into containers. The serving component enables rapid deployment and automatic scaling of containers through a request-driven model for serving workloads based on demand. The eventing component enables universal subscription, delivery, and management of events. Knative eventing is composed of Knative Broker and Trigger objects which make it easy to filter events based on event attributes. A Broker provides a bucket of events that can be selected by attribute. It receives events and forwards them to subscribers defined by one or more matching Triggers.
 
 ![Broker Trigger Architecture](/images/veba-knative-broker-trigger-overview.svg)
 
 ## Consuming Example Knative Function
 
-The vmware-samples GitHub repository contains a folder containing [example Knative functions](https://github.com/vmware-samples/vcenter-event-broker-appliance/tree/development/examples/knative). The most simplistic example of a function is kn-ps-echo this recieves all events from the event router and outputs them to Stdout.
+The vmware-samples GitHub repository contains a folder containing [example Knative functions](https://github.com/vmware-samples/vcenter-event-broker-appliance/tree/development/examples/knative). The most simplistic example of a function is kn-ps-echo this receives all events from the event router and outputs them to Stdout.
 
-A Knative function requires a container image the example function is in a publicly available repository projects.registry.vmware.com/veba/kn-ps-echo. Within the example folder is the Dockerfile used to create the container. We can see this defines a Powershell runtime environment with the [CloudEvents SDK](https://www.powershellgallery.com/packages/CloudEvents.Sdk) and [ThreadJob](https://www.powershellgallery.com/packages/ThreadJob) modules installed. We can see two Powershell scripts are copied in server.ps1 and handler.ps1 and that server.ps1 is ran when the container is started. The server.ps1 acts as a System.Net.HttpListener which recieves event and on message reciept passes this on to handler.ps1 to perform an action.
+A Knative function requires a container image the example function is in a publicly available repository projects.registry.vmware.com/veba/kn-ps-echo. Within the example folder is the Dockerfile used to create the container. We can see this defines a Powershell runtime environment with the [CloudEvents SDK](https://www.powershellgallery.com/packages/CloudEvents.Sdk) and [ThreadJob](https://www.powershellgallery.com/packages/ThreadJob) modules installed. We can see two Powershell scripts are copied in server.ps1 and handler.ps1 and that server.ps1 is executed when the container is started. The server.ps1 acts as a System.Net.HttpListener which receives the event and on message receipt passes this on to handler.ps1 to execute.
 
 ```dockerfile
 FROM photon:3.0
@@ -112,7 +112,7 @@ service.serving.knative.dev/kn-ps-echo created
 trigger.eventing.knative.dev/kn-ps-echo-trigger created
 ```
 
-vCenter Server constantly generates events and as the example has an unfiltered trigger events are output to Stdout. We can view the output by looking at the log file of container executing the script.  If we list the pods in the vmware-functions namespace and filter using function name we can see two pods and the deployment pod has two containers.
+vCenter Server constantly generates events and as the example has an unfiltered trigger events are output to Stdout. We can view the output by looking at the log file of the container executing the script.  If we list the pods in the vmware-functions namespace and filter using function name we can see two pods and the deployment pod has two containers.
 
 ```bash
 kubectl -n vmware-functions get pods | grep kn-ps-echo
@@ -122,7 +122,7 @@ kn-ps-echo-00001-deployment-6c9f77855c-ddz8w     2/2     Running   0          18
 kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7   1/1     Running   0          18m
 ```
 
-The scripts are ran in a container named user-container in the deployment pod so we can follow its logs and see the flow of vCenter events being echo'd.
+The scripts are run in a container named user-container in the deployment pod so we can follow its logs and see the flow of vCenter events being echo'd.
 
 ```
 kubectl logs -na vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container --follow
@@ -154,9 +154,9 @@ Cloud Event
 CloudEvent Data:
 ```
 
-So we can see all events are of the same Type: but the Subject: is populated with descriptive name. The subject contents maps to the vCenter Server event description a list of descriptions by vCenter Server version can be found [here](https://github.com/lamw/vcenter-event-mapping).
+So we can see all events are of the same Type: but the Subject: is populated with the Event name.
 
-Note: At the time of running the example didn't seem to be working correctly as it did not output the CloudEvent Data.
+Note: At the time of running the kn-ps-echo didn't seem to be working correctly as it did not output the CloudEvent Data.
 
 ## Creating A Knative Function
 
@@ -191,10 +191,6 @@ if($cloudEventData -eq $null) {
    }
 Write-Host "Full contents of CloudEventData`n $(${cloudEventData} | ConvertTo-Json)`n"
 
-# Perform onward action
-
-## vROps REST API documentation https://code.vmware.com/apis/364/vrealize-operations
-
 ## Check secret in place which supplies vROps environment variables
 Write-Host "vropsFqdn:" ${env:vropsFqdn}
 Write-Host "vropsUser:" ${env:vropsUser}
@@ -206,7 +202,7 @@ $headers = @{
    "Accept"  = "application/json"
    }
 
-## Acquire bearer token
+## Acquire bearer token using environment variables
 $uri = "https://" + $env:vropsFqdn + "/suite-api/api/auth/token/acquire"
 $basicAuthBody = @{
     username = $env:vropsUser;
@@ -231,12 +227,12 @@ $resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -Ski
 $resourceJson = $resource.Content | ConvertFrom-Json
 Write-Host "ResourceID of host is " $resourceJson.resourceList[0].identifier
 
-## Mark host as maintenance mode
+## Mark host resource as in maintenance mode
 $uri = "https://" + $env:vropsFqdn + "/suite-api/api/resources/" + $resourceJson.resourceList[0].identifier + "/maintained"
 Write-Host "Marking host as vROps maintenance mode ..."
 Invoke-WebRequest -Uri $uri -Method PUT -Headers $authedHeaders -SkipCertificateCheck
 
-## Get host maintenance mode state
+## Get host resource maintenance mode state
 $uri = "https://" + $env:vropsFqdn + "/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=" + $esxiHost
 Write-Host "Acquiring host maintenance mode state ..."
 $resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
