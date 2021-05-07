@@ -65,7 +65,14 @@ The VideoCore packages provide command line utilities that can get various piece
 sudo apt install -y libraspberrypi-bin
 ```
 
-# Storage Performance
+## Disable Red LED
+
+```
+sudo su
+echo none > /sys/class/leds/led1/trigger
+```
+
+## Storage Performance
 
 The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.
 
