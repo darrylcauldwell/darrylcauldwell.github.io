@@ -5,7 +5,23 @@
     <link>https://darrylcauldwell.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 30 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VSCode Remote SSH</title>
+      <link>https://darrylcauldwell.github.io/post/vs-code-remote-ssh/</link>
+      <pubDate>Thu, 13 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/vs-code-remote-ssh/</guid>
+      <description>
+        
+          &lt;p&gt;The more I use Visual Studio the more features and extensions I find which really help my workflow.&lt;/p&gt;
+&lt;p&gt;I tend to work with many headless remote systems from Windows jump servers. I&amp;rsquo;ve traditionally used PuTTY and MTPuTTY (Multi-Tabbed PuTTY) as SSH client and CyberDuck or WinSCP to copy files via SFTP over SSH. The VS Code &amp;lsquo;Remote - SSH&amp;rsquo; extension allows you to open a remote folder on any remote machine, virtual machine, or container with a running SSH server and take full advantage of VS Code&amp;rsquo;s feature set. Once connected to a server, you can interact with files and folders anywhere on the remote filesystem. We can also spawn and switch between terminal windows and have access to full range of VSCode extensions like those for Kubernetes and Docker! This makes managing multiple headless remote systems reallly painless!&lt;/p&gt;
+&lt;p&gt;However, while most Linux servers connect without issue some would fail with message like “open failed: administratively prohibited: open failed”. In order for VS Code to be able to connect successfully to the Linux VM, we need to make sure that AllowTcpForwarding is enabled.  To enable this edit the &lt;code&gt;/etc/ssh/sshd_config&lt;/code&gt; and ensure &lt;code&gt;AllowTcpForwarding yes&lt;/code&gt; and restart SSHD on a systemd based system using &lt;code&gt;systemctl restart sshd&lt;/code&gt;.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
     <item>
       <title>VMware Event Broker Appliance (VEBA) - Knative</title>
       <link>https://darrylcauldwell.github.io/post/veba-knative/</link>
