@@ -153,6 +153,10 @@ $cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyCon
    }
 Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full contents of CloudEventData&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;$(${cloudEventData} | ConvertTo-Json)&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
 
+&lt;span style=&#34;color:#75715e&#34;&gt;# Extract hostname from CloudEventData object&lt;/span&gt;
+$esxiHost=$cloudEventData.Host.Name
+Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hostname from CloudEventData&amp;#34;&lt;/span&gt; $esxiHost
+
 &lt;span style=&#34;color:#75715e&#34;&gt;## Check secret in place which supplies vROps environment variables&lt;/span&gt;
 Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsFqdn:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsFqdn}
 Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsUser:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsUser}
@@ -325,6 +329,7 @@ Full contents of CloudEventData
   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Ds&amp;#34;&lt;/span&gt;: null
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 
+Hostname from CloudEventData esx01.cork.local
 vropsFqdn: vrops.cork.local
 vropsUser: admin
 vropsPassword: VMware1!
@@ -805,7 +810,10 @@ sudo apt upgrade -y
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;install-tools&#34;&gt;Install Tools&lt;/h2&gt;
 &lt;p&gt;The VideoCore packages provide command line utilities that can get various pieces of information from the VideoCore GPU on the Raspberry Pi. The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;sudo apt install -y libraspberrypi-bin
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;# Storage Performance&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;disable-red-led&#34;&gt;Disable Red LED&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;sudo su
+echo none &amp;gt; /sys/class/leds/led1/trigger
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;storage-performance&#34;&gt;Storage Performance&lt;/h2&gt;
 &lt;p&gt;The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;sudo apt install -y fio
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;usb-flash-disk&#34;&gt;USB Flash Disk&lt;/h2&gt;

@@ -170,7 +170,10 @@ sudo apt upgrade -y
 </code></pre><h2 id="install-tools">Install Tools</h2>
 <p>The VideoCore packages provide command line utilities that can get various pieces of information from the VideoCore GPU on the Raspberry Pi. The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.</p>
 <pre><code>sudo apt install -y libraspberrypi-bin
-</code></pre><p># Storage Performance</p>
+</code></pre><h2 id="disable-red-led">Disable Red LED</h2>
+<pre><code>sudo su
+echo none &gt; /sys/class/leds/led1/trigger
+</code></pre><h2 id="storage-performance">Storage Performance</h2>
 <p>The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.</p>
 <pre><code>sudo apt install -y fio
 </code></pre><h2 id="usb-flash-disk">USB Flash Disk</h2>
