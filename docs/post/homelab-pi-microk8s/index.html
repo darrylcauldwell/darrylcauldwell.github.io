@@ -151,8 +151,8 @@
 <li>Rancher K3S</li>
 <li>microk8s</li>
 </ul>
-<p>## Manual
-When learning Kubernetes it is useful practise to configure all components manually. Often people follow the tutorial <a href="https://github.com/kelseyhightower/kubernetes-the-hard-way">Kubernetes The Hard Way</a>. For this installation I want to get up and running quickly so will be looking at automated build solution.</p>
+<h2 id="manual">Manual</h2>
+<p>When learning Kubernetes it is useful practise to configure all components manually. Often people follow the tutorial <a href="https://github.com/kelseyhightower/kubernetes-the-hard-way">Kubernetes The Hard Way</a>. For this installation I want to get up and running quickly so will be looking at automated build solution.</p>
 <h2 id="kubeadm">Kubeadm</h2>
 <p>The official CNCF tool for provisioning Kubernetes clusters in a variety of shapes and forms e.g. single-node, multi-node, HA, self-hosted.  It&rsquo;s as close to a &ldquo;vanilla&rdquo; Kubernetes you get in production but consumes a lot of resources.</p>
 <p>## Rancher K3S OR Canonical Microk8s
@@ -189,15 +189,15 @@ K3s and Microk8s are both lightweight implementation of Kubernetes they have var
 </tbody>
 </table>
 <p>I want my four node cluster to be highly available as easily as possible so for this deployment I chose Mircok8s.</p>
-<p>## Visual Studio Code Remote SSH
-The four Raspberry Pi which make up my cluster are headless. The Visual Studio Code <a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development extension pack</a> makes configuring headless systems very easy.</p>
+<h2 id="visual-studio-code-remote-ssh">Visual Studio Code Remote SSH</h2>
+<p>The four Raspberry Pi which make up my cluster are headless. The Visual Studio Code <a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development extension pack</a> makes configuring headless systems very easy.</p>
 <h2 id="enable-c-groups">Enable c-groups</h2>
 <p>Edit <code>/boot/firmware/cmdline.txt</code> and add following options:</p>
 <pre><code>cgroup_enable=memory cgroup_memory=1
 </code></pre><p><img src="/images/homelab-pi-microk8s-cgroup.png" alt="Microk8s cgroup"></p>
 <p>Reboot <code>sudo reboot</code> for changes to take effect.</p>
-<p>## Install Microk8s
-MicroK8s is supplied as a snap, there are various Kubernetes releases these are available as snap channels.  To see all available versions we can query what channels are available. When I&rsquo;m running this the current Kubernetes version is 1.21 and I filter results on this we can see all.</p>
+<h2 id="install-microk8s">Install Microk8s</h2>
+<p>MicroK8s is supplied as a snap, there are various Kubernetes releases these are available as snap channels.  To see all available versions we can query what channels are available. When I&rsquo;m running this the current Kubernetes version is 1.21 and I filter results on this we can see all.</p>
 <pre><code>snap info microk8s | grep 1.21
 
 latest/stable:    v1.21.1  2021-05-17 (2215) 168MB classic

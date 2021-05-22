@@ -20,7 +20,7 @@ There are various ways to setup a Kubernetes cluster including:
 * Rancher K3S
 * microk8s
 
-## Manual
+## Manual
 When learning Kubernetes it is useful practise to configure all components manually. Often people follow the tutorial [Kubernetes The Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way). For this installation I want to get up and running quickly so will be looking at automated build solution.
 
 ## Kubeadm
@@ -38,7 +38,7 @@ K3s and Microk8s are both lightweight implementation of Kubernetes they have var
 
 I want my four node cluster to be highly available as easily as possible so for this deployment I chose Mircok8s.
 
-## Visual Studio Code Remote SSH
+## Visual Studio Code Remote SSH
 The four Raspberry Pi which make up my cluster are headless. The Visual Studio Code [Remote Development extension pack](https://code.visualstudio.com/docs/remote/remote-overview) makes configuring headless systems very easy.
 
 ## Enable c-groups
@@ -52,7 +52,7 @@ cgroup_enable=memory cgroup_memory=1
 
 Reboot `sudo reboot` for changes to take effect.
 
-## Install Microk8s
+## Install Microk8s
 MicroK8s is supplied as a snap, there are various Kubernetes releases these are available as snap channels.  To see all available versions we can query what channels are available. When I'm running this the current Kubernetes version is 1.21 and I filter results on this we can see all.
 
 
