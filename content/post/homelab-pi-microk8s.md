@@ -148,7 +148,7 @@ mkdir ~/.kube
 sudo microk8s config > ~/.kube/config
 ```
 
-## Memory Footprint
+## Memory Footprint
 One of the benefits I hoped to realize by using Microk8s was low memory footprint.  We can see here our 8GB Raspberry Pi4B with Microk8s running it still shows 6GB available. 
 
 ```
