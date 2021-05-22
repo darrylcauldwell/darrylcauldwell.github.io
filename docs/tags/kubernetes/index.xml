@@ -347,6 +347,140 @@ Note: STARTED&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Not In Main
     </item>
     
     <item>
+      <title>Raspberry Pi Kubernetes Cluster</title>
+      <link>https://darrylcauldwell.github.io/post/homelab-pi-microk8s/</link>
+      <pubDate>Sun, 28 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/homelab-pi-microk8s/</guid>
+      <description>
+        
+          &lt;p&gt;Here I am looking at setting up my Raspberry Pi cluster to host the various Docker containers I run at home. I am using &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi/&#34;&gt;four Raspberry Pi 4B&lt;/a&gt; which are all build with Ubuntu 21.04 and configured as per &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi-ubuntu/&#34;&gt;Ubuntu Base configuration&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are various ways to setup a Kubernetes cluster including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Manually&lt;/li&gt;
+&lt;li&gt;Kubeadm&lt;/li&gt;
+&lt;li&gt;Rancher K3S&lt;/li&gt;
+&lt;li&gt;microk8s&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;## Manual
+When learning Kubernetes it is useful practise to configure all components manually. Often people follow the tutorial &lt;a href=&#34;https://github.com/kelseyhightower/kubernetes-the-hard-way&#34;&gt;Kubernetes The Hard Way&lt;/a&gt;. For this installation I want to get up and running quickly so will be looking at automated build solution.&lt;/p&gt;
+&lt;h2 id=&#34;kubeadm&#34;&gt;Kubeadm&lt;/h2&gt;
+&lt;p&gt;The official CNCF tool for provisioning Kubernetes clusters in a variety of shapes and forms e.g. single-node, multi-node, HA, self-hosted.  It&amp;rsquo;s as close to a &amp;ldquo;vanilla&amp;rdquo; Kubernetes you get in production but consumes a lot of resources.&lt;/p&gt;
+&lt;p&gt;## Rancher K3S OR Canonical Microk8s
+K3s and Microk8s are both lightweight implementation of Kubernetes they have various differences but a key one to understand is high availablity approach.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Function&lt;/th&gt;
+&lt;th&gt;MicroK8s&lt;/th&gt;
+&lt;th&gt;K3s&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Kubernetes Node Roles&lt;/td&gt;
+&lt;td&gt;Every node is a worker node&lt;/td&gt;
+&lt;td&gt;Agent Node(s)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kubernetes API Server&lt;/td&gt;
+&lt;td&gt;Every node is an API server&lt;/td&gt;
+&lt;td&gt;Server Node (s)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kubernetes Datastore&lt;/td&gt;
+&lt;td&gt;Dqlite&lt;/td&gt;
+&lt;td&gt;etcd&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Datastore HA&lt;/td&gt;
+&lt;td&gt;Embedded Dqlite when &amp;gt;3 nodes&lt;/td&gt;
+&lt;td&gt;Requires External datastore&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;I want my four node cluster to be highly available as easily as possible so for this deployment I chose Mircok8s.&lt;/p&gt;
+&lt;p&gt;## Visual Studio Code Remote SSH
+The four Raspberry Pi which make up my cluster are headless. The Visual Studio Code &lt;a href=&#34;https://code.visualstudio.com/docs/remote/remote-overview&#34;&gt;Remote Development extension pack&lt;/a&gt; makes configuring headless systems very easy.&lt;/p&gt;
+&lt;h2 id=&#34;enable-c-groups&#34;&gt;Enable c-groups&lt;/h2&gt;
+&lt;p&gt;Edit &lt;code&gt;/boot/firmware/cmdline.txt&lt;/code&gt; and add following options:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cgroup_enable=memory cgroup_memory=1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/homelab-pi-microk8s-cgroup.png&#34; alt=&#34;Microk8s cgroup&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Reboot &lt;code&gt;sudo reboot&lt;/code&gt; for changes to take effect.&lt;/p&gt;
+&lt;p&gt;## Install Microk8s
+MicroK8s is supplied as a snap, there are various Kubernetes releases these are available as snap channels.  To see all available versions we can query what channels are available. When I&amp;rsquo;m running this the current Kubernetes version is 1.21 and I filter results on this we can see all.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;snap info microk8s | grep 1.21
+
+latest/stable:    v1.21.1  2021-05-17 (2215) 168MB classic
+latest/candidate: v1.21.1  2021-05-13 (2214) 168MB classic
+latest/beta:      v1.21.1  2021-05-13 (2214) 168MB classic
+latest/edge:      v1.21.1  2021-05-19 (2227) 168MB classic
+1.21/stable:      v1.21.1  2021-05-17 (2215) 168MB classic
+1.21/candidate:   v1.21.1  2021-05-14 (2215) 168MB classic
+1.21/beta:        v1.21.1  2021-05-14 (2215) 168MB classic
+1.21/edge:        v1.21.1  2021-05-20 (2232) 168MB classic
+1.14/stable:      v1.14.10 2019-12-20 (1121) 164MB classic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&amp;rsquo;ll look to install the stable release of 1.21 on each using:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo snap install microk8s --classic --channel=1.21/stable
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When the snap is loaded and running on all nodes we can look to form them into a cluster.  On first node run following and it will generate a token to run on remote node to add it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## From first node in cluster generate token  
+sudo microk8s add-node
+
+From the node you wish to join to this cluster, run the following:
+microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then on remote node run command with generated token.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
+
+Contacting cluster at 192.168.1.100
+Waiting for this node to finish joining the cluster. ..  
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Repeat this process (generate a token, run it from the joining node) for the third and forth nodes.  When all done from any node we can query the cluster state see all four nodes and check high availability status.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo microk8s status --wait-readymicrok8s is running
+
+high-availability: yes
+  datastore master nodes: 192.168.1.100:19001 192.168.1.101:19001 192.168.1.102:19001
+  datastore standby nodes: 192.168.1.103:19001
+addons:
+  enabled:
+    ha-cluster           # Configure high availability on the current node
+  disabled:
+    dashboard            # The Kubernetes dashboard
+    dns                  # CoreDNS
+    helm                 # Helm 2 - the package manager for Kubernetes
+    helm3                # Helm 3 - Kubernetes package manager
+    host-access          # Allow Pods connecting to Host services smoothly
+    ingress              # Ingress controller for external access
+    linkerd              # Linkerd is a service mesh for Kubernetes and other frameworks
+    metallb              # Loadbalancer for your Kubernetes cluster
+    metrics-server       # K8s Metrics Server for API access to service metrics
+    portainer            # Portainer UI for your Kubernetes cluster
+    prometheus           # Prometheus operator for monitoring and logging
+    rbac                 # Role-Based Access Control for authorisation
+    registry             # Private image registry exposed on localhost:32000
+    storage              # Storage class; allocates storage from host directory
+    traefik              # traefik Ingress controller for external access
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;## Install kubectl
+The Microk8s install deploys its own client and to execute have to remember to prefix everything with microk8s. I have to switch between systems often and to avoid confusion prefer to install normal kubectl. Again this is available as a snap in multiple versions.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;snap info kubectl | grep 1.21
+
+latest/stable:    1.21.1         2021-05-14 (1970)  9MB classic
+latest/candidate: 1.21.1         2021-05-14 (1970)  9MB classic
+latest/beta:      1.21.1         2021-05-14 (1970)  9MB classic
+latest/edge:      1.21.1         2021-05-14 (1970)  9MB classic
+1.21/stable:      1.21.1         2021-05-13 (1970)  9MB classic
+1.21/candidate:   1.21.1         2021-05-13 (1970)  9MB classic
+1.21/beta:        1.21.1         2021-05-13 (1970)  9MB classic
+1.21/edge:        1.21.1         2021-05-13 (1970)  9MB classic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We want to install version to match Kubernetes and copy the Microk8s kubectl config to be kubectl default config.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo snap install kubectl --classic --channel=1.21/stable
+mkdir ~/.kube
+sudo microk8s config &amp;gt; ~/.kube/config
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So all in all very easy to setup and get a highly available Kubernetes cluster running on Raspberry Pi cluster with Microk8s.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
       <title>Introduction To Kubernetes Cluster Networking with Antrea</title>
       <link>https://darrylcauldwell.github.io/post/antrea/</link>
       <pubDate>Wed, 12 Aug 2020 00:00:00 +0000</pubDate>

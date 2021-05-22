@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>Configuring NSX Edge to DLR OSPF | </title>
+<title>Raspberry Pi Kubernetes Cluster | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,14 +17,14 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Configuring NSX Edge to DLR OSPF">
+<meta name="description" content="Raspberry Pi Kubernetes Cluster">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Configuring NSX Edge to DLR OSPF" />
-<meta property="og:url" content="https://darrylcauldwell.github.io/post/nsx-edge-ospf/" />
-<meta property="og:title" content="Configuring NSX Edge to DLR OSPF" />
-<meta property="og:description" content="Configuring NSX Edge to DLR OSPF" />
-<meta property="og:image" content="https://darrylcauldwell.github.io/images/thumbnail.png" />
+<meta name="twitter:title" content="Raspberry Pi Kubernetes Cluster" />
+<meta property="og:url" content="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" />
+<meta property="og:title" content="Raspberry Pi Kubernetes Cluster" />
+<meta property="og:description" content="Raspberry Pi Kubernetes Cluster" />
+<meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
 <link rel="manifest" href='https://darrylcauldwell.github.io/icons/site.webmanifest'>
@@ -32,7 +32,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://darrylcauldwell.github.io/post/nsx-edge-ospf/">
+<link rel="canonical" href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/">
 
     
 
@@ -104,28 +104,28 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">Configuring NSX Edge to DLR OSPF</h1><div class="post_meta">
+    <h1 class="post_title">Raspberry Pi Kubernetes Cluster</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      May 23, 2016</span>
-      <a href='https://darrylcauldwell.github.io/tags/nsx' title="nsx" class="post_tag button button_translucent">nsx
+      Mar 28, 2021</span>
+      <a href='https://darrylcauldwell.github.io/tags/raspberry' title="raspberry" class="post_tag button button_translucent">raspberry
       </a>
-      <a href='https://darrylcauldwell.github.io/tags/vcix' title="vcix" class="post_tag button button_translucent">vcix
+      <a href='https://darrylcauldwell.github.io/tags/kubernetes' title="kubernetes" class="post_tag button button_translucent">kubernetes
       </a>
 </div>
 
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Configuring%20NSX%20Edge%20to%20DLR%20OSPF&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fnsx-edge-ospf%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Raspberry%20Pi%20Kubernetes%20Cluster&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fhomelab-pi-microk8s%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fnsx-edge-ospf%2f&t=Configuring%20NSX%20Edge%20to%20DLR%20OSPF" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fhomelab-pi-microk8s%2f&t=Raspberry%20Pi%20Kubernetes%20Cluster" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -135,7 +135,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://darrylcauldwell.github.io/post/nsx-edge-ospf/" title="Copy Link" class="link link_yank">
+    <a href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -143,40 +143,127 @@
   </div>
 
     
-    <p>As part of study for VCIX-NV I’ve given myself task of exploring in my new home lab all parts of NSX which I&rsquo;m still not fully comfortable.  One of these things is OSPF,  to investigate this I came up with a test scenario and then worked through the steps to achieve a solution to meet the scenario design.</p>
-<h2 id="scenario-design">Scenario Design</h2>
-<p>We will replicate a typical development environment secured with an Edge Gateway.  Within the environment the developers will have ability to add and remove logical switches to the DLR and the automatic updating of the Edge Gateway routing table.</p>
-<p><img src="/images/nsx-edge-ospf-test.jpg" alt="NSX Edge OSPF Test"></p>
-<h2 id="deploy-edge-transit-logical-switch-and-distributed-logical-router">Deploy Edge, Transit Logical Switch and Distributed Logical Router</h2>
-<p>The lab has VXLAN capability during my NSX core home lab configuration, so has hosts prepared, VNI pool and deployed Controller.</p>
-<p>We&rsquo;ll first deploy the Transit logical switch.</p>
-<p><img src="/images/nsx-edge-ospf-ls.jpg" alt="NSX Edge Logical Switch"></p>
-<p>Create Edge Gateway with an Uplink interface on the OOB network  (192.168.1.43) and on the Transit network (192.168.2.1) .</p>
-<p><img src="/images/nsx-edge-ospf-edge-deploy.jpg" alt="NSX Edge Deploy"></p>
-<p>Create DLR initially with a single uplink on Transit network (192.168.2.254) , do not configure a default gateway.</p>
-<p><img src="/images/nsx-edge-ospf-dlr.jpg" alt="NSX Edge DLR"></p>
-<h2 id="configure-ospf-area">Configure OSPF Area</h2>
-<p>An OSPF area is a logical collection of OSPF networks, routers, and links that have the same area identification. The simulated development environment we are using RFC1918 address space in order that the IP address schema can overlap as such our OSPF routing will be internal so we will create an OSPF area which is type Stub.</p>
-<p>On Edge Gateway Enable Dynamic Routing Configuration on the Transit interface.</p>
-<p><img src="/images/nsx-edge-ospf-dynamic.jpg" alt="NSX Edge OSPF Dynamic"></p>
-<p>Then we need to enable OSPF</p>
-<p><img src="/images/nsx-edge-ospf-enable.jpg" alt="NSX Edge OSPF Enable"></p>
-<p>We require a stub OSPF area, and usefully Area ID 51 is configured already so we&rsquo;ll use this.  We just need to associate this with the Transit interface in order it can communicate with DLR.</p>
-<p><img src="/images/nsx-edge-ospf-mapping.jpg" alt="NSX Edge OSPF Mapping"></p>
-<p>Repeat the steps used for configuring OSPF on the Edge on the DLR, when enabling OSPF enter the forwarding address to match the Transit network IP interface and the protocol address to be another available IP address on the Transit network.</p>
-<p><img src="/images/nsx-edge-ospf-ProFwd.jpg" alt="NSX Edge OSPF Protocol Forward"></p>
-<h2 id="route-distribution">Route Distribution</h2>
-<p>The default Route Redistribution configuration for DLR is to distribute information about networks it is connected to.</p>
-<p><img src="/images/nsx-edge-ospf-RouteDistribute.jpg" alt="OSPF Route Redistribution"></p>
-<p>If we now check the Edge Gateway routing table we can see all routing is of type C (directly connected) or S (static entry for default gateway).</p>
-<p><img src="/images/nsx-edge-ospf-RouteTable.jpg" alt="OSPF Route Table"></p>
-<p>If I now simulate a developer creating a new Logical Switch for network 192.168.3.0/24 which is attached to DLR as internal interface 192.168.3.1.</p>
-<p><img src="/images/nsx-edge-ospf-test1DLR.jpg" alt="OSPF Test 1 DLR"></p>
-<p>We can then check the Edge Gateway routing table again.</p>
-<p><img src="/images/nsx-edge-ospf-test1DLR.jpg" alt="OSPF Test 1 Edge"></p>
-<p>We see a new route added type O (ospf derived) N2 (OSPF NSSA external type 2).  Which directs this traffic to the DLR interface on Transit network.</p>
-<p>If we then simulate the developer adding the test2 and test3 networks. We see the other routes populated.</p>
-<p><img src="/images/nsx-edge-ospf-test2-3.jpg" alt="OSPF Test 2-3"></p>
+    <p>Here I am looking at setting up my Raspberry Pi cluster to host the various Docker containers I run at home. I am using <a href="/post/homelab-pi/">four Raspberry Pi 4B</a> which are all build with Ubuntu 21.04 and configured as per <a href="/post/homelab-pi-ubuntu/">Ubuntu Base configuration</a>.</p>
+<p>There are various ways to setup a Kubernetes cluster including:</p>
+<ul>
+<li>Manually</li>
+<li>Kubeadm</li>
+<li>Rancher K3S</li>
+<li>microk8s</li>
+</ul>
+<p>## Manual
+When learning Kubernetes it is useful practise to configure all components manually. Often people follow the tutorial <a href="https://github.com/kelseyhightower/kubernetes-the-hard-way">Kubernetes The Hard Way</a>. For this installation I want to get up and running quickly so will be looking at automated build solution.</p>
+<h2 id="kubeadm">Kubeadm</h2>
+<p>The official CNCF tool for provisioning Kubernetes clusters in a variety of shapes and forms e.g. single-node, multi-node, HA, self-hosted.  It&rsquo;s as close to a &ldquo;vanilla&rdquo; Kubernetes you get in production but consumes a lot of resources.</p>
+<p>## Rancher K3S OR Canonical Microk8s
+K3s and Microk8s are both lightweight implementation of Kubernetes they have various differences but a key one to understand is high availablity approach.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>MicroK8s</th>
+<th>K3s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kubernetes Node Roles</td>
+<td>Every node is a worker node</td>
+<td>Agent Node(s)</td>
+</tr>
+<tr>
+<td>Kubernetes API Server</td>
+<td>Every node is an API server</td>
+<td>Server Node (s)</td>
+</tr>
+<tr>
+<td>Kubernetes Datastore</td>
+<td>Dqlite</td>
+<td>etcd</td>
+</tr>
+<tr>
+<td>Datastore HA</td>
+<td>Embedded Dqlite when &gt;3 nodes</td>
+<td>Requires External datastore</td>
+</tr>
+</tbody>
+</table>
+<p>I want my four node cluster to be highly available as easily as possible so for this deployment I chose Mircok8s.</p>
+<p>## Visual Studio Code Remote SSH
+The four Raspberry Pi which make up my cluster are headless. The Visual Studio Code <a href="https://code.visualstudio.com/docs/remote/remote-overview">Remote Development extension pack</a> makes configuring headless systems very easy.</p>
+<h2 id="enable-c-groups">Enable c-groups</h2>
+<p>Edit <code>/boot/firmware/cmdline.txt</code> and add following options:</p>
+<pre><code>cgroup_enable=memory cgroup_memory=1
+</code></pre><p><img src="/images/homelab-pi-microk8s-cgroup.png" alt="Microk8s cgroup"></p>
+<p>Reboot <code>sudo reboot</code> for changes to take effect.</p>
+<p>## Install Microk8s
+MicroK8s is supplied as a snap, there are various Kubernetes releases these are available as snap channels.  To see all available versions we can query what channels are available. When I&rsquo;m running this the current Kubernetes version is 1.21 and I filter results on this we can see all.</p>
+<pre><code>snap info microk8s | grep 1.21
+
+latest/stable:    v1.21.1  2021-05-17 (2215) 168MB classic
+latest/candidate: v1.21.1  2021-05-13 (2214) 168MB classic
+latest/beta:      v1.21.1  2021-05-13 (2214) 168MB classic
+latest/edge:      v1.21.1  2021-05-19 (2227) 168MB classic
+1.21/stable:      v1.21.1  2021-05-17 (2215) 168MB classic
+1.21/candidate:   v1.21.1  2021-05-14 (2215) 168MB classic
+1.21/beta:        v1.21.1  2021-05-14 (2215) 168MB classic
+1.21/edge:        v1.21.1  2021-05-20 (2232) 168MB classic
+1.14/stable:      v1.14.10 2019-12-20 (1121) 164MB classic
+</code></pre><p>I&rsquo;ll look to install the stable release of 1.21 on each using:</p>
+<pre><code>sudo snap install microk8s --classic --channel=1.21/stable
+</code></pre><p>When the snap is loaded and running on all nodes we can look to form them into a cluster.  On first node run following and it will generate a token to run on remote node to add it.</p>
+<pre><code>## From first node in cluster generate token  
+sudo microk8s add-node
+
+From the node you wish to join to this cluster, run the following:
+microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
+</code></pre><p>Then on remote node run command with generated token.</p>
+<pre><code>sudo microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
+
+Contacting cluster at 192.168.1.100
+Waiting for this node to finish joining the cluster. ..  
+</code></pre><p>Repeat this process (generate a token, run it from the joining node) for the third and forth nodes.  When all done from any node we can query the cluster state see all four nodes and check high availability status.</p>
+<pre><code>sudo microk8s status --wait-readymicrok8s is running
+
+high-availability: yes
+  datastore master nodes: 192.168.1.100:19001 192.168.1.101:19001 192.168.1.102:19001
+  datastore standby nodes: 192.168.1.103:19001
+addons:
+  enabled:
+    ha-cluster           # Configure high availability on the current node
+  disabled:
+    dashboard            # The Kubernetes dashboard
+    dns                  # CoreDNS
+    helm                 # Helm 2 - the package manager for Kubernetes
+    helm3                # Helm 3 - Kubernetes package manager
+    host-access          # Allow Pods connecting to Host services smoothly
+    ingress              # Ingress controller for external access
+    linkerd              # Linkerd is a service mesh for Kubernetes and other frameworks
+    metallb              # Loadbalancer for your Kubernetes cluster
+    metrics-server       # K8s Metrics Server for API access to service metrics
+    portainer            # Portainer UI for your Kubernetes cluster
+    prometheus           # Prometheus operator for monitoring and logging
+    rbac                 # Role-Based Access Control for authorisation
+    registry             # Private image registry exposed on localhost:32000
+    storage              # Storage class; allocates storage from host directory
+    traefik              # traefik Ingress controller for external access
+</code></pre><p>## Install kubectl
+The Microk8s install deploys its own client and to execute have to remember to prefix everything with microk8s. I have to switch between systems often and to avoid confusion prefer to install normal kubectl. Again this is available as a snap in multiple versions.</p>
+<pre><code>snap info kubectl | grep 1.21
+
+latest/stable:    1.21.1         2021-05-14 (1970)  9MB classic
+latest/candidate: 1.21.1         2021-05-14 (1970)  9MB classic
+latest/beta:      1.21.1         2021-05-14 (1970)  9MB classic
+latest/edge:      1.21.1         2021-05-14 (1970)  9MB classic
+1.21/stable:      1.21.1         2021-05-13 (1970)  9MB classic
+1.21/candidate:   1.21.1         2021-05-13 (1970)  9MB classic
+1.21/beta:        1.21.1         2021-05-13 (1970)  9MB classic
+1.21/edge:        1.21.1         2021-05-13 (1970)  9MB classic
+</code></pre><p>We want to install version to match Kubernetes and copy the Microk8s kubectl config to be kubectl default config.</p>
+<pre><code>sudo snap install kubectl --classic --channel=1.21/stable
+mkdir ~/.kube
+sudo microk8s config &gt; ~/.kube/config
+</code></pre><p>So all in all very easy to setup and get a highly available Kubernetes cluster running on Raspberry Pi cluster with Microk8s.</p>
 
 
   </article>
@@ -224,10 +311,10 @@
         <a href="https://darrylcauldwell.github.io/post/homelab-pi-ubuntu/" class="nav-link" title="Raspberry Pi Cluster Ubuntu Base">Raspberry Pi Cluster Ubuntu Base</a>
       </li>
       <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" class="nav-link" title="Raspberry Pi Kubernetes Cluster">Raspberry Pi Kubernetes Cluster</a>
+        <a href="https://darrylcauldwell.github.io/post/homelab-pi/" class="nav-link" title="Raspberry Pi Cluster Hardware">Raspberry Pi Cluster Hardware</a>
       </li>
       <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi/" class="nav-link" title="Raspberry Pi Cluster Hardware">Raspberry Pi Cluster Hardware</a>
+        <a href="https://darrylcauldwell.github.io/post/zsh/" class="nav-link" title="Customizing Zsh Prompt">Customizing Zsh Prompt</a>
       </li>
     </ul>
     <div>
