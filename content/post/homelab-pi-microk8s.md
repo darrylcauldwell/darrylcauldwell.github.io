@@ -148,4 +148,14 @@ mkdir ~/.kube
 sudo microk8s config > ~/.kube/config
 ```
 
-So all in all very easy to setup and get a highly available Kubernetes cluster running on Raspberry Pi cluster with Microk8s.
+## Memory Footprint
+One of the benefits I hoped to realize by using Microk8s was low memory footprint.  We can see here our 8GB Raspberry Pi4B with Microk8s running it still shows 6GB available. 
+
+```
+free -m
+              total        used        free      shared  buff/cache   available
+Mem:           7809        1173        4718           4        1918        6200
+Swap:             0           0           0
+```
+
+So all in all very easy to setup and get a low footprint highly available Kubernetes cluster running on Raspberry Pi cluster with Microk8s.
