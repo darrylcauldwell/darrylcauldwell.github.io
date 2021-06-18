@@ -130,7 +130,7 @@ git branch -a
 
 From here we can continue making changes, commit the files to local repository and then try and push them to remote as before.
 
-## In-branch blog testing
+## In-branch blog build and testing
 
 So far I have been updating blog content in markdown files. The Hugo engine takes these markdown files and creates all of the pages required for static website. Prior to posting it is good to test the post formatting looks good, the image links work etc. From within the branch we can run Hugo and use browser to test.
 
@@ -160,3 +160,78 @@ Web Server is available at http://localhost:1313/ (bind address 127.0.0.1)
 Press Ctrl+C to stop
 ```
 
+In my configuration GitHub pages is configured to use the /docs folder.  When we've tested and all looks good can then look to rebuild the static website files into that folder.
+
+```bash
+hugo --destination ~/Development/darrylcauldwell.github.io/docs
+
+Start building sites … 
+
+                   | EN   
+-------------------+------
+  Pages            | 242  
+  Paginator pages  |  27  
+  Non-page files   |   0  
+  Static files     | 274  
+  Processed images |   0  
+  Aliases          |  86  
+  Sitemaps         |   1  
+  Cleaned          |   0  
+
+Total in 263 ms
+```
+
+As we can see from the output adding a single post actually rebuilds many pages. It isn't really practical to add each to repository manually but we can use wildcard and add all.
+
+```
+git add .
+git commit -m 'new post on github branching'
+
+[blog-branch e202461] new post on github branching
+ 189 files changed, 4147 insertions(+), 2184 deletions(-)
+ create mode 100644 docs/post/git-branch/index.html
+
+git push origin blog-branch
+
+Enumerating objects: 646, done.
+Counting objects: 100% (646/646), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (277/277), done.
+Writing objects: 100% (382/382), 202.55 KiB | 4.71 MiB/s, done.
+Total 382 (delta 192), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (192/192), completed with 79 local objects.
+To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+   da04b9c..e202461  blog-branch -> blog-branch
+```
+
+So at this stage we've got out local and remote branch in sync.
+
+```
+git branch -a -v  
+
+* blog-branch                e202461 new post on github branching
+  master                     fb51479 heading formats
+  remotes/origin/HEAD        -> origin/master
+  remotes/origin/blog-branch e202461 new post on github branching
+  remotes/origin/master      fb51479 heading formats
+```
+
+## Merge blog post branch to master
+Once we're happy that the new post branch is good we can look to merge that into 'master' and be processed by GitHub Pages.
+
+As this is single user repository I could just use 'git merge' to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I'd typically made pull requests via the web UI. I recently found the new git cli 'gh' has capability to create pull-request.
+
+```
+gh pr create --title "New post about github branching" --body "New post about github branching with github pages" -H blog-branch
+
+Creating pull request for blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
+https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2
+```
+
+As pull requests require independant review I cannot approve my own pull request but I can add some comments.
+
+![GitHub Pull Request Review](/images/git-branch-pr.png)
+
+I can then look to merge.
+
+![GitHub Pull Request Merge](/images/git-branch-pr.png)
