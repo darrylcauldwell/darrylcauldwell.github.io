@@ -89,7 +89,7 @@ git branch -a
   remotes/origin/blog-branch
   remotes/origin/master
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From here we can continue making changes, commit the files to local repository and then try and push them to remote as before.&lt;/p&gt;
-&lt;h2 id=&#34;in-branch-blog-testing&#34;&gt;In-branch blog testing&lt;/h2&gt;
+&lt;h2 id=&#34;in-branch-blog-build-and-testing&#34;&gt;In-branch blog build and testing&lt;/h2&gt;
 &lt;p&gt;So far I have been updating blog content in markdown files. The Hugo engine takes these markdown files and creates all of the pages required for static website. Prior to posting it is good to test the post formatting looks good, the image links work etc. From within the branch we can run Hugo and use browser to test.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo server
 
@@ -114,7 +114,62 @@ Serving pages from memory
 Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
 Web Server is available at http://localhost:1313/ &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;bind address 127.0.0.1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
 Press Ctrl+C to stop
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In my configuration GitHub pages is configured to use the /docs folder.  When we&amp;rsquo;ve tested and all looks good can then look to rebuild the static website files into that folder.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo --destination ~/Development/darrylcauldwell.github.io/docs
+
+Start building sites … 
+
+                   | EN   
+-------------------+------
+  Pages            | &lt;span style=&#34;color:#ae81ff&#34;&gt;242&lt;/span&gt;  
+  Paginator pages  |  &lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;  
+  Non-page files   |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+  Static files     | &lt;span style=&#34;color:#ae81ff&#34;&gt;274&lt;/span&gt;  
+  Processed images |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+  Aliases          |  &lt;span style=&#34;color:#ae81ff&#34;&gt;86&lt;/span&gt;  
+  Sitemaps         |   &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;  
+  Cleaned          |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+
+Total in &lt;span style=&#34;color:#ae81ff&#34;&gt;263&lt;/span&gt; ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we can see from the output adding a single post actually rebuilds many pages. It isn&amp;rsquo;t really practical to add each to repository manually but we can use wildcard and add all.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git add .
+git commit -m &#39;new post on github branching&#39;
+
+[blog-branch e202461] new post on github branching
+ 189 files changed, 4147 insertions(+), 2184 deletions(-)
+ create mode 100644 docs/post/git-branch/index.html
+
+git push origin blog-branch
+
+Enumerating objects: 646, done.
+Counting objects: 100% (646/646), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (277/277), done.
+Writing objects: 100% (382/382), 202.55 KiB | 4.71 MiB/s, done.
+Total 382 (delta 192), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (192/192), completed with 79 local objects.
+To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+   da04b9c..e202461  blog-branch -&amp;gt; blog-branch
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So at this stage we&amp;rsquo;ve got out local and remote branch in sync.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git branch -a -v  
+
+* blog-branch                e202461 new post on github branching
+  master                     fb51479 heading formats
+  remotes/origin/HEAD        -&amp;gt; origin/master
+  remotes/origin/blog-branch e202461 new post on github branching
+  remotes/origin/master      fb51479 heading formats
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;merge-blog-post-branch-to-master&#34;&gt;Merge blog post branch to master&lt;/h2&gt;
+&lt;p&gt;Once we&amp;rsquo;re happy that the new post branch is good we can look to merge that into &amp;lsquo;master&amp;rsquo; and be processed by GitHub Pages.&lt;/p&gt;
+&lt;p&gt;As this is single user repository I could just use &amp;lsquo;git merge&amp;rsquo; to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I&amp;rsquo;d typically made pull requests via the web UI. I recently found the new git cli &amp;lsquo;gh&amp;rsquo; has capability to create pull-request.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gh pr create --title &amp;quot;New post about github branching&amp;quot; --body &amp;quot;New post about github branching with github pages&amp;quot; -H blog-branch
+
+Creating pull request for blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
+https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As pull requests require independant review I cannot approve my own pull request but I can add some comments.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-branch-pr.png&#34; alt=&#34;GitHub Pull Request Review&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I can then look to merge.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-branch-pr.png&#34; alt=&#34;GitHub Pull Request Merge&#34;&gt;&lt;/p&gt;
+
         
       </description>
     </item>
