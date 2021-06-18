@@ -189,7 +189,6 @@ As pull requests require independant review I cannot approve my own pull request
 I can then look to merge.
 
 ![GitHub Pull Request Merge](/images/git-branch-pr.png)
-&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
 
 When we&#39;re merged into &#39;master&#39; branch can look to remove the branch both locally and remotely.
 
@@ -205,23 +204,7 @@ git branch -a
 * master
   remotes/origin/HEAD -&amp;gt; origin/master
   remotes/origin/master
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;=======&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;64b6c80a97e2116e452e3ddf6d553af1697ac1de&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-
+&lt;/code&gt;&lt;/pre&gt;
         
       </description>
     </item>
