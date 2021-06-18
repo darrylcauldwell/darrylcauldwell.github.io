@@ -131,3 +131,30 @@ git branch -a
   remotes/origin/master
 ```
 
+So I make some changes, commit then and try and push using same command as earlier.
+
+```
+git commit -m 'these are changes I made'
+
+[blog-branch 7ec976e] these are changes I made
+ 1 file changed, 25 insertions(+), 15 deletions(-)
+
+git push origin master
+Everything up-to-date
+```
+
+Interesting we can see a file was changed but when we try and push it suggests nothing to push. 
+
+```
+git push
+
+Enumerating objects: 14, done.
+Counting objects: 100% (14/14), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (10/10), 2.41 KiB | 2.41 MiB/s, done.
+Total 10 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (7/7), completed with 3 local objects.
+To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+   bf9a51c..7ec976e  blog-branch -> blog-branch
+```
