@@ -5,7 +5,187 @@
     <link>https://darrylcauldwell.github.io/post/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 22 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GitHub Pages Git Branching Workflow</title>
+      <link>https://darrylcauldwell.github.io/post/git-branch/</link>
+      <pubDate>Fri, 18 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/git-branch/</guid>
+      <description>
+        
+          &lt;p&gt;Five years ago I moved my &lt;a href=&#34;https://darrylcauldwell.github.io/post/jekyll&#34;&gt;personal blog to GitHub Pages&lt;/a&gt;. Up to now, my workflow has been to clone to local repository make changes directly to master branch, build static website files, test locally and then push all changes upstream for GitHub pages to build. This simple workflow has worked perfectly however recently I find myself working across multiple devices and on multiple posts simultaneously.&lt;/p&gt;
+&lt;p&gt;As such I have moved to use GitHub branching in my workflow to assist meet the demands of my evolved working situation.&lt;/p&gt;
+&lt;h2 id=&#34;create-new-branch-for-post&#34;&gt;Create new branch for post&lt;/h2&gt;
+&lt;p&gt;First think to do is clone the existing repository from GitHub.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+cd darrylcauldwell.github.io
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If I check there is single branch named &amp;lsquo;master&amp;rsquo;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch
+
+* master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;First step is to create new branch to work in and switch to it.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout -b blog-branch
+
+git branch
+
+master
+* blog-branch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Add files,  make changes within branch etc, .&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;On branch blog-branch
+Your branch is up to date with &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;origin/blog-branch&amp;#39;&lt;/span&gt;.
+
+Untracked files:
+  &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git add &amp;lt;file&amp;gt;...&amp;#34;&lt;/span&gt; to include in what will be committed&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+        content/post/git-branch.md
+
+no changes added to commit &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git add&amp;#34;&lt;/span&gt; and/or &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git commit -a&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once we&amp;rsquo;re happy with changes to the branch approve the changes and add the files to the index.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add content/post/git-branch.md
+
+git status                        
+On branch blog-branch
+Your branch is up to date with &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;origin/blog-branch&amp;#39;&lt;/span&gt;.
+
+Changes to be committed:
+  &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git restore --staged &amp;lt;file&amp;gt;...&amp;#34;&lt;/span&gt; to unstage&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+        modified:   content/post/git-branch.md
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then commit the changes to the local repository.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;these are changes I made&amp;#39;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;blog-branch 8b566a8&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; these are changes I made
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; file changed, &lt;span style=&#34;color:#ae81ff&#34;&gt;51&lt;/span&gt; insertions&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;+&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; deletion&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;-&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once happy push the branch to remote upstream repository on GitHub.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push origin blog-branch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;make-changes-to-existing-branch&#34;&gt;Make changes to existing branch&lt;/h2&gt;
+&lt;p&gt;The workflow is slightly different if I have created a branch and want to return to work on it.  To simulate this if I delete the folder with local repository and create new clone from GitHub again.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+
+Cloning into &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;darrylcauldwell.github.io&amp;#39;&lt;/span&gt;...
+remote: Enumerating objects: 7361, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+remote: Counting objects: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;5996/5996&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+remote: Compressing objects: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;1761/1761&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+remote: Total &lt;span style=&#34;color:#ae81ff&#34;&gt;7361&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;delta 2975&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, reused &lt;span style=&#34;color:#ae81ff&#34;&gt;5678&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;delta 2660&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, pack-reused &lt;span style=&#34;color:#ae81ff&#34;&gt;1365&lt;/span&gt;
+Receiving objects: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;7361/7361&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, 66.43 MiB | 5.85 MiB/s, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+Resolving deltas: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;3667/3667&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When creating new clone only the &amp;lsquo;master&amp;rsquo; branch, we can see the branch on remote/origin.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch -a
+
+* master
+  remotes/origin/HEAD -&amp;gt; origin/master
+  remotes/origin/blog-branch
+  remotes/origin/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When look to switch local respository to branch with identical name the client is intelligent enough to link the local and remote and mark to track.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git checkout blog-branch
+
+Branch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;blog-branch&amp;#39;&lt;/span&gt; set up to track remote branch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;blog-branch&amp;#39;&lt;/span&gt; from &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;origin&amp;#39;&lt;/span&gt;.
+Switched to a new branch &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;blog-branch&amp;#39;&lt;/span&gt;
+
+git branch -a           
+
+* blog-branch
+  master
+  remotes/origin/HEAD -&amp;gt; origin/master
+  remotes/origin/blog-branch
+  remotes/origin/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From here we can continue making changes, commit the files to local repository and then try and push them to remote as before.&lt;/p&gt;
+&lt;h2 id=&#34;in-branch-blog-build-and-testing&#34;&gt;In-branch blog build and testing&lt;/h2&gt;
+&lt;p&gt;So far I have been updating blog content in markdown files. The Hugo engine takes these markdown files and creates all of the pages required for static website. Prior to posting it is good to test the post formatting looks good, the image links work etc. From within the branch we can run Hugo and use browser to test.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo server
+
+Start building sites … 
+
+                   | EN   
+-------------------+------
+  Pages            | &lt;span style=&#34;color:#ae81ff&#34;&gt;242&lt;/span&gt;  
+  Paginator pages  |  &lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;  
+  Non-page files   |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+  Static files     | &lt;span style=&#34;color:#ae81ff&#34;&gt;274&lt;/span&gt;  
+  Processed images |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+  Aliases          |  &lt;span style=&#34;color:#ae81ff&#34;&gt;86&lt;/span&gt;  
+  Sitemaps         |   &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;  
+  Cleaned          |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+
+Built in &lt;span style=&#34;color:#ae81ff&#34;&gt;205&lt;/span&gt; ms
+Watching &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; changes in /Users/darrylcauldwell/Development/darrylcauldwell.github.io/&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;archetypes,content,layouts,static,themes&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+Watching &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; config changes in /Users/darrylcauldwell/Development/darrylcauldwell.github.io/config/_default, /Users/darrylcauldwell/Development/darrylcauldwell.github.io/config/_default/menus
+Environment: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;development&amp;#34;&lt;/span&gt;
+Serving pages from memory
+Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
+Web Server is available at http://localhost:1313/ &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;bind address 127.0.0.1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+Press Ctrl+C to stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In my configuration GitHub pages is configured to use the /docs folder.  When we&amp;rsquo;ve tested and all looks good can then look to rebuild the static website files into that folder.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;hugo --destination ~/Development/darrylcauldwell.github.io/docs
+
+Start building sites … 
+
+                   | EN   
+-------------------+------
+  Pages            | &lt;span style=&#34;color:#ae81ff&#34;&gt;242&lt;/span&gt;  
+  Paginator pages  |  &lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;  
+  Non-page files   |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+  Static files     | &lt;span style=&#34;color:#ae81ff&#34;&gt;274&lt;/span&gt;  
+  Processed images |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+  Aliases          |  &lt;span style=&#34;color:#ae81ff&#34;&gt;86&lt;/span&gt;  
+  Sitemaps         |   &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;  
+  Cleaned          |   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;  
+
+Total in &lt;span style=&#34;color:#ae81ff&#34;&gt;263&lt;/span&gt; ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we can see from the output adding a single post actually rebuilds many pages. It isn&amp;rsquo;t really practical to add each to repository manually but we can use wildcard and add all.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git add .
+git commit -m &#39;new post on github branching&#39;
+
+[blog-branch e202461] new post on github branching
+ 189 files changed, 4147 insertions(+), 2184 deletions(-)
+ create mode 100644 docs/post/git-branch/index.html
+
+git push origin blog-branch
+
+Enumerating objects: 646, done.
+Counting objects: 100% (646/646), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (277/277), done.
+Writing objects: 100% (382/382), 202.55 KiB | 4.71 MiB/s, done.
+Total 382 (delta 192), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (192/192), completed with 79 local objects.
+To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+   da04b9c..e202461  blog-branch -&amp;gt; blog-branch
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So at this stage we&amp;rsquo;ve got out local and remote branch in sync.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git branch -a -v  
+
+* blog-branch                e202461 new post on github branching
+  master                     fb51479 heading formats
+  remotes/origin/HEAD        -&amp;gt; origin/master
+  remotes/origin/blog-branch e202461 new post on github branching
+  remotes/origin/master      fb51479 heading formats
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;merge-blog-post-branch-to-master&#34;&gt;Merge blog post branch to master&lt;/h2&gt;
+&lt;p&gt;Once we&amp;rsquo;re happy that the new post branch is good we can look to merge that into &amp;lsquo;master&amp;rsquo; and be processed by GitHub Pages.&lt;/p&gt;
+&lt;p&gt;As this is single user repository I could just use &amp;lsquo;git merge&amp;rsquo; to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I&amp;rsquo;d typically made pull requests via the web UI. I recently found the new git cli &amp;lsquo;gh&amp;rsquo; has capability to create pull-request.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gh pr create --title &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;New post about github branching&amp;#34;&lt;/span&gt; --body &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;New post about github branching with github pages&amp;#34;&lt;/span&gt; -H blog-branch
+
+Creating pull request &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
+https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As pull requests require independant review I cannot approve my own pull request but I can add some comments.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-branch-pr.png&#34; alt=&#34;GitHub Pull Request Review&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I can then look to merge.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-branch-pr.png&#34; alt=&#34;GitHub Pull Request Merge&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When we&amp;rsquo;re merged into &amp;lsquo;master&amp;rsquo; branch can look to remove the branch both locally and remotely.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch -d blog-branch
+git push origin -d blog-branch
+
+To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+ - &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;deleted&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;         blog-branch
+
+git branch -a
+
+* master
+  remotes/origin/HEAD -&amp;gt; origin/master
+  remotes/origin/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Raspberry Pi Kubernetes Cluster</title>
       <link>https://darrylcauldwell.github.io/post/homelab-pi-microk8s/</link>
