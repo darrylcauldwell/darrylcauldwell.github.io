@@ -14,6 +14,8 @@ Five years ago I moved my [personal blog to GitHub Pages](/posts/jekyll). Up to 
 
 As such I have moved to use GitHub branching in my workflow to assist meet the demands of my evolved working situation.
 
+## Create new branch for post
+
 First think to do is clone the existing repository from GitHub.
 
 ```bash
@@ -79,10 +81,12 @@ git commit -m 'these are changes I made'
 Once happy push the branch to remote upstream repository on GitHub.
 
 ```
-git push origin master
+git push origin blog-branch
 ```
 
-I can continue to work on this local repository branch and keep pushing.  However if I delete the local repository or switch devices I might need to create clone from GitHub again.
+## Make changes to existing branch
+
+The workflow is slightly different if I have created a branch and want to return to work on it.  To simulate this if I delete the folder with local repository and create new clone from GitHub again.
 
 ```
 git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
@@ -96,14 +100,7 @@ Receiving objects: 100% (7361/7361), 66.43 MiB | 5.85 MiB/s, done.
 Resolving deltas: 100% (3667/3667), done.
 ```
 
-However when I check branches of local repository I see only 'master'.
-
-```
-git branch  
-* master
-```
-
-If I run same command to view all I can see the remote branch.
+When creating new clone only the 'master' branch, we can see the branch on remote/origin.
 
 ```
 git branch -a
@@ -114,7 +111,7 @@ git branch -a
   remotes/origin/master
 ```
 
-If I try to switch to the branch the client is intelligent enough to link the local and remote and mark to track.
+When look to switch local respository to branch with identical name the client is intelligent enough to link the local and remote and mark to track.
 
 ```
 git checkout blog-branch
@@ -131,7 +128,7 @@ git branch -a
   remotes/origin/master
 ```
 
-So I make some changes, commit then and try and push using same command as earlier.
+The next non-intuitive aspect is when I change a file and commit this to local repository and then try and push using same command as earlier.  We can see from commit output that the file was changed but the push does 
 
 ```
 git commit -m 'these are changes I made'
@@ -139,11 +136,11 @@ git commit -m 'these are changes I made'
 [blog-branch 7ec976e] these are changes I made
  1 file changed, 25 insertions(+), 15 deletions(-)
 
-git push origin master
+git push origin blog-branch
 Everything up-to-date
 ```
 
-Interesting we can see a file was changed but when we try and push it suggests nothing to push. 
+Interesting we can see a file was changed but when we try and push it suggests nothing to push. As relationship is already in place instead we just need to push.
 
 ```
 git push
