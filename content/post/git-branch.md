@@ -14,56 +14,66 @@ Five years ago I moved my [personal blog to GitHub Pages](/posts/jekyll). Up to 
 
 As such I have moved to use GitHub branching in my workflow to assist meet the demands of my evolved working situation.
 
-## Clone GitHub repository and start local instance
+First think to do is clone the existing repository from GitHub.
 
 ```bash
 git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
 cd darrylcauldwell.github.io
-hugo server
 ```
 
-Open browser to locally running copy of site typically http://localhost:1313/
-
-## Create branch for new post OR edit of existing
-
-List all current branches
+If I check there is single branch named 'master'.
 
 ```git
 git branch
 
 * master
 ```
-Create new branch to work in and switch to it
+
+First step is to create new branch to work in and switch to it.
 
 ```
 git checkout -b blog-branch
-```
 
-List all current branches and note active branch
-
-```
 git branch
 
 master
 * blog-branch
 ```
 
-Add files,  make changes within branch,  it could be easy to lose track of what changes you've made so we can view changes.
+Add files,  make changes within branch etc, .
 
 ```
-git status
+On branch blog-branch
+Your branch is up to date with 'origin/blog-branch'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        content/post/git-branch.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
 Once we're happy with changes to the branch approve the changes and add the files to the index.
 
 ```
-git add .
+git add content/post/git-branch.md
+
+git status                        
+On branch blog-branch
+Your branch is up to date with 'origin/blog-branch'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   content/post/git-branch.md
 ``` 
 
 Then commit the changes to the local repository.
 
 ```
 git commit -m 'these are changes I made'
+
+[blog-branch 8b566a8] these are changes I made
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 ```
 
 Once happy push the branch to remote upstream repository on GitHub.
