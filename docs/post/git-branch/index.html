@@ -288,50 +288,27 @@ To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
 </code></pre><h2 id="merge-blog-post-branch-to-master">Merge blog post branch to master</h2>
 <p>Once we&rsquo;re happy that the new post branch is good we can look to merge that into &lsquo;master&rsquo; and be processed by GitHub Pages.</p>
 <p>As this is single user repository I could just use &lsquo;git merge&rsquo; to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I&rsquo;d typically made pull requests via the web UI. I recently found the new git cli &lsquo;gh&rsquo; has capability to create pull-request.</p>
-<p>&laquo;&laquo;&laquo;&lt; HEAD</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">=======</span>
-</code></pre></div><blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>64b6c80a97e2116e452e3ddf6d553af1697ac1de
-gh pr create &ndash;title &ldquo;New post about github branching&rdquo; &ndash;body &ldquo;New post about github branching with github pages&rdquo; -H blog-branch</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-<p>Creating pull request for blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
-<a href="https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2">https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2</a></p>
-<pre><code>
-As pull requests require independant review I cannot approve my own pull request but I can add some comments.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gh pr create --title <span style="color:#e6db74">&#34;New post about github branching&#34;</span> --body <span style="color:#e6db74">&#34;New post about github branching with github pages&#34;</span> -H blog-branch
 
-![GitHub Pull Request Review](/images/git-branch-pr.png)
-
-I can then look to merge.
-
-![GitHub Pull Request Merge](/images/git-branch-pr.png)
-
-When we're merged into 'master' branch can look to remove the branch both locally and remotely.
-
-```bash
-git branch -d blog-branch
+Creating pull request <span style="color:#66d9ef">for</span> blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
+https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2
+</code></pre></div><p>As pull requests require independant review I cannot approve my own pull request but I can add some comments.</p>
+<p><img src="/images/git-branch-pr.png" alt="GitHub Pull Request Review"></p>
+<p>I can then look to merge.</p>
+<p><img src="/images/git-branch-pr.png" alt="GitHub Pull Request Merge"></p>
+<p>When we&rsquo;re merged into &lsquo;master&rsquo; branch can look to remove the branch both locally and remotely.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch -d blog-branch
 git push origin -d blog-branch
 
 To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
- - [deleted]         blog-branch
+ - <span style="color:#f92672">[</span>deleted<span style="color:#f92672">]</span>         blog-branch
 
 git branch -a
 
 * master
   remotes/origin/HEAD -&gt; origin/master
   remotes/origin/master
-</code></pre>
+</code></pre></div>
 
   </article>
 <aside class="sidebar">

@@ -221,11 +221,7 @@ Once we're happy that the new post branch is good we can look to merge that into
 
 As this is single user repository I could just use 'git merge' to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I'd typically made pull requests via the web UI. I recently found the new git cli 'gh' has capability to create pull-request.
 
-<<<<<<< HEAD
 ```bash
-=======
-```
->>>>>>> 64b6c80a97e2116e452e3ddf6d553af1697ac1de
 gh pr create --title "New post about github branching" --body "New post about github branching with github pages" -H blog-branch
 
 Creating pull request for blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
