@@ -259,33 +259,33 @@ Start building sites …
 
 Total in <span style="color:#ae81ff">263</span> ms
 </code></pre></div><p>As we can see from the output adding a single post actually rebuilds many pages. It isn&rsquo;t really practical to add each to repository manually but we can use wildcard and add all.</p>
-<pre><code>git add .
-git commit -m 'new post on github branching'
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git add .
+git commit -m <span style="color:#e6db74">&#39;new post on github branching&#39;</span>
 
-[blog-branch e202461] new post on github branching
- 189 files changed, 4147 insertions(+), 2184 deletions(-)
- create mode 100644 docs/post/git-branch/index.html
+<span style="color:#f92672">[</span>blog-branch e202461<span style="color:#f92672">]</span> new post on github branching
+ <span style="color:#ae81ff">189</span> files changed, <span style="color:#ae81ff">4147</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">2184</span> deletions<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
+ create mode <span style="color:#ae81ff">100644</span> docs/post/git-branch/index.html
 
 git push origin blog-branch
 
-Enumerating objects: 646, done.
-Counting objects: 100% (646/646), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (277/277), done.
-Writing objects: 100% (382/382), 202.55 KiB | 4.71 MiB/s, done.
-Total 382 (delta 192), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (192/192), completed with 79 local objects.
+Enumerating objects: 646, <span style="color:#66d9ef">done</span>.
+Counting objects: 100% <span style="color:#f92672">(</span>646/646<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+Delta compression using up to <span style="color:#ae81ff">8</span> threads
+Compressing objects: 100% <span style="color:#f92672">(</span>277/277<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+Writing objects: 100% <span style="color:#f92672">(</span>382/382<span style="color:#f92672">)</span>, 202.55 KiB | 4.71 MiB/s, <span style="color:#66d9ef">done</span>.
+Total <span style="color:#ae81ff">382</span> <span style="color:#f92672">(</span>delta 192<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>delta 0<span style="color:#f92672">)</span>, pack-reused <span style="color:#ae81ff">0</span>
+remote: Resolving deltas: 100% <span style="color:#f92672">(</span>192/192<span style="color:#f92672">)</span>, completed with <span style="color:#ae81ff">79</span> local objects.
 To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
    da04b9c..e202461  blog-branch -&gt; blog-branch
-</code></pre><p>So at this stage we&rsquo;ve got out local and remote branch in sync.</p>
-<pre><code>git branch -a -v  
+</code></pre></div><p>So at this stage we&rsquo;ve got out local and remote branch in sync.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch -a -v  
 
 * blog-branch                e202461 new post on github branching
   master                     fb51479 heading formats
   remotes/origin/HEAD        -&gt; origin/master
   remotes/origin/blog-branch e202461 new post on github branching
   remotes/origin/master      fb51479 heading formats
-</code></pre><h2 id="merge-blog-post-branch-to-master">Merge blog post branch to master</h2>
+</code></pre></div><h2 id="merge-blog-post-branch-to-master">Merge blog post branch to master</h2>
 <p>Once we&rsquo;re happy that the new post branch is good we can look to merge that into &lsquo;master&rsquo; and be processed by GitHub Pages.</p>
 <p>As this is single user repository I could just use &lsquo;git merge&rsquo; to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I&rsquo;d typically made pull requests via the web UI. I recently found the new git cli &lsquo;gh&rsquo; has capability to create pull-request.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gh pr create --title <span style="color:#e6db74">&#34;New post about github branching&#34;</span> --body <span style="color:#e6db74">&#34;New post about github branching with github pages&#34;</span> -H blog-branch

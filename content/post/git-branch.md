@@ -183,7 +183,7 @@ Total in 263 ms
 
 As we can see from the output adding a single post actually rebuilds many pages. It isn't really practical to add each to repository manually but we can use wildcard and add all.
 
-```
+```bash
 git add .
 git commit -m 'new post on github branching'
 
@@ -206,7 +206,7 @@ To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
 
 So at this stage we've got out local and remote branch in sync.
 
-```
+```bash
 git branch -a -v  
 
 * blog-branch                e202461 new post on github branching

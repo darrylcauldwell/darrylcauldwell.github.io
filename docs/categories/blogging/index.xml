@@ -132,33 +132,33 @@ Start building sites …
 
 Total in &lt;span style=&#34;color:#ae81ff&#34;&gt;263&lt;/span&gt; ms
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we can see from the output adding a single post actually rebuilds many pages. It isn&amp;rsquo;t really practical to add each to repository manually but we can use wildcard and add all.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git add .
-git commit -m &#39;new post on github branching&#39;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git add .
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;new post on github branching&amp;#39;&lt;/span&gt;
 
-[blog-branch e202461] new post on github branching
- 189 files changed, 4147 insertions(+), 2184 deletions(-)
- create mode 100644 docs/post/git-branch/index.html
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;blog-branch e202461&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; new post on github branching
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;189&lt;/span&gt; files changed, &lt;span style=&#34;color:#ae81ff&#34;&gt;4147&lt;/span&gt; insertions&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;+&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2184&lt;/span&gt; deletions&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;-&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+ create mode &lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; docs/post/git-branch/index.html
 
 git push origin blog-branch
 
-Enumerating objects: 646, done.
-Counting objects: 100% (646/646), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (277/277), done.
-Writing objects: 100% (382/382), 202.55 KiB | 4.71 MiB/s, done.
-Total 382 (delta 192), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (192/192), completed with 79 local objects.
+Enumerating objects: 646, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+Counting objects: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;646/646&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+Delta compression using up to &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; threads
+Compressing objects: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;277/277&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+Writing objects: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;382/382&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, 202.55 KiB | 4.71 MiB/s, &lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;.
+Total &lt;span style=&#34;color:#ae81ff&#34;&gt;382&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;delta 192&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, reused &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;delta 0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, pack-reused &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+remote: Resolving deltas: 100% &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;192/192&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;, completed with &lt;span style=&#34;color:#ae81ff&#34;&gt;79&lt;/span&gt; local objects.
 To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
    da04b9c..e202461  blog-branch -&amp;gt; blog-branch
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So at this stage we&amp;rsquo;ve got out local and remote branch in sync.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git branch -a -v  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So at this stage we&amp;rsquo;ve got out local and remote branch in sync.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch -a -v  
 
 * blog-branch                e202461 new post on github branching
   master                     fb51479 heading formats
   remotes/origin/HEAD        -&amp;gt; origin/master
   remotes/origin/blog-branch e202461 new post on github branching
   remotes/origin/master      fb51479 heading formats
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;merge-blog-post-branch-to-master&#34;&gt;Merge blog post branch to master&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;merge-blog-post-branch-to-master&#34;&gt;Merge blog post branch to master&lt;/h2&gt;
 &lt;p&gt;Once we&amp;rsquo;re happy that the new post branch is good we can look to merge that into &amp;lsquo;master&amp;rsquo; and be processed by GitHub Pages.&lt;/p&gt;
 &lt;p&gt;As this is single user repository I could just use &amp;lsquo;git merge&amp;rsquo; to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I&amp;rsquo;d typically made pull requests via the web UI. I recently found the new git cli &amp;lsquo;gh&amp;rsquo; has capability to create pull-request.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gh pr create --title &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;New post about github branching&amp;#34;&lt;/span&gt; --body &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;New post about github branching with github pages&amp;#34;&lt;/span&gt; -H blog-branch
