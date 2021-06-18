@@ -3,18 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://darrylcauldwell.github.io/</loc>
-    <lastmod>2021-05-22T00:00:00+00:00</lastmod>
+    <lastmod>2021-06-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/categories/blogging/</loc>
+    <lastmod>2021-06-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/</loc>
-    <lastmod>2021-05-22T00:00:00+00:00</lastmod>
+    <lastmod>2021-06-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/tags/github/</loc>
+    <lastmod>2021-06-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/post/git-branch/</loc>
+    <lastmod>2021-06-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/post/</loc>
+    <lastmod>2021-06-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/tags/</loc>
+    <lastmod>2021-06-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/homelab/</loc>
     <lastmod>2021-05-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/kubernetes/</loc>
-    <lastmod>2021-05-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://darrylcauldwell.github.io/post/</loc>
     <lastmod>2021-05-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/raspberry/</loc>
@@ -24,9 +36,6 @@
     <lastmod>2021-05-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/post/homelab-pi-microk8s/</loc>
-    <lastmod>2021-05-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://darrylcauldwell.github.io/tags/</loc>
     <lastmod>2021-05-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/handy-hacks/</loc>
@@ -331,9 +340,6 @@
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/vrli/</loc>
     <lastmod>2016-07-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://darrylcauldwell.github.io/categories/blogging/</loc>
-    <lastmod>2016-06-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/jekyll/</loc>
     <lastmod>2016-06-29T00:00:00+00:00</lastmod>
