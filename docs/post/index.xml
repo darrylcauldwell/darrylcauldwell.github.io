@@ -161,27 +161,67 @@ To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;merge-blog-post-branch-to-master&#34;&gt;Merge blog post branch to master&lt;/h2&gt;
 &lt;p&gt;Once we&amp;rsquo;re happy that the new post branch is good we can look to merge that into &amp;lsquo;master&amp;rsquo; and be processed by GitHub Pages.&lt;/p&gt;
 &lt;p&gt;As this is single user repository I could just use &amp;lsquo;git merge&amp;rsquo; to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I&amp;rsquo;d typically made pull requests via the web UI. I recently found the new git cli &amp;lsquo;gh&amp;rsquo; has capability to create pull-request.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;gh pr create --title &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;New post about github branching&amp;#34;&lt;/span&gt; --body &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;New post about github branching with github pages&amp;#34;&lt;/span&gt; -H blog-branch
+&lt;p&gt;&amp;laquo;&amp;laquo;&amp;laquo;&amp;lt; HEAD&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=======&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;64b6c80a97e2116e452e3ddf6d553af1697ac1de
+gh pr create &amp;ndash;title &amp;ldquo;New post about github branching&amp;rdquo; &amp;ndash;body &amp;ldquo;New post about github branching with github pages&amp;rdquo; -H blog-branch&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Creating pull request for blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
+&lt;a href=&#34;https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2&#34;&gt;https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+As pull requests require independant review I cannot approve my own pull request but I can add some comments.
 
-Creating pull request &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
-https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As pull requests require independant review I cannot approve my own pull request but I can add some comments.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-branch-pr.png&#34; alt=&#34;GitHub Pull Request Review&#34;&gt;&lt;/p&gt;
-&lt;p&gt;I can then look to merge.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-branch-pr.png&#34; alt=&#34;GitHub Pull Request Merge&#34;&gt;&lt;/p&gt;
-&lt;p&gt;When we&amp;rsquo;re merged into &amp;lsquo;master&amp;rsquo; branch can look to remove the branch both locally and remotely.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch -d blog-branch
+![GitHub Pull Request Review](/images/git-branch-pr.png)
+
+I can then look to merge.
+
+![GitHub Pull Request Merge](/images/git-branch-pr.png)
+&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
+
+When we&#39;re merged into &#39;master&#39; branch can look to remove the branch both locally and remotely.
+
+```bash
+git branch -d blog-branch
 git push origin -d blog-branch
 
 To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
- - &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;deleted&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;         blog-branch
+ - [deleted]         blog-branch
 
 git branch -a
 
 * master
   remotes/origin/HEAD -&amp;gt; origin/master
   remotes/origin/master
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;=======&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;64b6c80a97e2116e452e3ddf6d553af1697ac1de&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+
         
       </description>
     </item>
