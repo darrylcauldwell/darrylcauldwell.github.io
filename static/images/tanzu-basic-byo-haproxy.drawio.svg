@@ -1,0 +1,208 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="811px" height="281px" viewBox="-0.5 -0.5 811 281" content="&lt;mxfile&gt;&lt;diagram id=&quot;PRHwYasOyJXxi3cCga1S&quot; name=&quot;Page-1&quot;&gt;1VnbctsgEP0aP1ojoYulR+feadLxjDtt80gsYmuKhYqQLefrCxbohpy4iRWrnmQsFljgnLMrwCP7cp3fUpisHkiI8AiYYT6yr0YAWCbw+Zew7AqLF4DCsKRRKBtVhnn0glRPac2iEKWNhowQzKKkaVyQOEYL1rBBSsm22eyZ4OaoCVwizTBfQKxbf0YhWxVWH0wq+x2Klis1suUFRc0aqsZyJekKhmRbM9nXI/uSEsKKp3V+ibAAT+FS9Ls5UFtOjKKYHdNB4r6BOJNru5vOKMl3cnpsp9ZMSRaHSHQzR/bFdhUxNE/gQtRuOcvctmJrzEsWf9SnIWe2QZShvGaS07pFZI0Y5cOashaYEiKpEVtBtq0QtzxpW9XQdqQNSpKXpesKB/4goeiGxdZgeYAxZ3Ut1gPMMf+3AmBYnm9YpsEH5H83wJFVP+6n30QL1/wYigKsiKtuiqNlzG3rKAyFoz7gdUwd3tJ2angnGrzzLEF0E6WEirDFWcqQeIqJiPNzS9E5QoqgL6x8DSsNDxSHU5HVeCkmMWquny+b7n4JrAxXFR/rdVe5BLIo7VQpj1jRbeLK4mOtquolCqrTQbBTktEFagQXg3SJWEMQKGzkXZ2QGuBuB97KRhGGLNo0s3UXCXKEGYn2ca349g7EhnJRrEb2qmfXliM3aDoCXstRgYHmaK+JctlHycRSqj6fTkBdJoZp+q9KRRRmiEZ8jTzUPyYfMCj52O10EbxTPo4XGEH903Q76U9M+rbgJ6G/MYFh++13+OWn6284Lz+/FZeOntDLJH/qhG45Z4rUg8ANJG6cIDAmVveb9p9DR/dVkn76eFGzrFH6HcYvGTd9zZ4QjXmOSwe4sWnHQbmf/ow4AOd6Yw0+DmyuXfNQ2tewPzokXnfb3uOcMDrOlfCqrYnV2pp4p9uaDEQ0PEwN1zerj3OaRPqGXzDhovL6Uo6t59XyesJsnMi/zEbAwxzSiyeeXr0l21NWWJ7JvkmlNu9PRlTFON3fLk3FlgUkeVWpvNTO+ZbvKp985oVbNVRbzxhHSYr6zeKKW1fP2pbfIbX26eNdNyN6MFeU1DaJn0CIAQZJB5h8Jh36VUqNhGq/kRCC64S8Db7fhX2bQXUzq9pZr9Fl22PHGxRjstaz3z4O9Mago5+1DlyGDYBDngMDewzMvmjUOOtg9mgaO2+Me6NRvzK+50H4BDGMF0Ohz3CCsQf+B+66TiKn4o4Xqx9Yil1J9TOVff0X&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <rect x="200" y="160" width="160" height="40" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 180px; margin-left: 201px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                HAProxy
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="280" y="184" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    HAProxy
+                </text>
+            </switch>
+        </g>
+        <rect x="200" y="240" width="400" height="40" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 398px; height: 1px; padding-top: 260px; margin-left: 201px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                Management - 192.168.10.0 /24 - VLAN 150
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="400" y="264" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    Management - 192.168.10.0 /24 - VLAN 150
+                </text>
+            </switch>
+        </g>
+        <rect x="400" y="160" width="200" height="40" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 198px; height: 1px; padding-top: 180px; margin-left: 401px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                Supervisor cluster nodes
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="500" y="184" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    Supervisor cluster nodes
+                </text>
+            </switch>
+        </g>
+        <path d="M 500 240 L 500 200" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 280 240.32 L 280 200" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/>
+        <rect x="280" y="80" width="320" height="40" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 318px; height: 1px; padding-top: 100px; margin-left: 281px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                Workload - 192.168.1.0 /24 - VLAN 152
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="440" y="104" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    Workload - 192.168.1.0 /24 - VLAN 152
+                </text>
+            </switch>
+        </g>
+        <path d="M 499.71 160 L 499.71 120" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/>
+        <rect x="280" y="0" width="320" height="40" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 318px; height: 1px; padding-top: 20px; margin-left: 281px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                Tanzu Kubernetes cluster nodes
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="440" y="24" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    Tanzu Kubernetes cluster nodes
+                </text>
+            </switch>
+        </g>
+        <path d="M 439.71 80 L 439.71 40" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 320.58 160 L 320.58 119.76" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/>
+        <ellipse cx="90" cy="220" rx="90" ry="30" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 178px; height: 1px; padding-top: 220px; margin-left: 1px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                HAProxy Management IP
+                                <br/>
+                                <font style="font-size: 12px">
+                                    192.168.10.185
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="90" y="224" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    HAProxy Management IP...
+                </text>
+            </switch>
+        </g>
+        <ellipse cx="90" cy="140" rx="90" ry="30" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 178px; height: 1px; padding-top: 140px; margin-left: 1px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                HAProxy Workload IP
+                                <br/>
+                                <font style="font-size: 12px">
+                                    192.168.1.25
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="90" y="144" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    HAProxy Workload IP...
+                </text>
+            </switch>
+        </g>
+        <ellipse cx="720" cy="110" rx="90" ry="30" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 178px; height: 1px; padding-top: 110px; margin-left: 631px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                Workload cluster pool
+                                <br style="font-size: 8px"/>
+                                <font size="1">
+                                    192.168.1.33-46
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="720" y="114" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    Workload cluster pool...
+                </text>
+            </switch>
+        </g>
+        <ellipse cx="720" cy="190" rx="90" ry="30" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 178px; height: 1px; padding-top: 190px; margin-left: 631px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                Supervisor cluster pool
+                                <br style="font-size: 8px"/>
+                                <font size="1">
+                                    192.168.10.193-206
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="720" y="194" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    Supervisor cluster pool...
+                </text>
+            </switch>
+        </g>
+        <ellipse cx="720" cy="30" rx="90" ry="30" fill="#ffffff" stroke="#000000" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 178px; height: 1px; padding-top: 30px; margin-left: 631px;">
+                        <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                                Loadbalancer pool
+                                <br style="font-size: 8px"/>
+                                <font size="1">
+                                    192.168.1.49-62
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="720" y="34" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    Loadbalancer pool...
+                </text>
+            </switch>
+        </g>
+    </g>
+    <switch>
+        <g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"/>
+        <a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems" target="_blank">
+            <text text-anchor="middle" font-size="10px" x="50%" y="100%">
+                Viewer does not support full SVG 1.1
+            </text>
+        </a>
+    </switch>
+</svg>
