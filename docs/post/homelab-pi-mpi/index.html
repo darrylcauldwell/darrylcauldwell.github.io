@@ -4,7 +4,7 @@
   <head>
 <title>Pi Supercomputer | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.84.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -210,12 +210,12 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
     slice <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
     process <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 
-    <span style="color:#66d9ef">print</span> (size)
+    print (size)
 
     <span style="color:#75715e"># Send the first batch of processes to the nodes.</span>
     <span style="color:#66d9ef">while</span> process <span style="color:#f92672">&lt;</span> size <span style="color:#f92672">and</span> slice <span style="color:#f92672">&lt;</span> total_slices:
         comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-        <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
+        print (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
         slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
         process <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 
@@ -224,23 +224,23 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
     <span style="color:#66d9ef">while</span> received_processes <span style="color:#f92672">&lt;</span> total_slices:
         pi <span style="color:#f92672">+=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
         process <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
-        <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Recieved data from process&#34;</span>, process)
+        print (<span style="color:#e6db74">&#34;Recieved data from process&#34;</span>, process)
         received_processes <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 
         <span style="color:#66d9ef">if</span> slice <span style="color:#f92672">&lt;</span> total_slices:
             comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-            <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
+            print (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
             slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 
     <span style="color:#75715e"># Send the shutdown signal</span>
     <span style="color:#66d9ef">for</span> process <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,size):
         comm<span style="color:#f92672">.</span>send(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
 
-    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Pi is&#34;</span>, <span style="color:#ae81ff">4.0</span> <span style="color:#f92672">*</span> pi)
+    print (<span style="color:#e6db74">&#34;Pi is&#34;</span>, <span style="color:#ae81ff">4.0</span> <span style="color:#f92672">*</span> pi)
 
 <span style="color:#75715e"># These are the worker nodes, where rank &gt; 0. They do the real work</span>
 <span style="color:#66d9ef">else</span>:
-    <span style="color:#66d9ef">while</span> True:
+    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
         start <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
         <span style="color:#66d9ef">if</span> start <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">break</span>
 

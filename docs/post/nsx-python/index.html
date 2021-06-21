@@ -4,7 +4,7 @@
   <head>
 <title>Controlling vSphere &amp; NSX-V With Python | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.84.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -167,14 +167,14 @@ content <span style="color:#f92672">=</span> vcenter<span style="color:#f92672">
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">content.about.fullName
 <span style="color:#e6db74">&#39;VMware vCenter Server 6.5.0 build-5178943&#39;</span>
 </code></pre></div><p>We can also explore the Object Model which is well descrived here in the <a href="http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html">vSphere SDK API Docs</a> and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>VirtualMachine],True)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>VirtualMachine],<span style="color:#66d9ef">True</span>)
 vmList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
 objView<span style="color:#f92672">.</span>Destroy()
 <span style="color:#66d9ef">for</span>  vm <span style="color:#f92672">in</span> vmList:
     vm<span style="color:#f92672">.</span>summary<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>name
 </code></pre></div><h1 id="basic-put-of-configuration-information">Basic put of configuration information</h1>
 <p>As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>HostSystem],True)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>HostSystem],<span style="color:#66d9ef">True</span>)
 hostList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
 objView<span style="color:#f92672">.</span>Destroy()
 <span style="color:#66d9ef">for</span> host <span style="color:#f92672">in</span> hostList:
