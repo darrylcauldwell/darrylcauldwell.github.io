@@ -45,6 +45,8 @@ master
 Add files,  make changes within branch etc, .
 
 ```bash
+git status
+
 On branch blog-branch
 Your branch is up to date with 'origin/blog-branch'.
 
