@@ -196,20 +196,9 @@ git branch -a
       <guid>https://darrylcauldwell.github.io/post/homelab-pi-microk8s/</guid>
       <description>
         
-          &lt;p&gt;Here I am looking at setting up my Raspberry Pi cluster to host the various Docker containers I run at home. I am using &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi/&#34;&gt;four Raspberry Pi 4B&lt;/a&gt; which are all build with Ubuntu 21.04 and configured as per &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi-ubuntu/&#34;&gt;Ubuntu Base configuration&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;There are various ways to setup a Kubernetes cluster including:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Manually&lt;/li&gt;
-&lt;li&gt;Kubeadm&lt;/li&gt;
-&lt;li&gt;Rancher K3S&lt;/li&gt;
-&lt;li&gt;microk8s&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;manual&#34;&gt;Manual&lt;/h2&gt;
-&lt;p&gt;When learning Kubernetes it is useful practise to configure all components manually. Often people follow the tutorial &lt;a href=&#34;https://github.com/kelseyhightower/kubernetes-the-hard-way&#34;&gt;Kubernetes The Hard Way&lt;/a&gt;. For this installation I want to get up and running quickly so will be looking at automated build solution.&lt;/p&gt;
-&lt;h2 id=&#34;kubeadm&#34;&gt;Kubeadm&lt;/h2&gt;
-&lt;p&gt;The official CNCF tool for provisioning Kubernetes clusters in a variety of shapes and forms e.g. single-node, multi-node, HA, self-hosted.  It&amp;rsquo;s as close to a &amp;ldquo;vanilla&amp;rdquo; Kubernetes you get in production but consumes a lot of resources.&lt;/p&gt;
-&lt;p&gt;## Rancher K3S OR Canonical Microk8s
-K3s and Microk8s are both lightweight implementation of Kubernetes they have various differences but a key one to understand is high availablity approach.&lt;/p&gt;
+          &lt;p&gt;The Raspberry Pi is a useful platform for self-hosting applications. More often than not self-hosted applications are supplied as container images. I used to run one application on one Raspberry Pi. The Raspberry Pi 4 ships with a 1.5GHz Quad-core CPU, USB3 and upto 8GB RAM. Here I am looking at clustering four to host the various containers I run and use a scheduling engine. I am using 8GB Pi 4Bs configured to mass storage boot from 128GB USB3 flash drives built with Ubuntu 21.04 LTS.&lt;/p&gt;
+&lt;h2 id=&#34;rancher-k3s-or-canonical-microk8s&#34;&gt;Rancher K3S OR Canonical Microk8s&lt;/h2&gt;
+&lt;p&gt;K3s and Microk8s are both lightweight implementation of Kubernetes they have various differences but a key one to understand is high availablity approach.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -241,14 +230,18 @@ K3s and Microk8s are both lightweight implementation of Kubernetes they have var
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;I want my four node cluster to be highly available as easily as possible so for this deployment I chose Mircok8s.&lt;/p&gt;
-&lt;h2 id=&#34;visual-studio-code-remote-ssh&#34;&gt;Visual Studio Code Remote SSH&lt;/h2&gt;
-&lt;p&gt;The four Raspberry Pi which make up my cluster are headless. The Visual Studio Code &lt;a href=&#34;https://code.visualstudio.com/docs/remote/remote-overview&#34;&gt;Remote Development extension pack&lt;/a&gt; makes configuring headless systems very easy.&lt;/p&gt;
-&lt;h2 id=&#34;enable-c-groups&#34;&gt;Enable c-groups&lt;/h2&gt;
-&lt;p&gt;Edit &lt;code&gt;/boot/firmware/cmdline.txt&lt;/code&gt; and add following options:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cgroup_enable=memory cgroup_memory=1
+&lt;p&gt;I want my four node cluster to be highly available as easily as possible so for this deployment I chose Microk8s.&lt;/p&gt;
+&lt;h2 id=&#34;microk8s-pre-requisit&#34;&gt;Microk8s Pre-requisit&lt;/h2&gt;
+&lt;p&gt;Some Raspberry Pis have limited RAM so cgroup memory support is disabled by default. We can update all of the Pi&amp;rsquo;s to enable cgroup memory during bootstrap.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi `/boot/firmware/cmdline.txt`
+
+## Add the following options
+cgroup_enable=memory cgroup_memory=1
+
+## Reboot for changes to take effect.
+
+sudo reboot
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/homelab-pi-microk8s-cgroup.png&#34; alt=&#34;Microk8s cgroup&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Reboot &lt;code&gt;sudo reboot&lt;/code&gt; for changes to take effect.&lt;/p&gt;
 &lt;h2 id=&#34;install-microk8s&#34;&gt;Install Microk8s&lt;/h2&gt;
 &lt;p&gt;MicroK8s is supplied as a snap, there are various Kubernetes releases these are available as snap channels.  To see all available versions we can query what channels are available. When I&amp;rsquo;m running this the current Kubernetes version is 1.21 and I filter results on this we can see all.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;snap info microk8s | grep 1.21
@@ -262,8 +255,10 @@ latest/edge:      v1.21.1  2021-05-19 (2227) 168MB classic
 1.21/beta:        v1.21.1  2021-05-14 (2215) 168MB classic
 1.21/edge:        v1.21.1  2021-05-20 (2232) 168MB classic
 1.14/stable:      v1.14.10 2019-12-20 (1121) 164MB classic
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&amp;rsquo;ll look to install the stable release of 1.21 on each using:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I&amp;rsquo;ll look to install the stable release of 1.21 and add ubuntu user to microk8s group on each using:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;sudo snap install microk8s --classic --channel=1.21/stable
+sudo usermod -a -G microk8s ubuntu
+newgrp microk8s
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When the snap is loaded and running on all nodes we can look to form them into a cluster.  On first node run following and it will generate a token to run on remote node to add it.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;## From first node in cluster generate token  
 sudo microk8s add-node
@@ -276,8 +271,9 @@ microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
 Contacting cluster at 192.168.1.100
 Waiting for this node to finish joining the cluster. ..  
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Repeat this process (generate a token, run it from the joining node) for the third and forth nodes.  When all done from any node we can query the cluster state see all four nodes and check high availability status.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;sudo microk8s status --wait-readymicrok8s is running
+&lt;pre&gt;&lt;code&gt;sudo microk8s status
 
+microk8s is running
 high-availability: yes
   datastore master nodes: 192.168.1.100:19001 192.168.1.101:19001 192.168.1.102:19001
   datastore standby nodes: 192.168.1.103:19001
@@ -300,8 +296,8 @@ addons:
     registry             # Private image registry exposed on localhost:32000
     storage              # Storage class; allocates storage from host directory
     traefik              # traefik Ingress controller for external access
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;## Install kubectl
-The Microk8s install deploys its own client and to execute have to remember to prefix everything with microk8s. I have to switch between systems often and to avoid confusion prefer to install normal kubectl. Again this is available as a snap in multiple versions.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;install-kubectl&#34;&gt;Install kubectl&lt;/h2&gt;
+&lt;p&gt;The Microk8s install deploys its own client and to execute have to remember to prefix everything with microk8s. I have to switch between systems often and to avoid confusion prefer to install normal kubectl. Again this is available as a snap in multiple versions.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;snap info kubectl | grep 1.21
 
 latest/stable:    1.21.1         2021-05-14 (1970)  9MB classic
@@ -316,13 +312,111 @@ latest/edge:      1.21.1         2021-05-14 (1970)  9MB classic
 &lt;pre&gt;&lt;code&gt;sudo snap install kubectl --classic --channel=1.21/stable
 mkdir ~/.kube
 sudo microk8s config &amp;gt; ~/.kube/config
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;memory-footprint&#34;&gt;Memory Footprint&lt;/h2&gt;
-&lt;p&gt;One of the benefits I hoped to realize by using Microk8s was low memory footprint.  We can see here our 8GB Raspberry Pi4B with Microk8s running it still shows 6GB available.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;free -m
-              total        used        free      shared  buff/cache   available
-Mem:           7809        1173        4718           4        1918        6200
-Swap:             0           0           0
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So all in all very easy to setup and get a low footprint highly available Kubernetes cluster running on Raspberry Pi cluster with Microk8s.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;cluster-networking&#34;&gt;Cluster Networking&lt;/h2&gt;
+&lt;p&gt;The base cluster networking provides communication between different Pods within the cluster. A kubernetes service resource is an abstraction which defines a logical set of Pods. The service can be defined as type ClusterIP, NodePort or LoadBalancer. The type:ClusterIP is only available between pods. The easiest way to expose externally is via type:NodePort this allocates a high port, between 30,000 to 32,767 and provides external port mapping on every host.&lt;/p&gt;
+&lt;h2 id=&#34;nodeport&#34;&gt;NodePort&lt;/h2&gt;
+&lt;p&gt;Microk8s provides this out of the box. We can test this is working by first creating a web server which itself listens on port 80. Then create a service of type:NodePort. We can then view the service details to obtain port allocation and either run curl localhost or off-host to IP via external web browser.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace net-test
+kubectl config set-context --current --namespace&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;net-test
+kubectl create deployment nginx --image&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;nginx --replicas&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; --port&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
+kubectl get deployments -o wide
+
+NAME    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES   SELECTOR
+nginx   2/2     &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;            &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;           65s   nginx        nginx    app&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;nginx
+
+kubectl expose deployment nginx --type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;NodePort
+kubectl get service -o wide
+
+NAME    TYPE       CLUSTER-IP       EXTERNAL-IP   PORT&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;S&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;        AGE
+nginx   NodePort   10.152.183.212   &amp;lt;none&amp;gt;        80:31508/TCP   9s
+
+curl localhost:31508
+kubectl delete service nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;cluster-ingress&#34;&gt;Cluster Ingress&lt;/h2&gt;
+&lt;p&gt;Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. To configure Ingress requires an Ingress Controller, Microk8s offers choice of two addons namely NGINX or Traefik. I looked to install NGINX with the Microk8s ingress addon.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;microk8s enable dns ingress
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;cluster-load-balancer&#34;&gt;Cluster Load Balancer&lt;/h2&gt;
+&lt;p&gt;A virtual IP is provided by load-lalancer, private and public cloud platforms typically provide an external layer 4 load-balancer. For bare metal there is no external load-balancer, instead we can look to &lt;a href=&#34;https://metallb.org/&#34;&gt;MetalLB&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Usefully Microk8s ships a MetalLB addon option, the installation takes parameter of address range of IPs to issue. When we pass the parameter the installer created the MetalLB ConfigMap.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;microk8s enable metallb:192.168.1.104-192.168.1.110
+kubectl expose deployment nginx --port&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt; --type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;LoadBalancer
+kubectl get service
+
+NAME    TYPE           CLUSTER-IP       EXTERNAL-IP     PORT&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;S&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;        AGE   SELECTOR
+nginx   LoadBalancer   10.152.183.132   192.168.1.104   80:30461/TCP   6s    app&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;nginx
+
+kubectl delete service nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;load-balanced-ingress&#34;&gt;Load Balanced Ingress&lt;/h2&gt;
+&lt;p&gt;The ingress controller is deployed as a DaemonSet which creates a ingress controller pod on each host in the cluster. Each pod listens has a containerPort 80 for http,  443 for https and 10254 which is a health probe.&lt;/p&gt;
+&lt;p&gt;We can look to create a service resource type:LoadBalancer which re-directs and balances traffic across the cluster.&lt;/p&gt;
+&lt;p&gt;Save the following as file named ingress-service.yaml&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;v1&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ingress&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ingress&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;selector&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;nginx-ingress-microk8s&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;LoadBalancer&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;ports&lt;/span&gt;:
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;http&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;protocol&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;TCP&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;port&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;targetPort&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;https&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;protocol&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;TCP&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;port&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;443&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;targetPort&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;443&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Apply the file to create the service&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f ingress-service.yaml
+kubectl -n ingress get svc -o wide
+
+NAME      TYPE           CLUSTER-IP      EXTERNAL-IP     PORT&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;S&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;                      AGE   SELECTOR
+ingress   LoadBalancer   10.152.183.54   192.168.1.104   80:31707/TCP,443:31289/TCP   7s    name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;nginx-ingress-microk8s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With this in place we can look to create a Ingress.&lt;/p&gt;
+&lt;p&gt;Save the following as file named nginx-ingress.yaml&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;networking.k8s.io/v1&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Ingress&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;nginx-ingress&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;net-test&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;annotations&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;kubernetes.io/ingress.class&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;public&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;rules&lt;/span&gt;:
+  - &lt;span style=&#34;color:#f92672&#34;&gt;http&lt;/span&gt;:
+      &lt;span style=&#34;color:#f92672&#34;&gt;paths&lt;/span&gt;:
+      - &lt;span style=&#34;color:#f92672&#34;&gt;backend&lt;/span&gt;:
+          &lt;span style=&#34;color:#f92672&#34;&gt;service&lt;/span&gt;:
+            &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;nginx&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;port&lt;/span&gt;: 
+              &lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;path&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;pathType&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Prefix&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Apply the file to create the service and we can use cURL to get nginx homepage.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f nginx-ingress.yaml
+kubectl -n net-test get ingress -o wide
+
+NAME            CLASS    HOSTS   ADDRESS   PORTS   AGE
+nginx-ingress   &amp;lt;none&amp;gt;   *                 &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;      4s
+
+curl 192.168.1.104
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;web-ui-dashboard&#34;&gt;Web UI (Dashboard)&lt;/h2&gt;
+&lt;p&gt;The Kubernetes web UI is a convenient way to view the cluster. This is supplied as a microk8s addon so simple to install.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo microk8s enable dashboard
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This creates a deployment exposed as a service type:ClusterIP on port 8443. We can edit the service and change to type:LoadBalancer so we can easier consume.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n kube-system get service kubernetes-dashboard -o wide
+
+NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;S&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;   AGE     SELECTOR
+kubernetes-dashboard   ClusterIP   10.152.183.172   &amp;lt;none&amp;gt;        443/TCP   4m14s   k8s-app&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;kubernetes-dashboard
+
+kubectl -n kube-system edit service kubernetes-dashboard
+kubectl -n kube-system get service kubernetes-dashboard -o wide
+
+NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP     PORT&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;S&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;         AGE     SELECTOR
+kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093/TCP   5m39s   k8s-app&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;kubernetes-dashboard
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/homelab-pi-microk8s-dashboard.png&#34; alt=&#34;Microk8s Dashboard&#34;&gt;&lt;/p&gt;
 
         
       </description>
