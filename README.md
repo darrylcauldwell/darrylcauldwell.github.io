@@ -5,7 +5,7 @@ This repository contains the blog, theme and source files needed to build the st
 # Usage Steps
 
 1. If not already added [install Hugo](https://gohugo.io/overview/installing/)
-2. Clone these two repository
+2. Clone the repository
 ```bash
 git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
 ```
