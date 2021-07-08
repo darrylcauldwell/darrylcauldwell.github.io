@@ -234,7 +234,12 @@ docker push ghcr.io/darrylcauldwell/chowdown:1.0
     - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Image digest</span>
       <span style="color:#f92672">run</span>: <span style="color:#ae81ff">echo ${{ steps.docker_build.outputs.digest }}</span>
 </code></pre></div><p>The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.</p>
-
+<p>We can look to test this by creating a Kubernetes deployment and exposing as a service.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create namespace chowdown
+kubectl config set-context --current
+kubectl create deployment chowdown --image<span style="color:#f92672">=</span>ghcr.io/darrylcauldwell/chowdown:1.0
+kubectl expose deployment chowdown --type<span style="color:#f92672">=</span>LoadBalancer --port <span style="color:#ae81ff">80</span>
+</code></pre></div>
 
   </article>
 <aside class="sidebar">

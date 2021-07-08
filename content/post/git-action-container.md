@@ -140,3 +140,12 @@ jobs:
 ```
 
 The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.
+
+We can look to test this by creating a Kubernetes deployment and exposing as a service.
+
+```bash
+kubectl create namespace chowdown
+kubectl config set-context --current
+kubectl create deployment chowdown --image=ghcr.io/darrylcauldwell/chowdown:1.0
+kubectl expose deployment chowdown --type=LoadBalancer --port 80
+```
