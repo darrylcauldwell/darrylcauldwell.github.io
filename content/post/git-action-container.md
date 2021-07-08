@@ -139,4 +139,4 @@ jobs:
       run: echo ${{ steps.docker_build.outputs.digest }}
 ```
 
-The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.
+The actions workflow definition is within the repository so upon committing the changes the action should trigger and build the image.
