@@ -41,7 +41,7 @@ git branch --list --all
 * publish
   remotes/origin/HEAD -&amp;gt; origin/publish
   remotes/origin/publish
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;## Static File Web Site&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;static-file-web-site&#34;&gt;Static File Web Site&lt;/h2&gt;
 &lt;p&gt;Using &amp;lsquo;jekyll serve&amp;rsquo; provide UX testing during development which is useful. The chowdown docker-compose.yml builds fro jekyll/jekyll image and runs jekyll serve to host the site. I would like to generate static file website where I can choose serving engine later. I can use &amp;lsquo;jekyll build&amp;rsquo; which outputs the site to a folder (./_site by default). The chowdown repository lists folder /_site is in the .gitignore, this prevents the static file website being upstream. The GitHub Action will look to create docker image from upstream so I will remove /_site from the .gitignore.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;jekyll build
 git add .
