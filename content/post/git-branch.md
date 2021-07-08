@@ -3,7 +3,8 @@ title = "GitHub Pages Git Branching Workflow"
 date = "2021-06-18"
 description = "GitHub Pages Git Branching Workflow"
 tags = [
-    "github"
+    "github",
+    "gitops"
 ]
 categories = [
     "blogging"
