@@ -5,7 +5,107 @@
     <link>https://darrylcauldwell.github.io/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 18 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 07 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Maintaining Container Images Within GitHub</title>
+      <link>https://darrylcauldwell.github.io/post/git-action-container/</link>
+      <pubDate>Wed, 07 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/git-action-container/</guid>
+      <description>
+        
+          &lt;p&gt;I am looking to build and maintain some containers using only GitHub features. Here I am looking at maintaining a container running static web site built with Jekyll. The static web site content will a plaintext recipe database based on &lt;a href=&#34;https://chowdown.io/&#34;&gt;chowdown&lt;/a&gt;. Each receipe will be created in its own branch which when merged with the main branch triggers a GitHub Action to create the container image and publish this to the GitHub Container Registry.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-action-container-overview.drawio.png&#34; alt=&#34;GitHub Package Process Overview&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;fork-and-clone-repository&#34;&gt;Fork and clone repository&lt;/h2&gt;
+&lt;p&gt;I am more interested in the process so I started by forking chowdown.  I look to automate where possible so used this opportunity to look at using the API to perform the fork.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Create personal access token with permissions on repo&lt;/span&gt;
+curl -u &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;darrylcauldwell&amp;#39;&lt;/span&gt; https://api.github.com/repos/clarklab/chowdown/forks -d &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;## When promoted paste personal access token&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the fork in place I can look to make local clone and run the website under Jekyll.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/darrylcauldwell/chowdown.git
+cd chowdown
+&lt;span style=&#34;color:#75715e&#34;&gt;## if running first time from form edit _config.yml and remove the value for key baseurl: otherwise it doesn&amp;#39;t start properly&lt;/span&gt;
+jekyll serve
+&lt;span style=&#34;color:#75715e&#34;&gt;## brower to http://127.0.0.1:4000&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;rename-main-branch&#34;&gt;Rename Main Branch&lt;/h2&gt;
+&lt;p&gt;The repository forked from looks like it is hosted from GitHub Pages and contains single gh-pages branch.  I would like  main branch to be called publish to reflect that this contains the source for current HEAD image.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch --list --all
+* gh-pages
+  remotes/origin/HEAD -&amp;gt; origin/gh-pages
+  remotes/origin/gh-pages
+
+git branch -m gh-pages publish
+git push origin :gh-pages publish
+git push origin –u publish
+git branch --list --all
+* publish
+  remotes/origin/HEAD -&amp;gt; origin/publish
+  remotes/origin/publish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;## Static File Web Site&lt;/p&gt;
+&lt;p&gt;Using &amp;lsquo;jekyll serve&amp;rsquo; provide UX testing during development which is useful. The chowdown docker-compose.yml builds fro jekyll/jekyll image and runs jekyll serve to host the site. I would like to generate static file website where I can choose serving engine later. I can use &amp;lsquo;jekyll build&amp;rsquo; which outputs the site to a folder (./_site by default). The chowdown repository lists folder /_site is in the .gitignore, this prevents the static file website being upstream. The GitHub Action will look to create docker image from upstream so I will remove /_site from the .gitignore.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;jekyll build
+git add .
+git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;added static file web site files&amp;#34;&lt;/span&gt;
+git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;docker-image&#34;&gt;Docker Image&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ll be looking to use NGINX to serve the site and would like the image to be as slim as possible so looking Alpine Linux. Copying the contents of /_site to the NGINX default path. In case of troubleshooting Pods being able to exec bash is useful so I look to install this.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Dockerfile&#34; data-lang=&#34;Dockerfile&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Dockerfile&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; nginx:1.21.1-alpine&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;COPY&lt;/span&gt; _site /usr/share/nginx/html&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# COPY nginx.conf /etc/nginx/nginx.conf&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; apk add --no-cache bash&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the Dockerfile in place we can use this to build the container image locally. Once this is build we can run it and ensure that its working as we expect. When we&amp;rsquo;re happy its working can push this to the GitHub Container Registry.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker build --tag ghcr.io/darrylcauldwell/chowdown:1.0 .
+docker run -d -p 80:80 ghcr.io/darrylcauldwell/chowdown:1.0
+&lt;span style=&#34;color:#75715e&#34;&gt;# browse http://127.0.0.0:80 to ensure &lt;/span&gt;
+docker push ghcr.io/darrylcauldwell/chowdown:1.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;event-driven-build&#34;&gt;Event Driven Build&lt;/h2&gt;
+&lt;p&gt;I would like a new version of the docker image be built every time a branch is merged to the main &amp;lsquo;publish&amp;rsquo; branch. GitHub Actions offer me capability on occurence of an event (merge branch) trigger an action (build image). These particular container images will be ran on Raspberry Pi so need to use docker buildx to create for Arm platform&lt;/p&gt;
+&lt;p&gt;The GitHub Action is created and runs in context of the GitHub Repository,  the GitHub Container Registry is under context of user or organisation. In order the GitHub Action can write images the package needs configuring so Actions have write access.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-action-container-access.png&#34; alt=&#34;GitHub Package Access Writes&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once permissions are in place create a custom action using similar yaml to this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# .github/workflows/create.yml&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Create chowdown image&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;on&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;push&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;branches&lt;/span&gt;: [ &lt;span style=&#34;color:#ae81ff&#34;&gt;publish ]&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;jobs&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;build&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;runs-on&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ubuntu-latest&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;steps&lt;/span&gt;:
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Checkout&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;uses&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;actions/checkout@v2&lt;/span&gt;
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Set up Docker Buildx&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;uses&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;docker/setup-buildx-action@v1&lt;/span&gt;
+      
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Log in to the Container registry&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;uses&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;with&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;registry&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ghcr.io&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;username&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;darrylcauldwell&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;password&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;${{ secrets.GITHUB_TOKEN }}&lt;/span&gt;
+          
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Build and push image&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;id&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;docker_build&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;uses&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;docker/build-push-action@v2&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;with&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;platforms&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;linux/amd64,linux/arm64&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;push&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;tags&lt;/span&gt;: |&lt;span style=&#34;color:#e6db74&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          ghcr.io/darrylcauldwell/chowdown:latest
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;          ghcr.io/darrylcauldwell/chowdown:1.0&lt;/span&gt;          
+
+    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Image digest&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;run&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;echo ${{ steps.docker_build.outputs.digest }}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
     <item>
       <title>GitHub Pages Git Branching Workflow</title>
       <link>https://darrylcauldwell.github.io/post/git-branch/</link>
