@@ -19,11 +19,11 @@ I enjoy learning by doing and to begin to better understand the technology looke
 * Kubernetes, OpenShift and Tanzu
 * Configuring infrastructure with Python, Ansible and Terraform
 
-# Compute
+## Compute
 
 The NUC6i5SYH was latest model when I purchased. My purchasing decision was primarily lead by power as these draw 60watt at peak load. I also wanted to try vSAN which drove need for at least two disk bays and the NUC has an M.2 and a 2.5" Drive bay.
 
-# Storage
+## Storage
 
 To form vSAN required the two internal disks be fully available which drove the addition of USB Flash Drive. The NUCs sit on and around desk so its very easy for them to get knocked the SanDisk Cruzer Fit formfactor keeps the chance of damage to a minimum.
 
@@ -31,15 +31,15 @@ I was working to a budget but wanted good performance. When cluster operating wi
 
 As well as internal storage I have a Synology DiskStation DS213j a  "budget-friendly" 2-bay NAS server. It isn't the fastest but offers iSCSI and/or NFS with 100MiB/sec read and 70MiB/sec write.
 
-# Network
+## Network
 
 One of usecases I wanted to explore with this hardware was Software Defined Networking. To this end I wanted network switch to support configuring multiple VLANs. To connect three NUCs each with two 1GbE NICs would consume six ports, to uplink to wider home network and the Synolofy DiskStation drove my choice to the eight 1GbE port Cisco SG200-08.
 
 To simulate redundant networking scenarios at the ESXi side I wanted to add a second NIC albeit connecting to same switch. To allow for USB NIC on NUCs VMware released a unsupported driver by way of a Fling. This was a little prescritive and this lead me to the StarTech USB 3.0 to Gigabit Ethernet NICs.
 
-My home office is in a cabin in the garden while it has power cabling it has no network cabling. To give a cabled network connection I use TP-Link AV500/AV600s. As these are very specific to my scenario I've not included them in the BOM. 
+My home office is in a cabin in the garden while it has power cabling it has no network cabling. To give a cabled network connection I use TP-Link AV500/AV600s. As these are very specific to my scenario I've not included them in the BOM.
 
-# Bill Of Materials
+## Bill Of Materials
 
 * 3x Intel NUC 6th Gen NUC6i5SYH (3x £358=) £1,074
 * 3x Crucial 32GB Kit (2x16GB) DDR4 (3x £86=) £258
