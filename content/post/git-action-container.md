@@ -1,7 +1,7 @@
 +++
 title = "Maintaining Container Images Within GitHub"
 date = "2021-07-07"
-description = "Maintaining container images, GitHub Repository - GitHub Actions - GitHub Packages"
+description = "GitHub CI Pipeline"
 tags = [
     "github",
     "gitops",
@@ -15,11 +15,11 @@ categories = [
 thumbnail = "clarity-icons/code-144.svg"
 +++
 
-I am looking to build and maintain some containers using only GitHub features. Here I am looking at maintaining a container running static web site built with Jekyll. The static web site content will a plaintext recipe database based on [chowdown](https://chowdown.io/). Each receipe will be created in its own branch which when merged with the main branch triggers a GitHub Action to create the container image and publish this to the GitHub Container Registry.
+I have been using a collection of products to maintain docker images. GitHub now provides suite of products which encompass all I require. This post documents the process I followed to create a CI pipeline for a container running static web site built with Jekyll. The static web site content is created from a fork of [chowdown](https://chowdown.io/). I maintain recipes markdown files using Visual Studio code and when I push changes to the 'publish' branch of my GitHub Repository this triggers a GitHub Action to create the container image and publish this to the GitHub Container Registry.
 
 ![GitHub Package Process Overview](/images/git-action-container-overview.drawio.png)
 
-## Fork and clone repository
+## Fork and clone chowdown
 
 I am more interested in the process so I started by forking chowdown.  I look to automate where possible so used this opportunity to look at using the API to perform the fork.
 
@@ -141,11 +141,44 @@ jobs:
 
 The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.
 
-We can look to test this by creating a Kubernetes deployment and exposing as a service.
+## Deploy Container To Kubernetes
+
+We can look to test this by creating a Kubernetes deployment and expose this as a service.
 
 ```bash
 kubectl create namespace chowdown
-kubectl config set-context --current
-kubectl create deployment chowdown --image=ghcr.io/darrylcauldwell/chowdown:1.0
-kubectl expose deployment chowdown --type=LoadBalancer --port 80
+kubectl create deployment chowdown --image=ghcr.io/darrylcauldwell/chowdown:1.0 --namespace=chowdown
+kubectl expose deployment chowdown --port=80 --type=ClusterIP --namespace=chowdown
+```
+
+This service will be exposed to public internet. I have a single static IP but expose multiple services to achieve this I use Kubernetes Ingress rules which allow routing based on URL and path. Save the following as file named chowdown-ingress.yaml.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chowdown-ingress
+  namespace: chowdown
+  annotations:
+    kubernetes.io/ingress.class: public
+spec:
+  rules:
+  - host: www.theveggiechef.uk
+    http:
+      paths:
+      - backend:
+          service:
+            name: chowdown
+            port: 
+              number: 80
+        path: /
+        pathType: Prefix
+```
+
+Once created apply the file to create the Ingress route and test using cURL. 
+
+```
+kubectl apply -f chowdown-ingress.yaml
+
+curl www.theveggiechef.uk
 ```

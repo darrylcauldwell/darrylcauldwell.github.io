@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Maintaining container images, GitHub Repository - GitHub Actions - GitHub Packages">
+<meta name="description" content="GitHub CI Pipeline">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
 <meta name="twitter:title" content="Maintaining Container Images Within GitHub" />
 <meta property="og:url" content="https://darrylcauldwell.github.io/post/git-action-container/" />
 <meta property="og:title" content="Maintaining Container Images Within GitHub" />
-<meta property="og:description" content="Maintaining container images, GitHub Repository - GitHub Actions - GitHub Packages" />
+<meta property="og:description" content="GitHub CI Pipeline" />
 <meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
@@ -147,9 +147,9 @@
   </div>
 
     
-    <p>I am looking to build and maintain some containers using only GitHub features. Here I am looking at maintaining a container running static web site built with Jekyll. The static web site content will a plaintext recipe database based on <a href="https://chowdown.io/">chowdown</a>. Each receipe will be created in its own branch which when merged with the main branch triggers a GitHub Action to create the container image and publish this to the GitHub Container Registry.</p>
+    <p>I have been using a collection of products to maintain docker images. GitHub now provides suite of products which encompass all I require. This post documents the process I followed to create a CI pipeline for a container running static web site built with Jekyll. The static web site content is created from a fork of <a href="https://chowdown.io/">chowdown</a>. I maintain recipes markdown files using Visual Studio code and when I push changes to the &lsquo;publish&rsquo; branch of my GitHub Repository this triggers a GitHub Action to create the container image and publish this to the GitHub Container Registry.</p>
 <p><img src="/images/git-action-container-overview.drawio.png" alt="GitHub Package Process Overview"></p>
-<h2 id="fork-and-clone-repository">Fork and clone repository</h2>
+<h2 id="fork-and-clone-chowdown">Fork and clone chowdown</h2>
 <p>I am more interested in the process so I started by forking chowdown.  I look to automate where possible so used this opportunity to look at using the API to perform the fork.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## Create personal access token with permissions on repo</span>
 curl -u <span style="color:#e6db74">&#39;darrylcauldwell&#39;</span> https://api.github.com/repos/clarklab/chowdown/forks -d <span style="color:#e6db74">&#39;&#39;</span>
@@ -234,12 +234,36 @@ docker push ghcr.io/darrylcauldwell/chowdown:1.0
     - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Image digest</span>
       <span style="color:#f92672">run</span>: <span style="color:#ae81ff">echo ${{ steps.docker_build.outputs.digest }}</span>
 </code></pre></div><p>The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.</p>
-<p>We can look to test this by creating a Kubernetes deployment and exposing as a service.</p>
+<h2 id="deploy-container-to-kubernetes">Deploy Container To Kubernetes</h2>
+<p>We can look to test this by creating a Kubernetes deployment and expose this as a service.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create namespace chowdown
-kubectl config set-context --current
-kubectl create deployment chowdown --image<span style="color:#f92672">=</span>ghcr.io/darrylcauldwell/chowdown:1.0
-kubectl expose deployment chowdown --type<span style="color:#f92672">=</span>LoadBalancer --port <span style="color:#ae81ff">80</span>
-</code></pre></div>
+kubectl create deployment chowdown --image<span style="color:#f92672">=</span>ghcr.io/darrylcauldwell/chowdown:1.0 --namespace<span style="color:#f92672">=</span>chowdown
+kubectl expose deployment chowdown --port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span> --type<span style="color:#f92672">=</span>ClusterIP --namespace<span style="color:#f92672">=</span>chowdown
+</code></pre></div><p>This service will be exposed to public internet. I have a single static IP but expose multiple services to achieve this I use Kubernetes Ingress rules which allow routing based on URL and path. Save the following as file named chowdown-ingress.yaml.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">chowdown-ingress</span>
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">chowdown</span>
+  <span style="color:#f92672">annotations</span>:
+    <span style="color:#f92672">kubernetes.io/ingress.class</span>: <span style="color:#ae81ff">public</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">rules</span>:
+  - <span style="color:#f92672">host</span>: <span style="color:#ae81ff">www.theveggiechef.uk</span>
+    <span style="color:#f92672">http</span>:
+      <span style="color:#f92672">paths</span>:
+      - <span style="color:#f92672">backend</span>:
+          <span style="color:#f92672">service</span>:
+            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">chowdown</span>
+            <span style="color:#f92672">port</span>: 
+              <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>
+        <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
+        <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
+</code></pre></div><p>Once created apply the file to create the Ingress route and test using cURL.</p>
+<pre><code>kubectl apply -f chowdown-ingress.yaml
+
+curl www.theveggiechef.uk
+</code></pre>
 
   </article>
 <aside class="sidebar">

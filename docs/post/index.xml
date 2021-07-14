@@ -14,9 +14,9 @@
       <guid>https://darrylcauldwell.github.io/post/git-action-container/</guid>
       <description>
         
-          &lt;p&gt;I am looking to build and maintain some containers using only GitHub features. Here I am looking at maintaining a container running static web site built with Jekyll. The static web site content will a plaintext recipe database based on &lt;a href=&#34;https://chowdown.io/&#34;&gt;chowdown&lt;/a&gt;. Each receipe will be created in its own branch which when merged with the main branch triggers a GitHub Action to create the container image and publish this to the GitHub Container Registry.&lt;/p&gt;
+          &lt;p&gt;I have been using a collection of products to maintain docker images. GitHub now provides suite of products which encompass all I require. This post documents the process I followed to create a CI pipeline for a container running static web site built with Jekyll. The static web site content is created from a fork of &lt;a href=&#34;https://chowdown.io/&#34;&gt;chowdown&lt;/a&gt;. I maintain recipes markdown files using Visual Studio code and when I push changes to the &amp;lsquo;publish&amp;rsquo; branch of my GitHub Repository this triggers a GitHub Action to create the container image and publish this to the GitHub Container Registry.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/git-action-container-overview.drawio.png&#34; alt=&#34;GitHub Package Process Overview&#34;&gt;&lt;/p&gt;
-&lt;h2 id=&#34;fork-and-clone-repository&#34;&gt;Fork and clone repository&lt;/h2&gt;
+&lt;h2 id=&#34;fork-and-clone-chowdown&#34;&gt;Fork and clone chowdown&lt;/h2&gt;
 &lt;p&gt;I am more interested in the process so I started by forking chowdown.  I look to automate where possible so used this opportunity to look at using the API to perform the fork.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Create personal access token with permissions on repo&lt;/span&gt;
 curl -u &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;darrylcauldwell&amp;#39;&lt;/span&gt; https://api.github.com/repos/clarklab/chowdown/forks -d &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
@@ -101,12 +101,36 @@ docker push ghcr.io/darrylcauldwell/chowdown:1.0
     - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Image digest&lt;/span&gt;
       &lt;span style=&#34;color:#f92672&#34;&gt;run&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;echo ${{ steps.docker_build.outputs.digest }}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.&lt;/p&gt;
-&lt;p&gt;We can look to test this by creating a Kubernetes deployment and exposing as a service.&lt;/p&gt;
+&lt;h2 id=&#34;deploy-container-to-kubernetes&#34;&gt;Deploy Container To Kubernetes&lt;/h2&gt;
+&lt;p&gt;We can look to test this by creating a Kubernetes deployment and expose this as a service.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create namespace chowdown
-kubectl config set-context --current
-kubectl create deployment chowdown --image&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ghcr.io/darrylcauldwell/chowdown:1.0
-kubectl expose deployment chowdown --type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;LoadBalancer --port &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+kubectl create deployment chowdown --image&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ghcr.io/darrylcauldwell/chowdown:1.0 --namespace&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;chowdown
+kubectl expose deployment chowdown --port&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt; --type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ClusterIP --namespace&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;chowdown
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This service will be exposed to public internet. I have a single static IP but expose multiple services to achieve this I use Kubernetes Ingress rules which allow routing based on URL and path. Save the following as file named chowdown-ingress.yaml.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;networking.k8s.io/v1&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Ingress&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;chowdown-ingress&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;chowdown&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;annotations&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;kubernetes.io/ingress.class&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;public&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;rules&lt;/span&gt;:
+  - &lt;span style=&#34;color:#f92672&#34;&gt;host&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;www.theveggiechef.uk&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;http&lt;/span&gt;:
+      &lt;span style=&#34;color:#f92672&#34;&gt;paths&lt;/span&gt;:
+      - &lt;span style=&#34;color:#f92672&#34;&gt;backend&lt;/span&gt;:
+          &lt;span style=&#34;color:#f92672&#34;&gt;service&lt;/span&gt;:
+            &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;chowdown&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;port&lt;/span&gt;: 
+              &lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;path&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;/&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;pathType&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Prefix&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once created apply the file to create the Ingress route and test using cURL.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;kubectl apply -f chowdown-ingress.yaml
+
+curl www.theveggiechef.uk
+&lt;/code&gt;&lt;/pre&gt;
         
       </description>
     </item>
