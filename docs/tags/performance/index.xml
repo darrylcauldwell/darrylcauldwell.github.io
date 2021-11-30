@@ -79,12 +79,12 @@ total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
     slice &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
     process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 
-    print (size)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (size)
 
     &lt;span style=&#34;color:#75715e&#34;&gt;# Send the first batch of processes to the nodes.&lt;/span&gt;
     &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
         comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-        print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
         slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
         process &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 
@@ -93,23 +93,23 @@ total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
     &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; received_processes &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
         pi &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
         process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
-        print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Recieved data from process&amp;#34;&lt;/span&gt;, process)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Recieved data from process&amp;#34;&lt;/span&gt;, process)
         received_processes &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 
         &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
             comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-            print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
             slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 
     &lt;span style=&#34;color:#75715e&#34;&gt;# Send the shutdown signal&lt;/span&gt;
     &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,size):
         comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
 
-    print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pi is&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pi)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pi is&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pi)
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# These are the worker nodes, where rank &amp;gt; 0. They do the real work&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;:
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; True:
         start &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
         &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; start &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
 

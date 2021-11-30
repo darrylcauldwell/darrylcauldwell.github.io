@@ -1323,14 +1323,14 @@ content &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; vcenter&lt;span
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;content.about.fullName
 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VMware vCenter Server 6.5.0 build-5178943&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can also explore the Object Model which is well descrived here in the &lt;a href=&#34;http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html&#34;&gt;vSphere SDK API Docs&lt;/a&gt; and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VirtualMachine],&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;)
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VirtualMachine],True)
 vmList &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view
 objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Destroy()
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  vm &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; vmList:
     vm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;summary&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;name
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;basic-put-of-configuration-information&#34;&gt;Basic put of configuration information&lt;/h1&gt;
 &lt;p&gt;As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;HostSystem],&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;)
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;HostSystem],True)
 hostList &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view
 objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Destroy()
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; host &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; hostList:
@@ -1461,7 +1461,7 @@ items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; response[&lt;span
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# If we print the dictionary we get the two key pairs&lt;/span&gt;
 
-print item_dict
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; item_dict
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
@@ -1489,7 +1489,7 @@ aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&am
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; __future__ &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; print_function
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; boto3
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; json
-print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#39;&lt;/span&gt;)
 &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(event, context):
     operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;operation&amp;#39;&lt;/span&gt;]
     &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tableName&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; event:
@@ -1506,7 +1506,7 @@ print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#3
     &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; operation &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; operations:
         &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; operations[operation](event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;payload&amp;#39;&lt;/span&gt;))
     &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ValueError&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Unrecognized operation &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(operation))
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ValueError&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Unrecognized operation &amp;#34;{}&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(operation))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then test that we can pull back a specific database item for example the Brian record, select &amp;lsquo;Action \ Configure test event&amp;rsquo; and paste in the following.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;operation&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;read&amp;#34;&lt;/span&gt;,
@@ -2147,7 +2147,7 @@ nsxraml_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
 nsxmanager &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;nsx.darrylcauldwell.local&amp;#39;&lt;/span&gt;
 nsx_username &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;admin&amp;#39;&lt;/span&gt;
 nsx_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VMware!&amp;#39;&lt;/span&gt;
-client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;False&lt;/span&gt;)
+client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;False)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you can then see the session by running the following command in python session&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;client_session
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;

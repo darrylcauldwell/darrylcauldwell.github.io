@@ -4,7 +4,7 @@
   <head>
 <title>Simple REST API For DynamoDB Using Lambda | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.84.0" />
+<meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -161,7 +161,7 @@ aws dynamodb put-item --table-name <span style="color:#e6db74">&#39;MyTable&#39;
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> __future__ <span style="color:#f92672">import</span> print_function
 <span style="color:#f92672">import</span> boto3
 <span style="color:#f92672">import</span> json
-print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
+<span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handler</span>(event, context):
     operation <span style="color:#f92672">=</span> event[<span style="color:#e6db74">&#39;operation&#39;</span>]
     <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;tableName&#39;</span> <span style="color:#f92672">in</span> event:
@@ -178,7 +178,7 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
     <span style="color:#66d9ef">if</span> operation <span style="color:#f92672">in</span> operations:
         <span style="color:#66d9ef">return</span> operations[operation](event<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;payload&#39;</span>))
     <span style="color:#66d9ef">else</span>:
-        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#39;Unrecognized operation &#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;&#39;</span><span style="color:#f92672">.</span>format(operation))
+        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#39;Unrecognized operation &#34;{}&#34;&#39;</span><span style="color:#f92672">.</span>format(operation))
 </code></pre></div><p>We can then test that we can pull back a specific database item for example the Brian record, select &lsquo;Action \ Configure test event&rsquo; and paste in the following.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
     <span style="color:#f92672">&#34;operation&#34;</span>: <span style="color:#e6db74">&#34;read&#34;</span>,
@@ -228,6 +228,9 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="vSphere with Tanzu using NSX-T">vSphere with Tanzu using NSX-T</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
       <li>
@@ -248,9 +251,6 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
       <li>
         <a href="https://darrylcauldwell.github.io/post/homelab-pi-mpi/" class="nav-link" title="Pi Supercomputer">Pi Supercomputer</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-storage/" class="nav-link" title="Comparing SD and USB 3 Storage Performance With Raspberry Pi4B">Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
@@ -267,7 +267,7 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
         
         <a href='https://darrylcauldwell.github.io/categories/homelab/' class="post_tag button button_translucent" title="homelab">
           HOMELAB
-          <span class="button_tally">10</span>
+          <span class="button_tally">11</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/certification/' class="post_tag button button_translucent" title="certification">
@@ -328,12 +328,17 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
         
         <a href='https://darrylcauldwell.github.io/tags/vsphere/' class="post_tag button button_translucent" title="vsphere">
           VSPHERE
-          <span class="button_tally">14</span>
+          <span class="button_tally">15</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/aws/' class="post_tag button button_translucent" title="aws">
           AWS
           <span class="button_tally">10</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
+          KUBERNETES
+          <span class="button_tally">7</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
@@ -348,11 +353,6 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
         
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
-          KUBERNETES
           <span class="button_tally">6</span>
         </a>
         
@@ -489,7 +489,7 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=6 title="kubernetes">KUBERNETES<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=7 title="kubernetes">KUBERNETES<span class="button_tally">7</span>
             </a>
             
             
@@ -518,6 +518,10 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
             
             
             <a href='https://darrylcauldwell.github.io/tags/nsx/' class=" post_tag button button_translucent" data-position=15 title="nsx">NSX<span class="button_tally">15</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.github.io/tags/nsx-t/' class=" post_tag button button_translucent" data-position=1 title="nsx-t">NSX-T<span class="button_tally">1</span>
             </a>
             
             
@@ -581,7 +585,7 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=1 title="tanzu">TANZU<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=2 title="tanzu">TANZU<span class="button_tally">2</span>
             </a>
             
             
@@ -653,7 +657,7 @@ print(<span style="color:#e6db74">&#39;Loading function&#39;</span>)
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=14 title="vsphere">VSPHERE<span class="button_tally">14</span>
+            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=15 title="vsphere">VSPHERE<span class="button_tally">15</span>
             </a>
             
             

@@ -5,7 +5,372 @@
     <link>https://darrylcauldwell.github.io/tags/kubernetes/</link>
     <description>Recent content in kubernetes on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 22 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vSphere with Tanzu using NSX-T</title>
+      <link>https://darrylcauldwell.github.io/post/tanzu-basic-nsx/</link>
+      <pubDate>Mon, 15 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/tanzu-basic-nsx/</guid>
+      <description>
+        
+          &lt;p&gt;I am looking to understand by exploring configuring Tanzu for vSphere with NSX-T networking.&lt;/p&gt;
+&lt;h2 id=&#34;supervisor-cluster-bootstrap&#34;&gt;Supervisor Cluster Bootstrap&lt;/h2&gt;
+&lt;p&gt;The enablement of Workload Control Plane triggers the deployment of three VMs which initially have single vNIC eth0 connected to a PortGroup which can route to vCenter and NSX. This appears to configure the first VM as bootstrap Kubernetes Node on which are deployed multiple Pods. The NSX Container Plug-in (NCP) Pod performs integration of Kubernetes and NSX-T.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods -n vmware-system-nsx
+NAME                       READY   STATUS    RESTARTS   AGE
+nsx-ncp-7c6578d9fd-xj6jk   1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;          25h
+
+During the bootstrap of the Supervisor Cluster the requires NSX objects are created by the NCP Pod.  The NCP Pod is configured with a ConfigMap which includes details of how to connect to the NSX API.
+
+&lt;span style=&#34;color:#e6db74&#34;&gt;```&lt;/span&gt;bash
+kubectl get pods -A | grep ncp
+vmware-system-nsx                           nsx-ncp-7c6578d9fd-xdqvl                                          1/1     Running     &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;          2d22h
+
+kubectl describe pod nsx-ncp-7c6578d9fd-xdqvl -n vmware-system-nsx | grep config
+ConfigMapName:       nsx-ncp-config
+
+kubectl describe ConfigMap nsx-ncp-config -n vmware-system-nsx | grep manager
+nsx_api_managers &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 192.168.10.28:443
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;routing-domains&#34;&gt;Routing Domains&lt;/h2&gt;
+&lt;p&gt;The Workload Control Plane configures various components on discreet network segments. The Management, Ingress and Egress networks all need to be part of a common routing. In this deployment the Managemenet network operates within a VLAN defined on the physical network. The Workload Control Plane deployment creates the Ingress and Egress networks as NSX-T logical segments. To faciliate the correct sharing of routes the NSX-T Tier-0 router is configured as a BGP Autonomous System which peers with the physical router, both advertise and share routes.&lt;/p&gt;
+&lt;h2 id=&#34;no-nat-topology&#34;&gt;No-NAT Topology&lt;/h2&gt;
+&lt;p&gt;It is possible [from vCenter Server 7.0 Update 3] to deploy a No-NAT (routed) topology which allows routing outside of the cluster network, more info on No-NAT &lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-2BC5CC9D-7396-4700-A698-3C97A882AE23.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;nat-topology&#34;&gt;NAT Topology&lt;/h2&gt;
+&lt;p&gt;In this deployment I deployed the default NAT (routed) topology where the Kubernetes POD and Service are within the same routing domain.  Communications to the wider network is facilitated by combination of NAT, Load Balancer Ingress and Egress.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-basic-nsx-nat.drawio.svg&#34; alt=&#34;Tanzu Basic with NSX-T NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;A NSX-T logical segment is created for ther Kubernetes Cluster network ( 10.244.0.0 /20 ) which all the Nodes and Pods will attach.&lt;/p&gt;
+&lt;p&gt;NSX-T Service Load Balancers get created which correspond to the Ingress resources:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Pod&lt;/th&gt;
+&lt;th&gt;Ingress IP Allocation&lt;/th&gt;
+&lt;th&gt;Port&lt;/th&gt;
+&lt;th&gt;Protocol&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;vsphere-csi-controller&lt;/td&gt;
+&lt;td&gt;172.16.1.1&lt;/td&gt;
+&lt;td&gt;2112&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;vsphere-csi-controller&lt;/td&gt;
+&lt;td&gt;172.16.1.1&lt;/td&gt;
+&lt;td&gt;2113&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-apiserver&lt;/td&gt;
+&lt;td&gt;172.16.1.2&lt;/td&gt;
+&lt;td&gt;6443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-apiserver&lt;/td&gt;
+&lt;td&gt;172.16.1.2&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;NSX-T Distributed Load Balancers get created which correspond to the ClusterIP service resources:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Pod&lt;/th&gt;
+&lt;th&gt;Ingress IP Allocation&lt;/th&gt;
+&lt;th&gt;Port&lt;/th&gt;
+&lt;th&gt;Protocol&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;kubernetes&lt;/td&gt;
+&lt;td&gt;10.96.0.1&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-dns&lt;/td&gt;
+&lt;td&gt;10.96.0.10&lt;/td&gt;
+&lt;td&gt;53&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-dns&lt;/td&gt;
+&lt;td&gt;10.96.0.10&lt;/td&gt;
+&lt;td&gt;53&lt;/td&gt;
+&lt;td&gt;L4 UDP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-dns&lt;/td&gt;
+&lt;td&gt;10.96.0.10&lt;/td&gt;
+&lt;td&gt;9153&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tkg-vmware-system-tkg-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.0.57&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;vmop-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.0.70&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capw-controller-manager-metrics-service&lt;/td&gt;
+&lt;td&gt;10.96.0.72&lt;/td&gt;
+&lt;td&gt;9846&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capw-controller-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.0.168&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-apiserver-lb-svc&lt;/td&gt;
+&lt;td&gt;10.96.0.186&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kube-apiserver-lb-svc&lt;/td&gt;
+&lt;td&gt;10.96.0.186&lt;/td&gt;
+&lt;td&gt;6443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tkg-vmware-system-tkg-controller-manager-metrics-service&lt;/td&gt;
+&lt;td&gt;10.96.0.202&lt;/td&gt;
+&lt;td&gt;9847&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;vmop-controller-manager-metrics-service&lt;/td&gt;
+&lt;td&gt;10.96.0.204&lt;/td&gt;
+&lt;td&gt;9848&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capi-kubeadm-bootstrap-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.1.44&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capi-controller-manager-metrics-service&lt;/td&gt;
+&lt;td&gt;10.96.1.45&lt;/td&gt;
+&lt;td&gt;9844&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;nsop-vmware-system-nsop-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.1.87&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capi-kubeadm-control-plane-controller-manager-metrics-service&lt;/td&gt;
+&lt;td&gt;10.96.1.95&lt;/td&gt;
+&lt;td&gt;9848&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;vmware-system-license-operator-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.1.112&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capi-kubeadm-bootstrap-controller-manager-metrics-service&lt;/td&gt;
+&lt;td&gt;10.96.1.136&lt;/td&gt;
+&lt;td&gt;9845&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;cert-manager-cert-manager&lt;/td&gt;
+&lt;td&gt;10.96.1.149&lt;/td&gt;
+&lt;td&gt;9402&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;psp-operator-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.1.150&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capi-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.1.163&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;docker-registry&lt;/td&gt;
+&lt;td&gt;10.96.1.170&lt;/td&gt;
+&lt;td&gt;5000&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;apiserver-authproxy&lt;/td&gt;
+&lt;td&gt;10.96.1.173&lt;/td&gt;
+&lt;td&gt;8443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;csi-vsphere-csi-controller&lt;/td&gt;
+&lt;td&gt;10.96.1.208&lt;/td&gt;
+&lt;td&gt;2112&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;csi-vsphere-csi-controller&lt;/td&gt;
+&lt;td&gt;10.96.1.208&lt;/td&gt;
+&lt;td&gt;2113&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;capw-capi-kubeadm-control-plane-webhook-service&lt;/td&gt;
+&lt;td&gt;10.96.0.235&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tkg-tkgs-plugin-service&lt;/td&gt;
+&lt;td&gt;10.96.1.245&lt;/td&gt;
+&lt;td&gt;8099&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;cert-manager-cert-manager-webhook&lt;/td&gt;
+&lt;td&gt;10.96.1.252&lt;/td&gt;
+&lt;td&gt;443&lt;/td&gt;
+&lt;td&gt;L4 TCP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The following three NAT rules are put in place to facilitate Egress with NSX-T:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Action&lt;/th&gt;
+&lt;th&gt;Source&lt;/th&gt;
+&lt;th&gt;Destination&lt;/th&gt;
+&lt;th&gt;Translation&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;SNAT&lt;/td&gt;
+&lt;td&gt;Any&lt;/td&gt;
+&lt;td&gt;Any&lt;/td&gt;
+&lt;td&gt;172.16.2.1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;No SNAT&lt;/td&gt;
+&lt;td&gt;10.244.0.0/20&lt;/td&gt;
+&lt;td&gt;10.244.0.0/20&lt;/td&gt;
+&lt;td&gt;Any&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;No SNAT&lt;/td&gt;
+&lt;td&gt;10.244.0.0/20&lt;/td&gt;
+&lt;td&gt;172.16.2.0/24&lt;/td&gt;
+&lt;td&gt;Any&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;supervisor-cluster-dns-complexities&#34;&gt;Supervisor Cluster DNS Complexities&lt;/h2&gt;
+&lt;p&gt;At this stage the VMs have a single NIC eth0 and management DNS resolver.&lt;/p&gt;
+&lt;p&gt;Once the NCP has created the required NSX objects the bootstrap node has a 2nd NIC added eth1 which is connected to the Cluster Network segment. This enables configuration to proceed on the bootstrap host after which the 2nd and 3rd Nodes are configured and have 2nd NIC added onnected to the Cluster Network segment.&lt;/p&gt;
+&lt;p&gt;I initially had issue where the installation status got stuck in “configuring” state. When I SSH to the first control plane VM I saw various error messages with various components. For example authorization errors were due to the kube-apiserver not being able to resolve the vCenter’s fqdn for SSO.  I had the NCP Pod moving to CrashLoopBackoff status again with what looked like fqdn lookup issues. This was confusing as during the earlier stages of the bootstrap process the bootstrap node had connected to vCenter and NSX using Management DNS resolver.&lt;/p&gt;
+&lt;p&gt;When working through the WCP installation UI there are two places to enter DNS server IP address.  The first is a DNS resolver with A and PTR records for the management components.  The Kubernetes CoreDNS performs lookups between Pods and Services within the Cluster. The second DNS entry what CoreDNS falls back to for FQDN lookups external of the Cluster. In my environment I have a single DNS solution which hosts both management and workload zones so the IP address (192.168.10.10) is common.&lt;/p&gt;
+&lt;p&gt;When I connect to first control plane VM I noticed I could ping DNS server via its management interface but could not ping DNS via workload interface.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:50:56:b3:29:f3
+          inet addr:192.168.10.45  Bcast:192.168.10.255  Mask:255.255.255.0
+...
+eth1      Link encap:Ethernet  HWaddr 04:50:56:00:d0:00
+          inet addr:10.244.0.2  Bcast:10.244.0.15  Mask:255.255.255.240
+...
+
+ping 192.168.10.10 -I eth0 -c &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+PING 192.168.10.10 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;192.168.10.10&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; from 192.168.10.45 eth0: 56&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;84&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; bytes of data.
+&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt; bytes from 192.168.10.10: icmp_seq&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; ttl&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt; time&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;0.412 ms
+
+--- 192.168.10.10 ping statistics ---
+&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; packets transmitted, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 0.412/0.412/0.412/0.000 ms
+
+ping 192.168.10.10 -I eth1 -c &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+PING 192.168.10.10 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;192.168.10.10&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; from 10.244.0.2 eth1: 56&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;84&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; bytes of data.
+From 10.244.0.1 icmp_seq&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; Destination Host Unreachable
+
+--- 192.168.10.10 ping statistics ---
+&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; packets transmitted, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; received, +1 errors, 100% packet loss, time 0ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So here I know I have a routing or Egress issue from workload to management routing domain. I would expect however the VM should still resolve vCenter and NSX-T records on management DNS and bootstrapping should comlete. I checked the network config to ensure that eth0 had correct DNS server IP and the routing table appeared correct.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cat /etc/systemd/network/10-eth0.network | grep DNS
+DNS &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 192.168.10.10
+cat /etc/systemd/network/10-eth1.network | grep DNS
+DNS &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 10.244.0.2
+
+route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.10.254  0.0.0.0         UG    &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; eth0
+10.244.0.0      0.0.0.0         255.255.255.240 U     &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; eth1
+192.168.10.0    0.0.0.0         255.255.255.0   U     &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; eth0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Looking deeper at routing policy redirects traffic to 192.168.10.10 via eth1.  As we know routing from eth1 was to DNS was not possible this causes the DNS issue.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ip rule show
+0:      from all lookup local
+0:      from all to 192.168.10.10  lookup 200
+0:      from all to 172.16.1.0 /24 lookup 200
+0:      from all to 10.244.0.0 /20 lookup 200
+0:      from 10.244.0.2 lookup 200
+0:      from all to 100.64.0.0 /16 lookup 200
+0:      from all to 10.96.0.0 /23 lookup 200
+32766:  from all lookup main
+32767:  from all lookup default
+
+ip route show table 200
+default via 10.244.0.1 dev eth1 proto static
+10.244.0.0/28 dev eth1 proto static scope link
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Interestingly if I remove Workload Management and then redeploy specifing Management DNS 192.168.10.10 but chaning Workload DNS to alternate IP but still on unroutable address 192.168.10.11. The deployment does not get stuck at the same place and completes successfully.  Looking at routing policy having unique DNS IP addressing does not force traffic to 192.168.10.10 via eth1.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ip rule show
+0:      from all lookup local
+0:      from all to 172.16.1.0 /24 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 10.244.0.0 /20 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 10.96.0.0 /23 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from 10.244.0.2 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 100.64.0.0 /16 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 192.168.10.11  lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+32766:  from all lookup main
+32767:  from all lookup default
+
+ip route show table &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+default via 10.244.0.1 dev eth1 proto static
+10.244.0.0/28 dev eth1 proto static scope link
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;workload-cluster-dns-traffic&#34;&gt;Workload Cluster DNS Traffic&lt;/h2&gt;
+&lt;p&gt;While useful to understand if the workloa cluster CoreDNS cannot route to the configured upstream DNS server it will cause an issue later so the unerlying cause needs resolving.  For me the issue was the DNS server was dual homed and required static route adding for 172.16.0.0/16 to redirect to the router which was BGP peered to the NSX Edge.&lt;/p&gt;
+&lt;h2 id=&#34;kubectl-vsphere-login-traffic&#34;&gt;Kubectl vSphere Login Traffic&lt;/h2&gt;
+&lt;p&gt;To connect to the Supervisor Cluster we connect to the LoadBalancer VIP representation of Kubernetes API ( 172.16.1.2 ).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;set KUBECTL_VSPHERE_PASSWORD&lt;span style=&#34;color:#f92672&#34;&gt;={&lt;/span&gt;my password&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+kubectl vsphere login --server&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;172.16.1.2 --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify --verbose &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;
+kubectl config use-context 172.16.1.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Raspberry Pi Kubernetes Cluster</title>
       <link>https://darrylcauldwell.github.io/post/homelab-pi-microk8s/</link>
@@ -375,7 +740,7 @@ cd veba-knative-mm-enter
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What I do need to do though is create a handler.ps1 which takes input from event and calls REST API of vROps.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; Process-Handler {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;Process&lt;/span&gt;-Handler {
    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
       [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
    )

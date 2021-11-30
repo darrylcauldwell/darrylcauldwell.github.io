@@ -4,7 +4,7 @@
   <head>
 <title>Pi Supercomputer | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.84.0" />
+<meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -210,12 +210,12 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
     slice <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
     process <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 
-    print (size)
+    <span style="color:#66d9ef">print</span> (size)
 
     <span style="color:#75715e"># Send the first batch of processes to the nodes.</span>
     <span style="color:#66d9ef">while</span> process <span style="color:#f92672">&lt;</span> size <span style="color:#f92672">and</span> slice <span style="color:#f92672">&lt;</span> total_slices:
         comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-        print (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
+        <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
         slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
         process <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 
@@ -224,23 +224,23 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
     <span style="color:#66d9ef">while</span> received_processes <span style="color:#f92672">&lt;</span> total_slices:
         pi <span style="color:#f92672">+=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
         process <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
-        print (<span style="color:#e6db74">&#34;Recieved data from process&#34;</span>, process)
+        <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Recieved data from process&#34;</span>, process)
         received_processes <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 
         <span style="color:#66d9ef">if</span> slice <span style="color:#f92672">&lt;</span> total_slices:
             comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-            print (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
+            <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
             slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
 
     <span style="color:#75715e"># Send the shutdown signal</span>
     <span style="color:#66d9ef">for</span> process <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,size):
         comm<span style="color:#f92672">.</span>send(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
 
-    print (<span style="color:#e6db74">&#34;Pi is&#34;</span>, <span style="color:#ae81ff">4.0</span> <span style="color:#f92672">*</span> pi)
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Pi is&#34;</span>, <span style="color:#ae81ff">4.0</span> <span style="color:#f92672">*</span> pi)
 
 <span style="color:#75715e"># These are the worker nodes, where rank &gt; 0. They do the real work</span>
 <span style="color:#66d9ef">else</span>:
-    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+    <span style="color:#66d9ef">while</span> True:
         start <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
         <span style="color:#66d9ef">if</span> start <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">break</span>
 
@@ -287,6 +287,9 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="vSphere with Tanzu using NSX-T">vSphere with Tanzu using NSX-T</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
       <li>
@@ -307,9 +310,6 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
       <li>
         <a href="https://darrylcauldwell.github.io/post/homelab-pi-storage/" class="nav-link" title="Comparing SD and USB 3 Storage Performance With Raspberry Pi4B">Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-ubuntu/" class="nav-link" title="Raspberry Pi Cluster Ubuntu Base">Raspberry Pi Cluster Ubuntu Base</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
@@ -326,7 +326,7 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
         
         <a href='https://darrylcauldwell.github.io/categories/homelab/' class="post_tag button button_translucent" title="homelab">
           HOMELAB
-          <span class="button_tally">10</span>
+          <span class="button_tally">11</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/certification/' class="post_tag button button_translucent" title="certification">
@@ -387,12 +387,17 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
         
         <a href='https://darrylcauldwell.github.io/tags/vsphere/' class="post_tag button button_translucent" title="vsphere">
           VSPHERE
-          <span class="button_tally">14</span>
+          <span class="button_tally">15</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/aws/' class="post_tag button button_translucent" title="aws">
           AWS
           <span class="button_tally">10</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
+          KUBERNETES
+          <span class="button_tally">7</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
@@ -407,11 +412,6 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
         
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
-          KUBERNETES
           <span class="button_tally">6</span>
         </a>
         
@@ -548,7 +548,7 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=6 title="kubernetes">KUBERNETES<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=7 title="kubernetes">KUBERNETES<span class="button_tally">7</span>
             </a>
             
             
@@ -577,6 +577,10 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
             
             
             <a href='https://darrylcauldwell.github.io/tags/nsx/' class=" post_tag button button_translucent" data-position=15 title="nsx">NSX<span class="button_tally">15</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.github.io/tags/nsx-t/' class=" post_tag button button_translucent" data-position=1 title="nsx-t">NSX-T<span class="button_tally">1</span>
             </a>
             
             
@@ -640,7 +644,7 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=1 title="tanzu">TANZU<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=2 title="tanzu">TANZU<span class="button_tally">2</span>
             </a>
             
             
@@ -712,7 +716,7 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=14 title="vsphere">VSPHERE<span class="button_tally">14</span>
+            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=15 title="vsphere">VSPHERE<span class="button_tally">15</span>
             </a>
             
             

@@ -4,7 +4,7 @@
   <head>
 <title>Controlling vSphere &amp; NSX-V With Python | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.84.0" />
+<meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -167,14 +167,14 @@ content <span style="color:#f92672">=</span> vcenter<span style="color:#f92672">
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">content.about.fullName
 <span style="color:#e6db74">&#39;VMware vCenter Server 6.5.0 build-5178943&#39;</span>
 </code></pre></div><p>We can also explore the Object Model which is well descrived here in the <a href="http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html">vSphere SDK API Docs</a> and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>VirtualMachine],<span style="color:#66d9ef">True</span>)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>VirtualMachine],True)
 vmList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
 objView<span style="color:#f92672">.</span>Destroy()
 <span style="color:#66d9ef">for</span>  vm <span style="color:#f92672">in</span> vmList:
     vm<span style="color:#f92672">.</span>summary<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>name
 </code></pre></div><h1 id="basic-put-of-configuration-information">Basic put of configuration information</h1>
 <p>As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>HostSystem],<span style="color:#66d9ef">True</span>)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>HostSystem],True)
 hostList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
 objView<span style="color:#f92672">.</span>Destroy()
 <span style="color:#66d9ef">for</span> host <span style="color:#f92672">in</span> hostList:
@@ -240,6 +240,9 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="vSphere with Tanzu using NSX-T">vSphere with Tanzu using NSX-T</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
       <li>
@@ -260,9 +263,6 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
       <li>
         <a href="https://darrylcauldwell.github.io/post/homelab-pi-mpi/" class="nav-link" title="Pi Supercomputer">Pi Supercomputer</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-storage/" class="nav-link" title="Comparing SD and USB 3 Storage Performance With Raspberry Pi4B">Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
@@ -279,7 +279,7 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
         
         <a href='https://darrylcauldwell.github.io/categories/homelab/' class="post_tag button button_translucent" title="homelab">
           HOMELAB
-          <span class="button_tally">10</span>
+          <span class="button_tally">11</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/certification/' class="post_tag button button_translucent" title="certification">
@@ -340,12 +340,17 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
         
         <a href='https://darrylcauldwell.github.io/tags/vsphere/' class="post_tag button button_translucent" title="vsphere">
           VSPHERE
-          <span class="button_tally">14</span>
+          <span class="button_tally">15</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/aws/' class="post_tag button button_translucent" title="aws">
           AWS
           <span class="button_tally">10</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
+          KUBERNETES
+          <span class="button_tally">7</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
@@ -360,11 +365,6 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
         
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
-          KUBERNETES
           <span class="button_tally">6</span>
         </a>
         
@@ -501,7 +501,7 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=6 title="kubernetes">KUBERNETES<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=7 title="kubernetes">KUBERNETES<span class="button_tally">7</span>
             </a>
             
             
@@ -530,6 +530,10 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
             
             
             <a href='https://darrylcauldwell.github.io/tags/nsx/' class=" post_tag button button_translucent" data-position=15 title="nsx">NSX<span class="button_tally">15</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.github.io/tags/nsx-t/' class=" post_tag button button_translucent" data-position=1 title="nsx-t">NSX-T<span class="button_tally">1</span>
             </a>
             
             
@@ -593,7 +597,7 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=1 title="tanzu">TANZU<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=2 title="tanzu">TANZU<span class="button_tally">2</span>
             </a>
             
             
@@ -665,7 +669,7 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=14 title="vsphere">VSPHERE<span class="button_tally">14</span>
+            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=15 title="vsphere">VSPHERE<span class="button_tally">15</span>
             </a>
             
             
