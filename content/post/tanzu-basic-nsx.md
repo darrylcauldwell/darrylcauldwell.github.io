@@ -49,7 +49,7 @@ It is possible [from vCenter Server 7.0 Update 3] to deploy a No-NAT (routed) to
 
 In this deployment I deployed the default NAT (routed) topology where the Kubernetes POD and Service are within the same routing domain.  Communications to the wider network is facilitated by combination of NAT, Load Balancer Ingress and Egress.
 
-![Tanzu Basic with NSX-T NAT](/images/tanzu-basic-nsx-nat.drawio.svg)
+![Tanzu Basic with NSX-T NAT](/images/tanzu-basic-nsx-nat.drawio.png)
 
 A NSX-T logical segment is created for ther Kubernetes Cluster network ( 10.244.0.0 /20 ) which all the Nodes and Pods will attach.
 

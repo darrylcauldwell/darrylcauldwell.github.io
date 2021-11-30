@@ -38,7 +38,7 @@ nsx_api_managers &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 192.16
 &lt;p&gt;It is possible [from vCenter Server 7.0 Update 3] to deploy a No-NAT (routed) topology which allows routing outside of the cluster network, more info on No-NAT &lt;a href=&#34;https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-2BC5CC9D-7396-4700-A698-3C97A882AE23.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;nat-topology&#34;&gt;NAT Topology&lt;/h2&gt;
 &lt;p&gt;In this deployment I deployed the default NAT (routed) topology where the Kubernetes POD and Service are within the same routing domain.  Communications to the wider network is facilitated by combination of NAT, Load Balancer Ingress and Egress.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-basic-nsx-nat.drawio.svg&#34; alt=&#34;Tanzu Basic with NSX-T NAT&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-basic-nsx-nat.drawio.png&#34; alt=&#34;Tanzu Basic with NSX-T NAT&#34;&gt;&lt;/p&gt;
 &lt;p&gt;A NSX-T logical segment is created for ther Kubernetes Cluster network ( 10.244.0.0 /20 ) which all the Nodes and Pods will attach.&lt;/p&gt;
 &lt;p&gt;NSX-T Service Load Balancers get created which correspond to the Ingress resources:&lt;/p&gt;
 &lt;table&gt;
