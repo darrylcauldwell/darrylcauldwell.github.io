@@ -250,8 +250,8 @@ kubectl config use-context hogwarts-cluster01
 kubectl run -i --tty busybox --image=quay.io/quay/busybox --restart=Never -- sh
 If you don't see a command prompt, try pressing enter.
 / # nslookup bbc.co.uk
-Server:		1.1.1.1
-Address:	1.1.1.1#53
+Server:         10.96.0.10
+Address:        10.96.0.10:53
 
 Non-authoritative answer:
 Name:	bbc.co.uk
