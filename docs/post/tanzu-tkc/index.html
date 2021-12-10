@@ -1,8 +1,8 @@
 
 <!DOCTYPE html>
-<html lang="en" data-figures="">
+<html lang="en" data-figures="" class="page">
   <head>
-<title>virtustream | </title>
+<title>Exploring Tanzu Kubernetes Clusters | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,14 +17,14 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="">
+<meta name="description" content="Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="virtustream" />
-<meta property="og:url" content="https://darrylcauldwell.github.io/tags/virtustream/" />
-<meta property="og:title" content="virtustream" />
-<meta property="og:description" content="" />
-<meta property="og:image" content="https://darrylcauldwell.github.io/images/thumbnail.png" />
+<meta name="twitter:title" content="Exploring Tanzu Kubernetes Clusters" />
+<meta property="og:url" content="https://darrylcauldwell.github.io/post/tanzu-tkc/" />
+<meta property="og:title" content="Exploring Tanzu Kubernetes Clusters" />
+<meta property="og:description" content="Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters" />
+<meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
 <link rel="manifest" href='https://darrylcauldwell.github.io/icons/site.webmanifest'>
@@ -32,8 +32,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://darrylcauldwell.github.io/tags/virtustream/">
-<link rel="alternate" type="application/rss+xml" href="https://darrylcauldwell.github.io/tags/virtustream/index.xml" title="" />
+<link rel="canonical" href="https://darrylcauldwell.github.io/post/tanzu-tkc/">
 
     
 
@@ -102,46 +101,319 @@
 </header>
 
     <main>
-
+  
 <div class="grid-inverse wrap content">
-  <ul class="posts" id="posts">
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://darrylcauldwell.github.io/post/virtustream/" title="What is Virtustream xStream Cloud">What is Virtustream xStream Cloud</a>
-      </h3>
-      <div class="post_meta">
+  <article class="post_content">
+    <h1 class="post_title">Exploring Tanzu Kubernetes Clusters</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Jul 21, 2015</span>
-      <a href='https://darrylcauldwell.github.io/tags/virtustream' title="virtustream" class="post_tag button button_translucent">virtustream
+      Dec 3, 2021</span>
+      <a href='https://darrylcauldwell.github.io/tags/tanzu' title="tanzu" class="post_tag button button_translucent">tanzu
+      </a>
+      <a href='https://darrylcauldwell.github.io/tags/kubernetes' title="kubernetes" class="post_tag button button_translucent">kubernetes
+      </a>
+      <a href='https://darrylcauldwell.github.io/tags/vsphere' title="vsphere" class="post_tag button button_translucent">vsphere
+      </a>
+      <a href='https://darrylcauldwell.github.io/tags/nsx-t' title="nsx-t" class="post_tag button button_translucent">nsx-t
       </a>
 </div>
 
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-              If you are an IT consumer with Enterprise workload it is a risk moving this workload to the cloud, how can you guarantee your potential future cloud provider is delivering you the service you require and once there how can you measure how well they are achieving delivering that service.
-What Is A Micro VM (uVM) A Micro …
-            
-          </p>
-          <a href="https://darrylcauldwell.github.io/post/virtustream/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
+    
+  <div class="post_share">
+    Share on:
+    <a href="https://twitter.com/intent/tweet?text=Exploring%20Tanzu%20Kubernetes%20Clusters&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#twitter"></use>
+</svg>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&t=Exploring%20Tanzu%20Kubernetes%20Clusters" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#facebook"></use>
+</svg>
+    </a>
+    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="Share on LinkedIn" rel="nofollow">
+      <svg class="icon">
+  <use xlink:href="#linkedin"></use>
+</svg>
+    </a>
+    <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" title="Copy Link" class="link link_yank">
+      <svg class="icon">
+  <use xlink:href="#copy"></use>
+</svg>
+    </a>
+  </div>
 
-    <li>
+    
+    <p>Following on from exploring configuring Tanzu for vSphere with NSX-T networking. I&rsquo;m continuing to explore what happens in NSX-T this time when I providion a subordinate Tanzu Kubernetes Clusters.</p>
+<p>Clusters ware created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:</p>
+<table>
+<thead>
+<tr>
+<th>Namespace</th>
+<th>User</th>
+<th>Role</th>
+<th>Storage Policy</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hogwarts</td>
+<td><a href="mailto:hermione@vsphere.local">hermione@vsphere.local</a></td>
+<td>Owner</td>
+<td>vSAN Default Storage Policy</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Hogwarts</td>
+<td><a href="mailto:harry@vsphere.local">harry@vsphere.local</a></td>
+<td>Edit</td>
+<td>vSAN Default Storage Policy</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Hogwarts</td>
+<td><a href="mailto:ron@vsphere.local">ron@vsphere.local</a></td>
+<td>View</td>
+<td>vSAN Default Storage Policy</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Hogsmead</td>
+<td><a href="mailto:hermione@vsphere.local">hermione@vsphere.local</a></td>
+<td>Edit</td>
+<td>vSAN Default Storage Policy</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Hogsmead</td>
+<td><a href="mailto:harry@vsphere.local">harry@vsphere.local</a></td>
+<td>Owner</td>
+<td>vSAN Default Storage Policy</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Hogsmead</td>
+<td><a href="mailto:ron@vsphere.local">ron@vsphere.local</a></td>
+<td>View</td>
+<td>vSAN Default Storage Policy</td>
+<td>Unlimited</td>
+</tr>
+</tbody>
+</table>
+<p>With these in place I can attempt to connect as Hermione and check access to Hippogriff.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">set KUBECTL_VSPHERE_PASSWORD<span style="color:#f92672">=</span>VMware1!
+kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify 
 
+Logged in successfully.
+You have access to the following contexts:
+   172.16.1.2
+   hogsmead
+   hogwarts
+If the context you wish to use is not in this list, you may need to try
+logging in again later, or contact your cluster administrator.
+To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
 
-    </li>
-  </ul>
+kubectl config use-context hogwarts
+</code></pre></div><p>To deploy a cluster you need to specify certain attributes such as which image and Kubernetes version to deploy and the dimensions of the nodes. The node images are stored in vSphere Content Library and some standard ones are available via a publiclu content library subscription. The VM hardware specification dimensions of node are defined as virtual machine classes. The VM storage location are defined as storage classes. The names of available images, vmclasses and storageclasses available to be deployed from supervisor can be easily checked.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get tanzukubernetesreleases
+NAME                                VERSION                          READY   COMPATIBLE   CREATED   UPDATES AVAILABLE
+v1.16.12---vmware.1-tkg.1.da7afe7   1.16.12+vmware.1-tkg.1.da7afe7   True    True         6m28s     <span style="color:#f92672">[</span>1.17.17+vmware.1-tkg.1.d44d45a 1.16.14+vmware.1-tkg.1.ada4837<span style="color:#f92672">]</span>
+v1.16.14---vmware.1-tkg.1.ada4837   1.16.14+vmware.1-tkg.1.ada4837   True    True         6m25s     <span style="color:#f92672">[</span>1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+v1.16.8---vmware.1-tkg.3.60d2ffd    1.16.8+vmware.1-tkg.3.60d2ffd    False   False        6m33s
+v1.17.11---vmware.1-tkg.1.15f1e18   1.17.11+vmware.1-tkg.1.15f1e18   True    True         6m29s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+v1.17.11---vmware.1-tkg.2.ad3d374   1.17.11+vmware.1-tkg.2.ad3d374   True    True         6m28s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+v1.17.13---vmware.1-tkg.2.2c133ed   1.17.13+vmware.1-tkg.2.2c133ed   True    True         6m30s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+v1.17.17---vmware.1-tkg.1.d44d45a   1.17.17+vmware.1-tkg.1.d44d45a   True    True         6m27s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+v1.17.7---vmware.1-tkg.1.154236c    1.17.7+vmware.1-tkg.1.154236c    True    True         6m24s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+v1.17.8---vmware.1-tkg.1.5417466    1.17.8+vmware.1-tkg.1.5417466    True    True         6m28s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+v1.18.10---vmware.1-tkg.1.3a6cd48   1.18.10+vmware.1-tkg.1.3a6cd48   True    True         6m30s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+v1.18.15---vmware.1-tkg.1.600e412   1.18.15+vmware.1-tkg.1.600e412   True    True         6m27s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+v1.18.15---vmware.1-tkg.2.ebf6117   1.18.15+vmware.1-tkg.2.ebf6117   True    True         6m29s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+v1.18.19---vmware.1-tkg.1.17af790   1.18.19+vmware.1-tkg.1.17af790   True    True         6m27s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+v1.18.5---vmware.1-tkg.1.c40d30d    1.18.5+vmware.1-tkg.1.c40d30d    True    True         6m30s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+v1.19.11---vmware.1-tkg.1.9d9b236   1.19.11+vmware.1-tkg.1.9d9b236   True    True         6m33s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+v1.19.14---vmware.1-tkg.1.8753786   1.19.14+vmware.1-tkg.1.8753786   True    True         6m29s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+v1.19.7---vmware.1-tkg.1.fc82c41    1.19.7+vmware.1-tkg.1.fc82c41    True    True         6m26s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+v1.19.7---vmware.1-tkg.2.f52f85a    1.19.7+vmware.1-tkg.2.f52f85a    True    True         6m26s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+v1.20.2---vmware.1-tkg.1.1d4f79a    1.20.2+vmware.1-tkg.1.1d4f79a    True    True         6m26s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55 1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+v1.20.2---vmware.1-tkg.2.3e10706    1.20.2+vmware.1-tkg.2.3e10706    True    True         6m33s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+v1.20.7---vmware.1-tkg.1.7fb9067    1.20.7+vmware.1-tkg.1.7fb9067    True    True         6m24s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55 1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+v1.20.8---vmware.1-tkg.2            1.20.8+vmware.1-tkg.2            True    True         6m25s
+v1.20.9---vmware.1-tkg.1.a4cee5b    1.20.9+vmware.1-tkg.1.a4cee5b    True    True         6m31s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55<span style="color:#f92672">]</span>
+v1.21.2---vmware.1-tkg.1.ee25d55    1.21.2+vmware.1-tkg.1.ee25d55    True    True         6m31s
+
+kubectl get vmclass
+NAME                  CPU   MEMORY   AGE
+best-effort-2xlarge   <span style="color:#ae81ff">8</span>     64Gi     80s
+best-effort-4xlarge   <span style="color:#ae81ff">16</span>    128Gi    80s
+best-effort-8xlarge   <span style="color:#ae81ff">32</span>    128Gi    80s
+best-effort-large     <span style="color:#ae81ff">4</span>     16Gi     80s
+best-effort-medium    <span style="color:#ae81ff">2</span>     8Gi      78s
+best-effort-small     <span style="color:#ae81ff">2</span>     4Gi      80s
+best-effort-xlarge    <span style="color:#ae81ff">4</span>     32Gi     80s
+best-effort-xsmall    <span style="color:#ae81ff">2</span>     2Gi      77s
+guaranteed-2xlarge    <span style="color:#ae81ff">8</span>     64Gi     79s
+guaranteed-4xlarge    <span style="color:#ae81ff">16</span>    128Gi    74s
+
+kubectl get storageclass -n hogwarts
+NAME                          PROVISIONER              RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+vsan-default-storage-policy   csi.vsphere.vmware.com   Delete          Immediate           true                   19m
+</code></pre></div><p>Using the output from previous commands we can copy paste the appropriate storage class, vm class and Kuberneters version values from what is available in the namespace into a yaml file definition for the cluster.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">run.tanzu.vmware.com/v1alpha2</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">TanzuKubernetesCluster</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hogwarts-cluster01</span>
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">hogwarts</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">topology</span>:
+    <span style="color:#f92672">controlPlane</span>:
+      <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">3</span>
+      <span style="color:#f92672">vmClass</span>: <span style="color:#ae81ff">best-effort-small</span>
+      <span style="color:#f92672">storageClass</span>: <span style="color:#ae81ff">vsan-default-storage-policy</span>
+      <span style="color:#f92672">tkr</span>:  
+        <span style="color:#f92672">reference</span>:
+          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">v1.21.2---vmware.1-tkg.1.ee25d55</span>
+    <span style="color:#f92672">nodePools</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">forbidden-forest</span>
+      <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">3</span>
+      <span style="color:#f92672">vmClass</span>: <span style="color:#ae81ff">best-effort-small</span>
+      <span style="color:#f92672">storageClass</span>: <span style="color:#ae81ff">vsan-default-storage-policy</span>
+      <span style="color:#f92672">tkr</span>:  
+        <span style="color:#f92672">reference</span>:
+          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">v1.21.2---vmware.1-tkg.1.ee25d55</span>
+  <span style="color:#f92672">settings</span>:
+    <span style="color:#f92672">network</span>:
+        <span style="color:#f92672">cni</span>:
+          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">antrea</span>
+        <span style="color:#f92672">services</span>:
+          <span style="color:#f92672">cidrBlocks</span>: [<span style="color:#e6db74">&#34;10.96.0.0/12&#34;</span>]
+        <span style="color:#f92672">pods</span>:
+          <span style="color:#f92672">cidrBlocks</span>: [<span style="color:#e6db74">&#34;172.16.128.0/17&#34;</span>]
+        <span style="color:#f92672">serviceDomain</span>: <span style="color:#ae81ff">hogwarts.local</span>
+</code></pre></div><p>With all of this in place we can deploy the cluster,  we can check it has been deployed correctly.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f hogwarts-cls1.yml
+tanzukubernetescluster.run.tanzu.vmware.com/hogwarts-cluster01 created
+
+kubectl get TanzuKubernetesCluster
+NAMESPACE   NAME                 CONTROL PLANE   WORKER   TKR NAME                           AGE   READY   TKR COMPATIBLE   UPDATES AVAILABLE
+hogwarts    hogwarts-cluster01   <span style="color:#ae81ff">3</span>               <span style="color:#ae81ff">3</span>        v1.21.2---vmware.1-tkg.1.ee25d55   32m   True    True
+
+kubectl get virtualmachines
+NAME                                                         POWERSTATE   AGE
+hogwarts-cluster01-control-plane-9tljd                       poweredOn    35m
+hogwarts-cluster01-control-plane-cn89v                       poweredOn    37m
+hogwarts-cluster01-control-plane-wfnjg                       poweredOn    41m
+hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-fqw2d   poweredOn    38m
+hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-n2r5s   poweredOn    38m
+hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-vbnnj   poweredOn    38m
+
+kubectl get service
+NAME                                               TYPE           CLUSTER-IP    EXTERNAL-IP   PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>          AGE
+service/hogwarts-cluster01-control-plane-service   LoadBalancer   10.96.0.231   172.16.1.3    6443:32176/TCP   44m
+</code></pre></div><p>If I swing over to take a look what has happened in NSX-T a second segment has been added to the T1 router which was created during the supervisor cluster enablement. The segment has connected the three control plane and three node pool VMs. An NSX Load Balancer is deployed to represent the Kubernetes API service resource.  There are also NAT Rules to represent cluster Egress via 172.16.2.2 IP address. All of the created NSX entities have the namespace name in this case &lsquo;hogwarts&rsquo; in their description they are really easy to identify via search.</p>
+<p>So all looks good and can try and connect to the subordinate cluster and interact with it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
+
+Logged in successfully.
+You have access to the following contexts:
+   172.16.1.2
+   hogsmead
+   hogwarts
+   hogwarts-cluster01
+If the context you wish to use is not in this list, you may need to try logging in again later, or contact your cluster administrator.
+To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
+
+kubectl config use-context hogwarts-cluster01
+
+kubectl get nodes
+NAME                                                         STATUS   ROLES                  AGE   VERSION
+hogwarts-cluster01-control-plane-9tljd                       Ready    control-plane,master   58m   v1.21.2+vmware.1
+hogwarts-cluster01-control-plane-cn89v                       Ready    control-plane,master   61m   v1.21.2+vmware.1
+hogwarts-cluster01-control-plane-wfnjg                       Ready    control-plane,master   64m   v1.21.2+vmware.1
+hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-fqw2d   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
+hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-n2r5s   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
+hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-vbnnj   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
+</code></pre></div><p>Next step is to deploy first Pod into the cluster, but this got stuck ContainerCreating and Pod seems to show an Antrea socket error.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl run -i --tty busybox --image<span style="color:#f92672">=</span>quay.io/quay/busybox --restart<span style="color:#f92672">=</span>Never -- sh
+
+kubectl get pods
+NAME      READY   STATUS              RESTARTS   AGE
+busybox   0/1     ContainerCreating   <span style="color:#ae81ff">0</span>          3m12s
+
+kubectl describe pod busybox
+Events:
+  Type     Reason                  Age                From               Message
+  ----     ------                  ----               ----               -------
+  Normal   Scheduled               3m55s              default-scheduler  Successfully assigned default/busybox to hogwarts-cluster01-forbidden-forest-8g2s2-66d6bfdd-8wzbr
+  Warning  FailedCreatePodSandBox  3m52s              kubelet            Failed to create pod sandbox: rpc error: code <span style="color:#f92672">=</span> Unknown desc <span style="color:#f92672">=</span> failed to setup network <span style="color:#66d9ef">for</span> sandbox <span style="color:#e6db74">&#34;354f63b2c94a0fb5a88c9611adb3008c7dd564deb157a39ebeca78f1b717316c&#34;</span>: rpc error: code <span style="color:#f92672">=</span> Unavailable desc <span style="color:#f92672">=</span> connection error: desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;transport: Error while dialing dial unix /var/run/antrea/cni.sock: connect: connection refused&#34;</span>
+</code></pre></div><p>So first thing to look at I guess is Antrea Pods and can see one is broken.  Checking logs and it looks like OVS timed out on startup.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -A
+NAMESPACE                      NAME                                                                       READY   STATUS              RESTARTS   AGE
+default                        busybox                                                                    0/1     ContainerCreating   <span style="color:#ae81ff">0</span>          12m
+kube-system                    antrea-agent-8pf5t                                                         0/2     CrashLoopBackOff    <span style="color:#ae81ff">26</span>         96m
+kube-system                    antrea-agent-bv9rq                                                         2/2     Running             <span style="color:#ae81ff">1</span>          102m
+kube-system                    antrea-agent-cth2b                                                         2/2     Running             <span style="color:#ae81ff">0</span>          102m
+kube-system                    antrea-agent-p6qfq                                                         2/2     Running             <span style="color:#ae81ff">1</span>          96m
+kube-system                    antrea-agent-wh8k4                                                         2/2     Running             <span style="color:#ae81ff">0</span>          91m
+kube-system                    antrea-agent-wsrtg                                                         2/2     Running             <span style="color:#ae81ff">0</span>          99m
+
+kubectl logs antrea-agent-8pf5t -n kube-system antrea-ovs
+<span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:08:00Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Starting ovsdb-server
+Starting ovsdb-server.
+2021-12-03T20:09:05Z|00002|timeval|WARN|Unreasonably long 10026ms poll interval <span style="color:#f92672">(</span>7883ms user, 82ms system<span style="color:#f92672">)</span>
+2021-12-03T20:09:05Z|00003|timeval|WARN|faults: <span style="color:#ae81ff">57</span> minor, <span style="color:#ae81ff">0</span> major
+2021-12-03T20:09:05Z|00004|timeval|WARN|context switches: <span style="color:#ae81ff">0</span> voluntary, <span style="color:#ae81ff">9309</span> involuntary
+2021-12-03T20:09:17Z|00002|timeval|WARN|Unreasonably long 8797ms poll interval <span style="color:#f92672">(</span>7858ms user, 89ms system<span style="color:#f92672">)</span>
+2021-12-03T20:09:17Z|00003|timeval|WARN|faults: <span style="color:#ae81ff">60</span> minor, <span style="color:#ae81ff">0</span> major
+2021-12-03T20:09:17Z|00004|timeval|WARN|context switches: <span style="color:#ae81ff">0</span> voluntary, <span style="color:#ae81ff">9264</span> involuntary
+Configuring Open vSwitch system IDs.
+/usr/share/openvswitch/scripts/ovs-ctl: line 42: hostname: command not found
+Enabling remote OVSDB managers.
+<span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:09:19Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Stopping OVS before quit
+<span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:09:19Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Stopping OVS
+ovs-vswitchd is not running.
+2021-12-03T20:09:21Z|00001|fatal_signal|WARN|terminating with signal <span style="color:#ae81ff">14</span> <span style="color:#f92672">(</span>Alarm clock<span style="color:#f92672">)</span>
+</code></pre></div><p>As this was a timeout and that the cluster is very easy to remove and redeploy I tried this and with exact same configuration this issue resolved. And we can finally run our pod and run some commands!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config use-context hogwarts
+kubectl delete -f hogwarts-cls1b.yml
+kubectl apply -f hogwarts-cls1b.yml
+
+kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
+Logged in successfully.
+You have access to the following contexts:
+   172.16.1.2
+   hogsmead
+   hogwarts
+   hogwarts-cluster01
+If the context you wish to use is not in this list, you may need to try logging in again later, or contact your cluster administrator.
+To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
+
+kubectl config use-context hogwarts-cluster01
+
+kubectl run -i --tty busybox --image<span style="color:#f92672">=</span>quay.io/quay/busybox --restart<span style="color:#f92672">=</span>Never -- sh
+If you don<span style="color:#960050;background-color:#1e0010">&#39;</span>t see a command prompt, try pressing enter.
+/ <span style="color:#75715e"># nslookup bbc.co.uk</span>
+Server:		1.1.1.1
+Address:	1.1.1.1#53
+
+Non-authoritative answer:
+Name:	bbc.co.uk
+Address: 151.101.128.81
+Name:	bbc.co.uk
+Address: 151.101.0.81
+Name:	bbc.co.uk
+Address: 151.101.192.81
+Name:	bbc.co.uk
+Address: 151.101.64.81
+
+/ <span style="color:#75715e">#</span>
+</code></pre></div>
+
+  </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
     
@@ -168,9 +440,6 @@ What Is A Micro VM (uVM) A Micro …
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Exploring Tanzu Kubernetes Clusters">Exploring Tanzu Kubernetes Clusters</a>
-      </li>
-      <li>
         <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="vSphere with Tanzu using NSX-T">vSphere with Tanzu using NSX-T</a>
       </li>
       <li>
@@ -190,6 +459,9 @@ What Is A Micro VM (uVM) A Micro …
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/vcf-lcm/" class="nav-link" title="VMware Cloud Foundation Lifecycle Management - VCF LCM">VMware Cloud Foundation Lifecycle Management - VCF LCM</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.github.io/post/homelab-pi-mpi/" class="nav-link" title="Pi Supercomputer">Pi Supercomputer</a>
       </li>
     </ul>
     <div>
@@ -620,9 +892,8 @@ What Is A Micro VM (uVM) A Micro …
   </section>
 </aside>
 
+  
 </div>
-
-
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>
