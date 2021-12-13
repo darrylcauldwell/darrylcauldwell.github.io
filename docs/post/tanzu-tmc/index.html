@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>Exploring Tanzu Mission Control | </title>
+<title>Managing Clusters Using Tanzu Mission Control | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Exploring Tanzu Mission Control">
+<meta name="description" content="Managing Clusters Using Tanzu Mission Control">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Exploring Tanzu Mission Control" />
+<meta name="twitter:title" content="Managing Clusters Using Tanzu Mission Control" />
 <meta property="og:url" content="https://darrylcauldwell.github.io/post/tanzu-tmc/" />
-<meta property="og:title" content="Exploring Tanzu Mission Control" />
-<meta property="og:description" content="Exploring Tanzu Mission Control" />
+<meta property="og:title" content="Managing Clusters Using Tanzu Mission Control" />
+<meta property="og:description" content="Managing Clusters Using Tanzu Mission Control" />
 <meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
@@ -104,7 +104,7 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">Exploring Tanzu Mission Control</h1><div class="post_meta">
+    <h1 class="post_title">Managing Clusters Using Tanzu Mission Control</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
@@ -124,12 +124,12 @@
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Exploring%20Tanzu%20Mission%20Control&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tmc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Managing%20Clusters%20Using%20Tanzu%20Mission%20Control&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tmc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tmc%2f&t=Exploring%20Tanzu%20Mission%20Control" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tmc%2f&t=Managing%20Clusters%20Using%20Tanzu%20Mission%20Control" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -147,26 +147,32 @@
   </div>
 
     
-    <p>With my TKG supervisor cluster deployed and tested with the deployment of first subordinate cluster. I am begining to look at Tanzu Mission Control. First I&rsquo;ll create a group to place them in. I&rsquo;m adding a simple label so other users know who to contact with any queries.</p>
+    <p>Third in a series of posts which build on each other looking Tanzu.</p>
+<ol>
+<li><a href="/post/tanzu-basic-nsx">Deploying Tanzu for vSphere with NSX-T</a></li>
+<li><a href="/post/tanzu-tkc">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a></li>
+<li><a href="/post/tanzu-tmc">Managing Tanzu Kubernetes Clusters Using Misson Control</a></li>
+</ol>
+<p>I am moving next to look at Tanzu Mission Control. The Mission Control inventory has a hierachy, first I&rsquo;ll create a group to place the clusters in. While adding the group add some metadata to group including a label so other users know who to contact with any queries.</p>
 <p><img src="/images/tanzu-tmc-cluster-group.png" alt="Tanzu Mission Control Cluster Group"></p>
-<p>First step is to enter some metadata for the cluster I&rsquo;m looking to attach.</p>
+<p>With the group in place we can look at attaching an existing cluster to TMC.  Following the wizard the first step is to enter some metadata for the cluster being attached.</p>
 <p><img src="/images/tanzu-tmc-cluster-meta.png" alt="Tanzu Mission Control Cluster Metadata"></p>
-<p>I then get option to proxy details but this is not required for me deployment.</p>
+<p>anzu Misson Control does not need to connect inwards to the cluster to be managed.  Instead agents are deployed and configured on the cluster which initiate outbound connection to Tanzu Misson Control. Outbound internet communications are sometimes via proxy, if required add proxy details next.</p>
 <p><img src="/images/tanzu-tmc-cluster-proxy.png" alt="Tanzu Mission Control Cluster Proxy"></p>
-<p>Tanzu Misson Control does not connect inwards to the cluster to be managed.  Instead agents are deployed and configured on the cluster which initiate outbound connection to Tanzu Misson Control. The UI presents the yaml to deploy the agent with configuration. I had configured user Hermione as the owner of the cluster so to logon with her credentials and deploy the agents</p>
+<p>When the deployed agents initiate communications with TMC they require to advertise who they are and be associated with the right objects. The agent configuration is supplied via UI as YAML. A URL is supplied to the configuration on internet. The administrator of this cluster is Hermione so I connect with her credentials and apply the yaml file to deploy and configure the agents.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
 
 kubectl create -f <span style="color:#e6db74">&#34;https://tanzuemea.tmc.cloud.vmware.com/installer?id=f1d706f38d6f3ad834314a941831b190e18508468ade1adf2e105a822c8c0b49&amp;source=attach&#34;</span>
 </code></pre></div><p><img src="/images/tanzu-tmc-cluster-kubectl.png" alt="Tanzu Mission Control Cluster kubectl"></p>
 <p>Once the agent has be deployed can move back to TMC. The agents take a couple of minutes to initialize and gather data but in very short order can then view the cluster and extension health in TMC.</p>
 <p><img src="/images/tanzu-tmc-cluster-health.png" alt="Tanzu Mission Control Cluster Health"></p>
-<p>So lesson so far is that onboarding an existing cluster into TMC is pretty simple.  To unlock more power of TMC we can register the TKG management cluster. The process is similar but slightly different to onboarding clusters we start with the meta data.</p>
+<p>To unlock more power of TMC we can register the TKG management cluster. The process is similar to attaching subordinate cluster but is slightly different as before we start with adding some metadata.</p>
 <p><img src="/images/tanzu-tmc-cluster-sup-meta.png" alt="Tanzu Mission Control Supervisor Cluster Metadata"></p>
 <p>Again here I am not using proxy so just skip through next page.</p>
 <p><img src="/images/tanzu-tmc-cluster-sup-proxy.png" alt="Tanzu Mission Control Supervisor Cluster Proxy"></p>
-<p>For onboarding the management cluster this next step is different.  Rather than being presented with a yaml file to apply with kubectl cmd here the wizard outputs a URL containing config.</p>
+<p>Rather than being presented with a yaml file to apply with kubectl cmd here the wizard outputs a URL link which contains config.</p>
 <p><img src="/images/tanzu-tmc-cluster-sup-URL.png" alt="Tanzu Mission Control Supervisor Cluster Config URL"></p>
-<p>We then have to create yaml file using the supplied URL.  This needs to be ran in the context of the cluster itself so we switch to that and then get the namespace name.</p>
+<p>We then have to create environmentally specific yaml file which includes namespace and the supplied URL. This needs to be ran in the context of the cluster itself so we switch to that and then get the namespace name prefixed with svc-tmc.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify
 Logged in successfully.
 You have access to the following contexts:
@@ -180,7 +186,7 @@ To change context, use <span style="color:#e6db74">`</span>kubectl config use-co
 kubectl config use-context 172.16.1.2
 Switched to context <span style="color:#e6db74">&#34;172.16.1.2&#34;</span>.
 
-kubectl get ns | grep svc
+kubectl get ns | grep svc-tmc
 NAME                                        STATUS   AGE
 svc-tmc-c34                                 Active   11d
 </code></pre></div><p>With the namespace name and URL we can populate the yaml file to apply agent and config.</p>
@@ -192,7 +198,7 @@ svc-tmc-c34                                 Active   11d
 <span style="color:#f92672">spec</span>:
   <span style="color:#f92672">operation</span>: <span style="color:#ae81ff">INSTALL</span>
   <span style="color:#f92672">registrationLink</span>: <span style="color:#ae81ff">https://tanzuemea.tmc.cloud.vmware.com/installer?id=0f25b71394ac623867f64138ed9d27bb0db5e8d0436e874e4f65ff179e7be807&amp;source=registration&amp;type=tkgs</span>
-</code></pre></div><p>We can then apply the configuration using kubectl.</p>
+</code></pre></div><p>We can then apply the configuration using kubectl and the agents get created with correct configuration.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create -f tmc-registration.yaml
 agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
 </code></pre></div><p><img src="/images/tanzu-tmc-cluster-sup-kubectl.png" alt="Tanzu Mission Control Supervisor Cluster kubectl"></p>
@@ -254,10 +260,10 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Exploring Tanzu Kubernetes Clusters">Exploring Tanzu Kubernetes Clusters</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Managing Tanzu Kubernetes Clusters Using ClusterAPI">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a>
       </li>
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="vSphere with Tanzu using NSX-T">vSphere with Tanzu using NSX-T</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="Deploying Tanzu for vSphere with NSX-T">Deploying Tanzu for vSphere with NSX-T</a>
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>

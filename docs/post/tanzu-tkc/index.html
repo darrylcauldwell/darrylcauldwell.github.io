@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>Exploring Tanzu Kubernetes Clusters | </title>
+<title>Managing Tanzu Kubernetes Clusters Using ClusterAPI | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -20,9 +20,9 @@
 <meta name="description" content="Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Exploring Tanzu Kubernetes Clusters" />
+<meta name="twitter:title" content="Managing Tanzu Kubernetes Clusters Using ClusterAPI" />
 <meta property="og:url" content="https://darrylcauldwell.github.io/post/tanzu-tkc/" />
-<meta property="og:title" content="Exploring Tanzu Kubernetes Clusters" />
+<meta property="og:title" content="Managing Tanzu Kubernetes Clusters Using ClusterAPI" />
 <meta property="og:description" content="Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters" />
 <meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
@@ -104,7 +104,7 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">Exploring Tanzu Kubernetes Clusters</h1><div class="post_meta">
+    <h1 class="post_title">Managing Tanzu Kubernetes Clusters Using ClusterAPI</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
@@ -124,12 +124,12 @@
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Exploring%20Tanzu%20Kubernetes%20Clusters&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Managing%20Tanzu%20Kubernetes%20Clusters%20Using%20ClusterAPI&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&t=Exploring%20Tanzu%20Kubernetes%20Clusters" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&t=Managing%20Tanzu%20Kubernetes%20Clusters%20Using%20ClusterAPI" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -147,8 +147,13 @@
   </div>
 
     
-    <p>Following on from exploring configuring Tanzu for vSphere with NSX-T networking. I&rsquo;m continuing to explore what happens in NSX-T this time when I providion a subordinate Tanzu Kubernetes Clusters.</p>
-<p>Clusters ware created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:</p>
+    <p>Second in a series of posts which build on each other looking Tanzu.</p>
+<ol>
+<li><a href="/post/tanzu-basic-nsx">Deploying Tanzu for vSphere with NSX-T</a></li>
+<li><a href="/post/tanzu-tkc">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a></li>
+<li><a href="/post/tanzu-tmc">Managing Tanzu Kubernetes Clusters Using Misson Control</a></li>
+</ol>
+<p>Clusters are created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:</p>
 <table>
 <thead>
 <tr>
@@ -440,10 +445,10 @@ Address: 151.101.64.81
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Exploring Tanzu Mission Control">Exploring Tanzu Mission Control</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Managing Clusters Using Tanzu Mission Control">Managing Clusters Using Tanzu Mission Control</a>
       </li>
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="vSphere with Tanzu using NSX-T">vSphere with Tanzu using NSX-T</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="Deploying Tanzu for vSphere with NSX-T">Deploying Tanzu for vSphere with NSX-T</a>
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>

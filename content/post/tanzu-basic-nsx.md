@@ -1,7 +1,7 @@
 +++
-title = "vSphere with Tanzu using NSX-T"
+title = "Deploying Tanzu for vSphere with NSX-T"
 date = "2021-11-15"
-description = "vSphere with Tanzu Basic using NSX-T"
+description = "Deploying vSphere with Tanzu"
 tags = [
     "tanzu",
     "kubernetes",
@@ -13,7 +13,11 @@ categories = [
 ]
 thumbnail = "clarity-icons/code-144.svg"
 +++
-I am looking to understand by exploring configuring Tanzu for vSphere with NSX-T networking.
+First in a series of posts which build on each other looking Tanzu.
+
+1. [Deploying Tanzu for vSphere with NSX-T](/post/tanzu-basic-nsx)
+2. [Managing Tanzu Kubernetes Clusters Using ClusterAPI](/post/tanzu-tkc)
+3. [Managing Tanzu Kubernetes Clusters Using Misson Control](/post/tanzu-tmc)
 
 ## Supervisor Cluster Bootstrap
 

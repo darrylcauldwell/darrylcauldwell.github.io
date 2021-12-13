@@ -1,5 +1,5 @@
 +++
-title = "Exploring Tanzu Kubernetes Clusters"
+title = "Managing Tanzu Kubernetes Clusters Using ClusterAPI"
 date = "2021-12-03"
 description = "Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters"
 tags = [
@@ -13,9 +13,13 @@ categories = [
 ]
 thumbnail = "clarity-icons/code-144.svg"
 +++
-Following on from exploring configuring Tanzu for vSphere with NSX-T networking. I'm continuing to explore what happens in NSX-T this time when I providion a subordinate Tanzu Kubernetes Clusters.
+Second in a series of posts which build on each other looking Tanzu.
 
-Clusters ware created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:
+1. [Deploying Tanzu for vSphere with NSX-T](/post/tanzu-basic-nsx)
+2. [Managing Tanzu Kubernetes Clusters Using ClusterAPI](/post/tanzu-tkc)
+3. [Managing Tanzu Kubernetes Clusters Using Misson Control](/post/tanzu-tmc)
+
+Clusters are created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:
 
 | Namespace | User | Role | Storage Policy | Limit |
 | --- | --- | --- | --- | --- |

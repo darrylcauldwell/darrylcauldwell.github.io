@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>vSphere with Tanzu using NSX-T | </title>
+<title>Deploying Tanzu for vSphere with NSX-T | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="vSphere with Tanzu Basic using NSX-T">
+<meta name="description" content="Deploying vSphere with Tanzu">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="vSphere with Tanzu using NSX-T" />
+<meta name="twitter:title" content="Deploying Tanzu for vSphere with NSX-T" />
 <meta property="og:url" content="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" />
-<meta property="og:title" content="vSphere with Tanzu using NSX-T" />
-<meta property="og:description" content="vSphere with Tanzu Basic using NSX-T" />
+<meta property="og:title" content="Deploying Tanzu for vSphere with NSX-T" />
+<meta property="og:description" content="Deploying vSphere with Tanzu" />
 <meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
@@ -104,7 +104,7 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">vSphere with Tanzu using NSX-T</h1><div class="post_meta">
+    <h1 class="post_title">Deploying Tanzu for vSphere with NSX-T</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
@@ -124,12 +124,12 @@
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=vSphere%20with%20Tanzu%20using%20NSX-T&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-basic-nsx%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Deploying%20Tanzu%20for%20vSphere%20with%20NSX-T&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-basic-nsx%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-basic-nsx%2f&t=vSphere%20with%20Tanzu%20using%20NSX-T" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-basic-nsx%2f&t=Deploying%20Tanzu%20for%20vSphere%20with%20NSX-T" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -147,7 +147,12 @@
   </div>
 
     
-    <p>I am looking to understand by exploring configuring Tanzu for vSphere with NSX-T networking.</p>
+    <p>First in a series of posts which build on each other looking Tanzu.</p>
+<ol>
+<li><a href="/post/tanzu-basic-nsx">Deploying Tanzu for vSphere with NSX-T</a></li>
+<li><a href="/post/tanzu-tkc">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a></li>
+<li><a href="/post/tanzu-tmc">Managing Tanzu Kubernetes Clusters Using Misson Control</a></li>
+</ol>
 <h2 id="supervisor-cluster-bootstrap">Supervisor Cluster Bootstrap</h2>
 <p>The enablement of Workload Control Plane triggers the deployment of three VMs which initially have single vNIC eth0 connected to a PortGroup which can route to vCenter and NSX. This appears to configure the first VM as bootstrap Kubernetes Node on which are deployed multiple Pods. The NSX Container Plug-in (NCP) Pod performs integration of Kubernetes and NSX-T.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -n vmware-system-nsx
@@ -528,10 +533,10 @@ kubectl config use-context 172.16.1.2
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Exploring Tanzu Mission Control">Exploring Tanzu Mission Control</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Managing Clusters Using Tanzu Mission Control">Managing Clusters Using Tanzu Mission Control</a>
       </li>
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Exploring Tanzu Kubernetes Clusters">Exploring Tanzu Kubernetes Clusters</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Managing Tanzu Kubernetes Clusters Using ClusterAPI">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a>
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>

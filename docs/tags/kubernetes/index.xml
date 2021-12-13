@@ -7,33 +7,39 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Fri, 10 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Exploring Tanzu Mission Control</title>
+      <title>Managing Clusters Using Tanzu Mission Control</title>
       <link>https://darrylcauldwell.github.io/post/tanzu-tmc/</link>
       <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>https://darrylcauldwell.github.io/post/tanzu-tmc/</guid>
       <description>
         
-          &lt;p&gt;With my TKG supervisor cluster deployed and tested with the deployment of first subordinate cluster. I am begining to look at Tanzu Mission Control. First I&amp;rsquo;ll create a group to place them in. I&amp;rsquo;m adding a simple label so other users know who to contact with any queries.&lt;/p&gt;
+          &lt;p&gt;Third in a series of posts which build on each other looking Tanzu.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-basic-nsx&#34;&gt;Deploying Tanzu for vSphere with NSX-T&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu Kubernetes Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu Kubernetes Clusters Using Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I am moving next to look at Tanzu Mission Control. The Mission Control inventory has a hierachy, first I&amp;rsquo;ll create a group to place the clusters in. While adding the group add some metadata to group including a label so other users know who to contact with any queries.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-group.png&#34; alt=&#34;Tanzu Mission Control Cluster Group&#34;&gt;&lt;/p&gt;
-&lt;p&gt;First step is to enter some metadata for the cluster I&amp;rsquo;m looking to attach.&lt;/p&gt;
+&lt;p&gt;With the group in place we can look at attaching an existing cluster to TMC.  Following the wizard the first step is to enter some metadata for the cluster being attached.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-meta.png&#34; alt=&#34;Tanzu Mission Control Cluster Metadata&#34;&gt;&lt;/p&gt;
-&lt;p&gt;I then get option to proxy details but this is not required for me deployment.&lt;/p&gt;
+&lt;p&gt;anzu Misson Control does not need to connect inwards to the cluster to be managed.  Instead agents are deployed and configured on the cluster which initiate outbound connection to Tanzu Misson Control. Outbound internet communications are sometimes via proxy, if required add proxy details next.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-proxy.png&#34; alt=&#34;Tanzu Mission Control Cluster Proxy&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Tanzu Misson Control does not connect inwards to the cluster to be managed.  Instead agents are deployed and configured on the cluster which initiate outbound connection to Tanzu Misson Control. The UI presents the yaml to deploy the agent with configuration. I had configured user Hermione as the owner of the cluster so to logon with her credentials and deploy the agents&lt;/p&gt;
+&lt;p&gt;When the deployed agents initiate communications with TMC they require to advertise who they are and be associated with the right objects. The agent configuration is supplied via UI as YAML. A URL is supplied to the configuration on internet. The administrator of this cluster is Hermione so I connect with her credentials and apply the yaml file to deploy and configure the agents.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl vsphere login --server&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
 
 kubectl create -f &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://tanzuemea.tmc.cloud.vmware.com/installer?id=f1d706f38d6f3ad834314a941831b190e18508468ade1adf2e105a822c8c0b49&amp;amp;source=attach&amp;#34;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-kubectl.png&#34; alt=&#34;Tanzu Mission Control Cluster kubectl&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once the agent has be deployed can move back to TMC. The agents take a couple of minutes to initialize and gather data but in very short order can then view the cluster and extension health in TMC.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-health.png&#34; alt=&#34;Tanzu Mission Control Cluster Health&#34;&gt;&lt;/p&gt;
-&lt;p&gt;So lesson so far is that onboarding an existing cluster into TMC is pretty simple.  To unlock more power of TMC we can register the TKG management cluster. The process is similar but slightly different to onboarding clusters we start with the meta data.&lt;/p&gt;
+&lt;p&gt;To unlock more power of TMC we can register the TKG management cluster. The process is similar to attaching subordinate cluster but is slightly different as before we start with adding some metadata.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-meta.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster Metadata&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Again here I am not using proxy so just skip through next page.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-proxy.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster Proxy&#34;&gt;&lt;/p&gt;
-&lt;p&gt;For onboarding the management cluster this next step is different.  Rather than being presented with a yaml file to apply with kubectl cmd here the wizard outputs a URL containing config.&lt;/p&gt;
+&lt;p&gt;Rather than being presented with a yaml file to apply with kubectl cmd here the wizard outputs a URL link which contains config.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-URL.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster Config URL&#34;&gt;&lt;/p&gt;
-&lt;p&gt;We then have to create yaml file using the supplied URL.  This needs to be ran in the context of the cluster itself so we switch to that and then get the namespace name.&lt;/p&gt;
+&lt;p&gt;We then have to create environmentally specific yaml file which includes namespace and the supplied URL. This needs to be ran in the context of the cluster itself so we switch to that and then get the namespace name prefixed with svc-tmc.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl vsphere login --server&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;172.16.1.2 --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify
 Logged in successfully.
 You have access to the following contexts:
@@ -47,7 +53,7 @@ To change context, use &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;k
 kubectl config use-context 172.16.1.2
 Switched to context &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.16.1.2&amp;#34;&lt;/span&gt;.
 
-kubectl get ns | grep svc
+kubectl get ns | grep svc-tmc
 NAME                                        STATUS   AGE
 svc-tmc-c34                                 Active   11d
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the namespace name and URL we can populate the yaml file to apply agent and config.&lt;/p&gt;
@@ -59,7 +65,7 @@ svc-tmc-c34                                 Active   11d
 &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
   &lt;span style=&#34;color:#f92672&#34;&gt;operation&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;INSTALL&lt;/span&gt;
   &lt;span style=&#34;color:#f92672&#34;&gt;registrationLink&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;https://tanzuemea.tmc.cloud.vmware.com/installer?id=0f25b71394ac623867f64138ed9d27bb0db5e8d0436e874e4f65ff179e7be807&amp;amp;source=registration&amp;amp;type=tkgs&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then apply the configuration using kubectl.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then apply the configuration using kubectl and the agents get created with correct configuration.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create -f tmc-registration.yaml
 agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-kubectl.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster kubectl&#34;&gt;&lt;/p&gt;
@@ -98,15 +104,20 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
     </item>
     
     <item>
-      <title>Exploring Tanzu Kubernetes Clusters</title>
+      <title>Managing Tanzu Kubernetes Clusters Using ClusterAPI</title>
       <link>https://darrylcauldwell.github.io/post/tanzu-tkc/</link>
       <pubDate>Fri, 03 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>https://darrylcauldwell.github.io/post/tanzu-tkc/</guid>
       <description>
         
-          &lt;p&gt;Following on from exploring configuring Tanzu for vSphere with NSX-T networking. I&amp;rsquo;m continuing to explore what happens in NSX-T this time when I providion a subordinate Tanzu Kubernetes Clusters.&lt;/p&gt;
-&lt;p&gt;Clusters ware created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:&lt;/p&gt;
+          &lt;p&gt;Second in a series of posts which build on each other looking Tanzu.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-basic-nsx&#34;&gt;Deploying Tanzu for vSphere with NSX-T&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu Kubernetes Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu Kubernetes Clusters Using Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Clusters are created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -375,14 +386,19 @@ Address: 151.101.64.81
     </item>
     
     <item>
-      <title>vSphere with Tanzu using NSX-T</title>
+      <title>Deploying Tanzu for vSphere with NSX-T</title>
       <link>https://darrylcauldwell.github.io/post/tanzu-basic-nsx/</link>
       <pubDate>Mon, 15 Nov 2021 00:00:00 +0000</pubDate>
       
       <guid>https://darrylcauldwell.github.io/post/tanzu-basic-nsx/</guid>
       <description>
         
-          &lt;p&gt;I am looking to understand by exploring configuring Tanzu for vSphere with NSX-T networking.&lt;/p&gt;
+          &lt;p&gt;First in a series of posts which build on each other looking Tanzu.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-basic-nsx&#34;&gt;Deploying Tanzu for vSphere with NSX-T&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu Kubernetes Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu Kubernetes Clusters Using Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
 &lt;h2 id=&#34;supervisor-cluster-bootstrap&#34;&gt;Supervisor Cluster Bootstrap&lt;/h2&gt;
 &lt;p&gt;The enablement of Workload Control Plane triggers the deployment of three VMs which initially have single vNIC eth0 connected to a PortGroup which can route to vCenter and NSX. This appears to configure the first VM as bootstrap Kubernetes Node on which are deployed multiple Pods. The NSX Container Plug-in (NCP) Pod performs integration of Kubernetes and NSX-T.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl get pods -n vmware-system-nsx
