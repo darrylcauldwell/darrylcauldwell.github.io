@@ -5,7 +5,98 @@
     <link>https://darrylcauldwell.github.io/tags/tanzu/</link>
     <description>Recent content in tanzu on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 03 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/tanzu/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 10 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/tanzu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploring Tanzu Mission Control</title>
+      <link>https://darrylcauldwell.github.io/post/tanzu-tmc/</link>
+      <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/tanzu-tmc/</guid>
+      <description>
+        
+          &lt;p&gt;With my TKG supervisor cluster deployed and tested with the deployment of first subordinate cluster. I am begining to look at Tanzu Mission Control. First I&amp;rsquo;ll create a group to place them in. I&amp;rsquo;m adding a simple label so other users know who to contact with any queries.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-group.png&#34; alt=&#34;Tanzu Mission Control Cluster Group&#34;&gt;&lt;/p&gt;
+&lt;p&gt;First step is to enter some metadata for the cluster I&amp;rsquo;m looking to attach.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-meta.png&#34; alt=&#34;Tanzu Mission Control Cluster Metadata&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I then get option to proxy details but this is not required for me deployment.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-proxy.png&#34; alt=&#34;Tanzu Mission Control Cluster Proxy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Tanzu Misson Control does not connect inwards to the cluster to be managed.  Instead agents are deployed and configured on the cluster which initiate outbound connection to Tanzu Misson Control. The UI presents the yaml to deploy the agent with configuration. I had configured user Hermione as the owner of the cluster so to logon with her credentials and deploy the agents&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl vsphere login --server&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
+
+kubectl create -f &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://tanzuemea.tmc.cloud.vmware.com/installer?id=f1d706f38d6f3ad834314a941831b190e18508468ade1adf2e105a822c8c0b49&amp;amp;source=attach&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-kubectl.png&#34; alt=&#34;Tanzu Mission Control Cluster kubectl&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once the agent has be deployed can move back to TMC. The agents take a couple of minutes to initialize and gather data but in very short order can then view the cluster and extension health in TMC.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-health.png&#34; alt=&#34;Tanzu Mission Control Cluster Health&#34;&gt;&lt;/p&gt;
+&lt;p&gt;So lesson so far is that onboarding an existing cluster into TMC is pretty simple.  To unlock more power of TMC we can register the TKG management cluster. The process is similar but slightly different to onboarding clusters we start with the meta data.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-meta.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster Metadata&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Again here I am not using proxy so just skip through next page.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-proxy.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster Proxy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;For onboarding the management cluster this next step is different.  Rather than being presented with a yaml file to apply with kubectl cmd here the wizard outputs a URL containing config.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-URL.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster Config URL&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We then have to create yaml file using the supplied URL.  This needs to be ran in the context of the cluster itself so we switch to that and then get the namespace name.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl vsphere login --server&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;172.16.1.2 --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify
+Logged in successfully.
+You have access to the following contexts:
+   172.16.1.2
+   hogsmead
+   hogwarts
+If the context you wish to use is not in this list, you may need to try
+logging in again later, or contact your cluster administrator.
+To change context, use &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;kubectl config use-context &amp;lt;workload name&amp;gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+
+kubectl config use-context 172.16.1.2
+Switched to context &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.16.1.2&amp;#34;&lt;/span&gt;.
+
+kubectl get ns | grep svc
+NAME                                        STATUS   AGE
+svc-tmc-c34                                 Active   11d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the namespace name and URL we can populate the yaml file to apply agent and config.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;installers.tmc.cloud.vmware.com/v1alpha1&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;AgentInstall&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;tmc-agent-installer-config&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;svc-tmc-c34 &lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+  &lt;span style=&#34;color:#f92672&#34;&gt;operation&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;INSTALL&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;registrationLink&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;https://tanzuemea.tmc.cloud.vmware.com/installer?id=0f25b71394ac623867f64138ed9d27bb0db5e8d0436e874e4f65ff179e7be807&amp;amp;source=registration&amp;amp;type=tkgs&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then apply the configuration using kubectl.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl create -f tmc-registration.yaml
+agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-kubectl.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster kubectl&#34;&gt;&lt;/p&gt;
+&lt;p&gt;After a couple of minutes when the agents have started and have reported back we can get a view of supervisor cluster health.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-sup-health.png&#34; alt=&#34;Tanzu Mission Control Supervisor Cluster Health&#34;&gt;&lt;/p&gt;
+&lt;p&gt;With the supervisor cluster registered we can start to some interesting things from TMC like provision a new cluster. To recap at this stage my deployment has two namespaces configured. Only Hogwarts has a workload cluster deployed.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hogwarts
+&lt;ul&gt;
+&lt;li&gt;hogwarts-cluster-01&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Hogsmead&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Starting the TMC wizard to create cluster first prompt is for the provider. This is analagous to namespace so we&amp;rsquo;ll look at creating cluster under Hogsmead.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-prov-provider.png&#34; alt=&#34;Tanzu Mission Control Cluster Provising Provider&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then add some cluster metadata.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-prov-meta.png&#34; alt=&#34;Tanzu Mission Control Cluster Provising Metadata&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Can then pick a version of Kubernetes which the cluster will run, the Pod and Service networking configuration and storage class.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-prov-config.png&#34; alt=&#34;Tanzu Mission Control Cluster Provising Config&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Followed by choosing the VM class, hardware specifcation of the cluster nodes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-prov-vmclass.png&#34; alt=&#34;Tanzu Mission Control Cluster Provising VM Class&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Finally the node pool configuration.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-prov-nodepool.png&#34; alt=&#34;Tanzu Mission Control Cluster Provising Node Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;It takes a few minutes to deploy the required VMs and configure the Kubernetes cluster.  You can get a view on how far it is along by looking in vCenter.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-prov-vcenter.png&#34; alt=&#34;Tanzu Mission Control Cluster Provising vCenter&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When deploying cluster from TMC the agents and configuration to register the cluster as with TMC is included.  After a few minutes when VMs are built and configured the cluster shows in UI.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-prov-registered.png&#34; alt=&#34;Tanzu Mission Control Cluster Provising Registered&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As well as provisioning TMC can also help with day two operations. When deploying the Hogsmead cluster I selected an v1.20.12 version of k8s. Upgrading to latest can be initiated very easily. Within the cluster view just hit Upgrade and select from drop down of all newer versions the version you need.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-lcm.png&#34; alt=&#34;Tanzu Mission Control Cluster Lifecycle Management&#34;&gt;&lt;/p&gt;
+&lt;p&gt;A couple of minutes later and can see its now running v1.21.6.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-lcm-version.png&#34; alt=&#34;Tanzu Mission Control Cluster Lifecycle Management Complete&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
     <item>
       <title>Exploring Tanzu Kubernetes Clusters</title>
       <link>https://darrylcauldwell.github.io/post/tanzu-tkc/</link>

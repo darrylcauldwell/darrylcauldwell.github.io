@@ -111,6 +111,45 @@
   <div class="excerpt">
     <div class="excerpt_header">
       <h3 class="post_link">
+        <a href="https://darrylcauldwell.github.io/post/homelab-pi-storage/" title="Comparing SD and USB 3 Storage Performance With Raspberry Pi4B">Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</a>
+      </h3>
+      <div class="post_meta">
+  
+    <svg class="icon">
+  <use xlink:href="#calendar"></use>
+</svg>
+    <span class="post_date">
+      Mar 29, 2021</span>
+      <a href='https://darrylcauldwell.github.io/tags/raspberry' title="raspberry" class="post_tag button button_translucent">raspberry
+      </a>
+      <a href='https://darrylcauldwell.github.io/tags/performance' title="performance" class="post_tag button button_translucent">performance
+      </a>
+</div>
+
+    </div>
+    <div class="excerpt_footer partition">
+      <div class="excerpt_thumbnail">
+        <img src='https://darrylcauldwell.github.io/clarity-icons/code-144.svg' alt="Comparing SD and USB 3 Storage Performance With Raspberry Pi4B">
+      </div>
+      
+        <div>
+          <p class="pale">
+            
+              Following on from base Ubuntu build here I look at the comparing the storage performance of SD and USB.
+SD Card Performance Linux FIO tool will be used to measure sequential write performance of a 4GB file:
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 …
+            
+          </p>
+          <a href="https://darrylcauldwell.github.io/post/homelab-pi-storage/" title="Read More" class="excerpt_more button">Read More</a>
+        </div>
+      </div>
+    </div>
+  </li>
+
+      <li class="post_item">
+  <div class="excerpt">
+    <div class="excerpt_header">
+      <h3 class="post_link">
         <a href="https://darrylcauldwell.github.io/post/homelab-pi-ubuntu/" title="Raspberry Pi Cluster Ubuntu Base">Raspberry Pi Cluster Ubuntu Base</a>
       </h3>
       <div class="post_meta">
@@ -441,46 +480,6 @@ Peloton Membership Peloton membership is required to provide access to their liv
     </div>
   </li>
 
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://darrylcauldwell.github.io/post/vsphere-k8s/" title="vSphere with Kubernetes Homelab Build">vSphere with Kubernetes Homelab Build</a>
-      </h3>
-      <div class="post_meta">
-  
-    <svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg>
-    <span class="post_date">
-      Apr 29, 2020</span>
-      <a href='https://darrylcauldwell.github.io/tags/tanzu' title="tanzu" class="post_tag button button_translucent">tanzu
-      </a>
-      <a href='https://darrylcauldwell.github.io/tags/kubernetes' title="kubernetes" class="post_tag button button_translucent">kubernetes
-      </a>
-      <a href='https://darrylcauldwell.github.io/tags/vsphere' title="vsphere" class="post_tag button button_translucent">vsphere
-      </a>
-</div>
-
-    </div>
-    <div class="excerpt_footer partition">
-      <div class="excerpt_thumbnail">
-        <img src='https://darrylcauldwell.github.io/clarity-icons/code-144.svg' alt="vSphere with Kubernetes Homelab Build">
-      </div>
-      
-        <div>
-          <p class="pale">
-            
-              I&rsquo;d been exploring Project Pacific during its beta in my homelab for a while. When vSphere 7 and NSX-T 3.0 went GA I took chance to rebuild lab and consolidate much of the configuration I&rsquo;d been applying iteratively.
-My lab hardware specification is a constraint so I&rsquo;ve had to deviate from …
-            
-          </p>
-          <a href="https://darrylcauldwell.github.io/post/vsphere-k8s/" title="Read More" class="excerpt_more button">Read More</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
     <li>
 <ul class="pagination">
   <li class="page-item">
@@ -541,6 +540,9 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Exploring Tanzu Mission Control">Exploring Tanzu Mission Control</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Exploring Tanzu Kubernetes Clusters">Exploring Tanzu Kubernetes Clusters</a>
       </li>
       <li>
@@ -561,9 +563,6 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
       <li>
         <a href="https://darrylcauldwell.github.io/post/veba-knative/" class="nav-link" title="VMware Event Broker Appliance (VEBA) - Knative">VMware Event Broker Appliance (VEBA) - Knative</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/vcf-lcm/" class="nav-link" title="VMware Cloud Foundation Lifecycle Management - VCF LCM">VMware Cloud Foundation Lifecycle Management - VCF LCM</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
@@ -580,7 +579,7 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
         
         <a href='https://darrylcauldwell.github.io/categories/homelab/' class="post_tag button button_translucent" title="homelab">
           HOMELAB
-          <span class="button_tally">12</span>
+          <span class="button_tally">13</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/certification/' class="post_tag button button_translucent" title="certification">
@@ -636,7 +635,7 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/tags/vsphere/' class="post_tag button button_translucent" title="vsphere">
           VSPHERE
-          <span class="button_tally">16</span>
+          <span class="button_tally">17</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/nsx/' class="post_tag button button_translucent" title="nsx">
@@ -651,7 +650,7 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
         
         <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
           KUBERNETES
-          <span class="button_tally">8</span>
+          <span class="button_tally">9</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
@@ -684,6 +683,11 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
           <span class="button_tally">4</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/tanzu/' class="post_tag button button_translucent" title="tanzu">
+          TANZU
+          <span class="button_tally">4</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
           <span class="button_tally">4</span>
@@ -697,11 +701,6 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
         <a href='https://darrylcauldwell.github.io/tags/windows/' class="post_tag button button_translucent" title="windows">
           WINDOWS
           <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/dynamodb/' class="post_tag button button_translucent" title="dynamodb">
-          DYNAMODB
-          <span class="button_tally">3</span>
         </a>
         
         
@@ -802,7 +801,7 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=8 title="kubernetes">KUBERNETES<span class="button_tally">8</span>
+            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=9 title="kubernetes">KUBERNETES<span class="button_tally">9</span>
             </a>
             
             
@@ -898,7 +897,7 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=3 title="tanzu">TANZU<span class="button_tally">3</span>
+            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=4 title="tanzu">TANZU<span class="button_tally">4</span>
             </a>
             
             
@@ -911,6 +910,10 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
             
             
             <a href='https://darrylcauldwell.github.io/tags/time-management/' class=" post_tag button button_translucent" data-position=1 title="time-management">TIME-MANAGEMENT<span class="button_tally">1</span>
+            </a>
+            
+            
+            <a href='https://darrylcauldwell.github.io/tags/tmc/' class=" post_tag button button_translucent" data-position=1 title="tmc">TMC<span class="button_tally">1</span>
             </a>
             
             
@@ -970,7 +973,7 @@ My lab hardware specification is a constraint so I&rsquo;ve had to deviate from 
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=16 title="vsphere">VSPHERE<span class="button_tally">16</span>
+            <a href='https://darrylcauldwell.github.io/tags/vsphere/' class=" post_tag button button_translucent" data-position=17 title="vsphere">VSPHERE<span class="button_tally">17</span>
             </a>
             
             
