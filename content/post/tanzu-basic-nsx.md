@@ -162,7 +162,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 Looking deeper at routing policy redirects traffic to 192.168.10.10 via eth1.  As we know routing from eth1 was to DNS was not possible this causes the DNS issue.
 
-```
+```bash
 ip rule show
 0:      from all lookup local
 0:      from all to 192.168.10.10  lookup 200

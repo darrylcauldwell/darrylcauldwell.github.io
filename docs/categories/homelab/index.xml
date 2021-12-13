@@ -714,21 +714,21 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 10.244.0.0      0.0.0.0         255.255.255.240 U     &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; eth1
 192.168.10.0    0.0.0.0         255.255.255.0   U     &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; eth0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Looking deeper at routing policy redirects traffic to 192.168.10.10 via eth1.  As we know routing from eth1 was to DNS was not possible this causes the DNS issue.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ip rule show
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ip rule show
 0:      from all lookup local
-0:      from all to 192.168.10.10  lookup 200
-0:      from all to 172.16.1.0 /24 lookup 200
-0:      from all to 10.244.0.0 /20 lookup 200
-0:      from 10.244.0.2 lookup 200
-0:      from all to 100.64.0.0 /16 lookup 200
-0:      from all to 10.96.0.0 /23 lookup 200
+0:      from all to 192.168.10.10  lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 172.16.1.0 /24 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 10.244.0.0 /20 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from 10.244.0.2 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 100.64.0.0 /16 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
+0:      from all to 10.96.0.0 /23 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
 32766:  from all lookup main
 32767:  from all lookup default
 
-ip route show table 200
+ip route show table &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
 default via 10.244.0.1 dev eth1 proto static
 10.244.0.0/28 dev eth1 proto static scope link
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Interestingly if I remove Workload Management and then redeploy specifing Management DNS 192.168.10.10 but chaning Workload DNS to alternate IP but still on unroutable address 192.168.10.11. The deployment does not get stuck at the same place and completes successfully.  Looking at routing policy having unique DNS IP addressing does not force traffic to 192.168.10.10 via eth1.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Interestingly if I remove Workload Management and then redeploy specifing Management DNS 192.168.10.10 but chaning Workload DNS to alternate IP but still on unroutable address 192.168.10.11. The deployment does not get stuck at the same place and completes successfully.  Looking at routing policy having unique DNS IP addressing does not force traffic to 192.168.10.10 via eth1.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ip rule show
 0:      from all lookup local
 0:      from all to 172.16.1.0 /24 lookup &lt;span style=&#34;color:#ae81ff&#34;&gt;200&lt;/span&gt;
