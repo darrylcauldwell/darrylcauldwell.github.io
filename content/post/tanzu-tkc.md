@@ -1,7 +1,7 @@
 +++
-title = "Managing Tanzu Kubernetes Clusters Using ClusterAPI"
+title = "Managing Tanzu for vSphere Clusters Using ClusterAPI"
 date = "2021-12-03"
-description = "Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters"
+description = "Managing Tanzu for vSphere Clusters Using ClusterAPI"
 tags = [
     "tanzu",
     "kubernetes",
@@ -16,8 +16,9 @@ thumbnail = "clarity-icons/code-144.svg"
 Second in a series of posts which build on each other looking Tanzu.
 
 1. [Deploying Tanzu for vSphere with NSX-T](/post/tanzu-basic-nsx)
-2. [Managing Tanzu Kubernetes Clusters Using ClusterAPI](/post/tanzu-tkc)
-3. [Managing Tanzu Kubernetes Clusters Using Misson Control](/post/tanzu-tmc)
+2. [Managing Tanzu for vSphere Clusters Using ClusterAPI](/post/tanzu-tkc)
+3. [Managing Tanzu for vSphere Clusters Using Tanzu Misson Control](/post/tanzu-tmc)
+4. [Deploying Tanzu for AWS Using Tanzu Misson Control](/post/tanzu-tmc-aws)
 
 Clusters are created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:
 

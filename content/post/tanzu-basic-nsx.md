@@ -16,8 +16,9 @@ thumbnail = "clarity-icons/code-144.svg"
 First in a series of posts which build on each other looking Tanzu.
 
 1. [Deploying Tanzu for vSphere with NSX-T](/post/tanzu-basic-nsx)
-2. [Managing Tanzu Kubernetes Clusters Using ClusterAPI](/post/tanzu-tkc)
-3. [Managing Tanzu Kubernetes Clusters Using Misson Control](/post/tanzu-tmc)
+2. [Managing Tanzu for vSphere Clusters Using ClusterAPI](/post/tanzu-tkc)
+3. [Managing Tanzu for vSphere Clusters Using Tanzu Misson Control](/post/tanzu-tmc)
+4. [Deploying Tanzu for AWS Using Tanzu Misson Control](/post/tanzu-tmc-aws)
 
 ## Supervisor Cluster Bootstrap
 

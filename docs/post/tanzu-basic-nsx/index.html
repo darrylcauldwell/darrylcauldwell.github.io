@@ -150,8 +150,9 @@
     <p>First in a series of posts which build on each other looking Tanzu.</p>
 <ol>
 <li><a href="/post/tanzu-basic-nsx">Deploying Tanzu for vSphere with NSX-T</a></li>
-<li><a href="/post/tanzu-tkc">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a></li>
-<li><a href="/post/tanzu-tmc">Managing Tanzu Kubernetes Clusters Using Misson Control</a></li>
+<li><a href="/post/tanzu-tkc">Managing Tanzu for vSphere Clusters Using ClusterAPI</a></li>
+<li><a href="/post/tanzu-tmc">Managing Tanzu for vSphere Clusters Using Tanzu Misson Control</a></li>
+<li><a href="/post/tanzu-tmc-aws">Deploying Tanzu for AWS Using Tanzu Misson Control</a></li>
 </ol>
 <h2 id="supervisor-cluster-bootstrap">Supervisor Cluster Bootstrap</h2>
 <p>The enablement of Workload Control Plane triggers the deployment of three VMs which initially have single vNIC eth0 connected to a PortGroup which can route to vCenter and NSX. This appears to configure the first VM as bootstrap Kubernetes Node on which are deployed multiple Pods. The NSX Container Plug-in (NCP) Pod performs integration of Kubernetes and NSX-T.</p>
@@ -533,10 +534,13 @@ kubectl config use-context 172.16.1.2
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Managing Clusters Using Tanzu Mission Control">Managing Clusters Using Tanzu Mission Control</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc-aws/" class="nav-link" title="Deploying Tanzu for AWS Using Tanzu Misson Control">Deploying Tanzu for AWS Using Tanzu Misson Control</a>
       </li>
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Managing Tanzu Kubernetes Clusters Using ClusterAPI">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Managing Tanzu for vSphere Clusters Using Tanzu Misson Control">Managing Tanzu for vSphere Clusters Using Tanzu Misson Control</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tkc/" class="nav-link" title="Managing Tanzu for vSphere Clusters Using ClusterAPI">Managing Tanzu for vSphere Clusters Using ClusterAPI</a>
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
@@ -552,9 +556,6 @@ kubectl config use-context 172.16.1.2
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/veba-knative/" class="nav-link" title="VMware Event Broker Appliance (VEBA) - Knative">VMware Event Broker Appliance (VEBA) - Knative</a>
-      </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/vcf-lcm/" class="nav-link" title="VMware Cloud Foundation Lifecycle Management - VCF LCM">VMware Cloud Foundation Lifecycle Management - VCF LCM</a>
       </li>
     </ul>
     <div>
@@ -572,7 +573,7 @@ kubectl config use-context 172.16.1.2
         
         <a href='https://darrylcauldwell.github.io/categories/homelab/' class="post_tag button button_translucent" title="homelab">
           HOMELAB
-          <span class="button_tally">13</span>
+          <span class="button_tally">14</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/certification/' class="post_tag button button_translucent" title="certification">
@@ -638,12 +639,12 @@ kubectl config use-context 172.16.1.2
         
         <a href='https://darrylcauldwell.github.io/tags/aws/' class="post_tag button button_translucent" title="aws">
           AWS
-          <span class="button_tally">10</span>
+          <span class="button_tally">11</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
           KUBERNETES
-          <span class="button_tally">9</span>
+          <span class="button_tally">10</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
@@ -671,13 +672,13 @@ kubectl config use-context 172.16.1.2
           <span class="button_tally">5</span>
         </a>
         
-        <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
-          PERFORMANCE
-          <span class="button_tally">4</span>
-        </a>
-        
         <a href='https://darrylcauldwell.github.io/tags/tanzu/' class="post_tag button button_translucent" title="tanzu">
           TANZU
+          <span class="button_tally">5</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
+          PERFORMANCE
           <span class="button_tally">4</span>
         </a>
         
@@ -718,7 +719,7 @@ kubectl config use-context 172.16.1.2
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=10 title="aws">AWS<span class="button_tally">10</span>
+            <a href='https://darrylcauldwell.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=11 title="aws">AWS<span class="button_tally">11</span>
             </a>
             
             
@@ -794,7 +795,7 @@ kubectl config use-context 172.16.1.2
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=9 title="kubernetes">KUBERNETES<span class="button_tally">9</span>
+            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=10 title="kubernetes">KUBERNETES<span class="button_tally">10</span>
             </a>
             
             
@@ -890,7 +891,7 @@ kubectl config use-context 172.16.1.2
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=4 title="tanzu">TANZU<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=5 title="tanzu">TANZU<span class="button_tally">5</span>
             </a>
             
             

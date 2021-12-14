@@ -5,9 +5,52 @@
     <link>https://darrylcauldwell.github.io/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 10 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Managing Clusters Using Tanzu Mission Control</title>
+      <title>Deploying Tanzu for AWS Using Tanzu Misson Control</title>
+      <link>https://darrylcauldwell.github.io/post/tanzu-tmc-aws/</link>
+      <pubDate>Tue, 14 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/tanzu-tmc-aws/</guid>
+      <description>
+        
+          &lt;p&gt;Fourth in a series of posts which build on each other looking Tanzu.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-basic-nsx&#34;&gt;Deploying Tanzu for vSphere with NSX-T&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu for vSphere Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu for vSphere Clusters Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc-aws&#34;&gt;Deploying Tanzu for AWS Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Tanzu Mission Control hosts a TKG management cluster on AWS that you can use to provision workload clusters into your AWS account. The TKG management cluster is pre-registered within TMC with name aws-hosted.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-prov.png&#34; alt=&#34;Tanzu Mission Control Provisioner&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Deploying a TKG cluster to AWS creates and configures EC2 instances in a region of your choosing. In order that TMC can create these requires AWS IAM credentials. The process to create these is initiated from within TMC and first step is associate to provisoner and specify a name.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-cred-name.png&#34; alt=&#34;Tanzu Mission Control Credential&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The UI outputs an AWS CloudFormation stack file which can be used to create IAM resources.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-cloudform-in.png&#34; alt=&#34;AWS CloudFormation IAM Input&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When AWS CloudFormation stack is created the role ARN is output.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-cloudform-out.png&#34; alt=&#34;AWS CloudFormation IAM Output&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This ARN is then input fed back into TMC to complete the association of IAM Role with TMC Credential.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-cred-arn.png&#34; alt=&#34;Tanzu Mission Control Credential ARN&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The IAM role will give TMC the ability to create EC2 instances. In addition to this an EC2 SSH key pair is required in each region. I will be looking to deploy cluster to eu-west-1 Ireland.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-cred-ssh.png&#34; alt=&#34;Tanzu Mission Control Credential ARN&#34;&gt;&lt;/p&gt;
+&lt;p&gt;With these in place we can now look to create cluster using the aws-hosted with the provider and credentials we just created.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-clus-create.png&#34; alt=&#34;Tanzu Mission Control Cluster Create&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then specifying the region, SSH key and Kubernetes version to deploy. I do not already have a VPC in place so I&amp;rsquo;ll look to have TMC create one to house this cluster. On-premises I had started allocating NSX-T subnets from 172.16.0.0/17 so am using the other half for AWS VPC so they do not overlap.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-clus-configure.png&#34; alt=&#34;Tanzu Mission Control Cluster Configuration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This is just a test so I want to keep costs low so choose single node control plane and single node node pool.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-clus-control.png&#34; alt=&#34;Tanzu Mission Control Cluster Control Plane&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-clus-nodepool.png&#34; alt=&#34;Tanzu Mission Control Cluster Node Pool&#34;&gt;&lt;/p&gt;
+&lt;p&gt;After a short time the cluster is deployed and cluster health is visible in TMC.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-clus-health.png&#34; alt=&#34;Tanzu Mission Control Cluster Health&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In addition to the two cluster nodes a third EC2 instance is deployed. Note this has external IP address and can be used as bastion host into VPC to connect onwards.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-aws-clus-bastion.png&#34; alt=&#34;Tanzu Mission Control Cluster Bastion&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Managing Tanzu for vSphere Clusters Using Tanzu Misson Control</title>
       <link>https://darrylcauldwell.github.io/post/tanzu-tmc/</link>
       <pubDate>Fri, 10 Dec 2021 00:00:00 +0000</pubDate>
       
@@ -17,8 +60,9 @@
           &lt;p&gt;Third in a series of posts which build on each other looking Tanzu.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-basic-nsx&#34;&gt;Deploying Tanzu for vSphere with NSX-T&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu Kubernetes Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu Kubernetes Clusters Using Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu for vSphere Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu for vSphere Clusters Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc-aws&#34;&gt;Deploying Tanzu for AWS Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;I am moving next to look at Tanzu Mission Control. The Mission Control inventory has a hierachy, first I&amp;rsquo;ll create a group to place the clusters in. While adding the group add some metadata to group including a label so other users know who to contact with any queries.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/tanzu-tmc-cluster-group.png&#34; alt=&#34;Tanzu Mission Control Cluster Group&#34;&gt;&lt;/p&gt;
@@ -104,7 +148,7 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
     </item>
     
     <item>
-      <title>Managing Tanzu Kubernetes Clusters Using ClusterAPI</title>
+      <title>Managing Tanzu for vSphere Clusters Using ClusterAPI</title>
       <link>https://darrylcauldwell.github.io/post/tanzu-tkc/</link>
       <pubDate>Fri, 03 Dec 2021 00:00:00 +0000</pubDate>
       
@@ -114,8 +158,9 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
           &lt;p&gt;Second in a series of posts which build on each other looking Tanzu.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-basic-nsx&#34;&gt;Deploying Tanzu for vSphere with NSX-T&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu Kubernetes Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu Kubernetes Clusters Using Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu for vSphere Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu for vSphere Clusters Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc-aws&#34;&gt;Deploying Tanzu for AWS Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Clusters are created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:&lt;/p&gt;
 &lt;table&gt;
@@ -396,8 +441,9 @@ Address: 151.101.64.81
           &lt;p&gt;First in a series of posts which build on each other looking Tanzu.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-basic-nsx&#34;&gt;Deploying Tanzu for vSphere with NSX-T&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu Kubernetes Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu Kubernetes Clusters Using Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tkc&#34;&gt;Managing Tanzu for vSphere Clusters Using ClusterAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc&#34;&gt;Managing Tanzu for vSphere Clusters Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://darrylcauldwell.github.io/post/tanzu-tmc-aws&#34;&gt;Deploying Tanzu for AWS Using Tanzu Misson Control&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id=&#34;supervisor-cluster-bootstrap&#34;&gt;Supervisor Cluster Bootstrap&lt;/h2&gt;
 &lt;p&gt;The enablement of Workload Control Plane triggers the deployment of three VMs which initially have single vNIC eth0 connected to a PortGroup which can route to vCenter and NSX. This appears to configure the first VM as bootstrap Kubernetes Node on which are deployed multiple Pods. The NSX Container Plug-in (NCP) Pod performs integration of Kubernetes and NSX-T.&lt;/p&gt;

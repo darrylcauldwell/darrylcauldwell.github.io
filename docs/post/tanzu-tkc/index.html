@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>Managing Tanzu Kubernetes Clusters Using ClusterAPI | </title>
+<title>Managing Tanzu for vSphere Clusters Using ClusterAPI | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters">
+<meta name="description" content="Managing Tanzu for vSphere Clusters Using ClusterAPI">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Managing Tanzu Kubernetes Clusters Using ClusterAPI" />
+<meta name="twitter:title" content="Managing Tanzu for vSphere Clusters Using ClusterAPI" />
 <meta property="og:url" content="https://darrylcauldwell.github.io/post/tanzu-tkc/" />
-<meta property="og:title" content="Managing Tanzu Kubernetes Clusters Using ClusterAPI" />
-<meta property="og:description" content="Exploring NSX-T While Provisioning Tanzu Kubernetes Clusters" />
+<meta property="og:title" content="Managing Tanzu for vSphere Clusters Using ClusterAPI" />
+<meta property="og:description" content="Managing Tanzu for vSphere Clusters Using ClusterAPI" />
 <meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
@@ -104,7 +104,7 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">Managing Tanzu Kubernetes Clusters Using ClusterAPI</h1><div class="post_meta">
+    <h1 class="post_title">Managing Tanzu for vSphere Clusters Using ClusterAPI</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
@@ -124,12 +124,12 @@
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Managing%20Tanzu%20Kubernetes%20Clusters%20Using%20ClusterAPI&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Managing%20Tanzu%20for%20vSphere%20Clusters%20Using%20ClusterAPI&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&t=Managing%20Tanzu%20Kubernetes%20Clusters%20Using%20ClusterAPI" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2ftanzu-tkc%2f&t=Managing%20Tanzu%20for%20vSphere%20Clusters%20Using%20ClusterAPI" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -150,8 +150,9 @@
     <p>Second in a series of posts which build on each other looking Tanzu.</p>
 <ol>
 <li><a href="/post/tanzu-basic-nsx">Deploying Tanzu for vSphere with NSX-T</a></li>
-<li><a href="/post/tanzu-tkc">Managing Tanzu Kubernetes Clusters Using ClusterAPI</a></li>
-<li><a href="/post/tanzu-tmc">Managing Tanzu Kubernetes Clusters Using Misson Control</a></li>
+<li><a href="/post/tanzu-tkc">Managing Tanzu for vSphere Clusters Using ClusterAPI</a></li>
+<li><a href="/post/tanzu-tmc">Managing Tanzu for vSphere Clusters Using Tanzu Misson Control</a></li>
+<li><a href="/post/tanzu-tmc-aws">Deploying Tanzu for AWS Using Tanzu Misson Control</a></li>
 </ol>
 <p>Clusters are created within organisational construct known as a namespace. The namespace configuration can be used to map user/groups to role/permission it uses the same users/groups available as vSphere Identity source, these can be aligned to one of three roles view, edit and owner. The namespace configuration also defines which vSphere storage policies can be aligned to namespace and the amount of available CPU, Memory and Storage can be limited. I have a single cluster prepared with the following Namespace configuration:</p>
 <table>
@@ -445,7 +446,10 @@ Address: 151.101.64.81
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Managing Clusters Using Tanzu Mission Control">Managing Clusters Using Tanzu Mission Control</a>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc-aws/" class="nav-link" title="Deploying Tanzu for AWS Using Tanzu Misson Control">Deploying Tanzu for AWS Using Tanzu Misson Control</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.github.io/post/tanzu-tmc/" class="nav-link" title="Managing Tanzu for vSphere Clusters Using Tanzu Misson Control">Managing Tanzu for vSphere Clusters Using Tanzu Misson Control</a>
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/tanzu-basic-nsx/" class="nav-link" title="Deploying Tanzu for vSphere with NSX-T">Deploying Tanzu for vSphere with NSX-T</a>
@@ -465,9 +469,6 @@ Address: 151.101.64.81
       <li>
         <a href="https://darrylcauldwell.github.io/post/veba-knative/" class="nav-link" title="VMware Event Broker Appliance (VEBA) - Knative">VMware Event Broker Appliance (VEBA) - Knative</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/vcf-lcm/" class="nav-link" title="VMware Cloud Foundation Lifecycle Management - VCF LCM">VMware Cloud Foundation Lifecycle Management - VCF LCM</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
@@ -484,7 +485,7 @@ Address: 151.101.64.81
         
         <a href='https://darrylcauldwell.github.io/categories/homelab/' class="post_tag button button_translucent" title="homelab">
           HOMELAB
-          <span class="button_tally">13</span>
+          <span class="button_tally">14</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/certification/' class="post_tag button button_translucent" title="certification">
@@ -550,12 +551,12 @@ Address: 151.101.64.81
         
         <a href='https://darrylcauldwell.github.io/tags/aws/' class="post_tag button button_translucent" title="aws">
           AWS
-          <span class="button_tally">10</span>
+          <span class="button_tally">11</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
           KUBERNETES
-          <span class="button_tally">9</span>
+          <span class="button_tally">10</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
@@ -583,13 +584,13 @@ Address: 151.101.64.81
           <span class="button_tally">5</span>
         </a>
         
-        <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
-          PERFORMANCE
-          <span class="button_tally">4</span>
-        </a>
-        
         <a href='https://darrylcauldwell.github.io/tags/tanzu/' class="post_tag button button_translucent" title="tanzu">
           TANZU
+          <span class="button_tally">5</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
+          PERFORMANCE
           <span class="button_tally">4</span>
         </a>
         
@@ -630,7 +631,7 @@ Address: 151.101.64.81
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=10 title="aws">AWS<span class="button_tally">10</span>
+            <a href='https://darrylcauldwell.github.io/tags/aws/' class=" post_tag button button_translucent" data-position=11 title="aws">AWS<span class="button_tally">11</span>
             </a>
             
             
@@ -706,7 +707,7 @@ Address: 151.101.64.81
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=9 title="kubernetes">KUBERNETES<span class="button_tally">9</span>
+            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=10 title="kubernetes">KUBERNETES<span class="button_tally">10</span>
             </a>
             
             
@@ -802,7 +803,7 @@ Address: 151.101.64.81
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=4 title="tanzu">TANZU<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/tanzu/' class=" post_tag button button_translucent" data-position=5 title="tanzu">TANZU<span class="button_tally">5</span>
             </a>
             
             

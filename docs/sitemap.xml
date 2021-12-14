@@ -3,27 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://darrylcauldwell.github.io/</loc>
-    <lastmod>2021-12-10T00:00:00+00:00</lastmod>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/tags/aws/</loc>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/</loc>
-    <lastmod>2021-12-10T00:00:00+00:00</lastmod>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/post/tanzu-tmc-aws/</loc>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/categories/homelab/</loc>
-    <lastmod>2021-12-10T00:00:00+00:00</lastmod>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/kubernetes/</loc>
-    <lastmod>2021-12-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://darrylcauldwell.github.io/post/tanzu-tmc/</loc>
-    <lastmod>2021-12-10T00:00:00+00:00</lastmod>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/post/</loc>
-    <lastmod>2021-12-10T00:00:00+00:00</lastmod>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/</loc>
-    <lastmod>2021-12-10T00:00:00+00:00</lastmod>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/tanzu/</loc>
+    <lastmod>2021-12-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://darrylcauldwell.github.io/post/tanzu-tmc/</loc>
     <lastmod>2021-12-10T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/tmc/</loc>
@@ -292,9 +298,6 @@
   </url><url>
     <loc>https://darrylcauldwell.github.io/post/nsx-python/</loc>
     <lastmod>2017-05-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://darrylcauldwell.github.io/tags/aws/</loc>
-    <lastmod>2017-03-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://darrylcauldwell.github.io/tags/dynamodb/</loc>
     <lastmod>2017-03-31T00:00:00+00:00</lastmod>

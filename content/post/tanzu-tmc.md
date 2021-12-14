@@ -1,7 +1,7 @@
 +++
-title = "Managing Clusters Using Tanzu Mission Control"
+title = "Managing Tanzu for vSphere Clusters Using Tanzu Misson Control"
 date = "2021-12-10"
-description = "Managing Clusters Using Tanzu Mission Control"
+description = "Managing Tanzu for vSphere Clusters Using Tanzu Misson Control"
 tags = [
     "tanzu",
     "kubernetes",
@@ -16,8 +16,9 @@ thumbnail = "clarity-icons/code-144.svg"
 Third in a series of posts which build on each other looking Tanzu.
 
 1. [Deploying Tanzu for vSphere with NSX-T](/post/tanzu-basic-nsx)
-2. [Managing Tanzu Kubernetes Clusters Using ClusterAPI](/post/tanzu-tkc)
-3. [Managing Tanzu Kubernetes Clusters Using Misson Control](/post/tanzu-tmc)
+2. [Managing Tanzu for vSphere Clusters Using ClusterAPI](/post/tanzu-tkc)
+3. [Managing Tanzu for vSphere Clusters Using Tanzu Misson Control](/post/tanzu-tmc)
+4. [Deploying Tanzu for AWS Using Tanzu Misson Control](/post/tanzu-tmc-aws)
 
 I am moving next to look at Tanzu Mission Control. The Mission Control inventory has a hierachy, first I'll create a group to place the clusters in. While adding the group add some metadata to group including a label so other users know who to contact with any queries.
 
