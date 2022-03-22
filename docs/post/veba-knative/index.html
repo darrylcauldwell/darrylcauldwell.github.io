@@ -4,7 +4,7 @@
   <head>
 <title>VMware Event Broker Appliance (VEBA) - Knative | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.84.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -274,7 +274,7 @@ cd veba-knative-mm-enter
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
 </code></pre></div><p>What I do need to do though is create a handler.ps1 which takes input from event and calls REST API of vROps.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">Function</span> <span style="color:#66d9ef">Process</span>-Handler {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">Function</span> Process-Handler {
    <span style="color:#66d9ef">param</span>(
       [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span>=0,<span style="color:#66d9ef">Mandatory</span>=$true)]<span style="color:#66d9ef">[CloudNative.CloudEvents.CloudEvent]</span>$CloudEvent
    )
@@ -532,7 +532,7 @@ Note: STARTED<span style="color:#f92672">=</span>Not In Maintenance | MAINTAINED
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">34</span>
+          <span class="button_tally">35</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -613,21 +613,21 @@ Note: STARTED<span style="color:#f92672">=</span>Not In Maintenance | MAINTAINED
         
         <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class="post_tag button button_translucent" title="kubernetes">
           KUBERNETES
-          <span class="button_tally">10</span>
+          <span class="button_tally">11</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
           PYTHON
+          <span class="button_tally">8</span>
+        </a>
+        
+        <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
+          DOCKER
           <span class="button_tally">7</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
-          DOCKER
           <span class="button_tally">6</span>
         </a>
         
@@ -716,7 +716,7 @@ Note: STARTED<span style="color:#f92672">=</span>Not In Maintenance | MAINTAINED
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/docker/' class=" post_tag button button_translucent" data-position=6 title="docker">DOCKER<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/docker/' class=" post_tag button button_translucent" data-position=7 title="docker">DOCKER<span class="button_tally">7</span>
             </a>
             
             
@@ -760,11 +760,11 @@ Note: STARTED<span style="color:#f92672">=</span>Not In Maintenance | MAINTAINED
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/knative/' class=" post_tag button button_translucent" data-position=1 title="knative">KNATIVE<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/knative/' class=" post_tag button button_translucent" data-position=2 title="knative">KNATIVE<span class="button_tally">2</span>
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=10 title="kubernetes">KUBERNETES<span class="button_tally">10</span>
+            <a href='https://darrylcauldwell.github.io/tags/kubernetes/' class=" post_tag button button_translucent" data-position=11 title="kubernetes">KUBERNETES<span class="button_tally">11</span>
             </a>
             
             
@@ -844,7 +844,7 @@ Note: STARTED<span style="color:#f92672">=</span>Not In Maintenance | MAINTAINED
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/python/' class=" post_tag button button_translucent" data-position=7 title="python">PYTHON<span class="button_tally">7</span>
+            <a href='https://darrylcauldwell.github.io/tags/python/' class=" post_tag button button_translucent" data-position=8 title="python">PYTHON<span class="button_tally">8</span>
             </a>
             
             
@@ -900,7 +900,7 @@ Note: STARTED<span style="color:#f92672">=</span>Not In Maintenance | MAINTAINED
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/veba/' class=" post_tag button button_translucent" data-position=1 title="veba">VEBA<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/veba/' class=" post_tag button button_translucent" data-position=2 title="veba">VEBA<span class="button_tally">2</span>
             </a>
             
             

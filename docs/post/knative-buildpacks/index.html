@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>The DevOps Infrastructure Architect | </title>
+<title>Creating A Knative Function Using Buildpacks | </title>
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.84.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,13 +17,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="The DevOps Infrastructure Architect">
+<meta name="description" content="Creating A Knative Function Using Buildpacks">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="The DevOps Infrastructure Architect" />
-<meta property="og:url" content="https://darrylcauldwell.github.io/post/devops-architect/" />
-<meta property="og:title" content="The DevOps Infrastructure Architect" />
-<meta property="og:description" content="The DevOps Infrastructure Architect" />
+<meta name="twitter:title" content="Creating A Knative Function Using Buildpacks" />
+<meta property="og:url" content="https://darrylcauldwell.github.io/post/knative-buildpacks/" />
+<meta property="og:title" content="Creating A Knative Function Using Buildpacks" />
+<meta property="og:description" content="Creating A Knative Function Using Buildpacks" />
 <meta property="og:image" content="https://darrylcauldwell.github.io/clarity-icons/code-144.svg" />
 <link rel="apple-touch-icon" sizes="180x180" href='https://darrylcauldwell.github.io/icons/apple-touch-icon.png'>
 <link rel="icon" type="image/png" sizes="32x32" href='https://darrylcauldwell.github.io/icons/favicon-32x32.png'>
@@ -32,7 +32,7 @@
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://darrylcauldwell.github.io/post/devops-architect/">
+<link rel="canonical" href="https://darrylcauldwell.github.io/post/knative-buildpacks/">
 
     
 
@@ -104,28 +104,34 @@
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">The DevOps Infrastructure Architect</h1><div class="post_meta">
+    <h1 class="post_title">Creating A Knative Function Using Buildpacks</h1><div class="post_meta">
   
     <svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg>
     <span class="post_date">
-      Dec 29, 2016</span>
-      <a href='https://darrylcauldwell.github.io/tags/devops' title="devops" class="post_tag button button_translucent">devops
+      Jan 1, 0001</span>
+      <a href='https://darrylcauldwell.github.io/tags/knative' title="knative" class="post_tag button button_translucent">knative
       </a>
-      <a href='https://darrylcauldwell.github.io/tags/architecture' title="architecture" class="post_tag button button_translucent">architecture
+      <a href='https://darrylcauldwell.github.io/tags/kubernetes' title="kubernetes" class="post_tag button button_translucent">kubernetes
+      </a>
+      <a href='https://darrylcauldwell.github.io/tags/veba' title="veba" class="post_tag button button_translucent">veba
+      </a>
+      <a href='https://darrylcauldwell.github.io/tags/python' title="python" class="post_tag button button_translucent">python
+      </a>
+      <a href='https://darrylcauldwell.github.io/tags/docker' title="docker" class="post_tag button button_translucent">docker
       </a>
 </div>
 
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=The%20DevOps%20Infrastructure%20Architect&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fdevops-architect%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Creating%20A%20Knative%20Function%20Using%20Buildpacks&url=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fknative-buildpacks%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fdevops-architect%2f&t=The%20DevOps%20Infrastructure%20Architect" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fdarrylcauldwell.github.io%2fpost%2fknative-buildpacks%2f&t=Creating%20A%20Knative%20Function%20Using%20Buildpacks" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -135,7 +141,7 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://darrylcauldwell.github.io/post/devops-architect/" title="Copy Link" class="link link_yank">
+    <a href="https://darrylcauldwell.github.io/post/knative-buildpacks/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -143,30 +149,112 @@
   </div>
 
     
-    <p>One common critisism of Agile teams is they are architecturally weak and disconnected from the operational realities of complex enterprise environments. Traditional enterprise architecture processes are viewed focusing on delivering documentation rather than delivering a working solution, slow, and focussed on delivering monolith design rather than continuous delivery of small incremental updates.</p>
-<h2 id="traditional-infrastructure-lifecycle">Traditional Infrastructure Lifecycle</h2>
-<p>Traditional infrastructure architecture development metholodies are a series of cyclical processes which culminate in a set of detailed documentation, including conceptual design, logical design and physical design. These are developed by an architect or architectural team in relative isolation to day-to-day operational activities. Typically in a traditional large enterprise architectural disciplines are aligned to technoligies wintel, security, network, storage, &amp; *nix and each prepares there own documentation set.</p>
-<p>At the point of delivery it is often found that the documentation sets are so large that they are often delivered incomplete of the full detail needed to deliver the solution. Cross discipline highly skilled engineers with deep technical product knowledge then engineer the solution design to make the component pieces work together. The engineers then delivers automation scripts to deliver the exact settings needed for the solution to operate. At this point the carefully prepared architectural documentation set is out of date.</p>
-<p>Enterprise solutions are usually intended to plugin to existing operational tooling, and the enterprise architect usually assume this tooling will have suitable functionality built in to support the solution they design. Once deployed it is often found that the integration to operational tooling works at a very basic level but does not out of the box meet the management complexities of the solution delivered. At this point cross discipline highly skilled engineers with deep technical product knowledge have to get together with the operational tooling team and engineer a solution to make the solution work. These changes to the solution make the architectural documentation further out of date. Day two operations of any delivered solution will naturally lead to more change and the document set becoming more obsolete. All of these changes require high skilled people at every stage of delivery.</p>
-<h2 id="agile-infrastructure-architecture">Agile Infrastructure Architecture</h2>
-<p>Pre-virtualisation the requirement for up front design was partially justified as the hardware required for the application needed to be specced, procured, delivered, racked and powered before it could be consumed. Virtualization de-coupled these two processes and pools of compute resources could be pre-provisioned and consumed elastically, the public cloud provides further elasticity in delivery.</p>
-<p>Agile development techniques such as ExtremeProgramming revolve around &lsquo;You Aren&rsquo;t Going to Need It (YAGNI)&rsquo;. This principle relates to the notion of &lsquo;incremental design&rsquo; rather than carefully considered planned development encompassing all possible future need. In lean this is refered to as just-in-time. Agile architecture should be a collaborative activity which enables agile development to progress features and improvements in a timely manner to produce artifacts to meet the immediate requirement, and iterated just-in-time. The use of architecture model storming can be used between, architecture and operational engineering teams to agree solutions collaboratively.</p>
-<p>The agile infrastructure architect still has the primary goal of designing solutions which are deployable, scalable, secure, maintainable, managable, standards compliant, fault tolerant, testable, upgradable and recoverable.</p>
-<p>When architectcure design is designed and delivered in small units, the feedback loop to deploying engineer is much shorter, issues are found and fixed and all stakeholders are kept in the loop. The use of collaboration tools to store documentation such as Github WiKi&rsquo;s or Atlassian Confluence means that documention can be kept up to date collabortaively and be kept close to the automation scipts.</p>
-<h2 id="references">References</h2>
-<p><a href="https://www.guru99.com/agile-vs-kanban.html">Agile Vs Kanban: What’s the Difference?</a>
-<a href="http://www.agilearchitect.org/agile/role.htm">Agile Architect: Role</a><br>
-<a href="http://martinfowler.com/bliki/Yagni.html">Martin Fowler: YAGNI</a><br>
-<a href="http://agilemodeling.com/essays/agileArchitecture.htm">Agile Modeling: Agile Architecture</a><br>
-<a href="http://www.agilemodeling.com/">Agile Modeling</a><br>
-<a href="https://www.gilb.com/blog/what-every-successful-project-manager-should-know">What Every Successful Product Manager (Owner) Should Know</a><br>
-<a href="http://blog.xebia.com/lean-architecture-principle-5-just-in-time-just-enough/">Lean Architecture: Just In Time, Just Enough</a><br>
-<a href="http://www.extremeprogramming.org/">Extreme Programming: A Gentle Introduction</a><br>
-<a href="http://www.scaledagileframework.com/agile-architecture/">Scaled Agile: Agile Architectuere Abstract</a><br>
-<a href="http://martinfowler.com/articles/designDead.html">Martin Fowler: Is Design Dead</a><br>
-<a href="http://agilemodeling.com/essays/modelStorming.htm">Agile Modeling: Model Storming</a><br>
-<a href="http://shapingsoftware.com/2009/03/02/agile-architecture-method/">Shaping Software: Agile Architecture Method</a><br>
-<a href="www.agiledata.org/essays/enterpriseArchitecture.html#AgileApproach">Agile Data: Agile Enterprise Architecture Approach</a></p>
+    <p>I&rsquo;m looking at event-based architectures as a method for building loosely coupled relationships between products. To this end I am creating various functions which I&rsquo;d like to trigger on an event in a product. Knative is an extension of Kubernetes which enables serverless workloads to run on Kubernetes. Knative is made of various components Knative Eventing provides tools for routing events from event producers to sinks. Eventing uses standard HTTP POST requests to send and receive events between event producers and sinks. The event layouts conform to the CloudEvents specifications. Brokers and Triggers provide an &ldquo;event mesh&rdquo; model, which allows an event producer to deliver events to a Broker, which then distributes them uniformly to consumers by using Triggers. In this article, we start from the point where our Knative deployment already has a Broker connected to an event producer. The Knative function we are looking to create will require at least two resources, a trigger and a service.</p>
+<h2 id="knative-trigger-filter">Knative Trigger Filter</h2>
+<p>The <a href="https://knative.dev/docs/eventing/broker/triggers/#trigger-filtering">Knative trigger</a> resource can be configured with a filter so it only fires when a specific CloudEvent with a specific attribute is received by the Broker. This is also configured with an association to the Knative service resource.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">eventing.knative.dev/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Trigger</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">veba-py-cb-trigger</span>
+  <span style="color:#f92672">labels</span>:
+    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">veba-ui</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">broker</span>: <span style="color:#ae81ff">default</span>
+  <span style="color:#f92672">filter</span>:
+    <span style="color:#f92672">attributes</span>:
+      <span style="color:#f92672">type</span>: <span style="color:#ae81ff">com.vmware.event.router/event</span>
+      <span style="color:#f92672">subject</span>: <span style="color:#ae81ff">VmCreatedEvent</span>
+  <span style="color:#f92672">subscriber</span>:
+    <span style="color:#f92672">ref</span>:
+      <span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">serving.knative.dev/v1</span>
+      <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
+      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">kn-py-cb</span>
+</code></pre></div><h2 id="knative-service-resource">Knative Service Resource</h2>
+<p>When a <a href="https://github.com/knative/specs/blob/main/specs/serving/knative-api-specification-1.0.md#service">Knative service</a> is called by a trigger it executes a container image.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">serving.knative.dev/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">kn-py-cb</span>
+  <span style="color:#f92672">labels</span>:
+    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">veba-ui</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">template</span>:
+    <span style="color:#f92672">metadata</span>:
+      <span style="color:#f92672">annotations</span>:
+        <span style="color:#f92672">autoscaling.knative.dev/maxScale</span>: <span style="color:#e6db74">&#34;1&#34;</span>
+        <span style="color:#f92672">autoscaling.knative.dev/minScale</span>: <span style="color:#e6db74">&#34;1&#34;</span>
+    <span style="color:#f92672">spec</span>:
+      <span style="color:#f92672">containers</span>:
+        - <span style="color:#f92672">image</span>: <span style="color:#ae81ff">ghcr.io/darrylcauldwell/kn-py-cb:1.0</span>
+          <span style="color:#f92672">envFrom</span>:
+            - <span style="color:#f92672">secretRef</span>:
+                <span style="color:#f92672">name</span>: <span style="color:#ae81ff">kn-py-cb-secret</span>
+</code></pre></div><h2 id="python-flask">Python Flask</h2>
+<p>The Knative serving component references a container image that executes the code. Knative Eventing makes standard HTTP POST requests to the service. The container image must run a web service to receive the POST. Flask is a lightweight WSGI web application framework written in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications. It is a good candidate to present our function logic from.</p>
+<h2 id="container-image-development-using-buildpacks">Container Image Development Using Buildpacks</h2>
+<p>Creating container images can be handcrafted artisanal creations. Buildpacks look to simplify container creation and target developers that have source code and simply wish to turn that into a container image.</p>
+<p>The Google Cloud Buildpacks project is a language family implementation on top of the Cloud Native Buildpack specification. Google Cloud Buildpacks support Go, Java, Node, Python, and .Net applications. Here I am using this as our practical example of developing our Python Flask Knative service image using a Google Cloud Buildpack.</p>
+<h3 id="install-pack-cli-tool">Install Pack CLI Tool</h3>
+<p>Pack is a CLI tool maintained by the Cloud Native Buildpacks project to support the use of buildpacks. The following command will download the latest version of pack from GitHub and install it in /usr/local/bin/.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">(</span>curl -sSL <span style="color:#e6db74">&#34;https://github.com/buildpacks/pack/releases/download/v0.24.0/pack-v0.24.0-linux.tgz&#34;</span> | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack<span style="color:#f92672">)</span>
+</code></pre></div><h3 id="define-the-container-entrypoint">Define The Container Entrypoint</h3>
+<p>Buildpacks allow applications to define process types using a special file named Procfile located at the root of the application. The Procfile specifies the commands that are executed by the app on startup.</p>
+<p>While developing the function logic I&rsquo;d like to run Flask in DEBUG mode so I specify the FLASK_ENV environment variable as development. I also define the FLASK_APP to be a file named &lsquo;handler.py&rsquo; and bind this locally to the port defined at container runtime.</p>
+<pre><code class="language-Procfile" data-lang="Procfile">web: FLASK_ENV=development FLASK_APP=handler.py python3 -m flask run --host=0.0.0.0 --port=$PORT
+</code></pre><h2 id="function-logic">Function Logic</h2>
+<p>The Buildpack Procfile in our example runs a Python Flask application &lsquo;handler.py&rsquo;. The Flask framework uses simple syntax and here we listen for HTTP POST made to the website /. The CloudEvent data is passed the POST body so we can get this as an object and use it as input to our logic.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Python" data-lang="Python"><span style="color:#75715e"># handler.py</span>
+<span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask, request
+<span style="color:#f92672">from</span> cloudevents.http <span style="color:#f92672">import</span> from_http
+<span style="color:#f92672">import</span> logging<span style="color:#f92672">,</span>json<span style="color:#f92672">,</span>os<span style="color:#f92672">,</span>time
+logging<span style="color:#f92672">.</span>basicConfig(level<span style="color:#f92672">=</span>logging<span style="color:#f92672">.</span>DEBUG,format<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%(asctime)s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%(levelname)s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%(name)s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%(threadName)s</span><span style="color:#e6db74"> : </span><span style="color:#e6db74">%(message)s</span><span style="color:#e6db74">&#39;</span>)
+
+app <span style="color:#f92672">=</span> Flask(__name__)
+<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#34;/&#34;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;POST&#34;</span>])
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">home</span>():
+    <span style="color:#75715e"># Extract  VM Name From CloudEvent Data</span>
+    event <span style="color:#f92672">=</span> from_http(request<span style="color:#f92672">.</span>headers, request<span style="color:#f92672">.</span>get_data(),<span style="color:#66d9ef">None</span>)
+    app<span style="color:#f92672">.</span>logger<span style="color:#f92672">.</span>debug(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Full event contents </span><span style="color:#e6db74">{</span>event<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+    data  <span style="color:#f92672">=</span> event<span style="color:#f92672">.</span>data
+    app<span style="color:#f92672">.</span>logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Found event ID </span><span style="color:#e6db74">{</span>event[<span style="color:#e6db74">&#39;id&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> triggered by </span><span style="color:#e6db74">{</span>event[<span style="color:#e6db74">&#39;subject&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> event for VM </span><span style="color:#e6db74">{</span>data[<span style="color:#e6db74">&#39;Vm&#39;</span>][<span style="color:#e6db74">&#39;Name&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>A Python application typically builds upon existing packages. To ensure the packages within the image the dependant packages and versions should be defined in &lsquo;requirements.txt&rsquo;.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Python" data-lang="Python"><span style="color:#75715e"># requirements.txt</span>
+flask<span style="color:#f92672">==</span><span style="color:#ae81ff">2.0.3</span>
+cloudevents<span style="color:#f92672">==</span><span style="color:#ae81ff">1.2.0</span>
+</code></pre></div><h3 id="create-container-image">Create Container Image</h3>
+<p>With the required Buildpack components in place ensure that local docker can pull the buildpack. Set variable for the container image and then use pack CLI to build the container image and which base to build from.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull gcr.io/buildpacks/builder:v1
+IMAGE<span style="color:#f92672">=</span>ghcr.io/darrylcauldwell/kn-py-cb:1.0
+pack build -B gcr.io/buildpacks/builder:v1 <span style="color:#e6db74">${</span>IMAGE<span style="color:#e6db74">}</span>
+</code></pre></div><h2 id="environmental-specific-variables">Environmental Specific Variables</h2>
+<p>The created container likely needs to be portable between deployments and any environmentally specific configuration passed at runtime. Here I use a file &lsquo;function.env&rsquo; to define all environment variables.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># function.env</span>
+ENV1 <span style="color:#f92672">=</span> VALUE1
+ENV2 <span style="color:#f92672">=</span> VALUE2
+ENV3 <span style="color:#f92672">=</span> VALUE3
+</code></pre></div><p>This file can be passed to the container at runtime which means these can be consumed by the code.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-env" data-lang="env">app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74">&#34;Environment variable ENV1 value is &#34;</span> + os.environ<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ENV1&#39;</span><span style="color:#f92672">])</span>
+app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74">&#34;Environment variable ENV2 value is &#34;</span> + os.environ<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ENV2&#39;</span><span style="color:#f92672">])</span>
+app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74">&#34;Environment variable ENV3 value is &#34;</span> + os.environ<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ENV3&#39;</span><span style="color:#f92672">])</span>
+app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74">&#34;Environment variable ENV4 value is &#34;</span> + os.environ<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ENV4&#39;</span><span style="color:#f92672">])</span>
+</code></pre></div><h2 id="rapid-iteration-development-and-testing">Rapid Iteration Development And Testing</h2>
+<p>Before deploying as Knative serving function it is possible to simulate how it will behave once triggered. We know that Knative is making an HTTP POST with CloudEvent data body which executes the container image. Once the container image is created using pack cli we can simply start the docker image and pass it a valid port to listen on and any environment variables it requires.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -e PORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8080</span> -it --env-file ./function.env --rm -p 8080:8080 <span style="color:#e6db74">${</span>IMAGE<span style="color:#e6db74">}</span>
+</code></pre></div><p>When the container image with function is running. Create a file with CloudEvent formatted JSON body and use curl to make the post to the locally running container image.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -i -d@testevent.json localhost:8080
+</code></pre></div><p>In case the function does not behave in the expected way and you wish to iterate the logic simply:</p>
+<ol>
+<li>Stop the container image</li>
+<li>Edit the function logic eg &lsquo;handler.py&rsquo;</li>
+<li>Run the pack command</li>
+<li>Start the new container image</li>
+<li>Test the functionality by making local POST using cURL</li>
+</ol>
+<h2 id="software-dependancy-lifecycle">Software Dependancy Lifecycle</h2>
+<p>One of the benefits of using Buildpacks as a container builder over artisanal container images using Dockerfiles is lifecycle management. The base buildpack images are maintained to pickup updates you can simply re-run pack cli with no changes and this will recreate your image from the updated buildpack base. Similarly, when you want to update your Python packages you just need to update the requirements.txt and re-run.</p>
+<h2 id="bulky-buildpacks">Bulky Buildpacks</h2>
+<p>Buildpacks are nice as they are simple and just work. But the resulting Container Images created from Buildpacks can be a bit bulky and can be not optimally layered.</p>
 
 
   </article>
@@ -185,6 +273,9 @@
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/avi/" class="nav-link" title="Avi Load Balancer">Avi Load Balancer</a>
+      </li>
+      <li>
+        <a href="https://darrylcauldwell.github.io/post/devops-architect/" class="nav-link" title="The DevOps Infrastructure Architect">The DevOps Infrastructure Architect</a>
       </li>
       <li>
         <a href="https://darrylcauldwell.github.io/post/homelab-nuc/" class="nav-link" title="Intel NUC Cluster Hardware">Intel NUC Cluster Hardware</a>
