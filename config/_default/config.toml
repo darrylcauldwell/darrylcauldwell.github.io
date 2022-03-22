@@ -113,7 +113,7 @@ series = "series"
 
     # The year when ths website was created, this value is used in the copyright
     # notice of the footer.
-    since = 2021
+    since = 2015
     [plausible_analytics]
     enable = false # to enable plausible analytics set to true.
     websiteDomain = "darrylcauldwell.github.io" # domain name of your website, most cases same as your base url
