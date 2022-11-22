@@ -141,7 +141,7 @@ cd veba-knative-mm-enter
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
 curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What I do need to do though is create a handler.ps1 which takes input from event and calls REST API of vROps.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; Process-Handler {
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;Process&lt;/span&gt;-Handler {
    &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
       [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
    )

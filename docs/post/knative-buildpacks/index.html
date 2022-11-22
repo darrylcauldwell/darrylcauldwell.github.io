@@ -4,7 +4,7 @@
   <head>
 <title>Creating A Knative Function Using Buildpacks | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.84.0" />
+<meta name="generator" content="Hugo 0.82.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -210,18 +210,18 @@
 logging<span style="color:#f92672">.</span>basicConfig(level<span style="color:#f92672">=</span>logging<span style="color:#f92672">.</span>DEBUG,format<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%(asctime)s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%(levelname)s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%(name)s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%(threadName)s</span><span style="color:#e6db74"> : </span><span style="color:#e6db74">%(message)s</span><span style="color:#e6db74">&#39;</span>)
 
 app <span style="color:#f92672">=</span> Flask(__name__)
-<span style="color:#a6e22e">@app</span><span style="color:#f92672">.</span>route(<span style="color:#e6db74">&#34;/&#34;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;POST&#34;</span>])
+<span style="color:#a6e22e">@app.route</span>(<span style="color:#e6db74">&#34;/&#34;</span>, methods<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;POST&#34;</span>])
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">home</span>():
     <span style="color:#75715e"># Extract  VM Name From CloudEvent Data</span>
-    event <span style="color:#f92672">=</span> from_http(request<span style="color:#f92672">.</span>headers, request<span style="color:#f92672">.</span>get_data(),<span style="color:#66d9ef">None</span>)
-    app<span style="color:#f92672">.</span>logger<span style="color:#f92672">.</span>debug(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Full event contents </span><span style="color:#e6db74">{</span>event<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+    event <span style="color:#f92672">=</span> from_http(request<span style="color:#f92672">.</span>headers, request<span style="color:#f92672">.</span>get_data(),None)
+    app<span style="color:#f92672">.</span>logger<span style="color:#f92672">.</span>debug(f<span style="color:#e6db74">&#34;Full event contents {event}&#34;</span>)
     data  <span style="color:#f92672">=</span> event<span style="color:#f92672">.</span>data
-    app<span style="color:#f92672">.</span>logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Found event ID </span><span style="color:#e6db74">{</span>event[<span style="color:#e6db74">&#39;id&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> triggered by </span><span style="color:#e6db74">{</span>event[<span style="color:#e6db74">&#39;subject&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74"> event for VM </span><span style="color:#e6db74">{</span>data[<span style="color:#e6db74">&#39;Vm&#39;</span>][<span style="color:#e6db74">&#39;Name&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+    app<span style="color:#f92672">.</span>logger<span style="color:#f92672">.</span>info(f<span style="color:#e6db74">&#34;Found event ID {event[&#39;id&#39;]} triggered by {event[&#39;subject&#39;]} event for VM {data[&#39;Vm&#39;][&#39;Name&#39;]}&#34;</span>)
 </code></pre></div><p>A Python application typically builds upon existing packages. To ensure the packages within the image the dependant packages and versions should be defined in &lsquo;requirements.txt&rsquo;.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Python" data-lang="Python"><span style="color:#75715e"># requirements.txt</span>
-flask<span style="color:#f92672">==</span><span style="color:#ae81ff">2.0.3</span>
-cloudevents<span style="color:#f92672">==</span><span style="color:#ae81ff">1.2.0</span>
+flask<span style="color:#f92672">==</span><span style="color:#ae81ff">2.0</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3</span>
+cloudevents<span style="color:#f92672">==</span><span style="color:#ae81ff">1.2</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>
 </code></pre></div><h3 id="create-container-image">Create Container Image</h3>
 <p>With the required Buildpack components in place ensure that local docker can pull the buildpack. Set variable for the container image and then use pack CLI to build the container image and which base to build from.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull gcr.io/buildpacks/builder:v1
@@ -284,6 +284,9 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/tanzu-tmc-aws/" class="nav-link" title="Deploying Tanzu for AWS Using Tanzu Misson Control">Deploying Tanzu for AWS Using Tanzu Misson Control</a>
       </li>
       <li>
@@ -304,16 +307,13 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
       <li>
         <a href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" class="nav-link" title="Raspberry Pi Kubernetes Cluster">Raspberry Pi Kubernetes Cluster</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/vs-code-remote-ssh/" class="nav-link" title="VSCode Remote SSH">VSCode Remote SSH</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">35</span>
+          <span class="button_tally">36</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -399,7 +399,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
         
         <a href='https://darrylcauldwell.github.io/tags/python/' class="post_tag button button_translucent" title="python">
           PYTHON
-          <span class="button_tally">8</span>
+          <span class="button_tally">9</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
@@ -414,7 +414,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
         
         <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
           DEVOPS
-          <span class="button_tally">5</span>
+          <span class="button_tally">6</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/tags/raspberry/' class="post_tag button button_translucent" title="raspberry">
@@ -473,7 +473,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/cloud-assembly/' class=" post_tag button button_translucent" data-position=1 title="cloud-assembly">CLOUD-ASSEMBLY<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/cloud-assembly/' class=" post_tag button button_translucent" data-position=2 title="cloud-assembly">CLOUD-ASSEMBLY<span class="button_tally">2</span>
             </a>
             
             
@@ -489,7 +489,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=5 title="devops">DEVOPS<span class="button_tally">5</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
             </a>
             
             
@@ -605,7 +605,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/pipeline/' class=" post_tag button button_translucent" data-position=1 title="pipeline">PIPELINE<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/pipeline/' class=" post_tag button button_translucent" data-position=2 title="pipeline">PIPELINE<span class="button_tally">2</span>
             </a>
             
             
@@ -613,7 +613,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/postman/' class=" post_tag button button_translucent" data-position=1 title="postman">POSTMAN<span class="button_tally">1</span>
+            <a href='https://darrylcauldwell.github.io/tags/postman/' class=" post_tag button button_translucent" data-position=2 title="postman">POSTMAN<span class="button_tally">2</span>
             </a>
             
             
@@ -625,7 +625,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/python/' class=" post_tag button button_translucent" data-position=8 title="python">PYTHON<span class="button_tally">8</span>
+            <a href='https://darrylcauldwell.github.io/tags/python/' class=" post_tag button button_translucent" data-position=9 title="python">PYTHON<span class="button_tally">9</span>
             </a>
             
             
@@ -633,7 +633,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/rest/' class=" post_tag button button_translucent" data-position=2 title="rest">REST<span class="button_tally">2</span>
+            <a href='https://darrylcauldwell.github.io/tags/rest/' class=" post_tag button button_translucent" data-position=3 title="rest">REST<span class="button_tally">3</span>
             </a>
             
             
@@ -697,7 +697,7 @@ app.logger.debug<span style="color:#f92672">(</span>f<span style="color:#e6db74"
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vra/' class=" post_tag button button_translucent" data-position=2 title="vra">VRA<span class="button_tally">2</span>
+            <a href='https://darrylcauldwell.github.io/tags/vra/' class=" post_tag button button_translucent" data-position=3 title="vra">VRA<span class="button_tally">3</span>
             </a>
             
             

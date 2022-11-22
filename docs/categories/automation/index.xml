@@ -5,7 +5,51 @@
     <link>https://darrylcauldwell.github.io/categories/automation/</link>
     <description>Recent content in automation on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 22 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/categories/automation/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/categories/automation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Service accounts with VMware Aria Automation API</title>
+      <link>https://darrylcauldwell.github.io/post/vra-api-svc-acc/</link>
+      <pubDate>Tue, 22 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/vra-api-svc-acc/</guid>
+      <description>
+        
+          &lt;p&gt;VMware &lt;a href=&#34;https://www.vmware.com/products/vrealize-automation.html&#34;&gt;VMware Aria Automation&lt;/a&gt; is a product suite comprising three products, &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/SaaS/Using-and-Managing-Cloud-Assembly/GUID-B9291A02-985E-4BD3-A11E-BDC839049072.html&#34;&gt;Cloud Assembly&lt;/a&gt;, &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/SaaS/Getting-Started-Service-Broker/GUID-8DDBB69B-6316-40FC-B584-C4F89643FA27.html&#34;&gt;Service Broker&lt;/a&gt; and &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/SaaS/Using-and-Managing-CodeStream/GUID-3625AE99-C60C-4517-803B-18C526ADCFF1.html&#34;&gt;Code Stream&lt;/a&gt;. These and other products are available &amp;lsquo;as a Service&amp;rsquo; via the &lt;a href=&#34;https://console.cloud.vmware.com&#34;&gt;VMware Cloud Services Portal&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;user-to-cloud-services-api-credentials&#34;&gt; User to Cloud Services API Credentials&lt;/h2&gt;
+&lt;p&gt;Most of the API documentation is centred around a user making call using API tokens. API tokens are issued by users in an organization and are associated with the user’s account.&lt;/p&gt;
+&lt;p&gt;The first step of a programatic flow is to pass the API token details to the Authorization Server. A Bearer Token is returned it is not intended to have any meaning to clients using it. The name “Bearer authentication” can be understood as “give access to the bearer of this token.” The Bearer Token is used in subsequent calls to the REST API.&lt;/p&gt;
+&lt;h2 id=&#34;service-to-cloud-services-api-credentials&#34;&gt;Service to Cloud Services API Credentials&lt;/h2&gt;
+&lt;p&gt;A common usecase is for servers and application services to make programmatic calls to REST APIs. If user aligned API tokens this can cause account lifecycle management headaches. VMware Cloud Services supports OAuth2 apps, the owner of the OAuth app is the organization in which it is created. These credentials can be managed by  user assigned the organization owner or developer roles.&lt;/p&gt;
+&lt;p&gt;VMware Cloud Services supports the creation of different OAuth2 apps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Server to server app - Tokens are issued directly to your app&lt;/li&gt;
+&lt;li&gt;Web app - Users of your app authorize access to protected resources&lt;/li&gt;
+&lt;li&gt;Native/Mobile app - Authorization Code Grant (Public client)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Some requirements will drive tightly coupled interactions and the building of client web or native applications. More typically cross product infrastructure managements tasks are loosely coupled.  OAuth2 Server to server app tokens are useful for these loosely coupled integrations. The programatic flow for these is very similar to that of the API token. The first step is to pass the OAuth2 API ID and APP Secret to the Authorization Server. A Bearer Token is returned which can be used in subsequent calls to the REST API.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-cloud-services-oauth2-server-to-server-app&#34;&gt;Creating A Cloud Services OAuth2 Server to server app&lt;/h2&gt;
+&lt;p&gt;To create a OAuth2 Server to server app you must connect to the &lt;a href=&#34;https://console.cloud.vmware.com&#34;&gt;VMware Cloud Services Portal&lt;/a&gt; with user account with sufficient priviliges.&lt;/p&gt;
+&lt;p&gt;Navigate to Organization and then OAuth Apps and follow the Create App wizard.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-create-app-1.png&#34; alt=&#34;Creating A Cloud Services OAuth2 Server to server app&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Add any Organization Role memberships which offer the right priviliges to the application calling the API.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-create-app-2.png&#34; alt=&#34;Adding a Organization Role to a Server to server app&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Add any Service Role memberships which offer the right priviliges to the application calling the API.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-create-app-3.png&#34; alt=&#34;Adding a Service Role to a Server to server app&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The creation wizard will output an Application ID and a Application Secret, store these securely.&lt;/p&gt;
+&lt;h2 id=&#34;calling-vrealize-automation-api-using-a-oauth2-server-to-server-app&#34;&gt;Calling vRealize Automation API Using A OAuth2 Server to server app&lt;/h2&gt;
+&lt;p&gt;In this test of functionality I am using a simple REST client.  The Application ID and a Application Secret need to be securely stored.  To similuate secret management solution I store these as environment variables along with the URL of the VMware Cloud Services API.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-env-var.png&#34; alt=&#34;REST client environment variables&#34;&gt;&lt;/p&gt;
+&lt;p&gt;With the secrets stored the next step is to form a POST to the Authorization Server.  This needs to have Authorization Username value set as the Application ID and the Password value set as the Application Secret.  As in my test these are environment variables I simply reference these.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-rest-post.png&#34; alt=&#34;VMware Cloud Services API Authorization Server POST&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The Authorization Server also requires a POST body to body in &amp;lsquo;x-www-form-unicode&amp;rsquo; where a key value pair is passed.  The key needs to set to &amp;lsquo;grant_type&amp;rsquo; and the value set to &amp;lsquo;client_credentials&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-rest-post-body.png&#34; alt=&#34;VMware Cloud Services API Authorization Server POST Body&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When POST is made if Application ID and a Application Secret are accepted by the API a Bearer token is returned in the response.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-bearer.png&#34; alt=&#34;VMware Cloud Services API Bearer Token&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
     <item>
       <title>Creating A Knative Function Using Buildpacks</title>
       <link>https://darrylcauldwell.github.io/post/knative-buildpacks/</link>
@@ -75,18 +119,18 @@
 logging&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;basicConfig(level&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;logging&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;DEBUG,format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(asctime)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(levelname)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(name)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(threadName)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; : &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(message)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)
 
 app &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Flask(__name__)
-&lt;span style=&#34;color:#a6e22e&#34;&gt;@app&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;route(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, methods&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;])
+&lt;span style=&#34;color:#a6e22e&#34;&gt;@app.route&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, methods&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;])
 
 &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;home&lt;/span&gt;():
     &lt;span style=&#34;color:#75715e&#34;&gt;# Extract  VM Name From CloudEvent Data&lt;/span&gt;
-    event &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; from_http(request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;headers, request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get_data(),&lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;)
-    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;debug(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full event contents &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;event&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+    event &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; from_http(request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;headers, request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get_data(),None)
+    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;debug(f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full event contents {event}&amp;#34;&lt;/span&gt;)
     data  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;data
-    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;info(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Found event ID &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; triggered by &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;subject&amp;#39;&lt;/span&gt;]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; event for VM &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;data[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Vm&amp;#39;&lt;/span&gt;][&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt;]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;info(f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Found event ID {event[&amp;#39;id&amp;#39;]} triggered by {event[&amp;#39;subject&amp;#39;]} event for VM {data[&amp;#39;Vm&amp;#39;][&amp;#39;Name&amp;#39;]}&amp;#34;&lt;/span&gt;)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A Python application typically builds upon existing packages. To ensure the packages within the image the dependant packages and versions should be defined in &amp;lsquo;requirements.txt&amp;rsquo;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# requirements.txt&lt;/span&gt;
-flask&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2.0.3&lt;/span&gt;
-cloudevents&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.2.0&lt;/span&gt;
+flask&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2.0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;
+cloudevents&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;create-container-image&#34;&gt;Create Container Image&lt;/h3&gt;
 &lt;p&gt;With the required Buildpack components in place ensure that local docker can pull the buildpack. Set variable for the container image and then use pack CLI to build the container image and which base to build from.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker pull gcr.io/buildpacks/builder:v1
@@ -1442,14 +1486,14 @@ content &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; vcenter&lt;span
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;content.about.fullName
 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VMware vCenter Server 6.5.0 build-5178943&amp;#39;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can also explore the Object Model which is well descrived here in the &lt;a href=&#34;http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html&#34;&gt;vSphere SDK API Docs&lt;/a&gt; and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VirtualMachine],&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;)
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;VirtualMachine],True)
 vmList &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view
 objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Destroy()
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;  vm &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; vmList:
     vm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;summary&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;config&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;name
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;basic-put-of-configuration-information&#34;&gt;Basic put of configuration information&lt;/h1&gt;
 &lt;p&gt;As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;HostSystem],&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;)
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;objView &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;viewManager&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;CreateContainerView(content&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;rootFolder,[vim&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;HostSystem],True)
 hostList &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;view
 objView&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Destroy()
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; host &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; hostList:
@@ -1580,7 +1624,7 @@ items &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; response[&lt;span
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# If we print the dictionary we get the two key pairs&lt;/span&gt;
 
-print item_dict
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; item_dict
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
@@ -1608,7 +1652,7 @@ aws dynamodb put-item --table-name &lt;span style=&#34;color:#e6db74&#34;&gt;&am
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; __future__ &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; print_function
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; boto3
 &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; json
-print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#39;&lt;/span&gt;)
 &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(event, context):
     operation &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;operation&amp;#39;&lt;/span&gt;]
     &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;tableName&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; event:
@@ -1625,7 +1669,7 @@ print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Loading function&amp;#3
     &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; operation &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; operations:
         &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; operations[operation](event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;payload&amp;#39;&lt;/span&gt;))
     &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ValueError&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Unrecognized operation &amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(operation))
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;raise&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ValueError&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Unrecognized operation &amp;#34;{}&amp;#34;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;format(operation))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can then test that we can pull back a specific database item for example the Brian record, select &amp;lsquo;Action \ Configure test event&amp;rsquo; and paste in the following.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;{
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;operation&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;read&amp;#34;&lt;/span&gt;,
@@ -2266,7 +2310,7 @@ nsxraml_file &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
 nsxmanager &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;nsx.darrylcauldwell.local&amp;#39;&lt;/span&gt;
 nsx_username &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;admin&amp;#39;&lt;/span&gt;
 nsx_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;VMware!&amp;#39;&lt;/span&gt;
-client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;False&lt;/span&gt;)
+client_session &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;False)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you can then see the session by running the following command in python session&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;client_session
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-install-ansible-RAMLclient.jpg&#34; alt=&#34;NSX RAML Client&#34;&gt;&lt;/p&gt;

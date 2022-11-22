@@ -5,7 +5,51 @@
     <link>https://darrylcauldwell.github.io/tags/postman/</link>
     <description>Recent content in postman on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 18 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/postman/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/postman/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Service accounts with VMware Aria Automation API</title>
+      <link>https://darrylcauldwell.github.io/post/vra-api-svc-acc/</link>
+      <pubDate>Tue, 22 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/vra-api-svc-acc/</guid>
+      <description>
+        
+          &lt;p&gt;VMware &lt;a href=&#34;https://www.vmware.com/products/vrealize-automation.html&#34;&gt;VMware Aria Automation&lt;/a&gt; is a product suite comprising three products, &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/SaaS/Using-and-Managing-Cloud-Assembly/GUID-B9291A02-985E-4BD3-A11E-BDC839049072.html&#34;&gt;Cloud Assembly&lt;/a&gt;, &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/SaaS/Getting-Started-Service-Broker/GUID-8DDBB69B-6316-40FC-B584-C4F89643FA27.html&#34;&gt;Service Broker&lt;/a&gt; and &lt;a href=&#34;https://docs.vmware.com/en/vRealize-Automation/SaaS/Using-and-Managing-CodeStream/GUID-3625AE99-C60C-4517-803B-18C526ADCFF1.html&#34;&gt;Code Stream&lt;/a&gt;. These and other products are available &amp;lsquo;as a Service&amp;rsquo; via the &lt;a href=&#34;https://console.cloud.vmware.com&#34;&gt;VMware Cloud Services Portal&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;user-to-cloud-services-api-credentials&#34;&gt; User to Cloud Services API Credentials&lt;/h2&gt;
+&lt;p&gt;Most of the API documentation is centred around a user making call using API tokens. API tokens are issued by users in an organization and are associated with the user’s account.&lt;/p&gt;
+&lt;p&gt;The first step of a programatic flow is to pass the API token details to the Authorization Server. A Bearer Token is returned it is not intended to have any meaning to clients using it. The name “Bearer authentication” can be understood as “give access to the bearer of this token.” The Bearer Token is used in subsequent calls to the REST API.&lt;/p&gt;
+&lt;h2 id=&#34;service-to-cloud-services-api-credentials&#34;&gt;Service to Cloud Services API Credentials&lt;/h2&gt;
+&lt;p&gt;A common usecase is for servers and application services to make programmatic calls to REST APIs. If user aligned API tokens this can cause account lifecycle management headaches. VMware Cloud Services supports OAuth2 apps, the owner of the OAuth app is the organization in which it is created. These credentials can be managed by  user assigned the organization owner or developer roles.&lt;/p&gt;
+&lt;p&gt;VMware Cloud Services supports the creation of different OAuth2 apps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Server to server app - Tokens are issued directly to your app&lt;/li&gt;
+&lt;li&gt;Web app - Users of your app authorize access to protected resources&lt;/li&gt;
+&lt;li&gt;Native/Mobile app - Authorization Code Grant (Public client)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Some requirements will drive tightly coupled interactions and the building of client web or native applications. More typically cross product infrastructure managements tasks are loosely coupled.  OAuth2 Server to server app tokens are useful for these loosely coupled integrations. The programatic flow for these is very similar to that of the API token. The first step is to pass the OAuth2 API ID and APP Secret to the Authorization Server. A Bearer Token is returned which can be used in subsequent calls to the REST API.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-cloud-services-oauth2-server-to-server-app&#34;&gt;Creating A Cloud Services OAuth2 Server to server app&lt;/h2&gt;
+&lt;p&gt;To create a OAuth2 Server to server app you must connect to the &lt;a href=&#34;https://console.cloud.vmware.com&#34;&gt;VMware Cloud Services Portal&lt;/a&gt; with user account with sufficient priviliges.&lt;/p&gt;
+&lt;p&gt;Navigate to Organization and then OAuth Apps and follow the Create App wizard.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-create-app-1.png&#34; alt=&#34;Creating A Cloud Services OAuth2 Server to server app&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Add any Organization Role memberships which offer the right priviliges to the application calling the API.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-create-app-2.png&#34; alt=&#34;Adding a Organization Role to a Server to server app&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Add any Service Role memberships which offer the right priviliges to the application calling the API.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-create-app-3.png&#34; alt=&#34;Adding a Service Role to a Server to server app&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The creation wizard will output an Application ID and a Application Secret, store these securely.&lt;/p&gt;
+&lt;h2 id=&#34;calling-vrealize-automation-api-using-a-oauth2-server-to-server-app&#34;&gt;Calling vRealize Automation API Using A OAuth2 Server to server app&lt;/h2&gt;
+&lt;p&gt;In this test of functionality I am using a simple REST client.  The Application ID and a Application Secret need to be securely stored.  To similuate secret management solution I store these as environment variables along with the URL of the VMware Cloud Services API.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-env-var.png&#34; alt=&#34;REST client environment variables&#34;&gt;&lt;/p&gt;
+&lt;p&gt;With the secrets stored the next step is to form a POST to the Authorization Server.  This needs to have Authorization Username value set as the Application ID and the Password value set as the Application Secret.  As in my test these are environment variables I simply reference these.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-rest-post.png&#34; alt=&#34;VMware Cloud Services API Authorization Server POST&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The Authorization Server also requires a POST body to body in &amp;lsquo;x-www-form-unicode&amp;rsquo; where a key value pair is passed.  The key needs to set to &amp;lsquo;grant_type&amp;rsquo; and the value set to &amp;lsquo;client_credentials&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-rest-post-body.png&#34; alt=&#34;VMware Cloud Services API Authorization Server POST Body&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When POST is made if Application ID and a Application Secret are accepted by the API a Bearer token is returned in the response.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vra-api-svc-acc-bearer.png&#34; alt=&#34;VMware Cloud Services API Bearer Token&#34;&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
     <item>
       <title>Orchestrating configuration of vROps via REST API with Postman</title>
       <link>https://darrylcauldwell.github.io/post/vrops_rest/</link>
