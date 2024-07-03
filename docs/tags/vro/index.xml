@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/vro/</link>
     <description>Recent content in vro on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Wed, 20 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vro/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Calling the NSX REST API with vRO and Navigating The XML Response</title>
@@ -15,24 +16,24 @@
       <description>
         
           &lt;p&gt;While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations. For example when creating an NSX Edge Services Gateway we use this method.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;NSXEdgeTrinityBasicController.createEdgeV4
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;NSXEdgeTrinityBasicController.createEdgeV4
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;That method returns void,  so next you need to make a second method call using filter by name to get the object and obtain object ID which is typically the input to other methods.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;NSXEdgeTrinityBasicController.getAllEdgeSummariesV4
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;NSXEdgeTrinityBasicController.getAllEdgeSummariesV4
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When creating NSX Distributed Logical Router it is the same method to create. However the second method to get the object fails as it cannot handle the additional property LogicalRouterScope which DLRs have, so throws an error.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;java.lang.NoSuchMethodException:com.vmware.vshield.edge.dto.trinity.LogicalRouterScope.&amp;lt;init&amp;gt;()
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;java.lang.NoSuchMethodException:com.vmware.vshield.edge.dto.trinity.LogicalRouterScope.&amp;lt;init&amp;gt;()
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After trying various other NSX plugin methods all have same issue so I changed approach. NSX offers all its capabilities via &lt;a href=&#34;https://docs.vmware.com/en/VMware-NSX-for-vSphere/6.4/nsx_64_api.pdf&#34;&gt;REST API&lt;/a&gt;. vRealize Orchestrator comes with a HTTP-REST plugin, so in theory we can add NSX Managers as HTTP-REST endpoint and call everything direct.&lt;/p&gt;
 &lt;p&gt;If you have multiple REST HTTP hosts added you would want to bring back a list of these.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;restHosts = RESTHostManager.getHosts();
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;restHosts = RESTHostManager.getHosts();
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This returns an array of UUIDs of each REST host, we can use these UUIDs to get the REST host objects. We could normally loop to find the specific &lt;a href=&#34;http://www.vroapi.com/Class/REST/2.2.2/RESTHost&#34;&gt;RESThost&lt;/a&gt; object we are looking for, but for ease here we would use the first item from array.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;host = RESTHostManager.getHost(restHosts[0]);
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;host = RESTHostManager.getHost(restHosts[0]);
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So we have the target &lt;a href=&#34;http://www.vroapi.com/Class/REST/2.2.2/RESTHost&#34;&gt;RESThost&lt;/a&gt; object look at forming the request using the &lt;a href=&#34;http://www.vroapi.com/Method/REST/2.2.2/RESTHost/createRequest&#34;&gt;createRequest&lt;/a&gt; method.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;request = host.createRequest(&#39;GET&#39;,&#39;/api/4.0/edges&#39;,&#39;&#39;);
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;request = host.createRequest(&amp;#39;GET&amp;#39;,&amp;#39;/api/4.0/edges&amp;#39;,&amp;#39;&amp;#39;);
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once we have our request formed we can look to make the call using the &lt;a href=&#34;http://www.vroapi.com/Method/REST/2.2.2/RESTHost/executeRequestWithCredentials&#34;&gt;executeRequestWithCredentials&lt;/a&gt; method. Here I store username and password as Secure String variables.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;responseStr = request.executeWithCredentials(username,password);
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;responseStr = request.executeWithCredentials(username,password);
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This returns a &lt;a href=&#34;http://www.vroapi.com/Class/REST/2.2.2/RESTResponse&#34;&gt;RESTResponse&lt;/a&gt; object, this has attribute contentAsString to navigate this XML we first convert this string to a &lt;a href=&#34;https://www.w3schools.com/XML/dom_document.asp&#34;&gt;XML DOM Document Object&lt;/a&gt;. vRealize Orchestrator comes with a &lt;a href=&#34;http://www.vroapi.com/Plugin/XML/7.0.1&#34;&gt;XML plugin&lt;/a&gt; we can use the &lt;a href=&#34;http://www.vroapi.com/Method/XML/7.0.1/XMLManager/fromString&#34;&gt;XMLManager.fromString&lt;/a&gt; method to perform this converstion.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;responseXml = XMLManager.fromString(responseStr.contentAsString);
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;responseXml = XMLManager.fromString(responseStr.contentAsString);
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If we look inside of the XML which is returned from /api/4.0/edges we can see each the hierachy that each NSX Edge is a XML Node called edgeSummary and within that Node are child nodes for all of its attributes.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;pagedEdgeList&amp;gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;pagedEdgeList&amp;gt;
     &amp;lt;edgePage&amp;gt;
         &amp;lt;edgeSummary&amp;gt;
             &amp;lt;objectId&amp;gt;
@@ -53,14 +54,14 @@
             &amp;lt;name&amp;gt;
             ...
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;So we need to bring back all the edgeSummary Nodes and create a &lt;a href=&#34;http://www.vroapi.com/Class/XML/7.0.1/XMLNodeList&#34;&gt;XMLNodeList&lt;/a&gt; object containing all of out Edges.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;edgeNodeList = responseXml.getElementsByTagName(&amp;quot;edgeSummary&amp;quot;);
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;edgeNodeList = responseXml.getElementsByTagName(&amp;#34;edgeSummary&amp;#34;);
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once we have this we can loop around the children of this and find the correct Edge entry and then get the objectId. We know the child order is always the same so we can choose data from positon in list and output the text content of Node.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;for (var i = 0 ; i &amp;lt; edgeNodeList.length ; i++) {
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;for (var i = 0 ; i &amp;lt; edgeNodeList.length ; i++) {
     var node = edgeNodeList.item(i) ;
     edgeChildNodeList = node.getChildNodes();
     if (edgeChildNodeList.item(6).textContent == edgeName) {
         var objectId = edgeChildNodeList.item(0).textContent ;
-        System.log(&amp;quot;Edge named &amp;quot; + edgeName + &amp;quot; has objectId &amp;quot; + objectId) ;
+        System.log(&amp;#34;Edge named &amp;#34; + edgeName + &amp;#34; has objectId &amp;#34; + objectId) ;
     }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With this technique we should be able to get around any vRealize Orchestrator NSX Plugin limitation. This would also be useful for calling other RESTful APIs in absence of a specific vRealize Orchestrator plugin.&lt;/p&gt;
@@ -82,18 +83,18 @@
 &lt;p&gt;Problems manifest themselves as failures to execute methods, but very little detail is returned with the error message. Within vRealize Orchestrator is a JavaScript runtime environment therefore we can install a plug-in such as &lt;a href=&#34;https://labs.vmware.com/flings/vco-cli&#34;&gt;vCO-CLI&lt;/a&gt; to get an exploratory programming interface and try the commands directly to see the return values. While this was useful it didn&amp;rsquo;t help with all issues.&lt;/p&gt;
 &lt;p&gt;The NSX plug-in talks to NSX Manager via the REST API, so another avenue to follow is that you can enable HttpClient logging which captures the REST calls made by the Plug-in in real-time. After some searching &lt;a href=&#34;https://www.vcoteam.info/articles/learn-vco/199-how-to-handle-vcenter-orchestrator-logs.html&#34;&gt;I found vRealize Orchestrator&lt;/a&gt; uses &lt;a href=&#34;https://logging.apache.org/log4j/2.x/&#34;&gt;Apache log4j&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We can edit the log4j configuration file&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/etc/vco/app-server/log4j.xml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Within this configuration file we find section for the HttpClient org.apache.http&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;category&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;additivity=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;org.apache.http&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;priority&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INFO&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/category&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can enable HttpClient debugging by amending this to have value of DEBUG.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;category&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;additivity=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;org.apache.http&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;priority&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DEBUG&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/category&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the vRealize Orchestrator server services are restarted the logging level will change and events will be written to the following log file.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vco/app-server/integration-server.log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Using a combination of these methods has enabled resolution of all issues experienced up to now. To note putting a vRealize Orchestrator server into debug mode will slow down the vRealize Orchetrator server considerably. It is recommended to use DEBUG mode temporarily.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/etc/vco/app-server/log4j.xml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Within this configuration file we find section for the HttpClient org.apache.http&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;category&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;additivity=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;org.apache.http&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;priority&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;INFO&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/category&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can enable HttpClient debugging by amending this to have value of DEBUG.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;category&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;additivity=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;org.apache.http&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;priority&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;value=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;DEBUG&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/category&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the vRealize Orchestrator server services are restarted the logging level will change and events will be written to the following log file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vco/app-server/integration-server.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Using a combination of these methods has enabled resolution of all issues experienced up to now. To note putting a vRealize Orchestrator server into debug mode will slow down the vRealize Orchetrator server considerably. It is recommended to use DEBUG mode temporarily.&lt;/p&gt;
 
         
       </description>

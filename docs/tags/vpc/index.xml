@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/vpc/</link>
     <description>Recent content in vpc on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Mon, 14 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Setup VPC Peering With Ansible</title>
@@ -18,211 +19,211 @@
 &lt;h2 id=&#34;local-peering&#34;&gt;Local Peering&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ll start by configuring two VPCs within the same account a single account, and configure peering between them. The Ansible host will sit within the same account which we create the new VPCs and peering. In order that Ansible can manage the AWS VPC services create an IAM Role named Ansible and assign it to the AdmistratorAccess policy. Once the IAM role is created we can then create a RHEL7 EC2 instance with this IAM role attached.&lt;/p&gt;
 &lt;p&gt;The Ansible AWS modules manages AWS via the API by use of the &lt;a href=&#34;http://boto.cloudhackers.com/&#34;&gt;Python boto library&lt;/a&gt;, presently the boto project is migrating from v2 to v3, the Ansible VPC module relies on both versions.  In order for boto to function correctly we also need locally installed AWSCLI. Once the RHEL instance is running connect and run the following commands to install Ansible and the boto and AWS CLI python library.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo yum install wget -y
-wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
-sudo rpm -ivh epel-release-7-8.noarch.rpm
-sudo yum install ansible git python python-devel python-pip -y
-sudo pip install boto boto3 awscli
-sudo yum update -y
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What we&amp;rsquo;ll do is use the &lt;a href=&#34;http://docs.ansible.com/ansible/ec2_vpc_module.html&#34;&gt;ec2_vpc module&lt;/a&gt; to create two new VPCs and capture the output of these as variables.  We can then use pass the output from VPC creation into the &lt;a href=&#34;http://docs.ansible.com/ansible/ec2_vpc_peer_module.html&#34;&gt;ec2_vpc_peer module&lt;/a&gt; to configure peering.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo yum install wget -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo rpm -ivh epel-release-7-8.noarch.rpm
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo yum install ansible git python python-devel python-pip -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo pip install boto boto3 awscli
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo yum update -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What we&amp;rsquo;ll do is use the &lt;a href=&#34;http://docs.ansible.com/ansible/ec2_vpc_module.html&#34;&gt;ec2_vpc module&lt;/a&gt; to create two new VPCs and capture the output of these as variables.  We can then use pass the output from VPC creation into the &lt;a href=&#34;http://docs.ansible.com/ansible/ec2_vpc_peer_module.html&#34;&gt;ec2_vpc_peer module&lt;/a&gt; to configure peering.&lt;/p&gt;
 &lt;p&gt;Once Ansible is installed you can clone example repository.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
-cd aws-ansible
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inside the repository is an example playbook.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;local-vpc-peering.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The contents of which are shown here.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
-   &lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
-
-   &lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
-   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt;
-   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
-       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt; }
-       &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
-       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
-       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
-       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
-       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
-   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;first_vpc&lt;/span&gt;
-
-   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ first_vpc }}&amp;#34; &lt;/span&gt;
-
-   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt;
-   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
-       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt; }
-       &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
-       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
-       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
-       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
-           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
-       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
-   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;second_vpc&lt;/span&gt;
-
-   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ second_vpc }}&amp;#34; &lt;/span&gt;
-
-   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Create local VPC peering connection&amp;#34;&lt;/span&gt;
-   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
-       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ first_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;peer_vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ second_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
-   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vpc_peer&lt;/span&gt;
-
-   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ vpc_peer }}&amp;#34;&lt;/span&gt;
-
-   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept local VPC peering connection&amp;#34;&lt;/span&gt;
-   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
-       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;peering_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ vpc_peer.peering_id }}&amp;#34;&lt;/span&gt;
-       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept&lt;/span&gt;
-   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept_peer&lt;/span&gt;
-
-   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ accept_peer }}&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ve added debugging of output, if you run this you will see the two VPCs get created and then the peering configured between them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd aws-ansible
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Inside the repository is an example playbook.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;local-vpc-peering.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The contents of which are shown here.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;first_vpc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ first_vpc }}&amp;#34; &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;           &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;second_vpc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ second_vpc }}&amp;#34; &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Create local VPC peering connection&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ first_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;peer_vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ second_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vpc_peer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ vpc_peer }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept local VPC peering connection&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;peering_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ vpc_peer.peering_id }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept_peer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ accept_peer }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ve added debugging of output, if you run this you will see the two VPCs get created and then the peering configured between them.&lt;/p&gt;
 &lt;p&gt;## Cross Account VPC Peering Using Access Keys&lt;/p&gt;
 &lt;p&gt;As well as confguring peering within a single account, we can also use Ansible across AWS accounts. The steps we use are very similar but we begin to use &lt;a href=&#34;http://boto.cloudhackers.com/en/latest/boto_config_tut.html&#34;&gt;boto configuration profiles&lt;/a&gt; once we have a configuration profile for each account in place we can then target each task in the play to a different account. As we are using boto we&amp;rsquo;ll authenticate using AWS Access Key and Secret rather than role based permissions applied to the EC2 instance, we cannot remove a role from a EC2 instance so terminate the old Ansible server and create a new one as above but without the IAM Role attached.&lt;/p&gt;
 &lt;p&gt;Within each account your managing create an IAM User called AnsibleAdministratorAccess and attach the AdmistratorAccess policy, add the Access Key ID and Secret Access Key to the boto2 and boto3 configuration files. I create a profile for each account named the account number.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vi /etc/boto.cfg
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
-aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
-aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
-
-mkdir ~/.aws/
-cp /etc/boto.cfg ~/.aws/config
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once Ansible and boto are installed and configured you can clone example repository.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo vi /etc/boto.cfg
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir ~/.aws/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp /etc/boto.cfg ~/.aws/config
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once Ansible and boto are installed and configured you can clone example repository.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
 cd aws-ansible
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Inside the repository is an example playbook.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cross-account-vpc-peering.yml 
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cross-account-vpc-peering.yml 
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You&amp;rsquo;ll notice this playbook looks very similar to the one for local peering. The key differences are the addition of the profile parameter for the ec2_vpc and ec2_vpc_peer tasks, and the addition of account number hosting VPCs.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;---
-- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
-
-    &lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
-    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;843555617105&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt; }
-        &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
-        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
-        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
-        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
-        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
-    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;first_vpc&lt;/span&gt;
-
-    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ first_vpc }}&amp;#34; &lt;/span&gt;
-
-    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt; }
-        &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
-        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
-        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
-        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
-        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
-    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;second_vpc&lt;/span&gt;
-
-    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ second_vpc }}&amp;#34; &lt;/span&gt;
-
-    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Create local VPC peering connection&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;843555617105&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ first_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;peer_vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ second_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;peer_owner_id&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vpc_peer&lt;/span&gt;
-
-    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ vpc_peer }}&amp;#34;&lt;/span&gt;
-
-    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept local VPC peering connection&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;peering_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ vpc_peer.peering_id }}&amp;#34;&lt;/span&gt; 
-        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept_peer&lt;/span&gt;
-
-    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ accept_peer }}&amp;#34;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ve added debugging of output, if you run this&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;ansible-playbook aws-ansible/cross-account-vpc-peering.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will see the two VPCs in different accounts and get created and then the peering configured between them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;- &lt;span style=&#34;color:#f92672&#34;&gt;hosts&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;connection&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;tasks&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;843555617105&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;First VPC&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.0.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;first_vpc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ first_vpc }}&amp;#34; &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;cidr_block&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.0.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/16&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Second VPC&amp;#34;&lt;/span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;subnets&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.1.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteA&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.2.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1b&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteB&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;cidr&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;10.1.3.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;/24&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;az&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1c&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;resource_tags&lt;/span&gt;: {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Location&amp;#34;&lt;/span&gt;:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;SiteC&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;wait&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;yes&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;second_vpc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ second_vpc }}&amp;#34; &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Create local VPC peering connection&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;843555617105&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ first_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;peer_vpc_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ second_vpc.vpc_id }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;peer_owner_id&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;present&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vpc_peer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ vpc_peer }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept local VPC peering connection&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ec2_vpc_peer&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;profile&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;664710917345&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;region&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eu-west-1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;peering_id&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ vpc_peer.peering_id }}&amp;#34;&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;state&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;register&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;accept_peer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#f92672&#34;&gt;debug&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;msg=&amp;#34;{{ accept_peer }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;ve added debugging of output, if you run this&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ansible-playbook aws-ansible/cross-account-vpc-peering.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will see the two VPCs in different accounts and get created and then the peering configured between them.&lt;/p&gt;
 &lt;h2 id=&#34;cross-account-vpc-peering-using-iam-assume-role-provider&#34;&gt;Cross Account VPC Peering Using IAM Assume Role Provider&lt;/h2&gt;
 &lt;p&gt;It is Amazon best practise is to &lt;a href=&#34;http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#delegate-using-roles&#34;&gt;delegate access using roles instead of sharing credentials.&lt;/a&gt; You can define a role that specifies what permissions the IAM users in the other account are allowed, and from which AWS accounts the IAM users are allowed to assume the role. Up to now we&amp;rsquo;ve used IAM User and Access Keys to authenticate across multiple accounts, here we will look at configuring Ansible using AssumeRole.&lt;/p&gt;
 &lt;p&gt;Unfortunatly ec2_vpc does not yet support boto3 and this is required to use AssumeRole, ec2_vpc_peer however does support this. What this means though is we need to configure boto2 config file with access key in both accounts.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sudo vi /etc/boto.cfg
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
-aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
-aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In order to configure boto3 to use AssumeRole we first, create an IAM User called AnsibleAdminUser in your first account. Then create an IAM Role your second account called &amp;lsquo;AnsibleAdministrator&amp;rsquo; for role type select &amp;lsquo;Role for Cross-Account Access \ Provide access between AWS accounts you own&amp;rsquo; then enter the Account ID of your first account and attach policy AdmistratorAccess. Once created view your new role in IAM and copy the Role ARN eg arn:aws:iam::664710917345:role/AnsibleAdministrator&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo vi /etc/boto.cfg
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In order to configure boto3 to use AssumeRole we first, create an IAM User called AnsibleAdminUser in your first account. Then create an IAM Role your second account called &amp;lsquo;AnsibleAdministrator&amp;rsquo; for role type select &amp;lsquo;Role for Cross-Account Access \ Provide access between AWS accounts you own&amp;rsquo; then enter the Account ID of your first account and attach policy AdmistratorAccess. Once created view your new role in IAM and copy the Role ARN eg arn:aws:iam::664710917345:role/AnsibleAdministrator&lt;/p&gt;
 &lt;p&gt;Configure boto3 credentials&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir ~/.aws
-sudo vi ~/.aws/credentials 
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;664710917345-AnsibleAdminUser&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
-aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
-
-sudo vi ~/.aws/config
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
-aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; 
-role_arn&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arn:aws:iam::843555617105:role/AnsibleAdministrator
-source_profile&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;664710917345-AnsibleAdminUser
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the credentials files are completed we can clone the example git repo and run the playbook.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir ~/.aws
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo vi ~/.aws/credentials 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;664710917345-AnsibleAdminUser&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo vi ~/.aws/config
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 664710917345&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_access_key_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_access_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws_secret_access_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &amp;lt;your_secret_key_here&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;profile 843555617105&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;role_arn&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arn:aws:iam::843555617105:role/AnsibleAdministrator
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;source_profile&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;664710917345-AnsibleAdminUser
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the credentials files are completed we can clone the example git repo and run the playbook.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;git clone https://github.com/darrylcauldwell/aws-ansible.git
 ansible-playbook aws-ansible/cross-account-vpc-peering.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should see the same behaviour where two VPCs are created and VPC Peering is established between them.&lt;/p&gt;
 

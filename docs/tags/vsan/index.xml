@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/vsan/</link>
     <description>Recent content in vsan on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Wed, 12 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vsan/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Programaticly configuring VMware Storage Profile API with Python</title>
@@ -17,9 +18,9 @@
           &lt;p&gt;I was looking to programaticly configuring VMware Storage Profile recently. My scripting language of choice is Python, VMware maintain &lt;a href=&#34;https://github.com/vmware/pyvmomi&#34;&gt;pyVmomi&lt;/a&gt; is which is the Python SDK for the VMware vSphere API. pyVmomi can be used to form binding and configure the &lt;a href=&#34;https://code.vmware.com/apis/968/vsphere&#34;&gt;vSphere Web Services API&lt;/a&gt; and the &lt;a href=&#34;https://code.vmware.com/apis/971&#34;&gt;VMware Storage Policy API&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The Storage Policy API is exposed as a Web service, running on VMware vCenter server systems.  When I approached the requirement it wasn&amp;rsquo;t clear to me how to connect to the Storage Policy API Web service. I read the &lt;a href=&#34;https://code.vmware.com/docs/11900/vmware-storage-policy-sdk-programming-guide&#34;&gt;VMware Storage Policy SDK Programming Guide&lt;/a&gt; section on forming connection which describes using the session cookie from a vCenter Server session to establish the Storage Policy session.&lt;/p&gt;
 &lt;p&gt;pyVim is a client-side Python API which wraps pvVmomi these are made available as a package.  These are published to PyPI repository and as such can be installed easily with pip.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;pip install --upgrade pyvmomi
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;pip install --upgrade pyvmomi
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It we look at pyVmomi in GitHub we can see that &lt;a href=&#34;https://github.com/vmware/pyvmomi/blob/master/pyVim/connect.py&#34;&gt;pyVim.connect&lt;/a&gt; defines a function SmartConnect which can be used to form connection to the vSphere Web Services API.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python3
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#!/usr/bin/env python3
 # Connect to a VMOMI ServiceInstance.
 
 import ssl argparse atexit getpass
@@ -27,43 +28,43 @@ from pyVim.connect import SmartConnect
 
 def get_args():
     parser = argparse.ArgumentParser(
-        description=&#39;Arguments for talking to vCenter&#39;)
+        description=&amp;#39;Arguments for talking to vCenter&amp;#39;)
 
-    parser.add_argument(&#39;-s&#39;, &#39;--host&#39;,
+    parser.add_argument(&amp;#39;-s&amp;#39;, &amp;#39;--host&amp;#39;,
                         required=True,
-                        action=&#39;store&#39;,
-                        help=&#39;vCenter Server FQDN or IP address&#39;)
+                        action=&amp;#39;store&amp;#39;,
+                        help=&amp;#39;vCenter Server FQDN or IP address&amp;#39;)
 
-    parser.add_argument(&#39;-o&#39;, &#39;--port&#39;,
+    parser.add_argument(&amp;#39;-o&amp;#39;, &amp;#39;--port&amp;#39;,
                         type=int,
                         default=443,
-                        action=&#39;store&#39;,
-                        help=&#39;vCenter Server TCP port&#39;)
+                        action=&amp;#39;store&amp;#39;,
+                        help=&amp;#39;vCenter Server TCP port&amp;#39;)
 
-    parser.add_argument(&#39;-u&#39;, &#39;--user&#39;,
+    parser.add_argument(&amp;#39;-u&amp;#39;, &amp;#39;--user&amp;#39;,
                         required=True,
-                        action=&#39;store&#39;,
-                        help=&#39;Username to login to vCenter Server&#39;)
+                        action=&amp;#39;store&amp;#39;,
+                        help=&amp;#39;Username to login to vCenter Server&amp;#39;)
 
-    parser.add_argument(&#39;-p&#39;, &#39;--password&#39;,
+    parser.add_argument(&amp;#39;-p&amp;#39;, &amp;#39;--password&amp;#39;,
                         required=False,
-                        action=&#39;store&#39;,
-                        help=&#39;Password to login to vCenter Server&#39;)
+                        action=&amp;#39;store&amp;#39;,
+                        help=&amp;#39;Password to login to vCenter Server&amp;#39;)
 
     args = parser.parse_args()
 
     if not args.password:
-        args.password = getpass.getpass(prompt=&#39;Enter password:&#39;)
+        args.password = getpass.getpass(prompt=&amp;#39;Enter password:&amp;#39;)
 
     return args
 
 def main():
     args = get_args()
 
-    &amp;quot;&amp;quot;&amp;quot; connect to vcenter service instance &amp;quot;&amp;quot;&amp;quot;
+    &amp;#34;&amp;#34;&amp;#34; connect to vcenter service instance &amp;#34;&amp;#34;&amp;#34;
 
     context = None
-    if hasattr(ssl, &amp;quot;_create_unverified_context&amp;quot;):
+    if hasattr(ssl, &amp;#34;_create_unverified_context&amp;#34;):
         context = ssl._create_unverified_context()
 
     serviceInstance = SmartConnect(
@@ -75,27 +76,27 @@ def main():
 
     atexit.register(Disconnect, serviceInstance)
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To connect to the VMware Storage Policy API we need to get the session cookie. The &lt;a href=&#34;https://github.com/vmware/pyvmomi/blob/master/pyVmomi/VmomiSupport.py&#34;&gt;VmomiSupport&lt;/a&gt; provides us helper functions to do things like gather the context which includes session cookie details. With this we can form a stub session to the Storage Policy API.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;    &amp;quot;&amp;quot;&amp;quot; connect to pbm service instance &amp;quot;&amp;quot;&amp;quot;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;    &amp;#34;&amp;#34;&amp;#34; connect to pbm service instance &amp;#34;&amp;#34;&amp;#34;
 
-    VmomiSupport.GetRequestContext()[&amp;quot;vcSessionCookie&amp;quot;] = \
-    serviceInstance._stub.cookie.split(&#39;&amp;quot;&#39;)[1]
-    hostname = serviceInstance._stub.host.split(&amp;quot;:&amp;quot;)[0]
+    VmomiSupport.GetRequestContext()[&amp;#34;vcSessionCookie&amp;#34;] = \
+    serviceInstance._stub.cookie.split(&amp;#39;&amp;#34;&amp;#39;)[1]
+    hostname = serviceInstance._stub.host.split(&amp;#34;:&amp;#34;)[0]
     pbmStub = SoapStubAdapter(
         host=hostname,
-        version=&amp;quot;pbm.version.version1&amp;quot;,
-        path=&amp;quot;/pbm/sdk&amp;quot;,
+        version=&amp;#34;pbm.version.version1&amp;#34;,
+        path=&amp;#34;/pbm/sdk&amp;#34;,
         poolSize=0,
         sslContext=ssl._create_unverified_context())
-    pbmServiceInstance = pbm.ServiceInstance(&amp;quot;ServiceInstance&amp;quot;, pbmStub)
+    pbmServiceInstance = pbm.ServiceInstance(&amp;#34;ServiceInstance&amp;#34;, pbmStub)
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With this connection in place we can make our request, in this example pull back all of the Storage Profiles.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;
-    &amp;quot;&amp;quot;&amp;quot; get profiles &amp;quot;&amp;quot;&amp;quot;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;
+    &amp;#34;&amp;#34;&amp;#34; get profiles &amp;#34;&amp;#34;&amp;#34;
 
     profileManager = pbmServiceInstance.RetrieveContent().profileManager
-    profiles = profileManager.PbmQueryProfile(resourceType=pbm.profile.ResourceType(resourceType=&amp;quot;STORAGE&amp;quot;))
+    profiles = profileManager.PbmQueryProfile(resourceType=pbm.profile.ResourceType(resourceType=&amp;#34;STORAGE&amp;#34;))
     print(profiles)
 
-if __name__ == &#39;__main__&#39;:
+if __name__ == &amp;#39;__main__&amp;#39;:
     main()
 &lt;/code&gt;&lt;/pre&gt;
         
