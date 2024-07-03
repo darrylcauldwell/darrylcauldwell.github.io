@@ -4,7 +4,7 @@
   <head>
 <title>Docker Networking | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -143,134 +143,134 @@
     
     <p>Hear I describe Docker networking from the very basic through to extending it by pluggin in alternative drivers. In order to follow along with this post you will require Docker capability on your laptop to do this follow <a href="https://docs.docker.com/engine/installation/">these instructions</a>.</p>
 <p>Mostly will be using <a href="https://www.alpinelinux.org/">Alpine Linux</a> as it is very small so downloads quickly and doesn&rsquo;t consume many resources.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull alpine
-docker images
-</code></pre></div><p>Output from images command should list all images you hold locally including Alpine Linux</p>
-<pre><code>REPOSITORY  TAG     IMAGE ID        CREATED         SIZE
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker pull alpine
+</span></span><span style="display:flex;"><span>docker images
+</span></span></code></pre></div><p>Output from images command should list all images you hold locally including Alpine Linux</p>
+<pre tabindex="0"><code>REPOSITORY  TAG     IMAGE ID        CREATED         SIZE
 alpine      latest  baa5d63471ea    2 weeks ago     4.803 MB
 </code></pre><p>Once we have the Alpine Linux image local we can then launch it,  if we do this with interactive and simulated TTY options we get presented with the Linux shell</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run --interactive --tty alpine sh
-</code></pre></div><p>From here we can view the docker containers view of the networking,  we see here it has allocated an rfc1918 address and that it can ping outbound.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/ <span style="color:#75715e"># ip addr</span>
-1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN qlen <span style="color:#ae81ff">1</span>
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-    valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host 
-    valid_lft forever preferred_lft forever
-16: eth0@if17: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP 
-    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
-    inet 172.17.0.2/16 scope global eth0
-    valid_lft forever preferred_lft forever
-    inet6 fe80::42:acff:fe11:2/64 scope link 
-    valid_lft forever preferred_lft forever
-/ <span style="color:#75715e"># ping 8.8.8.8</span>
-PING 8.8.8.8 <span style="color:#f92672">(</span>8.8.8.8<span style="color:#f92672">)</span>: <span style="color:#ae81ff">56</span> data bytes
-<span style="color:#ae81ff">64</span> bytes from 8.8.8.8: seq<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> ttl<span style="color:#f92672">=</span><span style="color:#ae81ff">61</span> time<span style="color:#f92672">=</span>43.770 ms
-</code></pre></div><p>To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q more details <a href="https://docs.docker.com/engine/reference/commandline/attach/">here</a>.  Once exited you should still be able to see the container in the running state.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker ps -a
-
-CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
-5099910cc9d0    alpine  <span style="color:#e6db74">&#34;sh&#34;</span>        <span style="color:#ae81ff">7</span> minutes ago       Up <span style="color:#ae81ff">7</span> minutes            elegant_torvalds
-</code></pre></div><p>If you need to get back to the running shell you can use either the container id or the name, these two commands are equivelant.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker attach 5099910cc9d0
-docker attach elegant_torvalds
-</code></pre></div><p>So now if we start a second instance of Apline Linux in container</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run --interactive --tty alpine sh
-docker ps -a
-
-CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
-e96c3e67410c    alpine  <span style="color:#e6db74">&#34;sh&#34;</span>        <span style="color:#ae81ff">6</span> seconds ago       Up <span style="color:#ae81ff">6</span> seconds            suspicious_pare
-5099910cc9d0    alpine  <span style="color:#e6db74">&#34;sh&#34;</span>        <span style="color:#ae81ff">9</span> minutes ago       Up <span style="color:#ae81ff">9</span> minutes            elegant_torvalds
-</code></pre></div><p>We can attach and detach to each,  we notice that the second instance has been assigned next IP 172.17.0.3 and that it can ping the first instance 172.17.0.2.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --interactive --tty alpine sh
+</span></span></code></pre></div><p>From here we can view the docker containers view of the networking,  we see here it has allocated an rfc1918 address and that it can ping outbound.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/ <span style="color:#75715e"># ip addr</span>
+</span></span><span style="display:flex;"><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN qlen <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+</span></span><span style="display:flex;"><span>    inet 127.0.0.1/8 scope host lo
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>    inet6 ::1/128 scope host 
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>16: eth0@if17: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP 
+</span></span><span style="display:flex;"><span>    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
+</span></span><span style="display:flex;"><span>    inet 172.17.0.2/16 scope global eth0
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>    inet6 fe80::42:acff:fe11:2/64 scope link 
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># ping 8.8.8.8</span>
+</span></span><span style="display:flex;"><span>PING 8.8.8.8 <span style="color:#f92672">(</span>8.8.8.8<span style="color:#f92672">)</span>: <span style="color:#ae81ff">56</span> data bytes
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">64</span> bytes from 8.8.8.8: seq<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> ttl<span style="color:#f92672">=</span><span style="color:#ae81ff">61</span> time<span style="color:#f92672">=</span>43.770 ms
+</span></span></code></pre></div><p>To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q more details <a href="https://docs.docker.com/engine/reference/commandline/attach/">here</a>.  Once exited you should still be able to see the container in the running state.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker ps -a
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
+</span></span><span style="display:flex;"><span>5099910cc9d0    alpine  <span style="color:#e6db74">&#34;sh&#34;</span>        <span style="color:#ae81ff">7</span> minutes ago       Up <span style="color:#ae81ff">7</span> minutes            elegant_torvalds
+</span></span></code></pre></div><p>If you need to get back to the running shell you can use either the container id or the name, these two commands are equivelant.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker attach 5099910cc9d0
+</span></span><span style="display:flex;"><span>docker attach elegant_torvalds
+</span></span></code></pre></div><p>So now if we start a second instance of Apline Linux in container</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --interactive --tty alpine sh
+</span></span><span style="display:flex;"><span>docker ps -a
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
+</span></span><span style="display:flex;"><span>e96c3e67410c    alpine  <span style="color:#e6db74">&#34;sh&#34;</span>        <span style="color:#ae81ff">6</span> seconds ago       Up <span style="color:#ae81ff">6</span> seconds            suspicious_pare
+</span></span><span style="display:flex;"><span>5099910cc9d0    alpine  <span style="color:#e6db74">&#34;sh&#34;</span>        <span style="color:#ae81ff">9</span> minutes ago       Up <span style="color:#ae81ff">9</span> minutes            elegant_torvalds
+</span></span></code></pre></div><p>We can attach and detach to each,  we notice that the second instance has been assigned next IP 172.17.0.3 and that it can ping the first instance 172.17.0.2.</p>
 <p>If we then detach the containers and view what docker networking shows, we see that Docker uses the concept of Drivers and that we are using the default bridge driver.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker network ls
-
-NETWORK ID          NAME                DRIVER
-64481f7454d1        bridge              bridge              
-a8f3b81d9991        host                host                
-6ccbf074e447        none                null         
-</code></pre></div><p>We can explore the properties of the bridge network a little more, and see the IP addresses it has issued to the containers.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker network inspect bridge
-
-<span style="color:#f92672">[</span>
-<span style="color:#f92672">{</span>
-    <span style="color:#e6db74">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;bridge&#34;</span>,
-    <span style="color:#e6db74">&#34;Id&#34;</span>: <span style="color:#e6db74">&#34;64481f7454d138e43558359d1e41bb96564769bfcccc547b42b2a37b873c3a73&#34;</span>,
-    <span style="color:#e6db74">&#34;Scope&#34;</span>: <span style="color:#e6db74">&#34;local&#34;</span>,
-    <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;bridge&#34;</span>,
-    <span style="color:#e6db74">&#34;EnableIPv6&#34;</span>: false,
-    <span style="color:#e6db74">&#34;IPAM&#34;</span>: <span style="color:#f92672">{</span>
-        <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;default&#34;</span>,
-        <span style="color:#e6db74">&#34;Options&#34;</span>: null,
-        <span style="color:#e6db74">&#34;Config&#34;</span>: <span style="color:#f92672">[</span>
-            <span style="color:#f92672">{</span>
-                <span style="color:#e6db74">&#34;Subnet&#34;</span>: <span style="color:#e6db74">&#34;172.17.0.0/16&#34;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">]</span>
-    <span style="color:#f92672">}</span>,
-    <span style="color:#e6db74">&#34;Internal&#34;</span>: false,
-    <span style="color:#e6db74">&#34;Containers&#34;</span>: <span style="color:#f92672">{}</span>
-    <span style="color:#f92672">}</span>,
-    <span style="color:#e6db74">&#34;Options&#34;</span>: <span style="color:#f92672">{</span>
-        <span style="color:#e6db74">&#34;com.docker.network.bridge.default_bridge&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span>,
-        <span style="color:#e6db74">&#34;com.docker.network.bridge.enable_icc&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span>,
-        <span style="color:#e6db74">&#34;com.docker.network.bridge.enable_ip_masquerade&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span>,
-        <span style="color:#e6db74">&#34;com.docker.network.bridge.host_binding_ipv4&#34;</span>: <span style="color:#e6db74">&#34;0.0.0.0&#34;</span>,
-        <span style="color:#e6db74">&#34;com.docker.network.bridge.name&#34;</span>: <span style="color:#e6db74">&#34;docker0&#34;</span>,
-        <span style="color:#e6db74">&#34;com.docker.network.driver.mtu&#34;</span>: <span style="color:#e6db74">&#34;1500&#34;</span>
-    <span style="color:#f92672">}</span>,
-    <span style="color:#e6db74">&#34;Labels&#34;</span>: <span style="color:#f92672">{}</span>
-<span style="color:#f92672">}</span>
-<span style="color:#f92672">]</span>
-</code></pre></div><p>So we can see that docker created a shared bridge, but what happens if you want to isolate containers on the same host well we can create a different bridge network we see it allocates the 172.18.0.0/16 CIDR.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker network create --driver bridge my-bridge-network
-docker network inspect my-bridge-network
-
-<span style="color:#f92672">[</span>
-    <span style="color:#f92672">{</span>
-        <span style="color:#e6db74">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;my-bridge-network&#34;</span>,
-        <span style="color:#e6db74">&#34;Id&#34;</span>: <span style="color:#e6db74">&#34;5fec8c172a6c323a616c54938815b42d6baab04e816d7a5bb9113a0e914c52a4&#34;</span>,
-        <span style="color:#e6db74">&#34;Scope&#34;</span>: <span style="color:#e6db74">&#34;local&#34;</span>,
-        <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;bridge&#34;</span>,
-        <span style="color:#e6db74">&#34;EnableIPv6&#34;</span>: false,
-        <span style="color:#e6db74">&#34;IPAM&#34;</span>: <span style="color:#f92672">{</span>
-            <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;default&#34;</span>,
-            <span style="color:#e6db74">&#34;Options&#34;</span>: <span style="color:#f92672">{}</span>,
-            <span style="color:#e6db74">&#34;Config&#34;</span>: <span style="color:#f92672">[</span>
-                <span style="color:#f92672">{</span>
-                    <span style="color:#e6db74">&#34;Subnet&#34;</span>: <span style="color:#e6db74">&#34;172.18.0.0/16&#34;</span>,
-                    <span style="color:#e6db74">&#34;Gateway&#34;</span>: <span style="color:#e6db74">&#34;172.18.0.1/16&#34;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">]</span>
-        <span style="color:#f92672">}</span>,
-        <span style="color:#e6db74">&#34;Internal&#34;</span>: false,
-        <span style="color:#e6db74">&#34;Containers&#34;</span>: <span style="color:#f92672">{}</span>,
-        <span style="color:#e6db74">&#34;Options&#34;</span>: <span style="color:#f92672">{}</span>,
-        <span style="color:#e6db74">&#34;Labels&#34;</span>: <span style="color:#f92672">{}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">]</span>
-</code></pre></div><p>So if we create a new container now on this new network, we see it gets IP address on 172.18.0.0/16 and it cannot ping containers on 172.17.0.0/16.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run --interactive --tty --net<span style="color:#f92672">=</span>my-bridge-network alpine sh
-/ <span style="color:#75715e"># ipaddr</span>
-1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN qlen <span style="color:#ae81ff">1</span>
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-    valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host 
-    valid_lft forever preferred_lft forever
-25: eth0@if26: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP 
-    link/ether 02:42:ac:12:00:02 brd ff:ff:ff:ff:ff:ff
-    inet 172.18.0.2/16 scope global eth0
-    valid_lft forever preferred_lft forever
-    inet6 fe80::42:acff:fe12:2/64 scope link 
-    valid_lft forever preferred_lft forever
-/ <span style="color:#75715e"># ping 172.17.0.3</span>
-PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color:#f92672">)</span>: <span style="color:#ae81ff">56</span> data bytes
-^C
---- 172.17.0.3 ping statistics ---
-<span style="color:#ae81ff">8</span> packets transmitted, <span style="color:#ae81ff">0</span> packets received, 100% packet loss
-</code></pre></div><p>We have focussed on the shipped bridge driver, however since <a href="https://github.com/docker/libnetwork">LibNetwork project</a> got integrated into docker the driver became plugable. Some of the Docker networking ecosystems, include Weave, Nuage, Cisco, Microsoft, Calico, Midokura, and VMware.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker network ls
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NETWORK ID          NAME                DRIVER
+</span></span><span style="display:flex;"><span>64481f7454d1        bridge              bridge              
+</span></span><span style="display:flex;"><span>a8f3b81d9991        host                host                
+</span></span><span style="display:flex;"><span>6ccbf074e447        none                null         
+</span></span></code></pre></div><p>We can explore the properties of the bridge network a little more, and see the IP addresses it has issued to the containers.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker network inspect bridge
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;bridge&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Id&#34;</span>: <span style="color:#e6db74">&#34;64481f7454d138e43558359d1e41bb96564769bfcccc547b42b2a37b873c3a73&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Scope&#34;</span>: <span style="color:#e6db74">&#34;local&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;bridge&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;EnableIPv6&#34;</span>: false,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;IPAM&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;default&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Options&#34;</span>: null,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Config&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;Subnet&#34;</span>: <span style="color:#e6db74">&#34;172.17.0.0/16&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Internal&#34;</span>: false,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Containers&#34;</span>: <span style="color:#f92672">{}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Options&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;com.docker.network.bridge.default_bridge&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;com.docker.network.bridge.enable_icc&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;com.docker.network.bridge.enable_ip_masquerade&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;com.docker.network.bridge.host_binding_ipv4&#34;</span>: <span style="color:#e6db74">&#34;0.0.0.0&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;com.docker.network.bridge.name&#34;</span>: <span style="color:#e6db74">&#34;docker0&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;com.docker.network.driver.mtu&#34;</span>: <span style="color:#e6db74">&#34;1500&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Labels&#34;</span>: <span style="color:#f92672">{}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">]</span>
+</span></span></code></pre></div><p>So we can see that docker created a shared bridge, but what happens if you want to isolate containers on the same host well we can create a different bridge network we see it allocates the 172.18.0.0/16 CIDR.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker network create --driver bridge my-bridge-network
+</span></span><span style="display:flex;"><span>docker network inspect my-bridge-network
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Name&#34;</span>: <span style="color:#e6db74">&#34;my-bridge-network&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Id&#34;</span>: <span style="color:#e6db74">&#34;5fec8c172a6c323a616c54938815b42d6baab04e816d7a5bb9113a0e914c52a4&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Scope&#34;</span>: <span style="color:#e6db74">&#34;local&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;bridge&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;EnableIPv6&#34;</span>: false,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;IPAM&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Driver&#34;</span>: <span style="color:#e6db74">&#34;default&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Options&#34;</span>: <span style="color:#f92672">{}</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;Config&#34;</span>: <span style="color:#f92672">[</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;Subnet&#34;</span>: <span style="color:#e6db74">&#34;172.18.0.0/16&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;Gateway&#34;</span>: <span style="color:#e6db74">&#34;172.18.0.1/16&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Internal&#34;</span>: false,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Containers&#34;</span>: <span style="color:#f92672">{}</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Options&#34;</span>: <span style="color:#f92672">{}</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Labels&#34;</span>: <span style="color:#f92672">{}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">]</span>
+</span></span></code></pre></div><p>So if we create a new container now on this new network, we see it gets IP address on 172.18.0.0/16 and it cannot ping containers on 172.17.0.0/16.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run --interactive --tty --net<span style="color:#f92672">=</span>my-bridge-network alpine sh
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># ipaddr</span>
+</span></span><span style="display:flex;"><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN qlen <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+</span></span><span style="display:flex;"><span>    inet 127.0.0.1/8 scope host lo
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>    inet6 ::1/128 scope host 
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>25: eth0@if26: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP 
+</span></span><span style="display:flex;"><span>    link/ether 02:42:ac:12:00:02 brd ff:ff:ff:ff:ff:ff
+</span></span><span style="display:flex;"><span>    inet 172.18.0.2/16 scope global eth0
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>    inet6 fe80::42:acff:fe12:2/64 scope link 
+</span></span><span style="display:flex;"><span>    valid_lft forever preferred_lft forever
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># ping 172.17.0.3</span>
+</span></span><span style="display:flex;"><span>PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color:#f92672">)</span>: <span style="color:#ae81ff">56</span> data bytes
+</span></span><span style="display:flex;"><span>^C
+</span></span><span style="display:flex;"><span>--- 172.17.0.3 ping statistics ---
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">8</span> packets transmitted, <span style="color:#ae81ff">0</span> packets received, 100% packet loss
+</span></span></code></pre></div><p>We have focussed on the shipped bridge driver, however since <a href="https://github.com/docker/libnetwork">LibNetwork project</a> got integrated into docker the driver became plugable. Some of the Docker networking ecosystems, include Weave, Nuage, Cisco, Microsoft, Calico, Midokura, and VMware.</p>
 <p>Upto now we have looked at networking between containers on the same host by bridging to the network interface card. You will probably want to extend the layer 2 networking capacibility so containers on different hosts can communicate. To do this we would use <a href="https://docs.docker.com/swarm/networking/">Docker Swarm</a> which includes the multi-host networking feature and allows the creation of custom container networks which span multiple Docker hosts. By default it does this by use of the &lsquo;overlay&rsquo; network driver</p>
 <p>An interesting option to use as a Docker networking driver is <a href="https://github.com/projectcalico/calico-containers">Project Calico for Containers</a> as the overlay networking expands across more and more hosts it can experience performance issues. Project Calico aims to over come this issue but allow container connectivity across hosts by having each container route directly at Layer 3 rather than Layer 2.  It does this by having a calico-node container installed and running on each host which manages the network routing etc.</p>
 <p>As in my previous post about <a href="/install-vic/">vSphere Integrated Containers</a> its interesting to see VMware integrating with Docker and I&rsquo;d expect it won&rsquo;t be too long until we discover how NSX will plug into Docker Networking.</p>
@@ -303,6 +303,9 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -323,16 +326,13 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -421,6 +421,11 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -428,11 +433,6 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -446,6 +446,11 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -453,11 +458,6 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -508,7 +508,7 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -656,6 +656,10 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -708,7 +712,7 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -836,7 +840,7 @@ PING 172.17.0.3 <span style="color:#f92672">(</span>172.17.0.3<span style="color
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

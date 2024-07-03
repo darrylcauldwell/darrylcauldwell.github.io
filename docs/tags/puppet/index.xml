@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/puppet/</link>
     <description>Recent content in puppet on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Mon, 23 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/puppet/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Configuring Puppet</title>
@@ -21,17 +22,17 @@ Puppet Learning VM (1.5GB vRAM 1x vCPU 4.5GB HDD), &lt;a href=&#34;http://info.p
 &lt;h2 id=&#34;puppet-learning-vm---configuration&#34;&gt;Puppet Learning VM - Configuration&lt;/h2&gt;
 &lt;p&gt;Once the Puppet Enterprise Learning VM is deployed from the OVF.  Its pretty intuitive setup I only changed to a bridged network connection for vNIC and installed VMware tools.&lt;/p&gt;
 &lt;p&gt;VMware tools install command syntax used&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum -y install perl
-mkdir /mnt/cdrom
-mount /dev/cdrom /mnt/cdrom
-cp /mnt/cdrom/VMwareTools-*.tar.gz /tmp
-umount /mnt/cdrom
-tar -zxf /tmp/VMwareTools-*.tar.gz -C /tmp
-cd /
-./tmp/vmware-tools-distrib/vmware-install.pl --default
-rm -f /tmp/VMwareTools-*.tar.gz
-rm -rf /tmp/vmware-tools-distrib
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum -y install perl
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir /mnt/cdrom
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mount /dev/cdrom /mnt/cdrom
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cp /mnt/cdrom/VMwareTools-*.tar.gz /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;umount /mnt/cdrom
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tar -zxf /tmp/VMwareTools-*.tar.gz -C /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd /
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;./tmp/vmware-tools-distrib/vmware-install.pl --default
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm -f /tmp/VMwareTools-*.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rm -rf /tmp/vmware-tools-distrib
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>

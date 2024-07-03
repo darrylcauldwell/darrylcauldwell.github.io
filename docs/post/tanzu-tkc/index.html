@@ -4,7 +4,7 @@
   <head>
 <title>Managing Tanzu for vSphere Clusters Using ClusterAPI | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -211,213 +211,213 @@
 </tbody>
 </table>
 <p>With these in place I can attempt to connect as Hermione and check access to Hippogriff.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">set KUBECTL_VSPHERE_PASSWORD<span style="color:#f92672">=</span>VMware1!
-kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify 
-
-Logged in successfully.
-You have access to the following contexts:
-   172.16.1.2
-   hogsmead
-   hogwarts
-If the context you wish to use is not in this list, you may need to try
-logging in again later, or contact your cluster administrator.
-To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
-
-kubectl config use-context hogwarts
-</code></pre></div><p>To deploy a cluster you need to specify certain attributes such as which image and Kubernetes version to deploy and the dimensions of the nodes. The node images are stored in vSphere Content Library and some standard ones are available via a publiclu content library subscription. The VM hardware specification dimensions of node are defined as virtual machine classes. The VM storage location are defined as storage classes. The names of available images, vmclasses and storageclasses available to be deployed from supervisor can be easily checked.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get tanzukubernetesreleases
-NAME                                VERSION                          READY   COMPATIBLE   CREATED   UPDATES AVAILABLE
-v1.16.12---vmware.1-tkg.1.da7afe7   1.16.12+vmware.1-tkg.1.da7afe7   True    True         6m28s     <span style="color:#f92672">[</span>1.17.17+vmware.1-tkg.1.d44d45a 1.16.14+vmware.1-tkg.1.ada4837<span style="color:#f92672">]</span>
-v1.16.14---vmware.1-tkg.1.ada4837   1.16.14+vmware.1-tkg.1.ada4837   True    True         6m25s     <span style="color:#f92672">[</span>1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
-v1.16.8---vmware.1-tkg.3.60d2ffd    1.16.8+vmware.1-tkg.3.60d2ffd    False   False        6m33s
-v1.17.11---vmware.1-tkg.1.15f1e18   1.17.11+vmware.1-tkg.1.15f1e18   True    True         6m29s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
-v1.17.11---vmware.1-tkg.2.ad3d374   1.17.11+vmware.1-tkg.2.ad3d374   True    True         6m28s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
-v1.17.13---vmware.1-tkg.2.2c133ed   1.17.13+vmware.1-tkg.2.2c133ed   True    True         6m30s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
-v1.17.17---vmware.1-tkg.1.d44d45a   1.17.17+vmware.1-tkg.1.d44d45a   True    True         6m27s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
-v1.17.7---vmware.1-tkg.1.154236c    1.17.7+vmware.1-tkg.1.154236c    True    True         6m24s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
-v1.17.8---vmware.1-tkg.1.5417466    1.17.8+vmware.1-tkg.1.5417466    True    True         6m28s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
-v1.18.10---vmware.1-tkg.1.3a6cd48   1.18.10+vmware.1-tkg.1.3a6cd48   True    True         6m30s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
-v1.18.15---vmware.1-tkg.1.600e412   1.18.15+vmware.1-tkg.1.600e412   True    True         6m27s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
-v1.18.15---vmware.1-tkg.2.ebf6117   1.18.15+vmware.1-tkg.2.ebf6117   True    True         6m29s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
-v1.18.19---vmware.1-tkg.1.17af790   1.18.19+vmware.1-tkg.1.17af790   True    True         6m27s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
-v1.18.5---vmware.1-tkg.1.c40d30d    1.18.5+vmware.1-tkg.1.c40d30d    True    True         6m30s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
-v1.19.11---vmware.1-tkg.1.9d9b236   1.19.11+vmware.1-tkg.1.9d9b236   True    True         6m33s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
-v1.19.14---vmware.1-tkg.1.8753786   1.19.14+vmware.1-tkg.1.8753786   True    True         6m29s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
-v1.19.7---vmware.1-tkg.1.fc82c41    1.19.7+vmware.1-tkg.1.fc82c41    True    True         6m26s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
-v1.19.7---vmware.1-tkg.2.f52f85a    1.19.7+vmware.1-tkg.2.f52f85a    True    True         6m26s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
-v1.20.2---vmware.1-tkg.1.1d4f79a    1.20.2+vmware.1-tkg.1.1d4f79a    True    True         6m26s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55 1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
-v1.20.2---vmware.1-tkg.2.3e10706    1.20.2+vmware.1-tkg.2.3e10706    True    True         6m33s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
-v1.20.7---vmware.1-tkg.1.7fb9067    1.20.7+vmware.1-tkg.1.7fb9067    True    True         6m24s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55 1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
-v1.20.8---vmware.1-tkg.2            1.20.8+vmware.1-tkg.2            True    True         6m25s
-v1.20.9---vmware.1-tkg.1.a4cee5b    1.20.9+vmware.1-tkg.1.a4cee5b    True    True         6m31s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55<span style="color:#f92672">]</span>
-v1.21.2---vmware.1-tkg.1.ee25d55    1.21.2+vmware.1-tkg.1.ee25d55    True    True         6m31s
-
-kubectl get vmclass
-NAME                  CPU   MEMORY   AGE
-best-effort-2xlarge   <span style="color:#ae81ff">8</span>     64Gi     80s
-best-effort-4xlarge   <span style="color:#ae81ff">16</span>    128Gi    80s
-best-effort-8xlarge   <span style="color:#ae81ff">32</span>    128Gi    80s
-best-effort-large     <span style="color:#ae81ff">4</span>     16Gi     80s
-best-effort-medium    <span style="color:#ae81ff">2</span>     8Gi      78s
-best-effort-small     <span style="color:#ae81ff">2</span>     4Gi      80s
-best-effort-xlarge    <span style="color:#ae81ff">4</span>     32Gi     80s
-best-effort-xsmall    <span style="color:#ae81ff">2</span>     2Gi      77s
-guaranteed-2xlarge    <span style="color:#ae81ff">8</span>     64Gi     79s
-guaranteed-4xlarge    <span style="color:#ae81ff">16</span>    128Gi    74s
-
-kubectl get storageclass -n hogwarts
-NAME                          PROVISIONER              RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
-vsan-default-storage-policy   csi.vsphere.vmware.com   Delete          Immediate           true                   19m
-</code></pre></div><p>Using the output from previous commands we can copy paste the appropriate storage class, vm class and Kuberneters version values from what is available in the namespace into a yaml file definition for the cluster.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">run.tanzu.vmware.com/v1alpha2</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">TanzuKubernetesCluster</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hogwarts-cluster01</span>
-  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">hogwarts</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">topology</span>:
-    <span style="color:#f92672">controlPlane</span>:
-      <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">3</span>
-      <span style="color:#f92672">vmClass</span>: <span style="color:#ae81ff">best-effort-small</span>
-      <span style="color:#f92672">storageClass</span>: <span style="color:#ae81ff">vsan-default-storage-policy</span>
-      <span style="color:#f92672">tkr</span>:  
-        <span style="color:#f92672">reference</span>:
-          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">v1.21.2---vmware.1-tkg.1.ee25d55</span>
-    <span style="color:#f92672">nodePools</span>:
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">forbidden-forest</span>
-      <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">3</span>
-      <span style="color:#f92672">vmClass</span>: <span style="color:#ae81ff">best-effort-small</span>
-      <span style="color:#f92672">storageClass</span>: <span style="color:#ae81ff">vsan-default-storage-policy</span>
-      <span style="color:#f92672">tkr</span>:  
-        <span style="color:#f92672">reference</span>:
-          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">v1.21.2---vmware.1-tkg.1.ee25d55</span>
-  <span style="color:#f92672">settings</span>:
-    <span style="color:#f92672">network</span>:
-        <span style="color:#f92672">cni</span>:
-          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">antrea</span>
-        <span style="color:#f92672">services</span>:
-          <span style="color:#f92672">cidrBlocks</span>: [<span style="color:#e6db74">&#34;10.96.0.0/12&#34;</span>]
-        <span style="color:#f92672">pods</span>:
-          <span style="color:#f92672">cidrBlocks</span>: [<span style="color:#e6db74">&#34;172.16.128.0/17&#34;</span>]
-        <span style="color:#f92672">serviceDomain</span>: <span style="color:#ae81ff">hogwarts.local</span>
-</code></pre></div><p>With all of this in place we can deploy the cluster,  we can check it has been deployed correctly.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f hogwarts-cls1.yml
-tanzukubernetescluster.run.tanzu.vmware.com/hogwarts-cluster01 created
-
-kubectl get TanzuKubernetesCluster
-NAMESPACE   NAME                 CONTROL PLANE   WORKER   TKR NAME                           AGE   READY   TKR COMPATIBLE   UPDATES AVAILABLE
-hogwarts    hogwarts-cluster01   <span style="color:#ae81ff">3</span>               <span style="color:#ae81ff">3</span>        v1.21.2---vmware.1-tkg.1.ee25d55   32m   True    True
-
-kubectl get virtualmachines
-NAME                                                         POWERSTATE   AGE
-hogwarts-cluster01-control-plane-9tljd                       poweredOn    35m
-hogwarts-cluster01-control-plane-cn89v                       poweredOn    37m
-hogwarts-cluster01-control-plane-wfnjg                       poweredOn    41m
-hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-fqw2d   poweredOn    38m
-hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-n2r5s   poweredOn    38m
-hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-vbnnj   poweredOn    38m
-
-kubectl get service
-NAME                                               TYPE           CLUSTER-IP    EXTERNAL-IP   PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>          AGE
-service/hogwarts-cluster01-control-plane-service   LoadBalancer   10.96.0.231   172.16.1.3    6443:32176/TCP   44m
-</code></pre></div><p>If I swing over to take a look what has happened in NSX-T a second segment has been added to the T1 router which was created during the supervisor cluster enablement. The segment has connected the three control plane and three node pool VMs. An NSX Load Balancer is deployed to represent the Kubernetes API service resource.  There are also NAT Rules to represent cluster Egress via 172.16.2.2 IP address. All of the created NSX entities have the namespace name in this case &lsquo;hogwarts&rsquo; in their description they are really easy to identify via search.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>set KUBECTL_VSPHERE_PASSWORD<span style="color:#f92672">=</span>VMware1!
+</span></span><span style="display:flex;"><span>kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Logged in successfully.
+</span></span><span style="display:flex;"><span>You have access to the following contexts:
+</span></span><span style="display:flex;"><span>   172.16.1.2
+</span></span><span style="display:flex;"><span>   hogsmead
+</span></span><span style="display:flex;"><span>   hogwarts
+</span></span><span style="display:flex;"><span>If the context you wish to use is not in this list, you may need to try
+</span></span><span style="display:flex;"><span>logging in again later, or contact your cluster administrator.
+</span></span><span style="display:flex;"><span>To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl config use-context hogwarts
+</span></span></code></pre></div><p>To deploy a cluster you need to specify certain attributes such as which image and Kubernetes version to deploy and the dimensions of the nodes. The node images are stored in vSphere Content Library and some standard ones are available via a publiclu content library subscription. The VM hardware specification dimensions of node are defined as virtual machine classes. The VM storage location are defined as storage classes. The names of available images, vmclasses and storageclasses available to be deployed from supervisor can be easily checked.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get tanzukubernetesreleases
+</span></span><span style="display:flex;"><span>NAME                                VERSION                          READY   COMPATIBLE   CREATED   UPDATES AVAILABLE
+</span></span><span style="display:flex;"><span>v1.16.12---vmware.1-tkg.1.da7afe7   1.16.12+vmware.1-tkg.1.da7afe7   True    True         6m28s     <span style="color:#f92672">[</span>1.17.17+vmware.1-tkg.1.d44d45a 1.16.14+vmware.1-tkg.1.ada4837<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.16.14---vmware.1-tkg.1.ada4837   1.16.14+vmware.1-tkg.1.ada4837   True    True         6m25s     <span style="color:#f92672">[</span>1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.16.8---vmware.1-tkg.3.60d2ffd    1.16.8+vmware.1-tkg.3.60d2ffd    False   False        6m33s
+</span></span><span style="display:flex;"><span>v1.17.11---vmware.1-tkg.1.15f1e18   1.17.11+vmware.1-tkg.1.15f1e18   True    True         6m29s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.17.11---vmware.1-tkg.2.ad3d374   1.17.11+vmware.1-tkg.2.ad3d374   True    True         6m28s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.17.13---vmware.1-tkg.2.2c133ed   1.17.13+vmware.1-tkg.2.2c133ed   True    True         6m30s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.17.17---vmware.1-tkg.1.d44d45a   1.17.17+vmware.1-tkg.1.d44d45a   True    True         6m27s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.17.7---vmware.1-tkg.1.154236c    1.17.7+vmware.1-tkg.1.154236c    True    True         6m24s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.17.8---vmware.1-tkg.1.5417466    1.17.8+vmware.1-tkg.1.5417466    True    True         6m28s     <span style="color:#f92672">[</span>1.18.19+vmware.1-tkg.1.17af790 1.17.17+vmware.1-tkg.1.d44d45a<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.18.10---vmware.1-tkg.1.3a6cd48   1.18.10+vmware.1-tkg.1.3a6cd48   True    True         6m30s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.18.15---vmware.1-tkg.1.600e412   1.18.15+vmware.1-tkg.1.600e412   True    True         6m27s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.18.15---vmware.1-tkg.2.ebf6117   1.18.15+vmware.1-tkg.2.ebf6117   True    True         6m29s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.18.19---vmware.1-tkg.1.17af790   1.18.19+vmware.1-tkg.1.17af790   True    True         6m27s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.18.5---vmware.1-tkg.1.c40d30d    1.18.5+vmware.1-tkg.1.c40d30d    True    True         6m30s     <span style="color:#f92672">[</span>1.19.14+vmware.1-tkg.1.8753786 1.18.19+vmware.1-tkg.1.17af790<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.19.11---vmware.1-tkg.1.9d9b236   1.19.11+vmware.1-tkg.1.9d9b236   True    True         6m33s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.19.14---vmware.1-tkg.1.8753786   1.19.14+vmware.1-tkg.1.8753786   True    True         6m29s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.19.7---vmware.1-tkg.1.fc82c41    1.19.7+vmware.1-tkg.1.fc82c41    True    True         6m26s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.19.7---vmware.1-tkg.2.f52f85a    1.19.7+vmware.1-tkg.2.f52f85a    True    True         6m26s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b 1.19.14+vmware.1-tkg.1.8753786<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.20.2---vmware.1-tkg.1.1d4f79a    1.20.2+vmware.1-tkg.1.1d4f79a    True    True         6m26s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55 1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.20.2---vmware.1-tkg.2.3e10706    1.20.2+vmware.1-tkg.2.3e10706    True    True         6m33s     <span style="color:#f92672">[</span>1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.20.7---vmware.1-tkg.1.7fb9067    1.20.7+vmware.1-tkg.1.7fb9067    True    True         6m24s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55 1.20.9+vmware.1-tkg.1.a4cee5b<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.20.8---vmware.1-tkg.2            1.20.8+vmware.1-tkg.2            True    True         6m25s
+</span></span><span style="display:flex;"><span>v1.20.9---vmware.1-tkg.1.a4cee5b    1.20.9+vmware.1-tkg.1.a4cee5b    True    True         6m31s     <span style="color:#f92672">[</span>1.21.2+vmware.1-tkg.1.ee25d55<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>v1.21.2---vmware.1-tkg.1.ee25d55    1.21.2+vmware.1-tkg.1.ee25d55    True    True         6m31s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get vmclass
+</span></span><span style="display:flex;"><span>NAME                  CPU   MEMORY   AGE
+</span></span><span style="display:flex;"><span>best-effort-2xlarge   <span style="color:#ae81ff">8</span>     64Gi     80s
+</span></span><span style="display:flex;"><span>best-effort-4xlarge   <span style="color:#ae81ff">16</span>    128Gi    80s
+</span></span><span style="display:flex;"><span>best-effort-8xlarge   <span style="color:#ae81ff">32</span>    128Gi    80s
+</span></span><span style="display:flex;"><span>best-effort-large     <span style="color:#ae81ff">4</span>     16Gi     80s
+</span></span><span style="display:flex;"><span>best-effort-medium    <span style="color:#ae81ff">2</span>     8Gi      78s
+</span></span><span style="display:flex;"><span>best-effort-small     <span style="color:#ae81ff">2</span>     4Gi      80s
+</span></span><span style="display:flex;"><span>best-effort-xlarge    <span style="color:#ae81ff">4</span>     32Gi     80s
+</span></span><span style="display:flex;"><span>best-effort-xsmall    <span style="color:#ae81ff">2</span>     2Gi      77s
+</span></span><span style="display:flex;"><span>guaranteed-2xlarge    <span style="color:#ae81ff">8</span>     64Gi     79s
+</span></span><span style="display:flex;"><span>guaranteed-4xlarge    <span style="color:#ae81ff">16</span>    128Gi    74s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get storageclass -n hogwarts
+</span></span><span style="display:flex;"><span>NAME                          PROVISIONER              RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+</span></span><span style="display:flex;"><span>vsan-default-storage-policy   csi.vsphere.vmware.com   Delete          Immediate           true                   19m
+</span></span></code></pre></div><p>Using the output from previous commands we can copy paste the appropriate storage class, vm class and Kuberneters version values from what is available in the namespace into a yaml file definition for the cluster.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">run.tanzu.vmware.com/v1alpha2</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">TanzuKubernetesCluster</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">hogwarts-cluster01</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">hogwarts</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">topology</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">controlPlane</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">vmClass</span>: <span style="color:#ae81ff">best-effort-small</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storageClass</span>: <span style="color:#ae81ff">vsan-default-storage-policy</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">tkr</span>:  
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">reference</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">v1.21.2---vmware.1-tkg.1.ee25d55</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">nodePools</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">forbidden-forest</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">vmClass</span>: <span style="color:#ae81ff">best-effort-small</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storageClass</span>: <span style="color:#ae81ff">vsan-default-storage-policy</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">tkr</span>:  
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">reference</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">v1.21.2---vmware.1-tkg.1.ee25d55</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">settings</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">network</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">cni</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">antrea</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">cidrBlocks</span>: [<span style="color:#e6db74">&#34;10.96.0.0/12&#34;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">pods</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">cidrBlocks</span>: [<span style="color:#e6db74">&#34;172.16.128.0/17&#34;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">serviceDomain</span>: <span style="color:#ae81ff">hogwarts.local</span>
+</span></span></code></pre></div><p>With all of this in place we can deploy the cluster,  we can check it has been deployed correctly.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f hogwarts-cls1.yml
+</span></span><span style="display:flex;"><span>tanzukubernetescluster.run.tanzu.vmware.com/hogwarts-cluster01 created
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get TanzuKubernetesCluster
+</span></span><span style="display:flex;"><span>NAMESPACE   NAME                 CONTROL PLANE   WORKER   TKR NAME                           AGE   READY   TKR COMPATIBLE   UPDATES AVAILABLE
+</span></span><span style="display:flex;"><span>hogwarts    hogwarts-cluster01   <span style="color:#ae81ff">3</span>               <span style="color:#ae81ff">3</span>        v1.21.2---vmware.1-tkg.1.ee25d55   32m   True    True
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get virtualmachines
+</span></span><span style="display:flex;"><span>NAME                                                         POWERSTATE   AGE
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-control-plane-9tljd                       poweredOn    35m
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-control-plane-cn89v                       poweredOn    37m
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-control-plane-wfnjg                       poweredOn    41m
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-fqw2d   poweredOn    38m
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-n2r5s   poweredOn    38m
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-vbnnj   poweredOn    38m
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get service
+</span></span><span style="display:flex;"><span>NAME                                               TYPE           CLUSTER-IP    EXTERNAL-IP   PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>          AGE
+</span></span><span style="display:flex;"><span>service/hogwarts-cluster01-control-plane-service   LoadBalancer   10.96.0.231   172.16.1.3    6443:32176/TCP   44m
+</span></span></code></pre></div><p>If I swing over to take a look what has happened in NSX-T a second segment has been added to the T1 router which was created during the supervisor cluster enablement. The segment has connected the three control plane and three node pool VMs. An NSX Load Balancer is deployed to represent the Kubernetes API service resource.  There are also NAT Rules to represent cluster Egress via 172.16.2.2 IP address. All of the created NSX entities have the namespace name in this case &lsquo;hogwarts&rsquo; in their description they are really easy to identify via search.</p>
 <p>So all looks good and can try and connect to the subordinate cluster and interact with it.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
-
-Logged in successfully.
-You have access to the following contexts:
-   172.16.1.2
-   hogsmead
-   hogwarts
-   hogwarts-cluster01
-If the context you wish to use is not in this list, you may need to try logging in again later, or contact your cluster administrator.
-To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
-
-kubectl config use-context hogwarts-cluster01
-
-kubectl get nodes
-NAME                                                         STATUS   ROLES                  AGE   VERSION
-hogwarts-cluster01-control-plane-9tljd                       Ready    control-plane,master   58m   v1.21.2+vmware.1
-hogwarts-cluster01-control-plane-cn89v                       Ready    control-plane,master   61m   v1.21.2+vmware.1
-hogwarts-cluster01-control-plane-wfnjg                       Ready    control-plane,master   64m   v1.21.2+vmware.1
-hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-fqw2d   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
-hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-n2r5s   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
-hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-vbnnj   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
-</code></pre></div><p>Next step is to deploy first Pod into the cluster, but this got stuck ContainerCreating and Pod seems to show an Antrea socket error.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl run -i --tty busybox --image<span style="color:#f92672">=</span>quay.io/quay/busybox --restart<span style="color:#f92672">=</span>Never -- sh
-
-kubectl get pods
-NAME      READY   STATUS              RESTARTS   AGE
-busybox   0/1     ContainerCreating   <span style="color:#ae81ff">0</span>          3m12s
-
-kubectl describe pod busybox
-Events:
-  Type     Reason                  Age                From               Message
-  ----     ------                  ----               ----               -------
-  Normal   Scheduled               3m55s              default-scheduler  Successfully assigned default/busybox to hogwarts-cluster01-forbidden-forest-8g2s2-66d6bfdd-8wzbr
-  Warning  FailedCreatePodSandBox  3m52s              kubelet            Failed to create pod sandbox: rpc error: code <span style="color:#f92672">=</span> Unknown desc <span style="color:#f92672">=</span> failed to setup network <span style="color:#66d9ef">for</span> sandbox <span style="color:#e6db74">&#34;354f63b2c94a0fb5a88c9611adb3008c7dd564deb157a39ebeca78f1b717316c&#34;</span>: rpc error: code <span style="color:#f92672">=</span> Unavailable desc <span style="color:#f92672">=</span> connection error: desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;transport: Error while dialing dial unix /var/run/antrea/cni.sock: connect: connection refused&#34;</span>
-</code></pre></div><p>So first thing to look at I guess is Antrea Pods and can see one is broken.  Checking logs and it looks like OVS timed out on startup.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods -A
-NAMESPACE                      NAME                                                                       READY   STATUS              RESTARTS   AGE
-default                        busybox                                                                    0/1     ContainerCreating   <span style="color:#ae81ff">0</span>          12m
-kube-system                    antrea-agent-8pf5t                                                         0/2     CrashLoopBackOff    <span style="color:#ae81ff">26</span>         96m
-kube-system                    antrea-agent-bv9rq                                                         2/2     Running             <span style="color:#ae81ff">1</span>          102m
-kube-system                    antrea-agent-cth2b                                                         2/2     Running             <span style="color:#ae81ff">0</span>          102m
-kube-system                    antrea-agent-p6qfq                                                         2/2     Running             <span style="color:#ae81ff">1</span>          96m
-kube-system                    antrea-agent-wh8k4                                                         2/2     Running             <span style="color:#ae81ff">0</span>          91m
-kube-system                    antrea-agent-wsrtg                                                         2/2     Running             <span style="color:#ae81ff">0</span>          99m
-
-kubectl logs antrea-agent-8pf5t -n kube-system antrea-ovs
-<span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:08:00Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Starting ovsdb-server
-Starting ovsdb-server.
-2021-12-03T20:09:05Z|00002|timeval|WARN|Unreasonably long 10026ms poll interval <span style="color:#f92672">(</span>7883ms user, 82ms system<span style="color:#f92672">)</span>
-2021-12-03T20:09:05Z|00003|timeval|WARN|faults: <span style="color:#ae81ff">57</span> minor, <span style="color:#ae81ff">0</span> major
-2021-12-03T20:09:05Z|00004|timeval|WARN|context switches: <span style="color:#ae81ff">0</span> voluntary, <span style="color:#ae81ff">9309</span> involuntary
-2021-12-03T20:09:17Z|00002|timeval|WARN|Unreasonably long 8797ms poll interval <span style="color:#f92672">(</span>7858ms user, 89ms system<span style="color:#f92672">)</span>
-2021-12-03T20:09:17Z|00003|timeval|WARN|faults: <span style="color:#ae81ff">60</span> minor, <span style="color:#ae81ff">0</span> major
-2021-12-03T20:09:17Z|00004|timeval|WARN|context switches: <span style="color:#ae81ff">0</span> voluntary, <span style="color:#ae81ff">9264</span> involuntary
-Configuring Open vSwitch system IDs.
-/usr/share/openvswitch/scripts/ovs-ctl: line 42: hostname: command not found
-Enabling remote OVSDB managers.
-<span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:09:19Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Stopping OVS before quit
-<span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:09:19Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Stopping OVS
-ovs-vswitchd is not running.
-2021-12-03T20:09:21Z|00001|fatal_signal|WARN|terminating with signal <span style="color:#ae81ff">14</span> <span style="color:#f92672">(</span>Alarm clock<span style="color:#f92672">)</span>
-</code></pre></div><p>As this was a timeout and that the cluster is very easy to remove and redeploy I tried this and with exact same configuration this issue resolved. And we can finally run our pod and run some commands!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl config use-context hogwarts
-kubectl delete -f hogwarts-cls1b.yml
-kubectl apply -f hogwarts-cls1b.yml
-
-kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
-Logged in successfully.
-You have access to the following contexts:
-   172.16.1.2
-   hogsmead
-   hogwarts
-   hogwarts-cluster01
-If the context you wish to use is not in this list, you may need to try logging in again later, or contact your cluster administrator.
-To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
-
-kubectl config use-context hogwarts-cluster01
-
-kubectl run -i --tty busybox --image<span style="color:#f92672">=</span>quay.io/quay/busybox --restart<span style="color:#f92672">=</span>Never -- sh
-If you don<span style="color:#960050;background-color:#1e0010">&#39;</span>t see a command prompt, try pressing enter.
-/ <span style="color:#75715e"># nslookup bbc.co.uk</span>
-Server:         10.96.0.10
-Address:        10.96.0.10:53
-
-Non-authoritative answer:
-Name:	bbc.co.uk
-Address: 151.101.128.81
-Name:	bbc.co.uk
-Address: 151.101.0.81
-Name:	bbc.co.uk
-Address: 151.101.192.81
-Name:	bbc.co.uk
-Address: 151.101.64.81
-
-/ <span style="color:#75715e">#</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Logged in successfully.
+</span></span><span style="display:flex;"><span>You have access to the following contexts:
+</span></span><span style="display:flex;"><span>   172.16.1.2
+</span></span><span style="display:flex;"><span>   hogsmead
+</span></span><span style="display:flex;"><span>   hogwarts
+</span></span><span style="display:flex;"><span>   hogwarts-cluster01
+</span></span><span style="display:flex;"><span>If the context you wish to use is not in this list, you may need to try logging in again later, or contact your cluster administrator.
+</span></span><span style="display:flex;"><span>To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl config use-context hogwarts-cluster01
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get nodes
+</span></span><span style="display:flex;"><span>NAME                                                         STATUS   ROLES                  AGE   VERSION
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-control-plane-9tljd                       Ready    control-plane,master   58m   v1.21.2+vmware.1
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-control-plane-cn89v                       Ready    control-plane,master   61m   v1.21.2+vmware.1
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-control-plane-wfnjg                       Ready    control-plane,master   64m   v1.21.2+vmware.1
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-fqw2d   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-n2r5s   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
+</span></span><span style="display:flex;"><span>hogwarts-cluster01-forbidden-forest-hdqms-7b9bf6bb44-vbnnj   Ready    &lt;none&gt;                 62m   v1.21.2+vmware.1
+</span></span></code></pre></div><p>Next step is to deploy first Pod into the cluster, but this got stuck ContainerCreating and Pod seems to show an Antrea socket error.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl run -i --tty busybox --image<span style="color:#f92672">=</span>quay.io/quay/busybox --restart<span style="color:#f92672">=</span>Never -- sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get pods
+</span></span><span style="display:flex;"><span>NAME      READY   STATUS              RESTARTS   AGE
+</span></span><span style="display:flex;"><span>busybox   0/1     ContainerCreating   <span style="color:#ae81ff">0</span>          3m12s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl describe pod busybox
+</span></span><span style="display:flex;"><span>Events:
+</span></span><span style="display:flex;"><span>  Type     Reason                  Age                From               Message
+</span></span><span style="display:flex;"><span>  ----     ------                  ----               ----               -------
+</span></span><span style="display:flex;"><span>  Normal   Scheduled               3m55s              default-scheduler  Successfully assigned default/busybox to hogwarts-cluster01-forbidden-forest-8g2s2-66d6bfdd-8wzbr
+</span></span><span style="display:flex;"><span>  Warning  FailedCreatePodSandBox  3m52s              kubelet            Failed to create pod sandbox: rpc error: code <span style="color:#f92672">=</span> Unknown desc <span style="color:#f92672">=</span> failed to setup network <span style="color:#66d9ef">for</span> sandbox <span style="color:#e6db74">&#34;354f63b2c94a0fb5a88c9611adb3008c7dd564deb157a39ebeca78f1b717316c&#34;</span>: rpc error: code <span style="color:#f92672">=</span> Unavailable desc <span style="color:#f92672">=</span> connection error: desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;transport: Error while dialing dial unix /var/run/antrea/cni.sock: connect: connection refused&#34;</span>
+</span></span></code></pre></div><p>So first thing to look at I guess is Antrea Pods and can see one is broken.  Checking logs and it looks like OVS timed out on startup.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods -A
+</span></span><span style="display:flex;"><span>NAMESPACE                      NAME                                                                       READY   STATUS              RESTARTS   AGE
+</span></span><span style="display:flex;"><span>default                        busybox                                                                    0/1     ContainerCreating   <span style="color:#ae81ff">0</span>          12m
+</span></span><span style="display:flex;"><span>kube-system                    antrea-agent-8pf5t                                                         0/2     CrashLoopBackOff    <span style="color:#ae81ff">26</span>         96m
+</span></span><span style="display:flex;"><span>kube-system                    antrea-agent-bv9rq                                                         2/2     Running             <span style="color:#ae81ff">1</span>          102m
+</span></span><span style="display:flex;"><span>kube-system                    antrea-agent-cth2b                                                         2/2     Running             <span style="color:#ae81ff">0</span>          102m
+</span></span><span style="display:flex;"><span>kube-system                    antrea-agent-p6qfq                                                         2/2     Running             <span style="color:#ae81ff">1</span>          96m
+</span></span><span style="display:flex;"><span>kube-system                    antrea-agent-wh8k4                                                         2/2     Running             <span style="color:#ae81ff">0</span>          91m
+</span></span><span style="display:flex;"><span>kube-system                    antrea-agent-wsrtg                                                         2/2     Running             <span style="color:#ae81ff">0</span>          99m
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl logs antrea-agent-8pf5t -n kube-system antrea-ovs
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:08:00Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Starting ovsdb-server
+</span></span><span style="display:flex;"><span>Starting ovsdb-server.
+</span></span><span style="display:flex;"><span>2021-12-03T20:09:05Z|00002|timeval|WARN|Unreasonably long 10026ms poll interval <span style="color:#f92672">(</span>7883ms user, 82ms system<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>2021-12-03T20:09:05Z|00003|timeval|WARN|faults: <span style="color:#ae81ff">57</span> minor, <span style="color:#ae81ff">0</span> major
+</span></span><span style="display:flex;"><span>2021-12-03T20:09:05Z|00004|timeval|WARN|context switches: <span style="color:#ae81ff">0</span> voluntary, <span style="color:#ae81ff">9309</span> involuntary
+</span></span><span style="display:flex;"><span>2021-12-03T20:09:17Z|00002|timeval|WARN|Unreasonably long 8797ms poll interval <span style="color:#f92672">(</span>7858ms user, 89ms system<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>2021-12-03T20:09:17Z|00003|timeval|WARN|faults: <span style="color:#ae81ff">60</span> minor, <span style="color:#ae81ff">0</span> major
+</span></span><span style="display:flex;"><span>2021-12-03T20:09:17Z|00004|timeval|WARN|context switches: <span style="color:#ae81ff">0</span> voluntary, <span style="color:#ae81ff">9264</span> involuntary
+</span></span><span style="display:flex;"><span>Configuring Open vSwitch system IDs.
+</span></span><span style="display:flex;"><span>/usr/share/openvswitch/scripts/ovs-ctl: line 42: hostname: command not found
+</span></span><span style="display:flex;"><span>Enabling remote OVSDB managers.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:09:19Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Stopping OVS before quit
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#f92672">[</span>1;34m2021-12-03T20:09:19Z <span style="color:#f92672">[</span>0;32mINFO <span style="color:#f92672">[</span>0;36mantrea-ovs<span style="color:#f92672">[</span>0m<span style="color:#f92672">]</span>: Stopping OVS
+</span></span><span style="display:flex;"><span>ovs-vswitchd is not running.
+</span></span><span style="display:flex;"><span>2021-12-03T20:09:21Z|00001|fatal_signal|WARN|terminating with signal <span style="color:#ae81ff">14</span> <span style="color:#f92672">(</span>Alarm clock<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>As this was a timeout and that the cluster is very easy to remove and redeploy I tried this and with exact same configuration this issue resolved. And we can finally run our pod and run some commands!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl config use-context hogwarts
+</span></span><span style="display:flex;"><span>kubectl delete -f hogwarts-cls1b.yml
+</span></span><span style="display:flex;"><span>kubectl apply -f hogwarts-cls1b.yml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
+</span></span><span style="display:flex;"><span>Logged in successfully.
+</span></span><span style="display:flex;"><span>You have access to the following contexts:
+</span></span><span style="display:flex;"><span>   172.16.1.2
+</span></span><span style="display:flex;"><span>   hogsmead
+</span></span><span style="display:flex;"><span>   hogwarts
+</span></span><span style="display:flex;"><span>   hogwarts-cluster01
+</span></span><span style="display:flex;"><span>If the context you wish to use is not in this list, you may need to try logging in again later, or contact your cluster administrator.
+</span></span><span style="display:flex;"><span>To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl config use-context hogwarts-cluster01
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl run -i --tty busybox --image<span style="color:#f92672">=</span>quay.io/quay/busybox --restart<span style="color:#f92672">=</span>Never -- sh
+</span></span><span style="display:flex;"><span>If you don<span style="color:#960050;background-color:#1e0010">&#39;</span>t see a command prompt, try pressing enter.
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e"># nslookup bbc.co.uk</span>
+</span></span><span style="display:flex;"><span>Server:         10.96.0.10
+</span></span><span style="display:flex;"><span>Address:        10.96.0.10:53
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Non-authoritative answer:
+</span></span><span style="display:flex;"><span>Name:	bbc.co.uk
+</span></span><span style="display:flex;"><span>Address: 151.101.128.81
+</span></span><span style="display:flex;"><span>Name:	bbc.co.uk
+</span></span><span style="display:flex;"><span>Address: 151.101.0.81
+</span></span><span style="display:flex;"><span>Name:	bbc.co.uk
+</span></span><span style="display:flex;"><span>Address: 151.101.192.81
+</span></span><span style="display:flex;"><span>Name:	bbc.co.uk
+</span></span><span style="display:flex;"><span>Address: 151.101.64.81
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/ <span style="color:#75715e">#</span>
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -446,6 +446,9 @@ Address: 151.101.64.81
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -466,16 +469,13 @@ Address: 151.101.64.81
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" class="nav-link" title="Raspberry Pi Kubernetes Cluster">Raspberry Pi Kubernetes Cluster</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -564,6 +564,11 @@ Address: 151.101.64.81
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -571,11 +576,6 @@ Address: 151.101.64.81
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -589,6 +589,11 @@ Address: 151.101.64.81
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -596,11 +601,6 @@ Address: 151.101.64.81
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -651,7 +651,7 @@ Address: 151.101.64.81
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -799,6 +799,10 @@ Address: 151.101.64.81
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -851,7 +855,7 @@ Address: 151.101.64.81
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -979,7 +983,7 @@ Address: 151.101.64.81
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

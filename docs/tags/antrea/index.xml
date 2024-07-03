@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/antrea/</link>
     <description>Recent content in antrea on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Wed, 12 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/antrea/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Introduction To Kubernetes Cluster Networking with Antrea</title>
@@ -24,7 +25,7 @@
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/antrea-ovs-pipeline.svg&#34; alt=&#34;OVS Pipeline&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;creating-a-simple-antrea-lab&#34;&gt;Creating A Simple Antrea Lab&lt;/h2&gt;
 &lt;p&gt;We can create a lab to look at Antrea anywhere we can run some VMs so on either a public cloud or a homelab. Create three Ubuntu 19.10 VMs with 2x CPU, 4GB RAM and 50GB vHDD, use Netplan to configure NIC to static IP addressing like.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cat /etc/netplan/01-netcfg.yaml 
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat /etc/netplan/01-netcfg.yaml 
 
 network:
   version: 2
@@ -40,34 +41,34 @@ network:
           addresses: 
           - 192.168.1.10
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Antrea requires Kubernetes 1.16 or later. Install Docker, Open vSwitch and Kubernetes by running the following.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;sudo apt update -y
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo apt update -y
 sudo apt upgrade -y
 sudo apt install docker.io python apt-transport-https openvswitch-switch -y
 sudo gpasswd -a $USER docker
 sudo systemctl start docker
 sudo systemctl enable docker
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt-add-repository &amp;quot;deb http://apt.kubernetes.io/ kubernetes-xenial main&amp;quot;
+sudo apt-add-repository &amp;#34;deb http://apt.kubernetes.io/ kubernetes-xenial main&amp;#34;
 sudo apt-get update
 sudo swapoff -a 
-sudo sed -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab
+sudo sed -i &amp;#39;/ swap / s/^\(.*\)$/#\1/g&amp;#39; /etc/fstab
 sudo apt-get install -y kubelet=1.16.4-00 kubeadm=1.16.4-00 kubectl=1.16.4-00
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To form the overlay network Antrea requires an IP address block to allocate IP addresses (&amp;ndash;pod-network-cidr). We can use kubeadm to configure the IP address block and bootstrap the cluster by running the following:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;sudo kubeadm init --pod-network-cidr=172.16.0.0/16
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo kubeadm init --pod-network-cidr=172.16.0.0/16
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In order to easily run kubectl from the master we can copy the kube config to our user profile by running the following.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;mkdir -p $HOME/.kube
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the control plane initiatlised  we can now get the cluster token from the master we can use this to add the two worker Nodes to the cluster.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;sudo kubeadm join 192.168.1.27:6443 --token 4bp2f0.ppfjk7mfee89j2kd \
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo kubeadm join 192.168.1.27:6443 --token 4bp2f0.ppfjk7mfee89j2kd \
 &amp;gt;     --discovery-token-ca-cert-hash sha256:5e79610f28840c15be46895340c4a5535b9a0d003741ed657961891a05987ccd 
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;All the Antrea components are containerized and can be installed using the Kubernetes deployment manifest. We can apply the default Antrea manifest supplied in GitHub repository which will deploy all necessary components.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl apply -f https://raw.githubusercontent.com/vmware-tanzu/antrea/master/build/yamls/antrea.yml
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl apply -f https://raw.githubusercontent.com/vmware-tanzu/antrea/master/build/yamls/antrea.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The Antrea components are deployed to the kube-system Namespace. The components include Deploymentm, Pods, Daemonset and ConfigMap.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl get all --namespace kube-system
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl get all --namespace kube-system
 kubectl get configmap --namespace kube-system
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The ConfigMap defines antrea-agent.conf this is used by Daemonset on each Node to configure Open vSwitch for use with CNI we can see some key information like.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl describe configmap antrea-config-tm7bht9mg6
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl describe configmap antrea-config-tm7bht9mg6
 
 Integration Bridge name (default: br-int)
 DataPath type (default: system)
@@ -77,7 +78,7 @@ MTU value (default: 1450)
 Service CIDR (default 10.96.0.0/12)
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;exploring-the-open-vswitch-overlay-network&#34;&gt;Exploring The Open vSwitch Overlay Network&lt;/h2&gt;
 &lt;p&gt;With Antrea in place we can look at exploring the overlay network it has put in place. We create a Kubernetes Namespace and deploy an simple stateless application like &lt;a href=&#34;https://kubernetes.io/docs/tutorials/stateless-application/guestbook/&#34;&gt;guestbook&lt;/a&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl config set-context --current --namespace=development
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
@@ -86,7 +87,7 @@ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-servi
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When running we can view the Pods IP addressing.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl get pods --output wide
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl get pods --output wide
 
 NAME                            READY   STATUS    RESTARTS   AGE     IP           NODE              NOMINATED NODE   READINESS GATES
 frontend-6cb7f8bd65-25qv4       1/1     Running   0          5m47s   172.16.2.4   antrea-worker-2   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
@@ -96,7 +97,7 @@ redis-master-7db7f6579f-4wdnj   1/1     Running   0          5m51s   172.16.2.2 
 redis-slave-7664787fbc-5xrvj    1/1     Running   0          5m49s   172.16.1.4   antrea-worker-1   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
 redis-slave-7664787fbc-nj6m5    1/1     Running   0          5m49s   172.16.2.3   antrea-worker-2   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can see that IPs from 172.16.1.0/24 are issued to Pods running on Node antrea-worker-1 and 172.16.2.0/24 are issued to Pods running on Node antrea-worker-2. To facilitate communications between Pods the antrea-agent configures flows on Open vSwitch on each Node. If we connect to a Antrea Agent container we can see that an OVS bridge is created called br-int and the bridge has a vxlan tunnel port called tun0 and a gateway port called gw0. The internal port gw0 is allocated the role of gateway of the Node&amp;rsquo;s subnet and is allocated the first IP address in subnet.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
 kubectl get pods --selector=component=antrea-agent --output wide
 
 NAME                 READY   STATUS    RESTARTS   AGE   IP             NODE              NOMINATED NODE   READINESS GATES
@@ -111,24 +112,24 @@ ovs-vsctl show
 
 3cf39eec-f64c-49ed-ad86-48f203b215a4
     Bridge br-int
-        Port &amp;quot;tun0&amp;quot;
-            Interface &amp;quot;tun0&amp;quot;
+        Port &amp;#34;tun0&amp;#34;
+            Interface &amp;#34;tun0&amp;#34;
                 type: vxlan
                 options: {key=flow, remote_ip=flow}
-        Port &amp;quot;coredns--886217&amp;quot;
-            Interface &amp;quot;coredns--886217&amp;quot;
-        Port &amp;quot;redis-sl-b32512&amp;quot;
-            Interface &amp;quot;redis-sl-b32512&amp;quot;
-        Port &amp;quot;coredns--3d5851&amp;quot;
-            Interface &amp;quot;coredns--3d5851&amp;quot;
-        Port &amp;quot;gw0&amp;quot;
-            Interface &amp;quot;gw0&amp;quot;
+        Port &amp;#34;coredns--886217&amp;#34;
+            Interface &amp;#34;coredns--886217&amp;#34;
+        Port &amp;#34;redis-sl-b32512&amp;#34;
+            Interface &amp;#34;redis-sl-b32512&amp;#34;
+        Port &amp;#34;coredns--3d5851&amp;#34;
+            Interface &amp;#34;coredns--3d5851&amp;#34;
+        Port &amp;#34;gw0&amp;#34;
+            Interface &amp;#34;gw0&amp;#34;
                 type: internal
-        Port &amp;quot;frontend-1ee3a9&amp;quot;
-            Interface &amp;quot;frontend-1ee3a9&amp;quot;
-    ovs_version: &amp;quot;2.11.1&amp;quot;
+        Port &amp;#34;frontend-1ee3a9&amp;#34;
+            Interface &amp;#34;frontend-1ee3a9&amp;#34;
+    ovs_version: &amp;#34;2.11.1&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can also see that ArpResponderTable (20) and L3ForwardingTable (70) have flow records relating to the pod network.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
 kubectl exec -it antrea-agent-czksb -c antrea-ovs bash
 ovs-ofctl dump-flows br-int | grep 172.16.2
 
@@ -136,7 +137,7 @@ ovs-ofctl dump-flows br-int | grep 172.16.2
 
  cookie=0xf70e020000000000, duration=820.733s, table=70, n_packets=649, n_bytes=63996, idle_age=0, priority=200,ip,nw_dst=172.16.2.0/24 actions=dec_ttl,mod_dl_src:06:d1:bb:d3:bc:fa,mod_dl_dst:aa:bb:cc:dd:ee:ff,load:0x1-&amp;gt;NXM_NX_REG1[],load:0x1-&amp;gt;NXM_NX_REG0[16],load:0xc0a8011d-&amp;gt;NXM_NX_TUN_IPV4_DST[],resubmit(,105)
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can look to test the IP routing and connectivity between Pods on same Node and also between Nodes,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl config set-context --current --namespace=development
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl config set-context --current --namespace=development
 kubectl get pods --output wide | grep frontend
 
 frontend-6cb7f8bd65-25qv4       1/1     Running   0          12m   172.16.2.4   antrea-worker-2   &amp;lt;none&amp;gt;           &amp;lt;none&amp;gt;
@@ -147,13 +148,13 @@ kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.5
 kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.1.5
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;exploring-network-policy&#34;&gt;Exploring Network Policy&lt;/h2&gt;
 &lt;p&gt;Antrea implements NetworkPolicy using OVS Flows. Flows are organized in tables, and they are applied on each node by the Antrea agent. Before applying a network policy, we can check flow table IngressDefault (100) and IngressRuleTable (90)&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
 kubectl get pods | grep antrea-agent
 
 kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=100
 
 cookie=0xcac6000000000000, duration=9103.902s, table=100, n_packets=102, n_bytes=9696, priority=0 actions=resubmit(,105)
-&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=90
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=90
 
 cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=32493, n_bytes=6556290, priority=210,ct_state=-new+est,ip actions=resubmit(,105)
 
@@ -161,11 +162,11 @@ cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=1634, n_bytes
 
 cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=37, n_bytes=3768, priority=0 actions=resubmit(,100)
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can confirm that frontend can ping the backend.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl config set-context --current --namespace=development
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl config set-context --current --namespace=development
 kubectl get pods -o wide
 kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can create a network policy to deny all ingress.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;/tmp/deny-all.yaml
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;/tmp/deny-all.yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -178,9 +179,9 @@ EOF
 
 kubectl create -f /tmp/deny-all.yaml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If we test again we can test and ensure that the policy is applied and the frontend can no longer ping backend.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then check IngressDefault (100) flow table and see that our network policy has added action to drop.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl config set-context --current --namespace=kube-system
 
 kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=100
  cookie=0xcac6000000000000, duration=3.427s, table=100, n_packets=0, n_bytes=0, priority=200,ip,reg1=0xa actions=drop

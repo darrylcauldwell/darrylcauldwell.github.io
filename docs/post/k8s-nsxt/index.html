@@ -4,7 +4,7 @@
   <head>
 <title>Introduction To Kubernetes Cluster Networking with NSX-T | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -179,7 +179,7 @@
 <h2 id="lab-vsphere-configuration">Lab vSphere Configuration</h2>
 <p>The hosts run vSphere 6.7 Update 3 and have the onboard NIC configure as a vSphere Standard Switch hosting Management and vSAN VMkernels and the USB3 NIC is unused. The hosts are added to a vCenter appliance (192.168.1.13) and formed into a VSAN enabled cluster. The cluster also hosts a Windows 2019 Server VM running Active Directory (192.168.1.10) this also acts as DNS server and NTP source for lab.</p>
 <h2 id="lab-nsx-t-configuration">Lab NSX-T Configuration</h2>
-<p>An extra-small NSX Manager appliance (192.168.1.14) is deployed.  All esxi hosts are configured as Transport Nodes using vusb0 interface to Transport Zone named &lsquo;overlayTransport&rsquo;. A medium sized NSX Edge called &lsquo;nsxEdge&rsquo; is deployed which is a member of &lsquo;overlayTransport&rsquo; and &lsquo;vlanTransport&rsquo; Transport Zones. A Edge Cluster named &lsquo;edgeCluster&rsquo; and add &lsquo;nsxEdge&rsquo; is a member.</p>
+<p>An extra-small NSX Manager appliance (192.168.1.14) is deployed.  All esxi hosts are configured as Transport Nodes using vusb0 interface to Transport Zone named &lsquo;overlayTransport&rsquo;. A medium sized NSX Edge called &rsquo;nsxEdge&rsquo; is deployed which is a member of &lsquo;overlayTransport&rsquo; and &lsquo;vlanTransport&rsquo; Transport Zones. A Edge Cluster named &rsquo;edgeCluster&rsquo; and add &rsquo;nsxEdge&rsquo; is a member.</p>
 <h2 id="kubernetes-ip-address-space">Kubernetes IP Address Space</h2>
 <p>A Kubernetes Cluster requires all Pods on a node to communicate with all Pods on all nodes in the cluster without NAT these are refered to as CluterIP. To support this a range of IP addresses must be defined to be issued to Pods and Services within a cluster. Even though the range is used for both Pods and Services, it is called the Pod address range. The last /20 of the Pod address range is used for Services. A /20 range has 212 = 4096 addresses. So 4096 addresses are used for Services, and the rest of the range is used for Pods.</p>
 <p>The address range I will be using to issue ClusterIP for this lab cluster is 10.0.0.0/16.</p>
@@ -265,11 +265,11 @@
 <p>When applied it should look like:</p>
 <p><img src="/images/k8s-nsxt-external-pool.png" alt="External Block Tag"></p>
 <h2 id="node-logical-switch">Node Logical Switch</h2>
-<p>Network connectivity to the containers running in Kubernetes is provided by a NSX-T logical switch segment which is often referred to as the node logical switch. For this create a new segment called &lsquo;node-logical-switch&rsquo; within the &lsquo;overlayTransportZone&rsquo; connected to no gateway.</p>
+<p>Network connectivity to the containers running in Kubernetes is provided by a NSX-T logical switch segment which is often referred to as the node logical switch. For this create a new segment called &rsquo;node-logical-switch&rsquo; within the &lsquo;overlayTransportZone&rsquo; connected to no gateway.</p>
 <p><img src="/images/k8s-nsxt-node-logical-switch.png" alt="Node Logical Switch"></p>
 <h2 id="kubernetes-master-vm">Kubernetes Master VM</h2>
-<p>Create a Ubuntu 18.04 VM with 2x CPU, 4GB RAM and 50GB vHDD named &lsquo;k8s-master&rsquo;. The VM should have two vNIC one which is used to communicate with NSX API and which will host Kubernetes API. The second connected to the node logical switch which will have the Open vSwitch (OVS) bridge configured to give connectivity to the Pods. In my lab first connected to &lsquo;VM Network&rsquo; enumerates as ens160 and the scond connected to &lsquo;node-logical-switch&rsquo; enumerates as ens192.</p>
-<pre><code>cat /etc/netplan/01-netcfg.yaml 
+<p>Create a Ubuntu 18.04 VM with 2x CPU, 4GB RAM and 50GB vHDD named &lsquo;k8s-master&rsquo;. The VM should have two vNIC one which is used to communicate with NSX API and which will host Kubernetes API. The second connected to the node logical switch which will have the Open vSwitch (OVS) bridge configured to give connectivity to the Pods. In my lab first connected to &lsquo;VM Network&rsquo; enumerates as ens160 and the scond connected to &rsquo;node-logical-switch&rsquo; enumerates as ens192.</p>
+<pre tabindex="0"><code>cat /etc/netplan/01-netcfg.yaml 
 
 network:
   version: 2
@@ -285,7 +285,7 @@ network:
           addresses: 
           - 192.168.1.10
     ens192: {}
-</code></pre><p>In order the NCP know which vNIC to configure the VM vNIC connected &lsquo;node-logical-switch&rsquo; creates a segment port object in NSX-T this port must have tag applied like this:</p>
+</code></pre><p>In order the NCP know which vNIC to configure the VM vNIC connected &rsquo;node-logical-switch&rsquo; creates a segment port object in NSX-T this port must have tag applied like this:</p>
 <table>
 <thead>
 <tr>
@@ -308,35 +308,35 @@ network:
 <p><img src="/images/k8s-nsxt-segment-port-tags.png" alt="Segment Port Tags"></p>
 <h2 id="install-and-configure-kubernetes">Install and Configure Kubernetes</h2>
 <p>Docker and Kubernetes require installation do this by running the following.</p>
-<pre><code>sudo apt update -y
+<pre tabindex="0"><code>sudo apt update -y
 sudo apt upgrade -y
 sudo apt install docker.io python apt-transport-https -y
 sudo gpasswd -a $USER docker
 sudo systemctl start docker
 sudo systemctl enable docker
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt-add-repository &quot;deb http://apt.kubernetes.io/ kubernetes-xenial main&quot;
+sudo apt-add-repository &#34;deb http://apt.kubernetes.io/ kubernetes-xenial main&#34;
 sudo apt-get update
 sudo swapoff -a 
-sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo sed -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab
 sudo apt-get install -y kubelet=1.16.4-00 kubeadm=1.16.4-00 kubectl=1.16.4-00
 </code></pre><p>Initialize the Kubernetes cluster by running the following:</p>
-<pre><code>sudo kubeadm init
+<pre tabindex="0"><code>sudo kubeadm init
 </code></pre><p>In order to easily run kubectl as a user we need to copy the cluster configuration to the user profile, do this by running the following.</p>
-<pre><code>mkdir -p $HOME/.kube
+<pre tabindex="0"><code>mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 </code></pre><p>We can now connect to cluster and check the state of the nodes, do this by running the following on the Master node.</p>
-<pre><code>kubectl get nodes
+<pre tabindex="0"><code>kubectl get nodes
 </code></pre><p><img src="/images/k8s-nsxt-init-get-nodes.png" alt="Init Get Nodes"></p>
 <p>The status of each Node will show &lsquo;NotReady&rsquo;,  we can get more details of why it is in this state by running the following on the Master node.</p>
-<pre><code>kubectl describe nodes k8s-master | grep Conditions -A9
+<pre tabindex="0"><code>kubectl describe nodes k8s-master | grep Conditions -A9
 </code></pre><p><img src="/images/k8s-nsxt-init-describe-node.png" alt="Init Describe Nodes"></p>
 <p>With this we can see this reason for the error is &lsquo;NetworkPluginNotReady&rsquo; that the cni plugin is not initiated.</p>
 <h2 id="install-and-configure-nsx-container-plug-in-ncp">Install and Configure NSX Container Plug-in (NCP)</h2>
 <p>The NSX Container Plug-in (NCP) provides integration between NSX-T and Kubernetes, it is a containerised application which manages communicates between NSX Manager and the Kubernetes control plane. The NSX Container Plug-in (NCP) application runs in Kubernetes it is supplied as .zip download. The configuration of the NCP applications is maintained in a Kubernetes manifest file.</p>
 <p>The NCP application ships a container image file we could deploy this to a container registry but here we will just upload the image file to VM and import the image to the local docker repository. The default container image name specified in the manifest is nsx-ncp so we can apply that as tag on the image.</p>
-<pre><code>sudo docker load -i /home/ubuntu/nsx-ncp-ubuntu-2.5.1.15287458.tar
+<pre tabindex="0"><code>sudo docker load -i /home/ubuntu/nsx-ncp-ubuntu-2.5.1.15287458.tar
 sudo docker image tag registry.local/2.5.1.15287458/nsx-ncp-ubuntu nsx-ncp
 sudo docker images | grep ncp
 </code></pre><p>Prior to the 2.5 release there were multiple  manifest files each targetting a specific area of configuration.  These are now merged into a single manifest file with multiple sections with multiple resource specifications the sections can be identified by the separator <code>---</code>. The resources are created in the order they appear in the file.</p>
@@ -432,7 +432,7 @@ sudo docker images | grep ncp
 </tbody>
 </table>
 <p>For this lab I will use mostly default configuration from the supplied manifest file template. The settings I change from what is in template are the environment specifics such as details for connecting to NSX API including whether to use imperative API or intent-based API, the &lsquo;cluster&rsquo; name and the Node vNIC on which the OVS bridge gets created on.</p>
-<pre><code>[nsx_v3]
+<pre tabindex="0"><code>[nsx_v3]
 policy_nsxapi = True
 
 nsx_api_managers = 192.168.1.14
@@ -451,14 +451,14 @@ apiserver_host_port = 6443
 [nsx_kube_proxy]
 ovs_uplink_port = ens192
 </code></pre><p>Once the manifest file is updated and docker image in local registry we can apply the NCP manifest. Applying the manifest takes a couple of minutes while as it creates various Pods we can watch their creation to view progress.</p>
-<pre><code>kubectl apply --filename /home/ubuntu/ncp-ubuntu.yaml
+<pre tabindex="0"><code>kubectl apply --filename /home/ubuntu/ncp-ubuntu.yaml
 kubectl get pods --output wide --namespace nsx-system --watch
 </code></pre><p><img src="/images/k8s-nsxt-deploy-ncp.png" alt="Deploy NCP"></p>
 <p>If all has gone well we can take a look at the objects created within the namespace.</p>
-<pre><code>kubectl get all --namespace nsx-system
+<pre tabindex="0"><code>kubectl get all --namespace nsx-system
 </code></pre><p><img src="/images/k8s-nsxt-deployed-ncp.png" alt="Deployed NCP"></p>
 <p>Now its running we can check health of the NCP, the NCP has a <a href="https://docs.vmware.com/en/VMware-NSX-T-Data-Center/2.5/ncp-kubernetes/GUID-EA8E6CEE-36F4-423C-AD1E-DD6421A5FB1C.html">CLI</a> where we can run various commands including health checks.</p>
-<pre><code>kubectl exec -it nsx-ncp-6978b9cb69-dj4k2 --namespace nsx-system -- /bin/bash 
+<pre tabindex="0"><code>kubectl exec -it nsx-ncp-6978b9cb69-dj4k2 --namespace nsx-system -- /bin/bash 
 nsxcli
 get ncp-k8s-api-server status
 get ncp-nsx status
@@ -467,26 +467,26 @@ exit
 </code></pre><p><img src="/images/k8s-nsxt-ncp-health.png" alt="NCP Health"></p>
 <h2 id="nsx-policy-ui-object-creation">NSX Policy UI Object Creation</h2>
 <p>With NSX integration when we deploy a Kubernetes namespace the NCP creates a corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.  If you open NSX Manager and view one of the object categories which should have objects created. Then create two Kubernetes namespaces one called development and one called production.</p>
-<pre><code>kubectl create --filename https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl create --filename https://k8s.io/examples/admin/namespace-dev.json
 kubectl create --filename https://k8s.io/examples/admin/namespace-prod.json
 </code></pre><p>If you refresh view in NSX Manager you will see the new objects appear in the Policy UI.</p>
 <p><img src="/images/k8s-nsxt-tier1s.png" alt="NSX-T Tier-1"></p>
 <p>We can then remove these two namespaces the NCP removes the corresponding segment, IP Pool (from internet 10.0.0.0/8 range), subnet and Tier-1 router.</p>
-<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl delete -f https://k8s.io/examples/admin/namespace-prod.json
 </code></pre><h2 id="ncp-bootstrap-scaleout-cluster">NCP Bootstrap Scaleout Cluster</h2>
 <p>We started this lab with a single node cluster to look at the nsx-ncp-bootstrap Daemonset. When Nodes are added to the cluster this should install and configure the Node with NCP.</p>
 <p>Create a second and third VM with same hardware configuration as k8s-master but name these k8s-worker-1 / k8s-worker-2 and give IPs 192.168.1.28  / 192.168.1.29.  Ensure the NSX segment port attached to  VMs is tagged correctly. Ensure the NCP docker image is uploaded, imported to local docker registry and has tag applied.</p>
 <p>To add the additional Node to the cluster first step is to create a token on master.</p>
-<pre><code>kubeadm token create --print-join-command
+<pre tabindex="0"><code>kubeadm token create --print-join-command
 </code></pre><p><img src="/images/k8s-nsxt-token.png" alt="Token"></p>
 <p>We use the output of command from the master to add the additional worker nodes to the cluster. The nsx-ncp-bootstap and nsx-node-agent are DaemonSets this ensures that all Nodes run a copy of a Pod. When we add the worker nodes to the cluster we can see the nsx-ncp-bootstrap Pods initialize and configure the Node and the nsx-node-agent Pods initialize.</p>
-<pre><code>kubectl get pods -o wide --namespace nsx-system --watch
+<pre tabindex="0"><code>kubectl get pods -o wide --namespace nsx-system --watch
 </code></pre><p><img src="/images/k8s-nsxt-ncp-scale-out.png" alt="NCP Scale Out"></p>
 <h2 id="ip-assignments">IP Assignments</h2>
 <p>When a Pod is deployed it can be exposed as a Service, the service</p>
 <p>If we deploy an simple stateless application example like <a href="https://kubernetes.io/docs/tutorials/stateless-application/guestbook/">guestbook</a>.</p>
-<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl config set-context --current --namespace=development
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
@@ -495,22 +495,22 @@ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-servi
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
 </code></pre><p>When we configures the lab we created NSX managed IP Block 10.0.0.0/16. When created the development namespace got allocated a /24 subnet from this block. If we view the Pods get IP in correct range.</p>
-<pre><code>kubectl get pods --output wide
+<pre tabindex="0"><code>kubectl get pods --output wide
 </code></pre><p><img src="/images/k8s-nsxt-internal-ip-allocation.png" alt="Internal IP Allocation"></p>
 <p>As well as Pod deployments the guestbook application installation also creates Service resources. A Service is an abstraction which defines a logical set of Pods. Our application runs three frontend pods and two Redis slaves the Service provides virtual IP. The kube-proxy is responsible for implementing the virtual IP for Services. We can see the ClusterIP are issued from the last /20 of the Pod address range. If we look in more detail at the Service resource we can see the three internal IP addresses behind it.</p>
-<pre><code>kubectl get services --namespace development
+<pre tabindex="0"><code>kubectl get services --namespace development
 kubectl cluster-info dump | grep -m 1 service-cluster-ip-range
 kubectl describe service frontend
 </code></pre><p><img src="/images/k8s-nsxt-clusterip.png" alt="Cluster IP"></p>
 <p>To facilitate communications between Pods the NCP is configuring the Open vSwitch on each Node. The Open vSwitch user space daemon runs on a container named nsx-ovs within the nsx-node-agent Pods. The Open vSwitch bridge name can be specified in the ncp.ini but defaults to br-int. If we connect to this container we can view the Open vSwitch flows .</p>
-<pre><code>kubectl exec -it nsx-node-agent-llf2c -c nsx-ovs bash --namespace nsx-system
+<pre tabindex="0"><code>kubectl exec -it nsx-node-agent-llf2c -c nsx-ovs bash --namespace nsx-system
 ovs-ofctl dump-flows br-int
 </code></pre><p><img src="/images/k8s-nsxt-ovs-flows.png" alt="OVS Flows"></p>
 <p>We can then remove the namespace and all objects within.</p>
-<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 </code></pre><h2 id="nsx-loadbalancer">NSX Loadbalancer</h2>
 <p>NSX provides an load balancer capability to Kubernetes we can use this by creating service resource with type LoadBalancer.  If we create a simple replicaset of five pods and expose this we can see it gets issued with IP Address from the IP Pool tagged with ncp/external = True. We can also see this in NSX Loadbalancer configuration.</p>
-<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl config set-context --current --namespace=development
 kubectl apply -f https://k8s.io/examples/service/load-balancer-example.yaml
 kubectl get replicasets
@@ -521,12 +521,12 @@ NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)       
 hello-world-nsx-lb   LoadBalancer   10.110.64.115   &lt;pending&gt;     8080:32091/TCP   7s
 hello-world-nsx-lb   LoadBalancer   10.110.64.115   172.16.0.13   8080:32091/TCP   7s
 </code></pre><p>We can then remove the namespace and all objects within.</p>
-<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 </code></pre><h2 id="kubernetes-pods-micro-segmentation">Kubernetes Pods Micro-Segmentation</h2>
 <p>One of the great usecases for NSX with vSphere has been the is the Distributed Firewall which protects VM workload at the Hypervisor layer. When we extend NSX into the Kubernetes container we also extend the Distributed Firewall capability. We can create firewall rules which contain members of groups, the groups can be dynamically populated by use of NSX tags. Kubernetes objects can have labels attached a label attached to a Pod is reflected in NSX as a tag on the segement port of the Pod.</p>
 <p>A simple test might be to deploy a two tier app where frontend can talk to backend but frontend cannot talk to other frontend. If we create a NSX group called Web with membership criteria Segement Port, Tag, Equals web Scope secgroup. We then create a NSX DFW rule with Web as source and destination and action of drop.</p>
 <p>With this in place we can ping test from one frontend pod to another frontend and backend and see this works.  We can then apply the label to the three frontend web Pods so they become members of the NSX group and are affected by the firewall rule.  With these in place we can retest ping from one frontend pod to another frontend and see that this is now blocked.</p>
-<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl config set-context --current --namespace=development
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
@@ -560,7 +560,7 @@ kubectl exec -it frontend-6cb7f8bd65-4mctt ping 10.0.6.5
 PING 10.0.6.5 (10.0.6.5): 56 data bytes
 64 bytes from 10.0.6.5: icmp_seq=0 ttl=64 time=5.672 ms
 </code></pre><p>We can then remove the namespace and all objects within.</p>
-<pre><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl delete -f https://k8s.io/examples/admin/namespace-dev.json
 </code></pre>
 
   </article>
@@ -590,6 +590,9 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -610,16 +613,13 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -708,6 +708,11 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -715,11 +720,6 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -733,6 +733,11 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -740,11 +745,6 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -795,7 +795,7 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -943,6 +943,10 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -995,7 +999,7 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -1123,7 +1127,7 @@ PING 10.0.6.5 (10.0.6.5): 56 data bytes
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

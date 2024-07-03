@@ -4,7 +4,7 @@
   <head>
 <title>Controlling NSX-T with Terraform | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -148,113 +148,113 @@
 <p>The Terraform NSX-T provider allows us to deliver and maintain NSX-T configuration as code.</p>
 <p>This is a walkthrough of how in a very few commands you can begin to control NSX-T configuration using NSX-T.</p>
 <p>If starting from scratch <a href="https://learn.hashicorp.com/terraform/getting-started/install.html">install a simple terraform server</a>,  on CentOS / RHEL you would use these commands.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum update -y
-yum install wget net-tools unzip -y
-cd /tmp
-wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
-mkdir /terraform
-unzip terraform_0.11.11_linux_amd64.zip -d /terraform
-cd /terraform
-./terraform --version
-</code></pre></div><p>Once we have this installed we can configure the  NSX-T Manager connection details as variables in a reusable variables file.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat &gt; /terraform/variables.tf <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
-</span><span style="color:#e6db74">variable &#34;nsx_manager&#34; {}
-</span><span style="color:#e6db74">variable &#34;nsx_username&#34; {}
-</span><span style="color:#e6db74">variable &#34;nsx_password&#34; {}
-</span><span style="color:#e6db74">__EOF__</span>
-
-cat &gt; /terraform/terraform.tfvars <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
-</span><span style="color:#e6db74">nsx_manager = &#34;192.168.1.15&#34;
-</span><span style="color:#e6db74">nsx_username = &#34;admin&#34;
-</span><span style="color:#e6db74">nsx_password = &#34;VMware1!&#34;
-</span><span style="color:#e6db74">__EOF__</span>
-</code></pre></div><p>We can then create a very basic Terraform configuration file which uses these variables and then performs a simple action like creating a NSX IP Set.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat &gt; /terraform/nsx.tf <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
-</span><span style="color:#e6db74">provider &#34;nsxt&#34; {
-</span><span style="color:#e6db74">  host                  = &#34;${var.nsx_manager}&#34;
-</span><span style="color:#e6db74">  username              = &#34;${var.nsx_username}&#34;
-</span><span style="color:#e6db74">  password              = &#34;${var.nsx_password}&#34;
-</span><span style="color:#e6db74">  allow_unverified_ssl  = true
-</span><span style="color:#e6db74">  max_retries           = 10
-</span><span style="color:#e6db74">  retry_min_delay       = 500
-</span><span style="color:#e6db74">  retry_max_delay       = 5000
-</span><span style="color:#e6db74">  retry_on_status_codes = [429]
-</span><span style="color:#e6db74">}
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">resource &#34;nsxt_ip_set&#34; &#34;ip_set1&#34; {
-</span><span style="color:#e6db74">  description  = &#34;IP Set provisioned by Terraform&#34;
-</span><span style="color:#e6db74">  display_name = &#34;IP Set&#34;
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">  tag {
-</span><span style="color:#e6db74">    scope = &#34;color&#34;
-</span><span style="color:#e6db74">    tag   = &#34;blue&#34;
-</span><span style="color:#e6db74">  }
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">  ip_addresses = [&#34;1.1.1.1&#34;, &#34;2.2.2.2&#34;]
-</span><span style="color:#e6db74">}
-</span><span style="color:#e6db74">__EOF__</span>
-</code></pre></div><p>With this in place we can initialize Terraform and get it to pull down the NSX-T provider.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./terraform init
-</code></pre></div><p>If all has gone well Terraform should initialize successfully.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum update -y
+</span></span><span style="display:flex;"><span>yum install wget net-tools unzip -y
+</span></span><span style="display:flex;"><span>cd /tmp
+</span></span><span style="display:flex;"><span>wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
+</span></span><span style="display:flex;"><span>mkdir /terraform
+</span></span><span style="display:flex;"><span>unzip terraform_0.11.11_linux_amd64.zip -d /terraform
+</span></span><span style="display:flex;"><span>cd /terraform
+</span></span><span style="display:flex;"><span>./terraform --version
+</span></span></code></pre></div><p>Once we have this installed we can configure the  NSX-T Manager connection details as variables in a reusable variables file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat &gt; /terraform/variables.tf <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">variable &#34;nsx_manager&#34; {}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">variable &#34;nsx_username&#34; {}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">variable &#34;nsx_password&#34; {}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">__EOF__</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt; /terraform/terraform.tfvars <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">nsx_manager = &#34;192.168.1.15&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">nsx_username = &#34;admin&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">nsx_password = &#34;VMware1!&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">__EOF__</span>
+</span></span></code></pre></div><p>We can then create a very basic Terraform configuration file which uses these variables and then performs a simple action like creating a NSX IP Set.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat &gt; /terraform/nsx.tf <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">provider &#34;nsxt&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  host                  = &#34;${var.nsx_manager}&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  username              = &#34;${var.nsx_username}&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  password              = &#34;${var.nsx_password}&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  allow_unverified_ssl  = true
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  max_retries           = 10
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  retry_min_delay       = 500
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  retry_max_delay       = 5000
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  retry_on_status_codes = [429]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">resource &#34;nsxt_ip_set&#34; &#34;ip_set1&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  description  = &#34;IP Set provisioned by Terraform&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  display_name = &#34;IP Set&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  tag {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    scope = &#34;color&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    tag   = &#34;blue&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ip_addresses = [&#34;1.1.1.1&#34;, &#34;2.2.2.2&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">__EOF__</span>
+</span></span></code></pre></div><p>With this in place we can initialize Terraform and get it to pull down the NSX-T provider.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./terraform init
+</span></span></code></pre></div><p>If all has gone well Terraform should initialize successfully.</p>
 <!-- raw HTML omitted -->
 <p>We can now look at the changes our Terraform configuration file will make to NSX.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./terraform plan
-</code></pre></div><p>We should see the single resource defined in the Terraform configuration file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./terraform plan
+</span></span></code></pre></div><p>We should see the single resource defined in the Terraform configuration file.</p>
 <!-- raw HTML omitted -->
 <p>Now we have verified it does what we hope we can then look to apply the change.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./terraform apply
-</code></pre></div><p>Not as this is changing configuration we get asked to confirm action.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./terraform apply
+</span></span></code></pre></div><p>Not as this is changing configuration we get asked to confirm action.</p>
 <!-- raw HTML omitted -->
 <p>Once ran successfully we can then check in NSX GUI and confirm the IP Set is created.</p>
 <!-- raw HTML omitted -->
 <p>If we would like to launch and destroy application specific NSX network infrastructure when we deploy our application. We would do this with a CI/CD pipeline tool like Jenkins will walk through this. If starting from scratch <a href="https://wiki.jenkins.io/display/JENKINS/Installing+Jenkins+on+Red+Hat+distributions">install a simple jenkins server</a>, on CentOS / RHEL you would use these commands.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum update -y
-yum install wget net-tools unzip -y
-wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
-rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
-yum install jenkins java -y
-service jenkins start
-chkconfig jenkins on
-</code></pre></div><p>Once installed and running we would normally load the <a href="https://wiki.jenkins.io/display/JENKINS/Terraform+Plugin">Terraform plugin</a>,  however this does not presently work as Terraform prompts for confirmation.  There is a <a href="https://github.com/jenkinsci/terraform-plugin/pull/4/commits/47d6d3da54dd2cc437c1efb5df89cdccdb0f3eb0">pending pull request to fix this</a> until this gets merged we need a workaround.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum update -y
+</span></span><span style="display:flex;"><span>yum install wget net-tools unzip -y
+</span></span><span style="display:flex;"><span>wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+</span></span><span style="display:flex;"><span>rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+</span></span><span style="display:flex;"><span>yum install jenkins java -y
+</span></span><span style="display:flex;"><span>service jenkins start
+</span></span><span style="display:flex;"><span>chkconfig jenkins on
+</span></span></code></pre></div><p>Once installed and running we would normally load the <a href="https://wiki.jenkins.io/display/JENKINS/Terraform+Plugin">Terraform plugin</a>,  however this does not presently work as Terraform prompts for confirmation.  There is a <a href="https://github.com/jenkinsci/terraform-plugin/pull/4/commits/47d6d3da54dd2cc437c1efb5df89cdccdb0f3eb0">pending pull request to fix this</a> until this gets merged we need a workaround.</p>
 <p>To workaround this issue we can still control Terraform with Jenkins by calling a shell script from within Jenkins job.  To do this we will create a folder and give Jenkins user account permissions by running following.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir /terraform
-sudo usermod -a -G root jenkins
-chmod -R g+w /terraform
-</code></pre></div><p>We can then create a Jenkins job with Build contents which creates a Terraform file and applies this.  A simple example would be.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir /terraform
+</span></span><span style="display:flex;"><span>sudo usermod -a -G root jenkins
+</span></span><span style="display:flex;"><span>chmod -R g+w /terraform
+</span></span></code></pre></div><p>We can then create a Jenkins job with Build contents which creates a Terraform file and applies this.  A simple example would be.</p>
 <!-- raw HTML omitted -->
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /terraform
-
-cat &gt; /terraform/nsx.tf <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
-</span><span style="color:#e6db74">provider &#34;nsxt&#34; {
-</span><span style="color:#e6db74">  host                  = &#34;192.168.1.15&#34;
-</span><span style="color:#e6db74">  username              = &#34;admin&#34;
-</span><span style="color:#e6db74">  password              = &#34;VMware1!&#34;
-</span><span style="color:#e6db74">  allow_unverified_ssl  = true
-</span><span style="color:#e6db74">  max_retries           = 10
-</span><span style="color:#e6db74">  retry_min_delay       = 500
-</span><span style="color:#e6db74">  retry_max_delay       = 5000
-</span><span style="color:#e6db74">  retry_on_status_codes = [429]
-</span><span style="color:#e6db74">}
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">resource &#34;nsxt_ip_set&#34; &#34;ip_set1&#34; {
-</span><span style="color:#e6db74">  description  = &#34;IP Set provisioned by Terraform&#34;
-</span><span style="color:#e6db74">  display_name = &#34;IP Set&#34;
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">  tag {
-</span><span style="color:#e6db74">    scope = &#34;color&#34;
-</span><span style="color:#e6db74">    tag   = &#34;blue&#34;
-</span><span style="color:#e6db74">  }
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">  ip_addresses = [&#34;1.1.1.1&#34;, &#34;2.2.2.2&#34;]
-</span><span style="color:#e6db74">}
-</span><span style="color:#e6db74">__EOF__</span>
-
-./terraform init
-
-./terraform apply -auto-approve
-
-rm -f nsx.tf
-</code></pre></div><p>This is an overly simple example and more likely we would pull a config file from distributed source control such as github.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /terraform
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt; /terraform/nsx.tf <span style="color:#e6db74">&lt;&lt; &#39;__EOF__&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">provider &#34;nsxt&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  host                  = &#34;192.168.1.15&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  username              = &#34;admin&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  password              = &#34;VMware1!&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  allow_unverified_ssl  = true
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  max_retries           = 10
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  retry_min_delay       = 500
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  retry_max_delay       = 5000
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  retry_on_status_codes = [429]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">resource &#34;nsxt_ip_set&#34; &#34;ip_set1&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  description  = &#34;IP Set provisioned by Terraform&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  display_name = &#34;IP Set&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  tag {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    scope = &#34;color&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    tag   = &#34;blue&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ip_addresses = [&#34;1.1.1.1&#34;, &#34;2.2.2.2&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">__EOF__</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>./terraform init
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>./terraform apply -auto-approve
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rm -f nsx.tf
+</span></span></code></pre></div><p>This is an overly simple example and more likely we would pull a config file from distributed source control such as github.</p>
 
 
   </article>
@@ -284,6 +284,9 @@ rm -f nsx.tf
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -304,16 +307,13 @@ rm -f nsx.tf
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -402,6 +402,11 @@ rm -f nsx.tf
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -409,11 +414,6 @@ rm -f nsx.tf
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -427,6 +427,11 @@ rm -f nsx.tf
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -434,11 +439,6 @@ rm -f nsx.tf
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -489,7 +489,7 @@ rm -f nsx.tf
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -637,6 +637,10 @@ rm -f nsx.tf
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -689,7 +693,7 @@ rm -f nsx.tf
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -817,7 +821,7 @@ rm -f nsx.tf
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

@@ -4,7 +4,7 @@
   <head>
 <title>Cloudbased-init For vSphere | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -152,7 +152,7 @@
 <p>In vSphere I created a Windows 2019 VM with defaults except for mapping ISO as CD/ROM. I then ran through installer to install Standard edition with Desktop experience, installed VMware Tools, disabled firewall and enabled Remote Desktop. I installed Cloudbased- init 0.9.12.dev76 and optional Carbon PowerShell module to default location. For configuration options I left the default Admin user be created into Administrators group, in addition I selected option to ‘Run Cloudbased-Init service as LocalSystem’. I chose options to &lsquo;Run Sysprep to create a generalized image&rsquo; and &lsquo;Shutdown when Sysprep terminates&rsquo;. When complete I change virtual machine to be a virtual machine template.</p>
 <p>I connect to vRealize Automation Cloud &gt; Infrastructure &gt; Cloud Accounts &gt; {my account} and run &lsquo;Sync Images&rsquo;.  Once image sync is completed vRealize Automation Cloud &gt; Infrastructure &gt; Image Mappings and create &lsquo;New Image Mapping&rsquo;. Create a Blueprint with single Cloud Agnostic Machine linked to the image mapping.</p>
 <p>When I provision a vRA Cloud blueprint to deploy a VM</p>
-<pre><code>formatVersion: 1
+<pre tabindex="0"><code>formatVersion: 1
 inputs: {}
 resources:
 Cloud_Machine_1:
@@ -165,20 +165,20 @@ Cloud_Machine_1:
         hostname: i-got-a-new-name
 </code></pre><p>The VM powers on and cloud-data gets passed by vRealize Automation Cloud as an OVF which is mounted as CDROM with CDROM contents ovf-env.xml in its root.</p>
 <p>Cloud-init runs on startup but appears to fail to do what it is asked, Cloudbase-init.log contains error.</p>
-<pre><code>2019-09-26 16:00:15.041 4360 ERROR cloudbaseinit.metadata.services.base [-] HTTPConnectionPool(host='169.254.169.254', port=80): Max retries exceeded with url: /openstack/latest/meta_data.json
+<pre tabindex="0"><code>2019-09-26 16:00:15.041 4360 ERROR cloudbaseinit.metadata.services.base [-] HTTPConnectionPool(host=&#39;169.254.169.254&#39;, port=80): Max retries exceeded with url: /openstack/latest/meta_data.json
 </code></pre><h2 id="adding-ovf-metadata-service">Adding OVF Metadata Service</h2>
 <p>Looking at the error suggested to me that Cloudbase-Init was not finding the OVF and file. I read through some of the Cloudbase-Init documentation and found that metadata service configuration was specified in,</p>
-<pre><code>C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf
+<pre tabindex="0"><code>C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf
 </code></pre><p>Checking the default configuration file does not include the <a href="https://cloudbase-init.readthedocs.io/en/latest/services.html">OvfService metadata service</a>:</p>
-<pre><code>metadata_services=cloudbaseinit.metadata.services.configdrive.ConfigDriveService,cloudbaseinit.metadata.services.httpservice.HttpService,cloudbaseinit.metadata.services.ec2service.EC2Service,cloudbaseinit.metadata.services.maasservice.MaaSHttpService
+<pre tabindex="0"><code>metadata_services=cloudbaseinit.metadata.services.configdrive.ConfigDriveService,cloudbaseinit.metadata.services.httpservice.HttpService,cloudbaseinit.metadata.services.ec2service.EC2Service,cloudbaseinit.metadata.services.maasservice.MaaSHttpService
 </code></pre><p>If I follow similar steps to before to creeate templat but during install of Cloudbase-init but DO NOT chose wizard options &lsquo;Sysprep and Shutdown&rsquo;.  Instead I update the metadata_services entry in the cloudbase-init-unattend.conf file include OvfService like:</p>
-<pre><code>metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+<pre tabindex="0"><code>metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
 </code></pre><p>Other Cloudbase-Init <a href="https://cloudbase-init.readthedocs.io/en/latest/plugins.html#plugins">plugins</a> which require reading metadata, such that which sets the hostname, pickup their configuration from this config file:</p>
-<pre><code>C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf
+<pre tabindex="0"><code>C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf
 </code></pre><p>The default installation of cloudbase-init.conf does not have a metadata_services entry at all. To allow the plugins be capable of reading metadata from OVF source add the following line to the file:</p>
-<pre><code>metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+<pre tabindex="0"><code>metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
 </code></pre><p>When both files have been updated execute sysprep passing the same parameters as the Cloudbase-Init installer wizard would:</p>
-<pre><code>cd “C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\”
+<pre tabindex="0"><code>cd “C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\”
 C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unattend:unattend.xml
 </code></pre><p>Performing a deployment of thee vRealize Automation Cloud blueprint example from earlier now deploys a VM with its hostname updated.</p>
 
@@ -210,6 +210,9 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -230,16 +233,13 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -328,6 +328,11 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -335,11 +340,6 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -353,6 +353,11 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -360,11 +365,6 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -415,7 +415,7 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -563,6 +563,10 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -615,7 +619,7 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -743,7 +747,7 @@ C:\Windows\System32\Sysprep\Sysprep.exe /quiet /generalize /oobe /shutdown /unat
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

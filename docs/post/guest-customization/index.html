@@ -4,7 +4,7 @@
   <head>
 <title>Understanding VMware Guest OS Customization | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -156,42 +156,42 @@
 <h2 id="logfiles-and-log-configuration">Logfiles and Log Configuration</h2>
 <p>Guest OS can be complex and things can go wrong during guest OS customization. When they do its useful to understand where to look for clues as to cause.</p>
 <p>If there were any problems with the extraction and deployment of the customization package onto the guest operating system these are written to:</p>
-<pre><code>/var/log/vmware-imc/toolsDeployPkg.log
+<pre tabindex="0"><code>/var/log/vmware-imc/toolsDeployPkg.log
 </code></pre><p>VMware guest operating system customization steps performed using the perl scripts output to default location of /var/log/messages. There are many other things in this log file so can use grep to view only the customization steps:</p>
-<pre><code>grep &quot;customize-guest&quot; /var/log/messages 
+<pre tabindex="0"><code>grep &#34;customize-guest&#34; /var/log/messages 
 </code></pre><p>There are many options for configuring cloud-init logging. These can be configured these within your template virtual machine. The configuration settings are stored in:</p>
-<pre><code>/etc/cloud/cloud.cfg.d/05_logging.cfg
+<pre tabindex="0"><code>/etc/cloud/cloud.cfg.d/05_logging.cfg
 </code></pre><p>Within this configuration file we can identify that by default cloud-init directs the main handler output to a file:</p>
-<pre><code>/var/log/cloud-init.log
+<pre tabindex="0"><code>/var/log/cloud-init.log
 </code></pre><p>We can also see that by default the stdout and stderr of the specific we tell it to perform is written to:</p>
-<pre><code>/var/log/cloud-init-output.log
+<pre tabindex="0"><code>/var/log/cloud-init-output.log
 </code></pre><h2 id="customization-guest-customatization-configuration">Customization Guest Customatization Configuration</h2>
 <p>There are many options which cloud-init can be configured with. These can be configured these within your template virtual machine. The configuration settings are stored in:</p>
-<pre><code>/etc/cloud/cloud.cfg
+<pre tabindex="0"><code>/etc/cloud/cloud.cfg
 </code></pre><p>One of the options which can be configured is whether VMware tools perl scripts are ran. How to enable or disable this is documented in this article:</p>
-<pre><code>https://kb.vmware.com/s/article/59557
+<pre tabindex="0"><code>https://kb.vmware.com/s/article/59557
 </code></pre><p>It is useful to note here that there is currently a known issue when cloud-init calls the open-vm-tools perl scripts for &lsquo;Ubuntu 18.04&rsquo;. The boot sequence and bring up order can cause the perl scripts to fail. A high level cause and workaround are described here:</p>
-<pre><code>https://kb.vmware.com/s/article/56409 
+<pre tabindex="0"><code>https://kb.vmware.com/s/article/56409 
 </code></pre><p>A more detailed description of the bug including some very interesting detail about how cloud-init and open-vm-tools perl scripts are called is described here:</p>
-<pre><code>https://bugs.launchpad.net/ubuntu/+source/open-vm-tools/+bug/1793715
+<pre tabindex="0"><code>https://bugs.launchpad.net/ubuntu/+source/open-vm-tools/+bug/1793715
 </code></pre><h2 id="cloud-init-user-data">Cloud-Init User-Data</h2>
 <p>One of the more useful enhancements of using cloud-init is the ability to instruct the guest operating system to run things such as custom scripts during boot.</p>
 <p>User-Data content supports the following types of content &lsquo;gzip compressed&rsquo; or &lsquo;mime multi-part archive&rsquo;. With a mime multi-part file, the user can specify more than one type of data within the content.  For full details on the User-Data content format see here:</p>
-<pre><code>https://cloudinit.readthedocs.io/en/latest/topics/format.html
+<pre tabindex="0"><code>https://cloudinit.readthedocs.io/en/latest/topics/format.html
 </code></pre><p>The two most common data types I use at the moment are Cloud Config Data or simple shell scripts. To differentiate sections when using a &lsquo;mime multi-part archive&rsquo; begin each section with data type for example  <code>#!</code> for shell script or <code>#cloud-config</code> for cloud config data.</p>
 <p>Cloud-init can be fussy about syntax of the file contents once created you can validate the syntaxt using a command like this:</p>
-<pre><code>cloud-init devel schema --config-file /tmp/user-data
+<pre tabindex="0"><code>cloud-init devel schema --config-file /tmp/user-data
 </code></pre><h2 id="vcenter-deploy-ova-import">vCenter Deploy OVA Import</h2>
 <p>Some operating systems packages which include cloud-init expose options to confiure during deployment.  For example Ubuntu which can be found here:</p>
-<pre><code>https://cloud-images.ubuntu.com/releases/18.04/release/ubuntu-18.04-server-cloudimg-amd64.ova
+<pre tabindex="0"><code>https://cloud-images.ubuntu.com/releases/18.04/release/ubuntu-18.04-server-cloudimg-amd64.ova
 </code></pre><p>The Ubunutu image includes property &lsquo;Encoded user-data&rsquo; this has property description <em>&ldquo;In order to fit into a xml attribute, this value is base64 encoded . It will be decoded, and then processed normally as user-data&rdquo;</em>.</p>
 <p>I like to keep a file copy of the un-encoded and encoded user-data. To do this I use text editior to create a file with the required cloud-init user-data contents.  I then use <a href="https://linux.die.net/man/1/base64">base64</a> to output contents into a file appended with .b64.</p>
-<pre><code>base64 --input /tmp/user-data --output /tmp/user-data.b64
+<pre tabindex="0"><code>base64 --input /tmp/user-data --output /tmp/user-data.b64
 </code></pre><p>If encoded user-data is passed during deployment of OVA file in this way this will run when the VM boots.</p>
 <h2 id="cloud-assembly">Cloud Assembly</h2>
 <p>Other VMware products such as Cloud Assembly can utilize open-vm-tools and cloud-init to perform guest customization.</p>
-<pre><code>https://docs.vmware.com/en/VMware-Cloud-Assembly/services/Using-and-Managing/GUID-70EA052D-FABF-4CE5-875D-9B52FED08AA3.html
-</code></pre><pre><code>https://blogs.vmware.com/management/2018/11/customizing-cloud-assembly-deployments-with-cloud-init.html
+<pre tabindex="0"><code>https://docs.vmware.com/en/VMware-Cloud-Assembly/services/Using-and-Managing/GUID-70EA052D-FABF-4CE5-875D-9B52FED08AA3.html
+</code></pre><pre tabindex="0"><code>https://blogs.vmware.com/management/2018/11/customizing-cloud-assembly-deployments-with-cloud-init.html
 </code></pre>
 
   </article>
@@ -221,6 +221,9 @@
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -241,16 +244,13 @@
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -339,6 +339,11 @@
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -346,11 +351,6 @@
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -364,6 +364,11 @@
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -371,11 +376,6 @@
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -426,7 +426,7 @@
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -574,6 +574,10 @@
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -626,7 +630,7 @@
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -754,7 +758,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

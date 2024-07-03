@@ -4,7 +4,7 @@
   <head>
 <title>Orchestrating configuration of vROps via REST API with Postman | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -155,61 +155,61 @@
 <p>In case we have multiple environments and want to export our collection and reuse we  want to store environmental specifics as variables. To faciliate this we can create a POSTMAN envrionment. For example we might create a environment called &lsquo;Homelab&rsquo; which has variable vrops-fqdn and both initial and current value of vrops01.example.local</p>
 <p>vRealize Operations Manager REST API documentation describes how we can <a href="https://docs.vmware.com/en/vRealize-Operations-Manager/8.1/com.vmware.vcom.api.doc/GUID-C3F0A911-A587-40F7-9998-13D4880A0C2B.html">aquire an authentication token</a>.</p>
 <p>Create new reques in Postman with name &lsquo;Aquire token&rsquo;, set the request method to POST and set URL to use environment variable like:</p>
-<pre><code>{% raw %}
+<pre tabindex="0"><code>{% raw %}
 https://{{vrops-fqdn}}/suite-api/api/auth/token/acquire
 {% endraw %}
 </code></pre><p>The documentation shows that two headers are required to be supplied so we must configure our request to pass these:</p>
-<pre><code>Content-Type: application/json
+<pre tabindex="0"><code>Content-Type: application/json
 Accept: application/json
 </code></pre><p>The documentation also describes that we need to POST the vROps logon credentials as the body. Within Postman change body type to raw and paste below substrituing credentials appropriate to your environment.</p>
-<pre><code>{
-  &quot;username&quot;: &quot;vRealize-username&quot;,
-  &quot;password&quot;: &quot;vRealize-password&quot;
+<pre tabindex="0"><code>{
+  &#34;username&#34;: &#34;vRealize-username&#34;,
+  &#34;password&#34;: &#34;vRealize-password&#34;
 }
 </code></pre><p>Successul processing of credential by the REST method returns a JSON body containing the token parameter. We want to capture this to use in the next step in our process. We can do this in Postman by running a script after the request is made which extracts the token value and sets this an environment variable. Change to the Test tab and add the following script.</p>
-<pre><code>var jsonData = JSON.parse(responseBody);
-postman.setEnvironmentVariable(&quot;bearerToken&quot;, jsonData.token);
+<pre tabindex="0"><code>var jsonData = JSON.parse(responseBody);
+postman.setEnvironmentVariable(&#34;bearerToken&#34;, jsonData.token);
 </code></pre><p>We can now look at the next step in our example is to add a vCenter adapter which is documented <a href="https://docs.vmware.com/en/vRealize-Operations-Manager/8.1/com.vmware.vcom.api.doc/GUID-18D17D09-628F-4974-AFE4-E94446E3462D.html">here</a>.</p>
 <p>Create new reques in Postman with name &lsquo;Aquire token&rsquo;, set the request method to POST and set URL to use environment variable like:</p>
-<pre><code>{% raw %}
+<pre tabindex="0"><code>{% raw %}
 https://{{vrops-fqdn}}/suite-api/api/adapters
 {% endraw %}
 </code></pre><p>We require to apply three headers to this request, the ones to describe payload is in JSON format and an authentication header which passes the token value environment variable from previous step.</p>
-<pre><code>{% raw %}
+<pre tabindex="0"><code>{% raw %}
 Content-Type: application/json
 Accept: application/json
 Authentication: vRealizeOpsToken {{bearerToken}}
 {% endraw %}
 </code></pre><p>The documentation supplies an example body to post with some optional parameters. Similar to aquire step we place this in request body tab and ensure raw format is selected (ensuring you set envioronmentally values).</p>
-<pre><code>{
-  &quot;name&quot; : &quot;New VC Adapter Instance&quot;,
-  &quot;collectorId&quot; : &quot;1&quot;,
-  &quot;adapterKindKey&quot; : &quot;VMWARE&quot;,
-  &quot;resourceIdentifiers&quot; : [ 
+<pre tabindex="0"><code>{
+  &#34;name&#34; : &#34;New VC Adapter Instance&#34;,
+  &#34;collectorId&#34; : &#34;1&#34;,
+  &#34;adapterKindKey&#34; : &#34;VMWARE&#34;,
+  &#34;resourceIdentifiers&#34; : [ 
     {
-      &quot;name&quot; : &quot;VCURL&quot;,
-      &quot;value&quot; : &quot;https://vcenter.example.local&quot;
+      &#34;name&#34; : &#34;VCURL&#34;,
+      &#34;value&#34; : &#34;https://vcenter.example.local&#34;
     } 
   ],
-  &quot;credential&quot; : {
-    &quot;id&quot; : null,
-    &quot;name&quot; : &quot;VC-Credential-1&quot;,
-    &quot;adapterKindKey&quot; : &quot;VMWARE&quot;,
-    &quot;credentialKindKey&quot; : &quot;PRINCIPALCREDENTIAL&quot;,
-    &quot;fields&quot; : [ 
+  &#34;credential&#34; : {
+    &#34;id&#34; : null,
+    &#34;name&#34; : &#34;VC-Credential-1&#34;,
+    &#34;adapterKindKey&#34; : &#34;VMWARE&#34;,
+    &#34;credentialKindKey&#34; : &#34;PRINCIPALCREDENTIAL&#34;,
+    &#34;fields&#34; : [ 
       {
-        &quot;name&quot; : &quot;USER&quot;,
-        &quot;value&quot; : &quot;administrator@vsphere.local&quot;
+        &#34;name&#34; : &#34;USER&#34;,
+        &#34;value&#34; : &#34;administrator@vsphere.local&#34;
       }, 
       {
-        &quot;name&quot; : &quot;PASSWORD&quot;,
-        &quot;value&quot; : &quot;VC-dummy-passwd&quot;
+        &#34;name&#34; : &#34;PASSWORD&#34;,
+        &#34;value&#34; : &#34;VC-dummy-passwd&#34;
       } 
     ],
   },
 }
 </code></pre><p>It is not essential but it is useful for troubleshooting of our request to output the token environment variable value to log prior to attempting to make the request. To do this we can use the &lsquo;Pre-request script&rsquo; tab and add the follwoing script.</p>
-<pre><code>console.log(pm.environment.get(&quot;bearerToken&quot;));
+<pre tabindex="0"><code>console.log(pm.environment.get(&#34;bearerToken&#34;));
 </code></pre><p>We can now run the collection which will open &lsquo;Postman runner&rsquo; which will make the two requests. The summary detail is output to &lsquo;Postman running&rsquo; and you can get more detailed output in &lsquo;Postman console&rsquo; view.</p>
 
 
@@ -240,6 +240,9 @@ Authentication: vRealizeOpsToken {{bearerToken}}
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -260,16 +263,13 @@ Authentication: vRealizeOpsToken {{bearerToken}}
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -358,6 +358,11 @@ Authentication: vRealizeOpsToken {{bearerToken}}
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -365,11 +370,6 @@ Authentication: vRealizeOpsToken {{bearerToken}}
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -383,6 +383,11 @@ Authentication: vRealizeOpsToken {{bearerToken}}
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -390,11 +395,6 @@ Authentication: vRealizeOpsToken {{bearerToken}}
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -445,7 +445,7 @@ Authentication: vRealizeOpsToken {{bearerToken}}
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -593,6 +593,10 @@ Authentication: vRealizeOpsToken {{bearerToken}}
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -645,7 +649,7 @@ Authentication: vRealizeOpsToken {{bearerToken}}
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -773,7 +777,7 @@ Authentication: vRealizeOpsToken {{bearerToken}}
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

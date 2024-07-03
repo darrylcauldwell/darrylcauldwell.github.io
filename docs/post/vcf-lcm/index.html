@@ -4,7 +4,7 @@
   <head>
 <title>VMware Cloud Foundation Lifecycle Management - VCF LCM | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -148,32 +148,32 @@
 <p>The SDDC Manager appliance controls the Cloud Foundation deployment. To upgrade the environment(s) requires the software packages. With each Cloud Foundation release, the required software packages are formed into bundles. The bundles are made available to download to licensed users via their &lsquo;My VMware&rsquo; account.</p>
 <p>There are two methods of downloading the bundles. SDDC Manager can be configured with &lsquo;My VMware&rsquo; account and the LCM service then polls the VMware depot to access update bundles. Alternatively, the Bundle Transfer utility can be used to manually download the bundles from the depot and then upload them to SDDC Manager.</p>
 <p>There is little control and limited UI visibility of bundle downloads using SDDC Manager. This is fine if you advanced plan and configure the account in time to poll available bundles and initiate downloads. The LCM service writes two files that can be useful in understanding progress.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/var/log/vmware/vcf/lcm/lcm.log
-/var/log/vmware/vcf/lcm/lcm-debug.log
-</code></pre></div><p>When you have multiple Cloud Foundation deployments it can be more efficient to use the Bundle Transfer utility to download once and distribute internally. The Bundle Transfer utility is also useful to gain a little more control over the download process.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/var/log/vmware/vcf/lcm/lcm.log
+</span></span><span style="display:flex;"><span>/var/log/vmware/vcf/lcm/lcm-debug.log
+</span></span></code></pre></div><p>When you have multiple Cloud Foundation deployments it can be more efficient to use the Bundle Transfer utility to download once and distribute internally. The Bundle Transfer utility is also useful to gain a little more control over the download process.</p>
 <p>The LCM Bundle Transfer utility is shipped with the SDDC Manager appliance. The utility can be used to download various bundle versions. The utility has two elements, to ensure the utility downloads the appropriate bundles for your deployment the first extract environmental metadata from SDDC Manager.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## SSH to SDDC Manager</span>
-<span style="color:#75715e">## Outputs required metadata in files</span>
-<span style="color:#75715e">## ~/markerFile</span>
-<span style="color:#75715e">## ~/markerFile.md5</span>
-
-cd /opt/vmware/vcf/lcm/lcm-tools/bin
-./lcm-bundle-transfer-util --generateMarker
-</code></pre></div><p>The second step takes the metadata as input and performs the download. This step requires Java 8 (or later) to be installed but can be run on either Windows or Linux.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
-scp -rp vcf@nest-1-sddc-manager.cork.local:/opt/vmware/vcf/lcm/lcm-tools F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
-scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
-scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile.md5 F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
-cd F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\l</span>cm-tools<span style="color:#ae81ff">\b</span>in
-lcm-bundle-transfer-util --download --outputDirectory F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload -depotUser <span style="color:#f92672">{</span>your my.vmware.com username<span style="color:#f92672">}</span> --markerFile F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\m</span>arkerFile --markerMd5File F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\m</span>arkerFile.md5
-</code></pre></div><p>Once the bundle downloads are complete we can copy them to SDDC Manager and import them into the repository.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## From Windows device used to download</span>
-scp -pr F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload vcf@Snest-1-sddc-manager.cork.local:/nfs/vmware/vcf/nfs-mount/
-<span style="color:#75715e">## SSH to SDDC Manager and set permissions</span>
-chmod -R <span style="color:#ae81ff">0777</span> /nfs/vmware/vcf/nfs-mount/bundleDownload
-cd /opt/vmware/vcf/lcm/lcm-tools/bin
-./lcm-bundle-transfer-util --upload --bundleDirectory /nfs/vmware/vcf/nfs-mount/bundleDownload
-</code></pre></div><h2 id="update-pre-check">Update Pre-check</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## SSH to SDDC Manager</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Outputs required metadata in files</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## ~/markerFile</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## ~/markerFile.md5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd /opt/vmware/vcf/lcm/lcm-tools/bin
+</span></span><span style="display:flex;"><span>./lcm-bundle-transfer-util --generateMarker
+</span></span></code></pre></div><p>The second step takes the metadata as input and performs the download. This step requires Java 8 (or later) to be installed but can be run on either Windows or Linux.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+</span></span><span style="display:flex;"><span>scp -rp vcf@nest-1-sddc-manager.cork.local:/opt/vmware/vcf/lcm/lcm-tools F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+</span></span><span style="display:flex;"><span>scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+</span></span><span style="display:flex;"><span>scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile.md5 F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload
+</span></span><span style="display:flex;"><span>cd F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\l</span>cm-tools<span style="color:#ae81ff">\b</span>in
+</span></span><span style="display:flex;"><span>lcm-bundle-transfer-util --download --outputDirectory F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload -depotUser <span style="color:#f92672">{</span>your my.vmware.com username<span style="color:#f92672">}</span> --markerFile F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\m</span>arkerFile --markerMd5File F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload<span style="color:#ae81ff">\m</span>arkerFile.md5
+</span></span></code></pre></div><p>Once the bundle downloads are complete we can copy them to SDDC Manager and import them into the repository.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## From Windows device used to download</span>
+</span></span><span style="display:flex;"><span>scp -pr F:<span style="color:#ae81ff">\3</span>.5.1<span style="color:#ae81ff">\b</span>undleDownload vcf@Snest-1-sddc-manager.cork.local:/nfs/vmware/vcf/nfs-mount/
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## SSH to SDDC Manager and set permissions</span>
+</span></span><span style="display:flex;"><span>chmod -R <span style="color:#ae81ff">0777</span> /nfs/vmware/vcf/nfs-mount/bundleDownload
+</span></span><span style="display:flex;"><span>cd /opt/vmware/vcf/lcm/lcm-tools/bin
+</span></span><span style="display:flex;"><span>./lcm-bundle-transfer-util --upload --bundleDirectory /nfs/vmware/vcf/nfs-mount/bundleDownload
+</span></span></code></pre></div><h2 id="update-pre-check">Update Pre-check</h2>
 <p>Once the bundles are uploaded successfully to the repository we can look towards installing them. Upgrades can fail to apply if the environment isn&rsquo;t healthy. Upgrades can take a while to apply so it is better to avoid failure and rollback. A series of environmental health pre-checks are included which can be run to avoid failure to successfully deploy bundles.</p>
 <ul>
 <li>Domain Manager
@@ -307,11 +307,11 @@ cd /opt/vmware/vcf/lcm/lcm-tools/bin
 </li>
 </ul>
 <p>Each check returns health state green, yellow or red if an issue is detected some information on impact and remediation is made available. Sometimes the information returned isn&rsquo;t perfect. The LCM pre-checks output to two files which can be useful in the understanding issue.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/var/log/vmware/vcf/lcm/lcm.log
-/var/log/vmware/vcf/lcm/lcm-debug.log
-</code></pre></div><p>Not all issues require full remediation. In my nested lab environment, the vSAN HCL returns a red issue which can never be resolved. I can either just ignore the error and proceed or we can look to disable the particular check in the configuration.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
-</code></pre></div><h2 id="bundle-apply">Bundle Apply</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/var/log/vmware/vcf/lcm/lcm.log
+</span></span><span style="display:flex;"><span>/var/log/vmware/vcf/lcm/lcm-debug.log
+</span></span></code></pre></div><p>Not all issues require full remediation. In my nested lab environment, the vSAN HCL returns a red issue which can never be resolved. I can either just ignore the error and proceed or we can look to disable the particular check in the configuration.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
+</span></span></code></pre></div><h2 id="bundle-apply">Bundle Apply</h2>
 <p>When you are happy with environmental health next to move to apply bundles. To move between Cloud Foundation versions can require applying multiple bundles.  For example, when moving from 3.5.1 to 3.7.1 following bundles are required.</p>
 <ul>
 <li>SDDC Manager
@@ -338,31 +338,31 @@ cd /opt/vmware/vcf/lcm/lcm-tools/bin
 </li>
 </ul>
 <p>Some of the bundles can take a long time to apply and the UI isn&rsquo;t very verbose. It is very useful to hold an SSH session to SDDC Manager to tail the summary log file to view progress when applying bundles.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tail -f /var/log/vmware/vcf/lcm/lcm.log
-</code></pre></div><p>The main workflow process spawns other processes so those main upgrade log files sometimes aren’t that verbose and often don’t help identify the issue. It is useful to understand that the spawned processes also log to folder UUID of the bundle apply task. The different bundles create sub-folders and write various logs examples.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/var/log/vmware/vcf/lcm/upgrades/&lt;upgrade_ID&gt;/thirdparty/sddc-migration-app/logs
-/var/log/vmware/vcf/lcm/upgrades/&lt;upgrade_ID&gt;/sddcmanager-migration-app/logs/sddcmanager_migration_app_upgrade.log
-</code></pre></div><h2 id="skip-level-upgrades">Skip Level Upgrades</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>tail -f /var/log/vmware/vcf/lcm/lcm.log
+</span></span></code></pre></div><p>The main workflow process spawns other processes so those main upgrade log files sometimes aren’t that verbose and often don’t help identify the issue. It is useful to understand that the spawned processes also log to folder UUID of the bundle apply task. The different bundles create sub-folders and write various logs examples.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/var/log/vmware/vcf/lcm/upgrades/&lt;upgrade_ID&gt;/thirdparty/sddc-migration-app/logs
+</span></span><span style="display:flex;"><span>/var/log/vmware/vcf/lcm/upgrades/&lt;upgrade_ID&gt;/sddcmanager-migration-app/logs/sddcmanager_migration_app_upgrade.log
+</span></span></code></pre></div><h2 id="skip-level-upgrades">Skip Level Upgrades</h2>
 <p>As we found before moving between Cloud Foundation versions can lead to applying multiple bundles to the same product. The skip-level upgrade tool was introduced to allow easier uplift to 3.10.1.2 or 3.10.2. For NSX for vSphere based workload domains can uplift to 3.10 from 3.5 and for NSX-T can uplift from 3.7.1.</p>
 <p>Here I am using the skip level upgrade tool to uplift a 3.5.1 NSX-V environment to 3.10.2 some twenty six bundles.</p>
 <p><img src="/images/vcf-lcm-skip-download.png" alt="Skip Level Download"></p>
 <h2 id="apache-cassandra">Apache Cassandra</h2>
 <p>The application uses a Apache Cassandra database to store data. When troubleshooting it can be useful to look through the contents.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## SSH to SDDC manager and open client</span>
-cqlsh --cqlversion<span style="color:#f92672">=</span>3.4.4 127.0.0.1 <span style="color:#ae81ff">9042</span>
-
-<span style="color:#75715e">## Get all keyspaces</span>
-describe keyspaces;
-
-<span style="color:#75715e">## Change to lcmkeyspace</span>
-use lcmkeyspace;
-
-<span style="color:#75715e">## Get all lcmkeyspace tables</span>
-describe tables;
-
-<span style="color:#75715e">## Get all host entries from upgrade_activity_log table in json format</span>
-<span style="color:#66d9ef">select</span> json * from upgrade_activity_log;
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## SSH to SDDC manager and open client</span>
+</span></span><span style="display:flex;"><span>cqlsh --cqlversion<span style="color:#f92672">=</span>3.4.4 127.0.0.1 <span style="color:#ae81ff">9042</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Get all keyspaces</span>
+</span></span><span style="display:flex;"><span>describe keyspaces;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Change to lcmkeyspace</span>
+</span></span><span style="display:flex;"><span>use lcmkeyspace;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Get all lcmkeyspace tables</span>
+</span></span><span style="display:flex;"><span>describe tables;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Get all host entries from upgrade_activity_log table in json format</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> json * from upgrade_activity_log;
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -391,6 +391,9 @@ describe tables;
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -411,16 +414,13 @@ describe tables;
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -509,6 +509,11 @@ describe tables;
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -516,11 +521,6 @@ describe tables;
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -534,6 +534,11 @@ describe tables;
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -541,11 +546,6 @@ describe tables;
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -596,7 +596,7 @@ describe tables;
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -744,6 +744,10 @@ describe tables;
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -796,7 +800,7 @@ describe tables;
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -924,7 +928,7 @@ describe tables;
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

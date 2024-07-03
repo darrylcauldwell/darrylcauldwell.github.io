@@ -4,7 +4,7 @@
   <head>
 <title>Controlling vSphere &amp; NSX-V With Python | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -146,70 +146,70 @@
     <p>My former colleagues had made me aware of pyVmomi an open source library which VMware provide and mostly maintain for managing vSphere, so its here I shall start. Since then NSX for vSphere has also an open source library NSX RAML Client provided by VMware so I&rsquo;ll then move to that.</p>
 <p>I am performing this learning exercise in my home lab  using is vSphere 6.5, vSAN 6.5, NSX6.3, with Python 2.7.10, although this should work the same with other versions.</p>
 <p>Install pyVmomi and open vCenter connection and then initiate an interactive python environment</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/vmware/pyvmomi.git
-sudo pip install -r ~/pyvmomi/requirements.txt
-python
-</code></pre></div><p>Import the pyVim, pyVmomi &amp; SSL libraries we are using,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> ssl
-<span style="color:#f92672">from</span> pyVim <span style="color:#f92672">import</span> connect
-<span style="color:#f92672">from</span> pyVmomi <span style="color:#f92672">import</span> vim, vmodl
-</code></pre></div><p>Open connection to vCenter then gather contents as an object</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">vcenter <span style="color:#f92672">=</span> connect<span style="color:#f92672">.</span>SmartConnect(
-    host<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;192.168.1.13&#39;</span>,
-    user<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;administrator@vsphere.local&#39;</span>,
-    pwd<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;VMware1!&#39;</span>,
-    port<span style="color:#f92672">=</span><span style="color:#ae81ff">443</span>,
-    sslContext<span style="color:#f92672">=</span>ssl<span style="color:#f92672">.</span>_create_unverified_context()
-)
-content <span style="color:#f92672">=</span> vcenter<span style="color:#f92672">.</span>RetrieveContent()
-</code></pre></div><h1 id="basic-get-of-information">Basic get of information</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/vmware/pyvmomi.git
+</span></span><span style="display:flex;"><span>sudo pip install -r ~/pyvmomi/requirements.txt
+</span></span><span style="display:flex;"><span>python
+</span></span></code></pre></div><p>Import the pyVim, pyVmomi &amp; SSL libraries we are using,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> ssl
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyVim <span style="color:#f92672">import</span> connect
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyVmomi <span style="color:#f92672">import</span> vim, vmodl
+</span></span></code></pre></div><p>Open connection to vCenter then gather contents as an object</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>vcenter <span style="color:#f92672">=</span> connect<span style="color:#f92672">.</span>SmartConnect(
+</span></span><span style="display:flex;"><span>    host<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;192.168.1.13&#39;</span>,
+</span></span><span style="display:flex;"><span>    user<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;administrator@vsphere.local&#39;</span>,
+</span></span><span style="display:flex;"><span>    pwd<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;VMware1!&#39;</span>,
+</span></span><span style="display:flex;"><span>    port<span style="color:#f92672">=</span><span style="color:#ae81ff">443</span>,
+</span></span><span style="display:flex;"><span>    sslContext<span style="color:#f92672">=</span>ssl<span style="color:#f92672">.</span>_create_unverified_context()
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>content <span style="color:#f92672">=</span> vcenter<span style="color:#f92672">.</span>RetrieveContent()
+</span></span></code></pre></div><h1 id="basic-get-of-information">Basic get of information</h1>
 <p>Once we have vCenter Object Model as content object we can output any part of this data</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">content.about.fullName
-<span style="color:#e6db74">&#39;VMware vCenter Server 6.5.0 build-5178943&#39;</span>
-</code></pre></div><p>We can also explore the Object Model which is well descrived here in the <a href="http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html">vSphere SDK API Docs</a> and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>VirtualMachine],True)
-vmList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
-objView<span style="color:#f92672">.</span>Destroy()
-<span style="color:#66d9ef">for</span>  vm <span style="color:#f92672">in</span> vmList:
-    vm<span style="color:#f92672">.</span>summary<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>name
-</code></pre></div><h1 id="basic-put-of-configuration-information">Basic put of configuration information</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>content.about.fullName
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;VMware vCenter Server 6.5.0 build-5178943&#39;</span>
+</span></span></code></pre></div><p>We can also explore the Object Model which is well descrived here in the <a href="http://pubs.vmware.com/vsphere-65/topic/com.vmware.wssdk.apiref.doc/right-pane.html">vSphere SDK API Docs</a> and when we know what we want to look for we can search and display anything we like, for example the list of virtual machines.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>VirtualMachine],<span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>vmList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
+</span></span><span style="display:flex;"><span>objView<span style="color:#f92672">.</span>Destroy()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span>  vm <span style="color:#f92672">in</span> vmList:
+</span></span><span style="display:flex;"><span>    vm<span style="color:#f92672">.</span>summary<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>name
+</span></span></code></pre></div><h1 id="basic-put-of-configuration-information">Basic put of configuration information</h1>
 <p>As well as getting information from the Object Model we can just as easily apply configuration to items within (assuming the account we connect with has sufficient rights),  for example if we gather the list of hosts and set a advanced option on all of them.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>HostSystem],True)
-hostList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
-objView<span style="color:#f92672">.</span>Destroy()
-<span style="color:#66d9ef">for</span> host <span style="color:#f92672">in</span> hostList:
-    optionManager <span style="color:#f92672">=</span> host<span style="color:#f92672">.</span>configManager<span style="color:#f92672">.</span>advancedOption
-    option <span style="color:#f92672">=</span> vim<span style="color:#f92672">.</span>option<span style="color:#f92672">.</span>OptionValue(key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;VSAN.ClomRepairDelay&#39;</span>, value<span style="color:#f92672">=</span>long(<span style="color:#ae81ff">120</span>))
-    optionManager<span style="color:#f92672">.</span>UpdateOptions(changedValue<span style="color:#f92672">=</span>[option])
-</code></pre></div><h1 id="nsx-for-vsphere">NSX for vSphere</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>objView <span style="color:#f92672">=</span> content<span style="color:#f92672">.</span>viewManager<span style="color:#f92672">.</span>CreateContainerView(content<span style="color:#f92672">.</span>rootFolder,[vim<span style="color:#f92672">.</span>HostSystem],<span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>hostList <span style="color:#f92672">=</span> objView<span style="color:#f92672">.</span>view
+</span></span><span style="display:flex;"><span>objView<span style="color:#f92672">.</span>Destroy()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> host <span style="color:#f92672">in</span> hostList:
+</span></span><span style="display:flex;"><span>    optionManager <span style="color:#f92672">=</span> host<span style="color:#f92672">.</span>configManager<span style="color:#f92672">.</span>advancedOption
+</span></span><span style="display:flex;"><span>    option <span style="color:#f92672">=</span> vim<span style="color:#f92672">.</span>option<span style="color:#f92672">.</span>OptionValue(key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;VSAN.ClomRepairDelay&#39;</span>, value<span style="color:#f92672">=</span>long(<span style="color:#ae81ff">120</span>))
+</span></span><span style="display:flex;"><span>    optionManager<span style="color:#f92672">.</span>UpdateOptions(changedValue<span style="color:#f92672">=</span>[option])
+</span></span></code></pre></div><h1 id="nsx-for-vsphere">NSX for vSphere</h1>
 <p>So we have the pyVmomi library for vSphere, in addition to this VMware have provided open source library for <a href="https://github.com/vmware/nsxramlclient">NSX for vSphere</a>.</p>
 <p>We&rsquo;ll first make sure the packages are installed along with the additional packages for managing NSX.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo pip install nsxramlclient pyvim pyvmomi lxml requests
-</code></pre></div><p>The NSX for vSphere REST API changes with each version, so in order to use the nsxramlclient library we will need a RAML file specific to version of NSX-V we are connecting to. The RAML file also produces nice <a href="https://htmlpreview.github.io/?https://github.com/vmware/nsxraml/blob/6.3/html-version/nsxvapi.html">dynamic documentation of the NSX APIs</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/vmware/nsxraml
-cd nsxraml
-git checkout 6.3
-</code></pre></div><p>So now we can try and connect and get some information about anything described in the API document, like NSX Controllers.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> nsxramlclient.client <span style="color:#f92672">import</span> NsxClient
-nsx_manager <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;192.168.1.18&#34;</span>
-nsx_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;admin&#34;</span>
-nsx_password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;VMware1!VMware1!&#34;</span>
-nsxraml_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;nsxvapi.raml&#39;</span>
-nsx_manager_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsx_manager, nsx_username, nsx_password)
-nsx_controllers <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>read(<span style="color:#e6db74">&#39;nsxControllers&#39;</span>, <span style="color:#e6db74">&#39;read&#39;</span>)
-nsx_controllers
-</code></pre></div><p>When it comes to putting and posting information getting the formatting right can be a challenge. To this end with the library it is possible to create a template python dictionary using extract_resource_body_example.  Once we have this we can display the output structure but more usefully we can also substitute values into the template.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">new_ls <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>extract_resource_body_example(<span style="color:#e6db74">&#39;logicalSwitches&#39;</span>, <span style="color:#e6db74">&#39;create&#39;</span>)
-nsx_manager_session<span style="color:#f92672">.</span>view_body_dict(new_ls)
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;name&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;TestLogicalSwitch1&#39;</span>
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;description&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;TestLogicalSwitch1&#39;</span>
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;tenantId&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Tenant1&#39;</span>
-new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;controlPlaneMode&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;UNICAST_MODE&#39;</span>
-nsx_manager_session<span style="color:#f92672">.</span>view_body_dict(new_ls)
-</code></pre></div><p>Once we have out body template correctly describing what we want we can post this and if all goes to plan create a new Logical Switch. In this example I am passing in the scopeId (transport zone) manually to keep it a simple example.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">new_ls_response <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>create(<span style="color:#e6db74">&#39;logicalSwitches&#39;</span>, uri_parameters<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;scopeId&#39;</span>: <span style="color:#e6db74">&#39;vdnscope-1&#39;</span>}, request_body_dict<span style="color:#f92672">=</span>new_ls)
-nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_response)
-</code></pre></div><h1 id="summary">Summary</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo pip install nsxramlclient pyvim pyvmomi lxml requests
+</span></span></code></pre></div><p>The NSX for vSphere REST API changes with each version, so in order to use the nsxramlclient library we will need a RAML file specific to version of NSX-V we are connecting to. The RAML file also produces nice <a href="https://htmlpreview.github.io/?https://github.com/vmware/nsxraml/blob/6.3/html-version/nsxvapi.html">dynamic documentation of the NSX APIs</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/vmware/nsxraml
+</span></span><span style="display:flex;"><span>cd nsxraml
+</span></span><span style="display:flex;"><span>git checkout 6.3
+</span></span></code></pre></div><p>So now we can try and connect and get some information about anything described in the API document, like NSX Controllers.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> nsxramlclient.client <span style="color:#f92672">import</span> NsxClient
+</span></span><span style="display:flex;"><span>nsx_manager <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;192.168.1.18&#34;</span>
+</span></span><span style="display:flex;"><span>nsx_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;admin&#34;</span>
+</span></span><span style="display:flex;"><span>nsx_password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;VMware1!VMware1!&#34;</span>
+</span></span><span style="display:flex;"><span>nsxraml_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;nsxvapi.raml&#39;</span>
+</span></span><span style="display:flex;"><span>nsx_manager_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsx_manager, nsx_username, nsx_password)
+</span></span><span style="display:flex;"><span>nsx_controllers <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>read(<span style="color:#e6db74">&#39;nsxControllers&#39;</span>, <span style="color:#e6db74">&#39;read&#39;</span>)
+</span></span><span style="display:flex;"><span>nsx_controllers
+</span></span></code></pre></div><p>When it comes to putting and posting information getting the formatting right can be a challenge. To this end with the library it is possible to create a template python dictionary using extract_resource_body_example.  Once we have this we can display the output structure but more usefully we can also substitute values into the template.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>new_ls <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>extract_resource_body_example(<span style="color:#e6db74">&#39;logicalSwitches&#39;</span>, <span style="color:#e6db74">&#39;create&#39;</span>)
+</span></span><span style="display:flex;"><span>nsx_manager_session<span style="color:#f92672">.</span>view_body_dict(new_ls)
+</span></span><span style="display:flex;"><span>new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;name&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;TestLogicalSwitch1&#39;</span>
+</span></span><span style="display:flex;"><span>new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;description&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;TestLogicalSwitch1&#39;</span>
+</span></span><span style="display:flex;"><span>new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;tenantId&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Tenant1&#39;</span>
+</span></span><span style="display:flex;"><span>new_ls[<span style="color:#e6db74">&#39;virtualWireCreateSpec&#39;</span>][<span style="color:#e6db74">&#39;controlPlaneMode&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;UNICAST_MODE&#39;</span>
+</span></span><span style="display:flex;"><span>nsx_manager_session<span style="color:#f92672">.</span>view_body_dict(new_ls)
+</span></span></code></pre></div><p>Once we have out body template correctly describing what we want we can post this and if all goes to plan create a new Logical Switch. In this example I am passing in the scopeId (transport zone) manually to keep it a simple example.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>new_ls_response <span style="color:#f92672">=</span> nsx_manager_session<span style="color:#f92672">.</span>create(<span style="color:#e6db74">&#39;logicalSwitches&#39;</span>, uri_parameters<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;scopeId&#39;</span>: <span style="color:#e6db74">&#39;vdnscope-1&#39;</span>}, request_body_dict<span style="color:#f92672">=</span>new_ls)
+</span></span><span style="display:flex;"><span>nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_response)
+</span></span></code></pre></div><h1 id="summary">Summary</h1>
 <p>It looks like with our new found friend the VMware Python libraries we can easily create and deploy a VMware configuration &lsquo;infrastructure as code&rsquo;.</p>
 
 
@@ -240,6 +240,9 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -260,16 +263,13 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -358,6 +358,11 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -365,11 +370,6 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -383,6 +383,11 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -390,11 +395,6 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -445,7 +445,7 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -593,6 +593,10 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -645,7 +649,7 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -773,7 +777,7 @@ nsx_manager_session<span style="color:#f92672">.</span>view_response(new_ls_resp
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

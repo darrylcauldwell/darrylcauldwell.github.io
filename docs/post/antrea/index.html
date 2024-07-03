@@ -4,7 +4,7 @@
   <head>
 <title>Introduction To Kubernetes Cluster Networking with Antrea | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -153,7 +153,7 @@
 <p><img src="/images/antrea-ovs-pipeline.svg" alt="OVS Pipeline"></p>
 <h2 id="creating-a-simple-antrea-lab">Creating A Simple Antrea Lab</h2>
 <p>We can create a lab to look at Antrea anywhere we can run some VMs so on either a public cloud or a homelab. Create three Ubuntu 19.10 VMs with 2x CPU, 4GB RAM and 50GB vHDD, use Netplan to configure NIC to static IP addressing like.</p>
-<pre><code>cat /etc/netplan/01-netcfg.yaml 
+<pre tabindex="0"><code>cat /etc/netplan/01-netcfg.yaml 
 
 network:
   version: 2
@@ -169,34 +169,34 @@ network:
           addresses: 
           - 192.168.1.10
 </code></pre><p>Antrea requires Kubernetes 1.16 or later. Install Docker, Open vSwitch and Kubernetes by running the following.</p>
-<pre><code>sudo apt update -y
+<pre tabindex="0"><code>sudo apt update -y
 sudo apt upgrade -y
 sudo apt install docker.io python apt-transport-https openvswitch-switch -y
 sudo gpasswd -a $USER docker
 sudo systemctl start docker
 sudo systemctl enable docker
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt-add-repository &quot;deb http://apt.kubernetes.io/ kubernetes-xenial main&quot;
+sudo apt-add-repository &#34;deb http://apt.kubernetes.io/ kubernetes-xenial main&#34;
 sudo apt-get update
 sudo swapoff -a 
-sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo sed -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab
 sudo apt-get install -y kubelet=1.16.4-00 kubeadm=1.16.4-00 kubectl=1.16.4-00
 </code></pre><p>To form the overlay network Antrea requires an IP address block to allocate IP addresses (&ndash;pod-network-cidr). We can use kubeadm to configure the IP address block and bootstrap the cluster by running the following:</p>
-<pre><code>sudo kubeadm init --pod-network-cidr=172.16.0.0/16
+<pre tabindex="0"><code>sudo kubeadm init --pod-network-cidr=172.16.0.0/16
 </code></pre><p>In order to easily run kubectl from the master we can copy the kube config to our user profile by running the following.</p>
-<pre><code>mkdir -p $HOME/.kube
+<pre tabindex="0"><code>mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 </code></pre><p>With the control plane initiatlised  we can now get the cluster token from the master we can use this to add the two worker Nodes to the cluster.</p>
-<pre><code>sudo kubeadm join 192.168.1.27:6443 --token 4bp2f0.ppfjk7mfee89j2kd \
+<pre tabindex="0"><code>sudo kubeadm join 192.168.1.27:6443 --token 4bp2f0.ppfjk7mfee89j2kd \
 &gt;     --discovery-token-ca-cert-hash sha256:5e79610f28840c15be46895340c4a5535b9a0d003741ed657961891a05987ccd 
 </code></pre><p>All the Antrea components are containerized and can be installed using the Kubernetes deployment manifest. We can apply the default Antrea manifest supplied in GitHub repository which will deploy all necessary components.</p>
-<pre><code>kubectl apply -f https://raw.githubusercontent.com/vmware-tanzu/antrea/master/build/yamls/antrea.yml
+<pre tabindex="0"><code>kubectl apply -f https://raw.githubusercontent.com/vmware-tanzu/antrea/master/build/yamls/antrea.yml
 </code></pre><p>The Antrea components are deployed to the kube-system Namespace. The components include Deploymentm, Pods, Daemonset and ConfigMap.</p>
-<pre><code>kubectl get all --namespace kube-system
+<pre tabindex="0"><code>kubectl get all --namespace kube-system
 kubectl get configmap --namespace kube-system
 </code></pre><p>The ConfigMap defines antrea-agent.conf this is used by Daemonset on each Node to configure Open vSwitch for use with CNI we can see some key information like.</p>
-<pre><code>kubectl describe configmap antrea-config-tm7bht9mg6
+<pre tabindex="0"><code>kubectl describe configmap antrea-config-tm7bht9mg6
 
 Integration Bridge name (default: br-int)
 DataPath type (default: system)
@@ -206,7 +206,7 @@ MTU value (default: 1450)
 Service CIDR (default 10.96.0.0/12)
 </code></pre><h2 id="exploring-the-open-vswitch-overlay-network">Exploring The Open vSwitch Overlay Network</h2>
 <p>With Antrea in place we can look at exploring the overlay network it has put in place. We create a Kubernetes Namespace and deploy an simple stateless application like <a href="https://kubernetes.io/docs/tutorials/stateless-application/guestbook/">guestbook</a>.</p>
-<pre><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
+<pre tabindex="0"><code>kubectl create -f https://k8s.io/examples/admin/namespace-dev.json
 kubectl config set-context --current --namespace=development
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
 kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
@@ -215,7 +215,7 @@ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-servi
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
 kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
 </code></pre><p>When running we can view the Pods IP addressing.</p>
-<pre><code>kubectl get pods --output wide
+<pre tabindex="0"><code>kubectl get pods --output wide
 
 NAME                            READY   STATUS    RESTARTS   AGE     IP           NODE              NOMINATED NODE   READINESS GATES
 frontend-6cb7f8bd65-25qv4       1/1     Running   0          5m47s   172.16.2.4   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
@@ -225,7 +225,7 @@ redis-master-7db7f6579f-4wdnj   1/1     Running   0          5m51s   172.16.2.2 
 redis-slave-7664787fbc-5xrvj    1/1     Running   0          5m49s   172.16.1.4   antrea-worker-1   &lt;none&gt;           &lt;none&gt;
 redis-slave-7664787fbc-nj6m5    1/1     Running   0          5m49s   172.16.2.3   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
 </code></pre><p>We can see that IPs from 172.16.1.0/24 are issued to Pods running on Node antrea-worker-1 and 172.16.2.0/24 are issued to Pods running on Node antrea-worker-2. To facilitate communications between Pods the antrea-agent configures flows on Open vSwitch on each Node. If we connect to a Antrea Agent container we can see that an OVS bridge is created called br-int and the bridge has a vxlan tunnel port called tun0 and a gateway port called gw0. The internal port gw0 is allocated the role of gateway of the Node&rsquo;s subnet and is allocated the first IP address in subnet.</p>
-<pre><code>kubectl config set-context --current --namespace=kube-system
+<pre tabindex="0"><code>kubectl config set-context --current --namespace=kube-system
 kubectl get pods --selector=component=antrea-agent --output wide
 
 NAME                 READY   STATUS    RESTARTS   AGE   IP             NODE              NOMINATED NODE   READINESS GATES
@@ -240,24 +240,24 @@ ovs-vsctl show
 
 3cf39eec-f64c-49ed-ad86-48f203b215a4
     Bridge br-int
-        Port &quot;tun0&quot;
-            Interface &quot;tun0&quot;
+        Port &#34;tun0&#34;
+            Interface &#34;tun0&#34;
                 type: vxlan
                 options: {key=flow, remote_ip=flow}
-        Port &quot;coredns--886217&quot;
-            Interface &quot;coredns--886217&quot;
-        Port &quot;redis-sl-b32512&quot;
-            Interface &quot;redis-sl-b32512&quot;
-        Port &quot;coredns--3d5851&quot;
-            Interface &quot;coredns--3d5851&quot;
-        Port &quot;gw0&quot;
-            Interface &quot;gw0&quot;
+        Port &#34;coredns--886217&#34;
+            Interface &#34;coredns--886217&#34;
+        Port &#34;redis-sl-b32512&#34;
+            Interface &#34;redis-sl-b32512&#34;
+        Port &#34;coredns--3d5851&#34;
+            Interface &#34;coredns--3d5851&#34;
+        Port &#34;gw0&#34;
+            Interface &#34;gw0&#34;
                 type: internal
-        Port &quot;frontend-1ee3a9&quot;
-            Interface &quot;frontend-1ee3a9&quot;
-    ovs_version: &quot;2.11.1&quot;
+        Port &#34;frontend-1ee3a9&#34;
+            Interface &#34;frontend-1ee3a9&#34;
+    ovs_version: &#34;2.11.1&#34;
 </code></pre><p>We can also see that ArpResponderTable (20) and L3ForwardingTable (70) have flow records relating to the pod network.</p>
-<pre><code>kubectl config set-context --current --namespace=kube-system
+<pre tabindex="0"><code>kubectl config set-context --current --namespace=kube-system
 kubectl exec -it antrea-agent-czksb -c antrea-ovs bash
 ovs-ofctl dump-flows br-int | grep 172.16.2
 
@@ -265,7 +265,7 @@ ovs-ofctl dump-flows br-int | grep 172.16.2
 
  cookie=0xf70e020000000000, duration=820.733s, table=70, n_packets=649, n_bytes=63996, idle_age=0, priority=200,ip,nw_dst=172.16.2.0/24 actions=dec_ttl,mod_dl_src:06:d1:bb:d3:bc:fa,mod_dl_dst:aa:bb:cc:dd:ee:ff,load:0x1-&gt;NXM_NX_REG1[],load:0x1-&gt;NXM_NX_REG0[16],load:0xc0a8011d-&gt;NXM_NX_TUN_IPV4_DST[],resubmit(,105)
 </code></pre><p>We can look to test the IP routing and connectivity between Pods on same Node and also between Nodes,</p>
-<pre><code>kubectl config set-context --current --namespace=development
+<pre tabindex="0"><code>kubectl config set-context --current --namespace=development
 kubectl get pods --output wide | grep frontend
 
 frontend-6cb7f8bd65-25qv4       1/1     Running   0          12m   172.16.2.4   antrea-worker-2   &lt;none&gt;           &lt;none&gt;
@@ -276,13 +276,13 @@ kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.5
 kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.1.5
 </code></pre><h2 id="exploring-network-policy">Exploring Network Policy</h2>
 <p>Antrea implements NetworkPolicy using OVS Flows. Flows are organized in tables, and they are applied on each node by the Antrea agent. Before applying a network policy, we can check flow table IngressDefault (100) and IngressRuleTable (90)</p>
-<pre><code>kubectl config set-context --current --namespace=kube-system
+<pre tabindex="0"><code>kubectl config set-context --current --namespace=kube-system
 kubectl get pods | grep antrea-agent
 
 kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=100
 
 cookie=0xcac6000000000000, duration=9103.902s, table=100, n_packets=102, n_bytes=9696, priority=0 actions=resubmit(,105)
-</code></pre><pre><code>kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=90
+</code></pre><pre tabindex="0"><code>kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=90
 
 cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=32493, n_bytes=6556290, priority=210,ct_state=-new+est,ip actions=resubmit(,105)
 
@@ -290,11 +290,11 @@ cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=1634, n_bytes
 
 cookie=0xcac6000000000000, duration=4059.159s, table=90, n_packets=37, n_bytes=3768, priority=0 actions=resubmit(,100)
 </code></pre><p>We can confirm that frontend can ping the backend.</p>
-<pre><code>kubectl config set-context --current --namespace=development
+<pre tabindex="0"><code>kubectl config set-context --current --namespace=development
 kubectl get pods -o wide
 kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
 </code></pre><p>We can create a network policy to deny all ingress.</p>
-<pre><code>cat &lt;&lt;EOF &gt;/tmp/deny-all.yaml
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;/tmp/deny-all.yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -307,9 +307,9 @@ EOF
 
 kubectl create -f /tmp/deny-all.yaml
 </code></pre><p>If we test again we can test and ensure that the policy is applied and the frontend can no longer ping backend.</p>
-<pre><code>kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
+<pre tabindex="0"><code>kubectl exec -it frontend-6cb7f8bd65-25qv4 -- ping -c 1 172.16.2.27
 </code></pre><p>We can then check IngressDefault (100) flow table and see that our network policy has added action to drop.</p>
-<pre><code>kubectl config set-context --current --namespace=kube-system
+<pre tabindex="0"><code>kubectl config set-context --current --namespace=kube-system
 
 kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int | grep table=100
  cookie=0xcac6000000000000, duration=3.427s, table=100, n_packets=0, n_bytes=0, priority=200,ip,reg1=0xa actions=drop
@@ -346,6 +346,9 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -366,16 +369,13 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -464,6 +464,11 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -471,11 +476,6 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -489,6 +489,11 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -496,11 +501,6 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -551,7 +551,7 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -699,6 +699,10 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -751,7 +755,7 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -879,7 +883,7 @@ kubectl exec -it antrea-agent-czksb -c antrea-agent ovs-ofctl dump-flows br-int 
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

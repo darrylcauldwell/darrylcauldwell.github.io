@@ -4,7 +4,7 @@
   <head>
 <title>Setup VPC Peering With Ansible | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -149,211 +149,211 @@
 <h2 id="local-peering">Local Peering</h2>
 <p>I&rsquo;ll start by configuring two VPCs within the same account a single account, and configure peering between them. The Ansible host will sit within the same account which we create the new VPCs and peering. In order that Ansible can manage the AWS VPC services create an IAM Role named Ansible and assign it to the AdmistratorAccess policy. Once the IAM role is created we can then create a RHEL7 EC2 instance with this IAM role attached.</p>
 <p>The Ansible AWS modules manages AWS via the API by use of the <a href="http://boto.cloudhackers.com/">Python boto library</a>, presently the boto project is migrating from v2 to v3, the Ansible VPC module relies on both versions.  In order for boto to function correctly we also need locally installed AWSCLI. Once the RHEL instance is running connect and run the following commands to install Ansible and the boto and AWS CLI python library.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo yum install wget -y
-wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
-sudo rpm -ivh epel-release-7-8.noarch.rpm
-sudo yum install ansible git python python-devel python-pip -y
-sudo pip install boto boto3 awscli
-sudo yum update -y
-</code></pre></div><p>What we&rsquo;ll do is use the <a href="http://docs.ansible.com/ansible/ec2_vpc_module.html">ec2_vpc module</a> to create two new VPCs and capture the output of these as variables.  We can then use pass the output from VPC creation into the <a href="http://docs.ansible.com/ansible/ec2_vpc_peer_module.html">ec2_vpc_peer module</a> to configure peering.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo yum install wget -y
+</span></span><span style="display:flex;"><span>wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+</span></span><span style="display:flex;"><span>sudo rpm -ivh epel-release-7-8.noarch.rpm
+</span></span><span style="display:flex;"><span>sudo yum install ansible git python python-devel python-pip -y
+</span></span><span style="display:flex;"><span>sudo pip install boto boto3 awscli
+</span></span><span style="display:flex;"><span>sudo yum update -y
+</span></span></code></pre></div><p>What we&rsquo;ll do is use the <a href="http://docs.ansible.com/ansible/ec2_vpc_module.html">ec2_vpc module</a> to create two new VPCs and capture the output of these as variables.  We can then use pass the output from VPC creation into the <a href="http://docs.ansible.com/ansible/ec2_vpc_peer_module.html">ec2_vpc_peer module</a> to configure peering.</p>
 <p>Once Ansible is installed you can clone example repository.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/darrylcauldwell/aws-ansible.git
-cd aws-ansible
-</code></pre></div><p>Inside the repository is an example playbook.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">local-vpc-peering.yml
-</code></pre></div><p>The contents of which are shown here.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">---
-- <span style="color:#f92672">hosts</span>: <span style="color:#e6db74">&#34;localhost&#34;</span>
-   <span style="color:#f92672">connection</span>: <span style="color:#e6db74">&#34;local&#34;</span>
-
-   <span style="color:#f92672">tasks</span>:
-   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;First VPC&#34;</span>
-   <span style="color:#f92672">ec2_vpc</span>:
-       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
-       <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.0.0.0</span><span style="color:#ae81ff">/16</span>
-       <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;First VPC&#34;</span> }
-       <span style="color:#f92672">subnets</span>:
-       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.1.0</span><span style="color:#ae81ff">/24</span>
-           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
-           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
-       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.2.0</span><span style="color:#ae81ff">/24</span>
-           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
-           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
-       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.3.0</span><span style="color:#ae81ff">/24</span>
-           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
-           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
-       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-       <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
-   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">first_vpc</span>
-
-   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ first_vpc }}&#34; </span>
-
-   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Second VPC&#34;</span>
-   <span style="color:#f92672">ec2_vpc</span>:
-       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
-       <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.1.0.0</span><span style="color:#ae81ff">/16</span>
-       <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;Second VPC&#34;</span> }
-       <span style="color:#f92672">subnets</span>:
-       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.1.0</span><span style="color:#ae81ff">/24</span>
-           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
-           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
-       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.2.0</span><span style="color:#ae81ff">/24</span>
-           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
-           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
-       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.3.0</span><span style="color:#ae81ff">/24</span>
-           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
-           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
-       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-       <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
-   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">second_vpc</span>
-
-   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ second_vpc }}&#34; </span>
-
-   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Create local VPC peering connection&#34;</span>
-   <span style="color:#f92672">ec2_vpc_peer</span>:
-       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-       <span style="color:#f92672">vpc_id</span>: <span style="color:#e6db74">&#34;{{ first_vpc.vpc_id }}&#34;</span>
-       <span style="color:#f92672">peer_vpc_id</span>: <span style="color:#e6db74">&#34;{{ second_vpc.vpc_id }}&#34;</span>
-       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
-   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">vpc_peer</span>
-
-   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ vpc_peer }}&#34;</span>
-
-   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Accept local VPC peering connection&#34;</span>
-   <span style="color:#f92672">ec2_vpc_peer</span>:
-       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-       <span style="color:#f92672">peering_id</span>: <span style="color:#e6db74">&#34;{{ vpc_peer.peering_id }}&#34;</span>
-       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">accept</span>
-   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">accept_peer</span>
-
-   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ accept_peer }}&#34;</span>
-</code></pre></div><p>I&rsquo;ve added debugging of output, if you run this you will see the two VPCs get created and then the peering configured between them.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/darrylcauldwell/aws-ansible.git
+</span></span><span style="display:flex;"><span>cd aws-ansible
+</span></span></code></pre></div><p>Inside the repository is an example playbook.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>local-vpc-peering.yml
+</span></span></code></pre></div><p>The contents of which are shown here.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">hosts</span>: <span style="color:#e6db74">&#34;localhost&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">connection</span>: <span style="color:#e6db74">&#34;local&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;First VPC&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">ec2_vpc</span>:
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.0.0.0</span><span style="color:#ae81ff">/16</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;First VPC&#34;</span> }
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">subnets</span>:
+</span></span><span style="display:flex;"><span>       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.1.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
+</span></span><span style="display:flex;"><span>       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.2.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
+</span></span><span style="display:flex;"><span>       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.3.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">first_vpc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ first_vpc }}&#34; </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Second VPC&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">ec2_vpc</span>:
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.1.0.0</span><span style="color:#ae81ff">/16</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;Second VPC&#34;</span> }
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">subnets</span>:
+</span></span><span style="display:flex;"><span>       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.1.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
+</span></span><span style="display:flex;"><span>       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.2.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
+</span></span><span style="display:flex;"><span>       - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.3.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">second_vpc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ second_vpc }}&#34; </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Create local VPC peering connection&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">ec2_vpc_peer</span>:
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">vpc_id</span>: <span style="color:#e6db74">&#34;{{ first_vpc.vpc_id }}&#34;</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">peer_vpc_id</span>: <span style="color:#e6db74">&#34;{{ second_vpc.vpc_id }}&#34;</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">vpc_peer</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ vpc_peer }}&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Accept local VPC peering connection&#34;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">ec2_vpc_peer</span>:
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">peering_id</span>: <span style="color:#e6db74">&#34;{{ vpc_peer.peering_id }}&#34;</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">state</span>: <span style="color:#ae81ff">accept</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">register</span>: <span style="color:#ae81ff">accept_peer</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ accept_peer }}&#34;</span>
+</span></span></code></pre></div><p>I&rsquo;ve added debugging of output, if you run this you will see the two VPCs get created and then the peering configured between them.</p>
 <p>## Cross Account VPC Peering Using Access Keys</p>
 <p>As well as confguring peering within a single account, we can also use Ansible across AWS accounts. The steps we use are very similar but we begin to use <a href="http://boto.cloudhackers.com/en/latest/boto_config_tut.html">boto configuration profiles</a> once we have a configuration profile for each account in place we can then target each task in the play to a different account. As we are using boto we&rsquo;ll authenticate using AWS Access Key and Secret rather than role based permissions applied to the EC2 instance, we cannot remove a role from a EC2 instance so terminate the old Ansible server and create a new one as above but without the IAM Role attached.</p>
 <p>Within each account your managing create an IAM User called AnsibleAdministratorAccess and attach the AdmistratorAccess policy, add the Access Key ID and Secret Access Key to the boto2 and boto3 configuration files. I create a profile for each account named the account number.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo vi /etc/boto.cfg
-
-<span style="color:#f92672">[</span>profile 843555617105<span style="color:#f92672">]</span>
-aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
-aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
-
-<span style="color:#f92672">[</span>profile 664710917345<span style="color:#f92672">]</span>
-aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
-aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
-
-mkdir ~/.aws/
-cp /etc/boto.cfg ~/.aws/config
-</code></pre></div><p>Once Ansible and boto are installed and configured you can clone example repository.</p>
-<pre><code>git clone https://github.com/darrylcauldwell/aws-ansible.git
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo vi /etc/boto.cfg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>profile 843555617105<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
+</span></span><span style="display:flex;"><span>aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>profile 664710917345<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
+</span></span><span style="display:flex;"><span>aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mkdir ~/.aws/
+</span></span><span style="display:flex;"><span>cp /etc/boto.cfg ~/.aws/config
+</span></span></code></pre></div><p>Once Ansible and boto are installed and configured you can clone example repository.</p>
+<pre tabindex="0"><code>git clone https://github.com/darrylcauldwell/aws-ansible.git
 cd aws-ansible
 </code></pre><p>Inside the repository is an example playbook.</p>
-<pre><code>cross-account-vpc-peering.yml 
+<pre tabindex="0"><code>cross-account-vpc-peering.yml 
 </code></pre><p>You&rsquo;ll notice this playbook looks very similar to the one for local peering. The key differences are the addition of the profile parameter for the ec2_vpc and ec2_vpc_peer tasks, and the addition of account number hosting VPCs.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">---
-- <span style="color:#f92672">hosts</span>: <span style="color:#e6db74">&#34;localhost&#34;</span>
-    <span style="color:#f92672">connection</span>: <span style="color:#e6db74">&#34;local&#34;</span>
-
-    <span style="color:#f92672">tasks</span>:
-    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;First VPC&#34;</span>
-    <span style="color:#f92672">ec2_vpc</span>:
-        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
-        <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.0.0.0</span><span style="color:#ae81ff">/16</span>
-        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">843555617105</span>
-        <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;First VPC&#34;</span> }
-        <span style="color:#f92672">subnets</span>:
-        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.1.0</span><span style="color:#ae81ff">/24</span>
-            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
-            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
-        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.2.0</span><span style="color:#ae81ff">/24</span>
-            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
-            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
-        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.3.0</span><span style="color:#ae81ff">/24</span>
-            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
-            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
-        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-        <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
-    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">first_vpc</span>
-
-    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ first_vpc }}&#34; </span>
-
-    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Second VPC&#34;</span>
-    <span style="color:#f92672">ec2_vpc</span>:
-        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
-        <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.1.0.0</span><span style="color:#ae81ff">/16</span>
-        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">664710917345</span>
-        <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;Second VPC&#34;</span> }
-        <span style="color:#f92672">subnets</span>:
-        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.1.0</span><span style="color:#ae81ff">/24</span>
-            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
-            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
-        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.2.0</span><span style="color:#ae81ff">/24</span>
-            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
-            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
-        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.3.0</span><span style="color:#ae81ff">/24</span>
-            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
-            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
-        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-        <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
-    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">second_vpc</span>
-
-    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ second_vpc }}&#34; </span>
-
-    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Create local VPC peering connection&#34;</span>
-    <span style="color:#f92672">ec2_vpc_peer</span>:
-        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">843555617105</span>
-        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-        <span style="color:#f92672">vpc_id</span>: <span style="color:#e6db74">&#34;{{ first_vpc.vpc_id }}&#34;</span>
-        <span style="color:#f92672">peer_vpc_id</span>: <span style="color:#e6db74">&#34;{{ second_vpc.vpc_id }}&#34;</span>
-        <span style="color:#f92672">peer_owner_id</span>: <span style="color:#ae81ff">664710917345</span>
-        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
-    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">vpc_peer</span>
-
-    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ vpc_peer }}&#34;</span>
-
-    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Accept local VPC peering connection&#34;</span>
-    <span style="color:#f92672">ec2_vpc_peer</span>:
-        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">664710917345</span>
-        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
-        <span style="color:#f92672">peering_id</span>: <span style="color:#e6db74">&#34;{{ vpc_peer.peering_id }}&#34;</span> 
-        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">accept</span>
-    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">accept_peer</span>
-
-    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ accept_peer }}&#34;</span>
-</code></pre></div><p>I&rsquo;ve added debugging of output, if you run this</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ansible-playbook aws-ansible/cross-account-vpc-peering.yml
-</code></pre></div><p>You will see the two VPCs in different accounts and get created and then the peering configured between them.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">hosts</span>: <span style="color:#e6db74">&#34;localhost&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">connection</span>: <span style="color:#e6db74">&#34;local&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;First VPC&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ec2_vpc</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.0.0.0</span><span style="color:#ae81ff">/16</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">843555617105</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;First VPC&#34;</span> }
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">subnets</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.1.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.2.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.0.3.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">first_vpc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ first_vpc }}&#34; </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Second VPC&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ec2_vpc</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">cidr_block</span>: <span style="color:#ae81ff">10.1.0.0</span><span style="color:#ae81ff">/16</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">664710917345</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">resource_tags</span>: { <span style="color:#e6db74">&#34;Name&#34;</span>:<span style="color:#e6db74">&#34;Second VPC&#34;</span> }
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">subnets</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.1.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1a</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteA&#34;</span>}
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.2.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1b</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteB&#34;</span>}
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">10.1.3.0</span><span style="color:#ae81ff">/24</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">az</span>: <span style="color:#ae81ff">eu-west-1c</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">resource_tags</span>: {<span style="color:#e6db74">&#34;Location&#34;</span>:<span style="color:#e6db74">&#34;SiteC&#34;</span>}
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">wait</span>: <span style="color:#e6db74">&#34;yes&#34;</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">second_vpc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ second_vpc }}&#34; </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Create local VPC peering connection&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ec2_vpc_peer</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">843555617105</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">vpc_id</span>: <span style="color:#e6db74">&#34;{{ first_vpc.vpc_id }}&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">peer_vpc_id</span>: <span style="color:#e6db74">&#34;{{ second_vpc.vpc_id }}&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">peer_owner_id</span>: <span style="color:#ae81ff">664710917345</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">vpc_peer</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ vpc_peer }}&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;Accept local VPC peering connection&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ec2_vpc_peer</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">profile</span>: <span style="color:#ae81ff">664710917345</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">region</span>: <span style="color:#ae81ff">eu-west-1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">peering_id</span>: <span style="color:#e6db74">&#34;{{ vpc_peer.peering_id }}&#34;</span> 
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">accept</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">register</span>: <span style="color:#ae81ff">accept_peer</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">debug</span>: <span style="color:#ae81ff">msg=&#34;{{ accept_peer }}&#34;</span>
+</span></span></code></pre></div><p>I&rsquo;ve added debugging of output, if you run this</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ansible-playbook aws-ansible/cross-account-vpc-peering.yml
+</span></span></code></pre></div><p>You will see the two VPCs in different accounts and get created and then the peering configured between them.</p>
 <h2 id="cross-account-vpc-peering-using-iam-assume-role-provider">Cross Account VPC Peering Using IAM Assume Role Provider</h2>
 <p>It is Amazon best practise is to <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#delegate-using-roles">delegate access using roles instead of sharing credentials.</a> You can define a role that specifies what permissions the IAM users in the other account are allowed, and from which AWS accounts the IAM users are allowed to assume the role. Up to now we&rsquo;ve used IAM User and Access Keys to authenticate across multiple accounts, here we will look at configuring Ansible using AssumeRole.</p>
 <p>Unfortunatly ec2_vpc does not yet support boto3 and this is required to use AssumeRole, ec2_vpc_peer however does support this. What this means though is we need to configure boto2 config file with access key in both accounts.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo vi /etc/boto.cfg
-
-<span style="color:#f92672">[</span>profile 843555617105<span style="color:#f92672">]</span>
-aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
-aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
-
-<span style="color:#f92672">[</span>profile 664710917345<span style="color:#f92672">]</span>
-aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
-aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
-</code></pre></div><p>In order to configure boto3 to use AssumeRole we first, create an IAM User called AnsibleAdminUser in your first account. Then create an IAM Role your second account called &lsquo;AnsibleAdministrator&rsquo; for role type select &lsquo;Role for Cross-Account Access \ Provide access between AWS accounts you own&rsquo; then enter the Account ID of your first account and attach policy AdmistratorAccess. Once created view your new role in IAM and copy the Role ARN eg arn:aws:iam::664710917345:role/AnsibleAdministrator</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo vi /etc/boto.cfg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>profile 843555617105<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
+</span></span><span style="display:flex;"><span>aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>profile 664710917345<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
+</span></span><span style="display:flex;"><span>aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
+</span></span></code></pre></div><p>In order to configure boto3 to use AssumeRole we first, create an IAM User called AnsibleAdminUser in your first account. Then create an IAM Role your second account called &lsquo;AnsibleAdministrator&rsquo; for role type select &lsquo;Role for Cross-Account Access \ Provide access between AWS accounts you own&rsquo; then enter the Account ID of your first account and attach policy AdmistratorAccess. Once created view your new role in IAM and copy the Role ARN eg arn:aws:iam::664710917345:role/AnsibleAdministrator</p>
 <p>Configure boto3 credentials</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir ~/.aws
-sudo vi ~/.aws/credentials 
-
-<span style="color:#f92672">[</span>664710917345-AnsibleAdminUser<span style="color:#f92672">]</span>
-aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
-aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
-
-sudo vi ~/.aws/config
-
-<span style="color:#f92672">[</span>profile 664710917345<span style="color:#f92672">]</span>
-aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
-aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
-
-<span style="color:#f92672">[</span>profile 843555617105<span style="color:#f92672">]</span> 
-role_arn<span style="color:#f92672">=</span>arn:aws:iam::843555617105:role/AnsibleAdministrator
-source_profile<span style="color:#f92672">=</span>664710917345-AnsibleAdminUser
-</code></pre></div><p>Once the credentials files are completed we can clone the example git repo and run the playbook.</p>
-<pre><code>git clone https://github.com/darrylcauldwell/aws-ansible.git
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir ~/.aws
+</span></span><span style="display:flex;"><span>sudo vi ~/.aws/credentials 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>664710917345-AnsibleAdminUser<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
+</span></span><span style="display:flex;"><span>aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo vi ~/.aws/config
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>profile 664710917345<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>aws_access_key_id <span style="color:#f92672">=</span> &lt;your_access_key_here&gt;
+</span></span><span style="display:flex;"><span>aws_secret_access_key <span style="color:#f92672">=</span> &lt;your_secret_key_here&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>profile 843555617105<span style="color:#f92672">]</span> 
+</span></span><span style="display:flex;"><span>role_arn<span style="color:#f92672">=</span>arn:aws:iam::843555617105:role/AnsibleAdministrator
+</span></span><span style="display:flex;"><span>source_profile<span style="color:#f92672">=</span>664710917345-AnsibleAdminUser
+</span></span></code></pre></div><p>Once the credentials files are completed we can clone the example git repo and run the playbook.</p>
+<pre tabindex="0"><code>git clone https://github.com/darrylcauldwell/aws-ansible.git
 ansible-playbook aws-ansible/cross-account-vpc-peering.yml
 </code></pre><p>We should see the same behaviour where two VPCs are created and VPC Peering is established between them.</p>
 
@@ -385,6 +385,9 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -405,16 +408,13 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -503,6 +503,11 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -510,11 +515,6 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -528,6 +528,11 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -535,11 +540,6 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -590,7 +590,7 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -738,6 +738,10 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -790,7 +794,7 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -918,7 +922,7 @@ ansible-playbook aws-ansible/cross-account-vpc-peering.yml
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

@@ -4,7 +4,7 @@
   <head>
 <title>Setup Hanlon | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -145,165 +145,165 @@
 <p>I chose CentOS 6.5 64bit to host Hanlon and configured this as a VM with two vNICs one normal internet facing and one on a new private vSwitch with no uplinks,  the private is where DHCP\PXE\TFTP will be setup on and where the ESXi VMs will hopefully get built.  All these sit on an nested ESXi 5.0 configured with 12GB of vRAM and access to 1TB of NFS disk running inside VMware Fusion 6 on a Mac.</p>
 <p>I don&rsquo;t work with Linux so some of my commands might be sub optimal, I&rsquo;ll try and record all I use here for reference, and if you see anything I&rsquo;m doing badly please do say.</p>
 <p>First task to the new VM is to start VMware tools installer which mounts the correct ISO,  then install the tools via putty session (or via console).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum -y install perl
-mkdir /mnt/cdrom
-mount /dev/cdrom /mnt/cdrom
-cp /mnt/cdrom/VMwareTools-*.tar.gz /tmp
-tar -zxf /tmp/VMwareTools-*.tar.gz -C /tmp
-cd /tmp/vmware-tools-distrib/
-./vmware-install.pl --default
-rm -f /tmp/VMwareTools-*.tar.gz
-rm -rf /tmp/vmware-tools-distrib
-
-<span style="color:#75715e"># I then changed from DHCP to static IP addressing,  to note shown here are only the lines I changed or added the rest I left as they populated by OS</span>
-
-vi /etc/sysconfig/network-scripts/ifcfg-eth0
-BOOTPROTO<span style="color:#f92672">=</span>none
-NETWORK<span style="color:#f92672">=</span>&amp;lt;Internet Facing Network Address&amp;gt;
-NETMASK<span style="color:#f92672">=</span>&amp;lt;Internet Facing Subnet Mask&amp;gt;
-IPADDR<span style="color:#f92672">=</span>&amp;lt;Internet Facing IP Address&amp;gt;
-vi /etc/sysconfig/network-scripts/ifcfg-eth1
-BOOTPROTO<span style="color:#f92672">=</span>none
-NETWORK<span style="color:#f92672">=</span>&amp;lt;Private Network Address&amp;gt;
-NETMASK<span style="color:#f92672">=</span>&amp;lt;Private Subnet Mask&amp;gt;
-IPADDR<span style="color:#f92672">=</span>&amp;lt;Private IP Address&amp;gt;
-
-<span style="color:#75715e"># My next port of call was to add a DHCP server to the VM, I chose ISC as that was recommended for Razor and appeared simple and well [documented](http://prefetch.net/articles/iscdhcpd.html).</span>
-
-<span style="color:#75715e">## Install DHCP</span>
-yum install dhcp
-
-<span style="color:#75715e">## Change DHCP that to listen on eth1</span>
-vi /etc/sysconfig/dhcpd
-
-DHCPDARGS<span style="color:#f92672">=</span>eth1
-
-<span style="color:#75715e">## Create a new config file</span>
-vi /etc/dhcp/dhcpd.conf
-
-<span style="color:#75715e">## Populate with following (altering with your ID address ranges)</span>
-subnet 172.25.1.0 netmask 255.255.255.0 <span style="color:#f92672">{</span>
-range 172.25.1.20 172.25.1.50;
-option tftp-server-name <span style="color:#e6db74">&#34;172.25.1.10&#34;</span>;
-<span style="color:#66d9ef">if</span> exists user-class and option user-class <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;iPXE&#34;</span> <span style="color:#f92672">{</span>
-filename <span style="color:#e6db74">&#34;hanlon.ipxe&#34;</span>;
-<span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-filename <span style="color:#e6db74">&#34;undionly.kpxe&#34;</span>;
-<span style="color:#f92672">}</span>
-next-server 172.25.1.10;
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">## Start DHCP using</span>
-/etc/init.d/dhcpd start
-</code></pre></div><p>Test ISC DHCP and option by creating a VM with no OS,  and with only a NIC on the
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum -y install perl
+</span></span><span style="display:flex;"><span>mkdir /mnt/cdrom
+</span></span><span style="display:flex;"><span>mount /dev/cdrom /mnt/cdrom
+</span></span><span style="display:flex;"><span>cp /mnt/cdrom/VMwareTools-*.tar.gz /tmp
+</span></span><span style="display:flex;"><span>tar -zxf /tmp/VMwareTools-*.tar.gz -C /tmp
+</span></span><span style="display:flex;"><span>cd /tmp/vmware-tools-distrib/
+</span></span><span style="display:flex;"><span>./vmware-install.pl --default
+</span></span><span style="display:flex;"><span>rm -f /tmp/VMwareTools-*.tar.gz
+</span></span><span style="display:flex;"><span>rm -rf /tmp/vmware-tools-distrib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># I then changed from DHCP to static IP addressing,  to note shown here are only the lines I changed or added the rest I left as they populated by OS</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>vi /etc/sysconfig/network-scripts/ifcfg-eth0
+</span></span><span style="display:flex;"><span>BOOTPROTO<span style="color:#f92672">=</span>none
+</span></span><span style="display:flex;"><span>NETWORK<span style="color:#f92672">=</span>&amp;lt;Internet Facing Network Address&amp;gt;
+</span></span><span style="display:flex;"><span>NETMASK<span style="color:#f92672">=</span>&amp;lt;Internet Facing Subnet Mask&amp;gt;
+</span></span><span style="display:flex;"><span>IPADDR<span style="color:#f92672">=</span>&amp;lt;Internet Facing IP Address&amp;gt;
+</span></span><span style="display:flex;"><span>vi /etc/sysconfig/network-scripts/ifcfg-eth1
+</span></span><span style="display:flex;"><span>BOOTPROTO<span style="color:#f92672">=</span>none
+</span></span><span style="display:flex;"><span>NETWORK<span style="color:#f92672">=</span>&amp;lt;Private Network Address&amp;gt;
+</span></span><span style="display:flex;"><span>NETMASK<span style="color:#f92672">=</span>&amp;lt;Private Subnet Mask&amp;gt;
+</span></span><span style="display:flex;"><span>IPADDR<span style="color:#f92672">=</span>&amp;lt;Private IP Address&amp;gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># My next port of call was to add a DHCP server to the VM, I chose ISC as that was recommended for Razor and appeared simple and well [documented](http://prefetch.net/articles/iscdhcpd.html).</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Install DHCP</span>
+</span></span><span style="display:flex;"><span>yum install dhcp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Change DHCP that to listen on eth1</span>
+</span></span><span style="display:flex;"><span>vi /etc/sysconfig/dhcpd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DHCPDARGS<span style="color:#f92672">=</span>eth1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Create a new config file</span>
+</span></span><span style="display:flex;"><span>vi /etc/dhcp/dhcpd.conf
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Populate with following (altering with your ID address ranges)</span>
+</span></span><span style="display:flex;"><span>subnet 172.25.1.0 netmask 255.255.255.0 <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>range 172.25.1.20 172.25.1.50;
+</span></span><span style="display:flex;"><span>option tftp-server-name <span style="color:#e6db74">&#34;172.25.1.10&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> exists user-class and option user-class <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;iPXE&#34;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>filename <span style="color:#e6db74">&#34;hanlon.ipxe&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>filename <span style="color:#e6db74">&#34;undionly.kpxe&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>next-server 172.25.1.10;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Start DHCP using</span>
+</span></span><span style="display:flex;"><span>/etc/init.d/dhcpd start
+</span></span></code></pre></div><p>Test ISC DHCP and option by creating a VM with no OS,  and with only a NIC on the
 private network and it should now pickup a PXE address.</p>
 <p><img src="/images/hanlon-PXE-Boot.gif" alt="Hanlon PXE Boot"></p>
 <p>It will fail as there is no PXE or TFTP server setup yet on the Hanlon server. So next step is to add a PXE and TFTP server,  so first task is to install it.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum -y install tftp-server tftp
-
-<span style="color:#75715e">## Enable TFTP</span>
-sed -i <span style="color:#e6db74">&#39;s/disable\t\t\t= yes/disable\t\t\t= no/g&#39;</span> /etc/xinetd.d/tftp
-service xinetd restart
-
-<span style="color:#75715e">## Install Java</span>
-yum -y install java-1.7.0-openjdk
-
-<span style="color:#75715e">## Create MongoDB Repo config file</span>
-vi /etc/yum.repos.d/mongodb.repo
-
-<span style="color:#75715e">## Then populate new file with</span>
-<span style="color:#f92672">[</span>mongodb<span style="color:#f92672">]</span>
-name<span style="color:#f92672">=</span>MongoDB Repository
-baseurl<span style="color:#f92672">=</span>http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
-gpgcheck<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
-enabled<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
-
-<span style="color:#75715e">## Install MongoDB from repo</span>
-yum -y install mongodb-org
-
-<span style="color:#75715e">## Install Torquebox Ruby Application Platform</span>
-curl -L -O http://torquebox.org/release/org/torquebox/torquebox-dist/3.0.1/torquebox-dist-3.0.1-bin.zip
-yum -y install unzip
-unzip torquebox-dist-3.0.1-bin.zip -d $HOME
-echo <span style="color:#e6db74">&#39;export TORQUEBOX_HOME=$HOME/torquebox-3.0.1&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
-echo <span style="color:#e6db74">&#39;export JBOSS_HOME=$TORQUEBOX_HOME/jboss&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
-echo <span style="color:#e6db74">&#39;export JRUBY_HOME=$TORQUEBOX_HOME/jruby&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
-echo <span style="color:#e6db74">&#39;export PATH=$JRUBY_HOME/bin:$PATH&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
-exec $SHELL -l
-
-<span style="color:#75715e">## Download Hanlon</span>
-mkdir /opt/hanlon
-cd /opt/hanlon
-yum -y install git
-git clone https://github.com/csc/Hanlon.git
-
-<span style="color:#75715e">## Install Requisite Ruby Gems for Hanlon</span>
-cd /opt/hanlon/Hanlon
-bundle install
-gem update --system
-
-<span style="color:#75715e">## Just need now to finalise the configuration of the Hanlon Microkernel, configure TFTP and  iPXE.</span>
-
-<span style="color:#75715e">## Install GCC</span>
-yum -y install gcc gcc-c++
-
-<span style="color:#75715e">## Download iPXE &amp; Make Files</span>
-git clone https://github.com/ipxe/ipxe.git
-curl -O https://gist.githubusercontent.com/jcpowermac/7cc13ce51816ce5222f4/raw/4384911a921a732e0b85d28ff3485fe18c092ffd/image_comboot.patch
-yum -y install patch genisoimage
-patch -p0 &lt; image_comboot.patch
-cd ipxe/src
-make
-
-<span style="color:#75715e">## Move new iPXE files to correct place for TFTP</span>
-cd bin
-cp undionly.kpxe /var/lib/tftpboot/undionly.kpxe
-cp ipxe.pxe /var/lib/tftpboot/ipxe.kpxe
-cp ipxe.iso /var/lib/tftpboot/ipxe.iso
-
-<span style="color:#75715e">## Get Syslinux files and move to correct place</span>
-curl -O https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.02.tar.gz
-tar -zxvf syslinux-6.02.tar.gz --strip-components <span style="color:#ae81ff">3</span> -C /var/lib/tftpboot syslinux-6.02/bios/core/pxelinux.0
-tar -zxvf syslinux-6.02.tar.gz --strip-components <span style="color:#ae81ff">4</span> -C /var/lib/tftpboot syslinux-6.02/bios/com32/menu/menu.c32
-
-<span style="color:#75715e">## Create Hanlon.pxe</span>
-yum -y install wget
-wget https://github.com/csc/Hanlon-Microkernel/releases/download/v1.0/hnl_mk_prod-image.1.0.iso&lt;
-/opt/hanlon/Hanlon/cli/hanlon image add -t mk -p hnl_mk_prod-image.1.0.iso
-/opt/hanlon/Hanlon/cli/hanlon config ipxe &gt; /var/lib/tftpboot/hanlon.ipxe
-
-<span style="color:#75715e">## Configure TFTBoot</span>
-mkdir /var/lib/tftpboot/pxelinux.cfg
-cat &gt; /var/lib/tftpboot/pxelinux.cfg/default <span style="color:#e6db74">&lt;&lt;EOF
-</span><span style="color:#e6db74">default menu.c32
-</span><span style="color:#e6db74">prompt 0
-</span><span style="color:#e6db74">menu title Hanlon Boot Menu
-</span><span style="color:#e6db74">timeout 50
-</span><span style="color:#e6db74">f1 help.txt
-</span><span style="color:#e6db74">f2 version.txt
-</span><span style="color:#e6db74">label hanlon-boot
-</span><span style="color:#e6db74">menu label Automatic hanlon Node Boot
-</span><span style="color:#e6db74">kernel ipxe.lkrn
-</span><span style="color:#e6db74">append initrd=hanlon.ipxe
-</span><span style="color:#e6db74">label boot-else
-</span><span style="color:#e6db74">menu label Bypass hanlon
-</span><span style="color:#e6db74">localboot 1
-</span><span style="color:#e6db74">EOF</span>&gt;&gt;
-
-<span style="color:#75715e">## Bind TFTP to eth1</span>
-vi /etc/xinetd.d/tftp
-add bind <span style="color:#f92672">=</span> &lt;ipaddress&gt; of eth1
-chkconfig dhcpd on
-service xinetd restart
-
-<span style="color:#75715e">## Test TFTP is working</span>
-tftp localhost4
-get hanlon.ipxe
-quit
-
-<span style="color:#75715e">## If TFTP Times Out Try Disable Firewall</span>
-service iptables stop
-</code></pre></div><p>At this point you should be able to create a test VM bound to same Host Only network and it should pick up a DHCP address then connect to TFTP server and download and boot an image.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum -y install tftp-server tftp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Enable TFTP</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;s/disable\t\t\t= yes/disable\t\t\t= no/g&#39;</span> /etc/xinetd.d/tftp
+</span></span><span style="display:flex;"><span>service xinetd restart
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Install Java</span>
+</span></span><span style="display:flex;"><span>yum -y install java-1.7.0-openjdk
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Create MongoDB Repo config file</span>
+</span></span><span style="display:flex;"><span>vi /etc/yum.repos.d/mongodb.repo
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Then populate new file with</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>mongodb<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>name<span style="color:#f92672">=</span>MongoDB Repository
+</span></span><span style="display:flex;"><span>baseurl<span style="color:#f92672">=</span>http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
+</span></span><span style="display:flex;"><span>gpgcheck<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>enabled<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Install MongoDB from repo</span>
+</span></span><span style="display:flex;"><span>yum -y install mongodb-org
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Install Torquebox Ruby Application Platform</span>
+</span></span><span style="display:flex;"><span>curl -L -O http://torquebox.org/release/org/torquebox/torquebox-dist/3.0.1/torquebox-dist-3.0.1-bin.zip
+</span></span><span style="display:flex;"><span>yum -y install unzip
+</span></span><span style="display:flex;"><span>unzip torquebox-dist-3.0.1-bin.zip -d $HOME
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;export TORQUEBOX_HOME=$HOME/torquebox-3.0.1&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;export JBOSS_HOME=$TORQUEBOX_HOME/jboss&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;export JRUBY_HOME=$TORQUEBOX_HOME/jruby&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;export PATH=$JRUBY_HOME/bin:$PATH&#39;</span> &amp;gt;&amp;gt; ~/.bashrc
+</span></span><span style="display:flex;"><span>exec $SHELL -l
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Download Hanlon</span>
+</span></span><span style="display:flex;"><span>mkdir /opt/hanlon
+</span></span><span style="display:flex;"><span>cd /opt/hanlon
+</span></span><span style="display:flex;"><span>yum -y install git
+</span></span><span style="display:flex;"><span>git clone https://github.com/csc/Hanlon.git
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Install Requisite Ruby Gems for Hanlon</span>
+</span></span><span style="display:flex;"><span>cd /opt/hanlon/Hanlon
+</span></span><span style="display:flex;"><span>bundle install
+</span></span><span style="display:flex;"><span>gem update --system
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Just need now to finalise the configuration of the Hanlon Microkernel, configure TFTP and  iPXE.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Install GCC</span>
+</span></span><span style="display:flex;"><span>yum -y install gcc gcc-c++
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Download iPXE &amp; Make Files</span>
+</span></span><span style="display:flex;"><span>git clone https://github.com/ipxe/ipxe.git
+</span></span><span style="display:flex;"><span>curl -O https://gist.githubusercontent.com/jcpowermac/7cc13ce51816ce5222f4/raw/4384911a921a732e0b85d28ff3485fe18c092ffd/image_comboot.patch
+</span></span><span style="display:flex;"><span>yum -y install patch genisoimage
+</span></span><span style="display:flex;"><span>patch -p0 &lt; image_comboot.patch
+</span></span><span style="display:flex;"><span>cd ipxe/src
+</span></span><span style="display:flex;"><span>make
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Move new iPXE files to correct place for TFTP</span>
+</span></span><span style="display:flex;"><span>cd bin
+</span></span><span style="display:flex;"><span>cp undionly.kpxe /var/lib/tftpboot/undionly.kpxe
+</span></span><span style="display:flex;"><span>cp ipxe.pxe /var/lib/tftpboot/ipxe.kpxe
+</span></span><span style="display:flex;"><span>cp ipxe.iso /var/lib/tftpboot/ipxe.iso
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Get Syslinux files and move to correct place</span>
+</span></span><span style="display:flex;"><span>curl -O https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.02.tar.gz
+</span></span><span style="display:flex;"><span>tar -zxvf syslinux-6.02.tar.gz --strip-components <span style="color:#ae81ff">3</span> -C /var/lib/tftpboot syslinux-6.02/bios/core/pxelinux.0
+</span></span><span style="display:flex;"><span>tar -zxvf syslinux-6.02.tar.gz --strip-components <span style="color:#ae81ff">4</span> -C /var/lib/tftpboot syslinux-6.02/bios/com32/menu/menu.c32
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Create Hanlon.pxe</span>
+</span></span><span style="display:flex;"><span>yum -y install wget
+</span></span><span style="display:flex;"><span>wget https://github.com/csc/Hanlon-Microkernel/releases/download/v1.0/hnl_mk_prod-image.1.0.iso&lt;
+</span></span><span style="display:flex;"><span>/opt/hanlon/Hanlon/cli/hanlon image add -t mk -p hnl_mk_prod-image.1.0.iso
+</span></span><span style="display:flex;"><span>/opt/hanlon/Hanlon/cli/hanlon config ipxe &gt; /var/lib/tftpboot/hanlon.ipxe
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Configure TFTBoot</span>
+</span></span><span style="display:flex;"><span>mkdir /var/lib/tftpboot/pxelinux.cfg
+</span></span><span style="display:flex;"><span>cat &gt; /var/lib/tftpboot/pxelinux.cfg/default <span style="color:#e6db74">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">default menu.c32
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">prompt 0
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">menu title Hanlon Boot Menu
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">timeout 50
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">f1 help.txt
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">f2 version.txt
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">label hanlon-boot
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">menu label Automatic hanlon Node Boot
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">kernel ipxe.lkrn
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">append initrd=hanlon.ipxe
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">label boot-else
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">menu label Bypass hanlon
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">localboot 1
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>&gt;&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Bind TFTP to eth1</span>
+</span></span><span style="display:flex;"><span>vi /etc/xinetd.d/tftp
+</span></span><span style="display:flex;"><span>add bind <span style="color:#f92672">=</span> &lt;ipaddress&gt; of eth1
+</span></span><span style="display:flex;"><span>chkconfig dhcpd on
+</span></span><span style="display:flex;"><span>service xinetd restart
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Test TFTP is working</span>
+</span></span><span style="display:flex;"><span>tftp localhost4
+</span></span><span style="display:flex;"><span>get hanlon.ipxe
+</span></span><span style="display:flex;"><span>quit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## If TFTP Times Out Try Disable Firewall</span>
+</span></span><span style="display:flex;"><span>service iptables stop
+</span></span></code></pre></div><p>At this point you should be able to create a test VM bound to same Host Only network and it should pick up a DHCP address then connect to TFTP server and download and boot an image.</p>
 
 
   </article>
@@ -333,6 +333,9 @@ service iptables stop
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -353,16 +356,13 @@ service iptables stop
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -451,6 +451,11 @@ service iptables stop
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -458,11 +463,6 @@ service iptables stop
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -476,6 +476,11 @@ service iptables stop
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -483,11 +488,6 @@ service iptables stop
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -538,7 +538,7 @@ service iptables stop
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -686,6 +686,10 @@ service iptables stop
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -738,7 +742,7 @@ service iptables stop
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -866,7 +870,7 @@ service iptables stop
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

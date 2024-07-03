@@ -4,7 +4,7 @@
   <head>
 <title>DynamoDB Python Test Environment with Cloud Formations | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -156,78 +156,78 @@
 <li>EC2 Instance with the IAM Role and EC2 Security Group attached, which on boot performs a yum update and installs the AWS Python SDK</li>
 </ul>
 <p>The Cloud Formation template I created to meet this requirement is <a href="https://s3-eu-west-1.amazonaws.com/cfpythdynamo/PythonDynamoDict.json">here on s3</a>,  so we can first get this.</p>
-<pre><code>curl https://s3-eu-west-1.amazonaws.com/cfpythdynamo/PythonDynamoDict.json -o PythonDynamoDict.json
+<pre tabindex="0"><code>curl https://s3-eu-west-1.amazonaws.com/cfpythdynamo/PythonDynamoDict.json -o PythonDynamoDict.json
 </code></pre><p>To note in order to use this CF template it requires an EC2 access key,  if you pull down the json then search and replace &ldquo;MyEC2&rdquo; with the name of your EC2 access key before creating a stack. Assuming your laptop has AWS credentials configured to allow you rights to deploy Cloud Formation templates and create IAM.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws cloudformation deploy --template-file PythonDynamoDict.json --stack-name <span style="color:#e6db74">&#34;PythonDDB&#34;</span> --capabilities <span style="color:#e6db74">&#34;CAPABILITY_IAM&#34;</span>
-</code></pre></div><p>This should take less than five minutes and output</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Waiting <span style="color:#66d9ef">for</span> changeset to be created..
-Waiting <span style="color:#66d9ef">for</span> stack create/update to complete
-Successfully created/updated stack - PythonDDB
-</code></pre></div><h1 id="connect-python-session-to-ddb">Connect Python session to DDB</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws cloudformation deploy --template-file PythonDynamoDict.json --stack-name <span style="color:#e6db74">&#34;PythonDDB&#34;</span> --capabilities <span style="color:#e6db74">&#34;CAPABILITY_IAM&#34;</span>
+</span></span></code></pre></div><p>This should take less than five minutes and output</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Waiting <span style="color:#66d9ef">for</span> changeset to be created..
+</span></span><span style="display:flex;"><span>Waiting <span style="color:#66d9ef">for</span> stack create/update to complete
+</span></span><span style="display:flex;"><span>Successfully created/updated stack - PythonDDB
+</span></span></code></pre></div><h1 id="connect-python-session-to-ddb">Connect Python session to DDB</h1>
 <p>Open an SSD session to the EC2 instance, once session is open,  open a interactive python session</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">python
-</code></pre></div><p>Then within the python session we can connect to and do stuff with DDB, I&rsquo;ve included some simple transactions.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Import the boto3 and json library</span>
-
-<span style="color:#f92672">import</span> boto3<span style="color:#f92672">,</span> json
-
-<span style="color:#75715e"># Create an object to DynamoDB created by Cloud Formations in Ireland</span>
-
-dynamodb <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>resource(<span style="color:#e6db74">&#39;dynamodb&#39;</span>, region_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;eu-west-1&#39;</span>)
-
-<span style="color:#75715e"># Create an object to the DDB Table created by Cloud Formations</span>
-
-table <span style="color:#f92672">=</span> dynamodb<span style="color:#f92672">.</span>Table(<span style="color:#e6db74">&#39;myTestDB&#39;</span>)
-
-<span style="color:#75715e"># Clear any previously created values from items object</span>
-
-items <span style="color:#f92672">=</span> []
-item_dict <span style="color:#f92672">=</span> dict()
-
-<span style="color:#75715e"># Define a helper class to convert a DynamoDB item to JSON</span>
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DecimalEncoder</span>(json<span style="color:#f92672">.</span>JSONEncoder):
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">default</span>(self, o):
-        <span style="color:#66d9ef">if</span> isinstance(o, decimal<span style="color:#f92672">.</span>Decimal):
-            <span style="color:#66d9ef">if</span> o <span style="color:#f92672">%</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
-                <span style="color:#66d9ef">return</span> float(o)
-            <span style="color:#66d9ef">else</span>:
-                <span style="color:#66d9ef">return</span> int(o)
-        <span style="color:#66d9ef">return</span> super(DecimalEncoder, self)<span style="color:#f92672">.</span>default(o)
-
-<span style="color:#75715e"># Create some DDB Table items</span>
-
-table<span style="color:#f92672">.</span>put_item(
-   Item<span style="color:#f92672">=</span>{
-        <span style="color:#e6db74">&#39;ForeName&#39;</span>: <span style="color:#e6db74">&#39;Bobby&#39;</span>,
-        <span style="color:#e6db74">&#39;FamilyName&#39;</span>: <span style="color:#e6db74">&#39;Johnson&#39;</span>,
-    },
-)
-table<span style="color:#f92672">.</span>put_item(
-    Item<span style="color:#f92672">=</span>{
-        <span style="color:#e6db74">&#39;ForeName&#39;</span>: <span style="color:#e6db74">&#39;Sam&#39;</span>,
-        <span style="color:#e6db74">&#39;FamilyName&#39;</span>: <span style="color:#e6db74">&#39;Smith&#39;</span>,
-    }
-)
-
-<span style="color:#75715e"># Perform a table scan to return all items</span>
-
-response <span style="color:#f92672">=</span> table<span style="color:#f92672">.</span>scan()
-items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">&#39;Items&#39;</span>]
-
-<span style="color:#75715e"># Cycle through item decobe the json and store the decoded item in a python dictionary named item_dict</span>
-<span style="color:#75715e"># here also updating formatting so only the values are stored.</span>
-
-<span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> items:
-    decoded_item <span style="color:#f92672">=</span> (json<span style="color:#f92672">.</span>dumps(item, cls<span style="color:#f92672">=</span>DecimalEncoder))
-    item_part_format <span style="color:#f92672">=</span> decoded_item<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;&#34;FamilyName&#34;: &#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)
-    item_str_formatted <span style="color:#f92672">=</span> item_part_format<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;, &#34;ForeName&#34;: &#39;</span>, <span style="color:#e6db74">&#39;:&#39;</span>)
-    item_dict<span style="color:#f92672">.</span>update(json<span style="color:#f92672">.</span>loads(item_str_formatted))
-
-<span style="color:#75715e"># If we print the dictionary we get the two key pairs</span>
-
-<span style="color:#66d9ef">print</span> item_dict
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python
+</span></span></code></pre></div><p>Then within the python session we can connect to and do stuff with DDB, I&rsquo;ve included some simple transactions.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Import the boto3 and json library</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> boto3<span style="color:#f92672">,</span> json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create an object to DynamoDB created by Cloud Formations in Ireland</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dynamodb <span style="color:#f92672">=</span> boto3<span style="color:#f92672">.</span>resource(<span style="color:#e6db74">&#39;dynamodb&#39;</span>, region_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;eu-west-1&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create an object to the DDB Table created by Cloud Formations</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>table <span style="color:#f92672">=</span> dynamodb<span style="color:#f92672">.</span>Table(<span style="color:#e6db74">&#39;myTestDB&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Clear any previously created values from items object</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>items <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>item_dict <span style="color:#f92672">=</span> dict()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Define a helper class to convert a DynamoDB item to JSON</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DecimalEncoder</span>(json<span style="color:#f92672">.</span>JSONEncoder):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">default</span>(self, o):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> isinstance(o, decimal<span style="color:#f92672">.</span>Decimal):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> o <span style="color:#f92672">%</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> float(o)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> int(o)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> super(DecimalEncoder, self)<span style="color:#f92672">.</span>default(o)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create some DDB Table items</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>table<span style="color:#f92672">.</span>put_item(
+</span></span><span style="display:flex;"><span>   Item<span style="color:#f92672">=</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;ForeName&#39;</span>: <span style="color:#e6db74">&#39;Bobby&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;FamilyName&#39;</span>: <span style="color:#e6db74">&#39;Johnson&#39;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>table<span style="color:#f92672">.</span>put_item(
+</span></span><span style="display:flex;"><span>    Item<span style="color:#f92672">=</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;ForeName&#39;</span>: <span style="color:#e6db74">&#39;Sam&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;FamilyName&#39;</span>: <span style="color:#e6db74">&#39;Smith&#39;</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Perform a table scan to return all items</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>response <span style="color:#f92672">=</span> table<span style="color:#f92672">.</span>scan()
+</span></span><span style="display:flex;"><span>items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">&#39;Items&#39;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Cycle through item decobe the json and store the decoded item in a python dictionary named item_dict</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># here also updating formatting so only the values are stored.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> items:
+</span></span><span style="display:flex;"><span>    decoded_item <span style="color:#f92672">=</span> (json<span style="color:#f92672">.</span>dumps(item, cls<span style="color:#f92672">=</span>DecimalEncoder))
+</span></span><span style="display:flex;"><span>    item_part_format <span style="color:#f92672">=</span> decoded_item<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;&#34;FamilyName&#34;: &#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>    item_str_formatted <span style="color:#f92672">=</span> item_part_format<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#39;, &#34;ForeName&#34;: &#39;</span>, <span style="color:#e6db74">&#39;:&#39;</span>)
+</span></span><span style="display:flex;"><span>    item_dict<span style="color:#f92672">.</span>update(json<span style="color:#f92672">.</span>loads(item_str_formatted))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># If we print the dictionary we get the two key pairs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print item_dict
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -256,6 +256,9 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -276,16 +279,13 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -374,6 +374,11 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -381,11 +386,6 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -399,6 +399,11 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -406,11 +411,6 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -461,7 +461,7 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -609,6 +609,10 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -661,7 +665,7 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -789,7 +793,7 @@ items <span style="color:#f92672">=</span> response[<span style="color:#e6db74">
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

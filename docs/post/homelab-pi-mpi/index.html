@@ -4,7 +4,7 @@
   <head>
 <title>Pi Supercomputer | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -149,32 +149,32 @@
 <h2 id="parrallel-programming">Parrallel Programming</h2>
 <p>Each Raspberry Pi is a small unit of compute, one of my goals is to understand how operating many in a cluster. There are various approaches to parallel computational models, message-passing has proven to be an effective one. MPI the Message Passing Interface, is a standardized and portable message-passing system designed to function on a wide variety of parallel computers.</p>
 <p>My prefered language is Python and usefully there is <a href="https://mpi4py.readthedocs.io/en/stable/install.html">MPI for Python</a>.</p>
-<pre><code>sudo apt-get install -y libopenmpi-dev python-dev pip
+<pre tabindex="0"><code>sudo apt-get install -y libopenmpi-dev python-dev pip
 sudo pip install mpi4py
 mpirun --version
 </code></pre><p>All the RPIs in the cluster will access each other via SSH, this communication needs to be passwordless. The first thing you need to do is generate an SSH key pair on first host.</p>
-<pre><code>ssh-keygen -t rsa -b 4096
+<pre tabindex="0"><code>ssh-keygen -t rsa -b 4096
 </code></pre><p>Once key generated to enable passwordless access, upload a copy of the public key to the other three servers.</p>
-<pre><code>ssh-copy-id ubuntu@[server_ip_address]
+<pre tabindex="0"><code>ssh-copy-id ubuntu@[server_ip_address]
 </code></pre><p>Repeat keygen and copy public key process on all four hosts.</p>
 <p>In order for mpi to distribute workload the node where execution occurs needs to understand which nodes are available.  The machinename parameter can be used to point to a text file containing list of nodes.</p>
 <p>In order name we can use names we can add entries to hosts file.</p>
-<pre><code>sudo sh -c 'echo &quot;192.168.1.100 rpi-0&quot; &gt;&gt; /etc/hosts'
-sudo sh -c 'echo &quot;192.168.1.101 rpi-1&quot; &gt;&gt; /etc/hosts'
-sudo sh -c 'echo &quot;192.168.1.102 rpi-2&quot; &gt;&gt; /etc/hosts'
-sudo sh -c 'echo &quot;192.168.1.103 rpi-3&quot; &gt;&gt; /etc/hosts'
+<pre tabindex="0"><code>sudo sh -c &#39;echo &#34;192.168.1.100 rpi-0&#34; &gt;&gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &#34;192.168.1.101 rpi-1&#34; &gt;&gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &#34;192.168.1.102 rpi-2&#34; &gt;&gt; /etc/hosts&#39;
+sudo sh -c &#39;echo &#34;192.168.1.103 rpi-3&#34; &gt;&gt; /etc/hosts&#39;
 </code></pre><p>We can then create a file in home directory listing nodes.</p>
-<pre><code>cat &lt;&lt;EOF &gt;&gt; ~/machinefile
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; ~/machinefile
 rpi-0
 rpi-1
 rpi-2
 rpi-3
 EOF
 </code></pre><p>The easiest way to run commands or code is with the mpirun command. This command, run in a shell, will launch multiple copies of your code, and set up communications between them. As each Pi has four cores and we have four we can specify number of processors to run as sixteen.</p>
-<pre><code>mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
+<pre tabindex="0"><code>mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
 </code></pre><p><img src="/images/pi/mpirun_temp.png" alt="MPIRUN Measure Temparature"></p>
 <p>While its interesting running individual commands across nodes the MPI for Python module exposes options for programs to spread load.  A simple test of this is where we scatter a bunch of elements, like those in a list, to processing nodes.</p>
-<pre><code>cat &lt;&lt;EOF &gt;&gt; ~/scatter.py
+<pre tabindex="0"><code>cat &lt;&lt;EOF &gt;&gt; ~/scatter.py
 from mpi4py import MPI
 
 comm = MPI.COMM_WORLD
@@ -183,80 +183,80 @@ rank = comm.Get_rank()
 
 if rank == 0:
    data = [(x+1)**x for x in range(size)]
-   print ('we will be scattering:',data)
+   print (&#39;we will be scattering:&#39;,data)
 else:
    data = None
    
 data = comm.scatter(data, root=0)
-print ('rank',rank,'has data:',data)
+print (&#39;rank&#39;,rank,&#39;has data:&#39;,data)
 EOF
 </code></pre><p>Once script created execute:</p>
-<pre><code>mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
+<pre tabindex="0"><code>mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
 </code></pre><p><img src="/images/pi/mpirun_scatter.png" alt="MPIRUN Scatter"></p>
 <p>While scattering elements of a list is interesting splitting up a processing problem and distributing to multiple processing nodes is more fun.  Calculating Pi is a nice example of this,  and its nice for a Pi cluster to calculate Pi with MPI.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#pi.py</span>
-<span style="color:#f92672">from</span> mpi4py <span style="color:#f92672">import</span> MPI
-
-comm <span style="color:#f92672">=</span> MPI<span style="color:#f92672">.</span>COMM_WORLD
-rank <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>Get_rank()
-size <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>Get_size()
-
-slice_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000000</span>
-total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
-
-<span style="color:#75715e"># This is the controller node.</span>
-<span style="color:#66d9ef">if</span> rank <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-    pi <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    slice <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    process <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-
-    <span style="color:#66d9ef">print</span> (size)
-
-    <span style="color:#75715e"># Send the first batch of processes to the nodes.</span>
-    <span style="color:#66d9ef">while</span> process <span style="color:#f92672">&lt;</span> size <span style="color:#f92672">and</span> slice <span style="color:#f92672">&lt;</span> total_slices:
-        comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-        <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
-        slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-        process <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-
-    <span style="color:#75715e"># Wait for the data to come back</span>
-    received_processes <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    <span style="color:#66d9ef">while</span> received_processes <span style="color:#f92672">&lt;</span> total_slices:
-        pi <span style="color:#f92672">+=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-        process <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
-        <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Recieved data from process&#34;</span>, process)
-        received_processes <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-
-        <span style="color:#66d9ef">if</span> slice <span style="color:#f92672">&lt;</span> total_slices:
-            comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-            <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
-            slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-
-    <span style="color:#75715e"># Send the shutdown signal</span>
-    <span style="color:#66d9ef">for</span> process <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,size):
-        comm<span style="color:#f92672">.</span>send(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-
-    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;Pi is&#34;</span>, <span style="color:#ae81ff">4.0</span> <span style="color:#f92672">*</span> pi)
-
-<span style="color:#75715e"># These are the worker nodes, where rank &gt; 0. They do the real work</span>
-<span style="color:#66d9ef">else</span>:
-    <span style="color:#66d9ef">while</span> True:
-        start <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-        <span style="color:#66d9ef">if</span> start <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">break</span>
-
-        i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-        slice_value <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-        <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> slice_size:
-            <span style="color:#66d9ef">if</span> i<span style="color:#f92672">%</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-                slice_value <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> (<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>(start<span style="color:#f92672">*</span>slice_size<span style="color:#f92672">+</span>i)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
-            <span style="color:#66d9ef">else</span>:
-                slice_value <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> (<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>(start<span style="color:#f92672">*</span>slice_size<span style="color:#f92672">+</span>i)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
-            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-
-        comm<span style="color:#f92672">.</span>send(slice_value, dest<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-        comm<span style="color:#f92672">.</span>send(rank, dest<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
-</code></pre></div><p>Execute script with mpi and watch it distribute the calculation around the nodes and aggregate these to final answer.</p>
-<pre><code>mpirun -np 16 -machinefile ~/machinefile python3 pi.py
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#pi.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> mpi4py <span style="color:#f92672">import</span> MPI
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>comm <span style="color:#f92672">=</span> MPI<span style="color:#f92672">.</span>COMM_WORLD
+</span></span><span style="display:flex;"><span>rank <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>Get_rank()
+</span></span><span style="display:flex;"><span>size <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>Get_size()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>slice_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000000</span>
+</span></span><span style="display:flex;"><span>total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This is the controller node.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> rank <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    pi <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    slice <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    process <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print (size)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Send the first batch of processes to the nodes.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> process <span style="color:#f92672">&lt;</span> size <span style="color:#f92672">and</span> slice <span style="color:#f92672">&lt;</span> total_slices:
+</span></span><span style="display:flex;"><span>        comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
+</span></span><span style="display:flex;"><span>        slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        process <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Wait for the data to come back</span>
+</span></span><span style="display:flex;"><span>    received_processes <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> received_processes <span style="color:#f92672">&lt;</span> total_slices:
+</span></span><span style="display:flex;"><span>        pi <span style="color:#f92672">+=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        process <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span>MPI<span style="color:#f92672">.</span>ANY_SOURCE, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;Recieved data from process&#34;</span>, process)
+</span></span><span style="display:flex;"><span>        received_processes <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> slice <span style="color:#f92672">&lt;</span> total_slices:
+</span></span><span style="display:flex;"><span>            comm<span style="color:#f92672">.</span>send(slice, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>            print (<span style="color:#e6db74">&#34;Sending slice&#34;</span>,slice,<span style="color:#e6db74">&#34;to process&#34;</span>,process)
+</span></span><span style="display:flex;"><span>            slice <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Send the shutdown signal</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> process <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,size):
+</span></span><span style="display:flex;"><span>        comm<span style="color:#f92672">.</span>send(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, dest<span style="color:#f92672">=</span>process, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#34;Pi is&#34;</span>, <span style="color:#ae81ff">4.0</span> <span style="color:#f92672">*</span> pi)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># These are the worker nodes, where rank &gt; 0. They do the real work</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        start <span style="color:#f92672">=</span> comm<span style="color:#f92672">.</span>recv(source<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> start <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        slice_value <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> slice_size:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> i<span style="color:#f92672">%</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>                slice_value <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> (<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>(start<span style="color:#f92672">*</span>slice_size<span style="color:#f92672">+</span>i)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                slice_value <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> (<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>(start<span style="color:#f92672">*</span>slice_size<span style="color:#f92672">+</span>i)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        comm<span style="color:#f92672">.</span>send(slice_value, dest<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        comm<span style="color:#f92672">.</span>send(rank, dest<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, tag<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+</span></span></code></pre></div><p>Execute script with mpi and watch it distribute the calculation around the nodes and aggregate these to final answer.</p>
+<pre tabindex="0"><code>mpirun -np 16 -machinefile ~/machinefile python3 pi.py
 </code></pre><p><img src="/images/pi/pi_with_mpi_on_pi.png" alt="Pi with MPI on Pi"></p>
 
 
@@ -287,6 +287,9 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -307,16 +310,13 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -405,6 +405,11 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -412,11 +417,6 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -430,6 +430,11 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -437,11 +442,6 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -492,7 +492,7 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -640,6 +640,10 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -692,7 +696,7 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -820,7 +824,7 @@ total_slices <span style="color:#f92672">=</span> <span style="color:#ae81ff">50
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

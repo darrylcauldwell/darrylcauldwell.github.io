@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/categories/storage/</link>
     <description>Recent content in storage on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Mon, 29 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/categories/storage/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Comparing SD and USB 3 Storage Performance With Raspberry Pi4B</title>
@@ -17,7 +18,7 @@
           &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I look at the comparing the storage performance of SD and USB.&lt;/p&gt;
 &lt;h2 id=&#34;sd-card-performance&#34;&gt;SD Card Performance&lt;/h2&gt;
 &lt;p&gt;Linux FIO tool will be used to measure sequential write performance of a 4GB file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/sd_reads.png&#34; alt=&#34;SD Card Read Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
 &lt;ol&gt;
@@ -27,7 +28,7 @@
 &lt;li&gt;IOPS=10.1k, BW=39.3MiB/s&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Similarly, the tool will be used to measure sequential read performance of a 4GB file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/sd_writes.png&#34; alt=&#34;SD Card Write Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
 &lt;ol&gt;
@@ -48,7 +49,7 @@
 &lt;h2 id=&#34;usb-flash-performance&#34;&gt;USB Flash Performance&lt;/h2&gt;
 &lt;p&gt;The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device.&lt;/p&gt;
 &lt;p&gt;Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /mnt/ssd
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/usb_writes.png&#34; alt=&#34;USB Write Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
@@ -58,7 +59,7 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
 &lt;li&gt;IOPS=14.4k, BW=56.2MiB/s&lt;/li&gt;
 &lt;li&gt;IOPS=11.9k, BW=46.6MiB/s&lt;/li&gt;
 &lt;/ol&gt;
-&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /mnt/ssd
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/usb_reads.png&#34; alt=&#34;USB Read Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
@@ -161,15 +162,15 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
           &lt;p&gt;In a newly deployed Windows Server 2012 HyperV environment with around sixty nodes, running a couple of hundred Windows Server 2012 virtual machines running various applications.  We found the EMC VMX storage which underpinned this became massively busy with Write IO at around 3am,  the Write IO was mostly coming from TRIM and Unmap commands,  the amount has a dramatic impact and leads to lots of 153 errors on the server estate,  after one to two hours the Write IO subsided. I wrote a script to audit the estate to identify if there was any pattern to the errors. We found the errors correlated to the 3am Window also.&lt;/p&gt;
 &lt;p&gt;EMC initially said the cause of this was the way the VNX was interpreting ODX command and they asked if we disable ODX on all HyperV servers. I used a PowerShell command to extract out all servers in AD with a ServiceConnection point of HyperV,  then looked to audit ODX on these and then disable.&lt;/p&gt;
 &lt;p&gt;Since disabling the problem persisted second thoughts were that there was some tasks scheduled within the applications running on the VMs which was triggering this event,  after speaking to the product groups they said nothing was scheduled at this time. We continued our search within the HyperV communities and found &lt;a href=&#34;http://larsjoergensen.net/windows/windows-server/windows-server-2012/server-2012-automatic-maintenance-killed-san&#34;&gt;this article&lt;/a&gt; which suggested some scheduled tasks are now enabled by default within Windows Server 2012.  On looking there appear two&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Regular Maintenance
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Regular Maintenance
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 03:00 (if 2012 R2 this would be 2am as the default time changed) and&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Maintenance Configurator
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Maintenance Configurator
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 01:00.&lt;/p&gt;
 &lt;p&gt;The Action for these tasks is “Custom Handler”, Microsoft publish no details on what these tasks do. We logged a call with Microsoft and they also did not know what these, but they did say that tasks with a “Custom Handler” are umbrella’s for other tasks.&lt;/p&gt;
 &lt;p&gt;As Regular Maintenance appeared to be the most likely due to execution time, I viewed its Last Run Time.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I then manually worked through each Windows task in Task Scheduler and took note of which Tasks had Last Run Time which matched that of “Regular Maintenance”.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
 \Microsoft\Windows\.NET Framework.Net Framework NGEN v4.0.30319 64
 \Microsoft\Windows\Application Experience\AitAgent
 \Microsoft\Windows\Application Experience\ProgramDataUpdater

@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/categories/vsphere/</link>
     <description>Recent content in vsphere on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Fri, 30 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/categories/vsphere/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VMware Event Broker Appliance (VEBA) - Knative</title>
@@ -16,94 +17,94 @@
         
           &lt;p&gt;When I worked as an architect working with AWS I used event-driven automation with AWS Lambda to integrate distributed systems. This event-driven automation allowed me to put complex systems in place very simply. The VMware Event Broker Appliance (VEBA) aims to facilitate event-driven automation based on vCenter Server events. The VMware Event Broker Appliance is made available as a &lt;a href=&#34;https://flings.vmware.com/vmware-event-broker-appliance&#34;&gt;fling&lt;/a&gt;. The &lt;a href=&#34;https://vmweventbroker.io/kb/architecture&#34;&gt;system architecture&lt;/a&gt; shows that the appliance is built on a Photon OS running Kubernetes with Contour acting as ingress controller. The event broker appliance is composed of two components an event router and a choice of event stream processor Knative, OpenFaaS or AWS EventBridge.&lt;/p&gt;
 &lt;p&gt;The appliance OVA installation takes parameters that configure the event router with a binding to vCenter Server. Once installed we can take a look at the resource description.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to appliance&lt;/span&gt;
-&lt;span style=&#34;color:#ae81ff&#34;&gt;cat config/event-router-config.yml&lt;/span&gt;
-
-&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;event-router.vmware.com/v1alpha1&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;RouterConfig&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;router-config-knative&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;eventProcessor&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-knative&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;knative&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;knative&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;insecureSSL&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;encoding&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;binary&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;destination&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Broker&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;eventProvider&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-vc-01&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vcenter&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;vcenter&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;address&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;https://&amp;lt;MY VCENTER FQDN&amp;gt;/sdk&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;auth&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;basicAuth&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;password&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;MY PASSWORD&amp;gt;&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;username&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;administrator@vsphere.local&amp;#34;&lt;/span&gt;
-      &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;basic_auth&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;insecureSSL&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;checkpoint&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;metricsProvider&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;default&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;bindAddress&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.0.0.0&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;8082&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-metrics&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;eventProcessor&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-knative&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;knative&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;knative&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;insecureSSL&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;encoding&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;binary&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;destination&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Broker&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;knative&#34;&gt;Knative&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to appliance&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;cat config/event-router-config.yml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;event-router.vmware.com/v1alpha1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;RouterConfig&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;router-config-knative&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;eventProcessor&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-knative&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;knative&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;knative&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;insecureSSL&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;encoding&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;binary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;destination&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Broker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;eventProvider&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-vc-01&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vcenter&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;vcenter&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;address&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;https://&amp;lt;MY VCENTER FQDN&amp;gt;/sdk&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;auth&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;basicAuth&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;password&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;MY PASSWORD&amp;gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;username&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;administrator@vsphere.local&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;basic_auth&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;insecureSSL&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;checkpoint&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metricsProvider&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;default&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;bindAddress&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0.0.0.0&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;8082&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-metrics&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;eventProcessor&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-knative&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;knative&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;knative&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;insecureSSL&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;encoding&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;binary&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;destination&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Broker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;knative&#34;&gt;Knative&lt;/h2&gt;
 &lt;p&gt;Knative is an open-source community project which extends a Kubernetes deployment with components for deploying, running, and managing serverless applications. It consists of three core components, build, serving and eventing. The build component offers a flexible approach to building source code into containers. The serving component enables rapid deployment and automatic scaling of containers through a request-driven model for serving workloads based on demand. The eventing component enables universal subscription, delivery, and management of events. Knative eventing is composed of Knative Broker and Trigger objects which make it easy to filter events based on event attributes. A Broker provides a bucket of events that can be selected by attribute. It receives events and forwards them to subscribers defined by one or more matching Triggers.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/veba-knative-broker-trigger-overview.svg&#34; alt=&#34;Broker Trigger Architecture&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;consuming-example-knative-function&#34;&gt;Consuming Example Knative Function&lt;/h2&gt;
 &lt;p&gt;The vmware-samples GitHub repository contains a folder containing &lt;a href=&#34;https://github.com/vmware-samples/vcenter-event-broker-appliance/tree/development/examples/knative&#34;&gt;example Knative functions&lt;/a&gt;. The most simplistic example of a function is kn-ps-echo this receives all events from the event router and outputs them to Stdout.&lt;/p&gt;
 &lt;p&gt;A Knative function requires a container image the example function is in a publicly available repository projects.registry.vmware.com/veba/kn-ps-echo. Within the example folder is the Dockerfile used to create the container. We can see this defines a Powershell runtime environment with the &lt;a href=&#34;https://www.powershellgallery.com/packages/CloudEvents.Sdk&#34;&gt;CloudEvents SDK&lt;/a&gt; and &lt;a href=&#34;https://www.powershellgallery.com/packages/ThreadJob&#34;&gt;ThreadJob&lt;/a&gt; modules installed. We can see two Powershell scripts are copied in server.ps1 and handler.ps1 and that server.ps1 is executed when the container is started. The server.ps1 acts as a System.Net.HttpListener which receives the event and on message receipt passes this on to handler.ps1 to execute.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; photon:3.0&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ENV&lt;/span&gt; TERM linux&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ENV&lt;/span&gt; PORT &lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Set terminal. If we don&amp;#39;t do this, weird readline things happen.&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/bin/pwsh&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/shells &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/pwsh&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/shells &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    tdnf install -y powershell-7.0.3-2.ph3 unzip &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    pwsh -c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Set-PSRepository -Name PSGallery -InstallationPolicy Trusted&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    find / -name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;net45&amp;#34;&lt;/span&gt; | xargs rm -rf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    tdnf erase -y unzip &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    tdnf clean all&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; pwsh  -Command &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Install-Module ThreadJob -Force -Confirm:$false&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; pwsh -Command &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Install-Module -Name CloudEvents.Sdk&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;COPY&lt;/span&gt; server.ps1 ./&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;COPY&lt;/span&gt; handler.ps1 handler.ps1&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CMD&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pwsh&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./server.ps1&amp;#34;&lt;/span&gt;]&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As the manifest file and dependant container image are publicly available to test we can just execute the manifest file and it will create the Knative kservice and trigger resources.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n vmware-function -f https://github.com/vmware-samples/vcenter-event-broker-appliance/blob/development/examples/knative/powershell/kn-ps-echo/function.yaml
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; photon:3.0&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ENV&lt;/span&gt; TERM linux&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ENV&lt;/span&gt; PORT &lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Set terminal. If we don&amp;#39;t do this, weird readline things happen.&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/bin/pwsh&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/shells &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/pwsh&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/shells &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    tdnf install -y powershell-7.0.3-2.ph3 unzip &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    pwsh -c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Set-PSRepository -Name PSGallery -InstallationPolicy Trusted&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    find / -name &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;net45&amp;#34;&lt;/span&gt; | xargs rm -rf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    tdnf erase -y unzip &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    tdnf clean all&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; pwsh  -Command &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Install-Module ThreadJob -Force -Confirm:$false&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;RUN&lt;/span&gt; pwsh -Command &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Install-Module -Name CloudEvents.Sdk&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;COPY&lt;/span&gt; server.ps1 ./&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;COPY&lt;/span&gt; handler.ps1 handler.ps1&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CMD&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pwsh&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./server.ps1&amp;#34;&lt;/span&gt;]&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As the manifest file and dependant container image are publicly available to test we can just execute the manifest file and it will create the Knative kservice and trigger resources.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n vmware-function -f https://github.com/vmware-samples/vcenter-event-broker-appliance/blob/development/examples/knative/powershell/kn-ps-echo/function.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;service.serving.knative.dev/kn-ps-echo created
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;trigger.eventing.knative.dev/kn-ps-echo-trigger created
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;vCenter Server constantly generates events and as the example has an unfiltered trigger events are output to Stdout. We can view the output by looking at the log file of the container executing the script.  If we list the pods in the vmware-functions namespace and filter using function name we can see two pods and the deployment pod has two containers.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n vmware-functions get pods | grep kn-ps-echo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NAME                                             READY   STATUS    RESTARTS   AGE
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kn-ps-echo-00001-deployment-6c9f77855c-ddz8w     2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          18m
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7   1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          18m
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The scripts are run in a container named user-container in the deployment pod so we can follow its logs and see the flow of vCenter events being echo&amp;rsquo;d.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl logs -na vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container --follow
 
-service.serving.knative.dev/kn-ps-echo created
-trigger.eventing.knative.dev/kn-ps-echo-trigger created
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;vCenter Server constantly generates events and as the example has an unfiltered trigger events are output to Stdout. We can view the output by looking at the log file of the container executing the script.  If we list the pods in the vmware-functions namespace and filter using function name we can see two pods and the deployment pod has two containers.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n vmware-functions get pods | grep kn-ps-echo
-
-NAME                                             READY   STATUS    RESTARTS   AGE
-kn-ps-echo-00001-deployment-6c9f77855c-ddz8w     2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          18m
-kn-ps-echo-trigger-dispatcher-7bc8f78d48-5cwc7   1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          18m
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The scripts are run in a container named user-container in the deployment pod so we can follow its logs and see the flow of vCenter events being echo&amp;rsquo;d.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl logs -na vmware-functions kn-ps-echo-00001-deployment-6c9f77855c-ddz8w user-container --follow
-
-Server start listening on &#39;http://*:8080/&#39;
+Server start listening on &amp;#39;http://*:8080/&amp;#39;
 Cloud Event
   Source: https://&amp;lt;MY VCENTER FQDN&amp;gt;/sdk
   Type: com.vmware.event.router/event
@@ -135,213 +136,213 @@ CloudEvent Data:
 &lt;p&gt;If we start off by thinking about a use case for event driven architecture. I got a lot of value from eventing in AWS in forming loosely coupled relationship between discreet systems and maintaining synchronicity of state between the systems. vCenter Server and vRealize Operations Manager both have concept of maintenance mode and when performing lifecycle management tasks its common to enable this on both products. Here I&amp;rsquo;ll look at the usecase where when I set vCenter Server maintenance mode state the event triggers functions which mirror the state in vRealize Operations Manager.&lt;/p&gt;
 &lt;p&gt;The first thing we need to do is identify the vCenter Server event created when a host is placed in maintenance mode. Checking the event documentaion we can find the two events are &lt;a href=&#34;https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.EnteredMaintenanceModeEvent.html&#34;&gt;EnteredMaintenanceModeEvent&lt;/a&gt; and &lt;a href=&#34;https://vdc-repo.vmware.com/vmwb-repository/dcr-public/fe08899f-1eec-4d8d-b3bc-a6664c168c2c/7fdf97a1-4c0d-4be0-9d43-2ceebbc174d9/doc/vim.event.ExitMaintenanceModeEvent.html&#34;&gt;ExitMaintenanceModeEvent&lt;/a&gt;. Next we need to establish a API call to set state in vRealize Operations Manager checking the APIU documentation the &lt;a href=&#34;https://vdc-download.vmware.com/vmwb-repository/dcr-public/1e2150d8-8682-4213-a6f0-03fb3b1dc410/b10f698a-21c4-4194-84a5-d3aca9002a07/index.html#markResourceAsBeingMaintained&#34;&gt;markResourceAsBeingMaintained&lt;/a&gt; can be used to mark and unmark resourde maintenance mode.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;ll start by creating a container image for the enter event. The kn-ps-echo example Dockerfile and server.ps1 contain nothing I need to change so can be reused.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Create folders and pull down reusable example files&lt;/span&gt;
-mkdir veba-knative-mm-enter
-cd veba-knative-mm-enter
-curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
-curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What I do need to do though is create a handler.ps1 which takes input from event and calls REST API of vROps.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;Process&lt;/span&gt;-Handler {
-   &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
-      [&lt;span style=&#34;color:#66d9ef&#34;&gt;Parameter&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;Position&lt;/span&gt;=0,&lt;span style=&#34;color:#66d9ef&#34;&gt;Mandatory&lt;/span&gt;=$true)]&lt;span style=&#34;color:#66d9ef&#34;&gt;[CloudNative.CloudEvents.CloudEvent]&lt;/span&gt;$CloudEvent
-   )
-
-&lt;span style=&#34;color:#75715e&#34;&gt;# Form cloudEventData object and output to console for debugging&lt;/span&gt;
-$cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth 10
-&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;($cloudEventData &lt;span style=&#34;color:#f92672&#34;&gt;-eq&lt;/span&gt; $null) {
-   $cloudEventData = $cloudEvent | Read-CloudEventData
-   }
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full contents of CloudEventData&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;$(${cloudEventData} | ConvertTo-Json)&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
-
-&lt;span style=&#34;color:#75715e&#34;&gt;# Extract hostname from CloudEventData object&lt;/span&gt;
-$esxiHost=$cloudEventData.Host.Name
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hostname from CloudEventData&amp;#34;&lt;/span&gt; $esxiHost
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Check secret in place which supplies vROps environment variables&lt;/span&gt;
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsFqdn:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsFqdn}
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsUser:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsUser}
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsPassword:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsPassword}
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Form unauthorized headers payload&lt;/span&gt;
-$headers = @{
-   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;;
-   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept&amp;#34;&lt;/span&gt;  = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;
-   }
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Acquire bearer token using environment variables&lt;/span&gt;
-$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/auth/token/acquire&amp;#34;&lt;/span&gt;
-$basicAuthBody = @{
-    username = $env:vropsUser;
-    password = $env:vropsPassword;
-    }
-$basicAuthBodyJson = $basicAuthBody | ConvertTo-Json -Depth 5
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Acquiring bearer token ...&amp;#34;&lt;/span&gt;
-$bearer = Invoke-WebRequest -Uri $uri -Method POST -Headers $headers -Body $basicAuthBodyJson -SkipCertificateCheck | ConvertFrom-Json
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bearer token is&amp;#34;&lt;/span&gt; $bearer.token
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Form authorized headers payload&lt;/span&gt;
-$authedHeaders = @{
-   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;;
-   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept&amp;#34;&lt;/span&gt;  = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;;
-   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Authorization&amp;#34;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vRealizeOpsToken &amp;#34;&lt;/span&gt; + $bearer.token
-   }
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Get host ResourceID&lt;/span&gt;
-$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=&amp;#34;&lt;/span&gt; + $esxiHost
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Acquiring host ResourceID ...&amp;#34;&lt;/span&gt;
-$resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
-$resourceJson = $resource.Content | ConvertFrom-Json
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ResourceID of host is &amp;#34;&lt;/span&gt; $resourceJson.resourceList[0].identifier
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Mark host resource as in maintenance mode&lt;/span&gt;
-$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/resources/&amp;#34;&lt;/span&gt; + $resourceJson.resourceList[0].identifier + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/maintained&amp;#34;&lt;/span&gt;
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Marking host as vROps maintenance mode ...&amp;#34;&lt;/span&gt;
-Invoke-WebRequest -Uri $uri -Method PUT -Headers $authedHeaders -SkipCertificateCheck
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Get host resource maintenance mode state&lt;/span&gt;
-$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=&amp;#34;&lt;/span&gt; + $esxiHost
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Acquiring host maintenance mode state ...&amp;#34;&lt;/span&gt;
-$resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
-$resourceJson = $resource.Content | ConvertFrom-Json
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host maintenence mode state is &amp;#34;&lt;/span&gt; $resourceJson.resourceList[0].resourceStatusStates[0].resourceState
-Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Note: STARTED=Not In Maintenance | MAINTAINED_MANUAL=In Maintenance&amp;#34;&lt;/span&gt;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In order to be environmentally agnositic I have the script use Environment Variables. These can be storedm in a Kubernetes Secret resource which can be associated with the containers and available at script runtime.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;kubectl -n vmware-functions create secret generic veba-knative-mm-vrops \
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Create folders and pull down reusable example files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir veba-knative-mm-enter
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd veba-knative-mm-enter
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/Dockerfile
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -O https://raw.githubusercontent.com/vmware-samples/vcenter-event-broker-appliance/master/examples/knative/powershell/kn-ps-echo/server.ps1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What I do need to do though is create a handler.ps1 which takes input from event and calls REST API of vROps.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;Function&lt;/span&gt; Process-Handler {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;param&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      [Parameter(&lt;span style=&#34;color:#a6e22e&#34;&gt;Position&lt;/span&gt;=&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;Mandatory&lt;/span&gt;=$true)][&lt;span style=&#34;color:#66d9ef&#34;&gt;CloudNative.CloudEvents.CloudEvent&lt;/span&gt;]$CloudEvent
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   )
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Form cloudEventData object and output to console for debugging&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$cloudEventData = $cloudEvent | Read-CloudEventJsonData -ErrorAction SilentlyContinue -Depth &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;($cloudEventData &lt;span style=&#34;color:#f92672&#34;&gt;-eq&lt;/span&gt; $null) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   $cloudEventData = $cloudEvent | Read-CloudEventData
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full contents of CloudEventData&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;$(${cloudEventData} | ConvertTo-Json)&lt;span style=&#34;color:#ae81ff&#34;&gt;`n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Extract hostname from CloudEventData object&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$esxiHost=$cloudEventData.Host.Name
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hostname from CloudEventData&amp;#34;&lt;/span&gt; $esxiHost
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Check secret in place which supplies vROps environment variables&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsFqdn:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsFqdn}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsUser:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsUser}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vropsPassword:&amp;#34;&lt;/span&gt; ${env&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;vropsPassword}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Form unauthorized headers payload&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$headers = @{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept&amp;#34;&lt;/span&gt;  = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Acquire bearer token using environment variables&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/auth/token/acquire&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$basicAuthBody = @{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    username = $env:vropsUser;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    password = $env:vropsPassword;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$basicAuthBodyJson = $basicAuthBody | ConvertTo-Json -Depth &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Acquiring bearer token ...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$bearer = Invoke-WebRequest -Uri $uri -Method POST -Headers $headers -Body $basicAuthBodyJson -SkipCertificateCheck | ConvertFrom-Json
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Bearer token is&amp;#34;&lt;/span&gt; $bearer.token
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Form authorized headers payload&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$authedHeaders = @{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Content-Type&amp;#34;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Accept&amp;#34;&lt;/span&gt;  = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;application/json&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Authorization&amp;#34;&lt;/span&gt; = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;vRealizeOpsToken &amp;#34;&lt;/span&gt; + $bearer.token
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Get host ResourceID&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=&amp;#34;&lt;/span&gt; + $esxiHost
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Acquiring host ResourceID ...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$resourceJson = $resource.Content | ConvertFrom-Json
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ResourceID of host is &amp;#34;&lt;/span&gt; $resourceJson.resourceList[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].identifier
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Mark host resource as in maintenance mode&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/resources/&amp;#34;&lt;/span&gt; + $resourceJson.resourceList[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].identifier + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/maintained&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Marking host as vROps maintenance mode ...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Invoke-WebRequest -Uri $uri -Method PUT -Headers $authedHeaders -SkipCertificateCheck
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Get host resource maintenance mode state&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$uri = &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://&amp;#34;&lt;/span&gt; + $env:vropsFqdn + &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=&amp;#34;&lt;/span&gt; + $esxiHost
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Acquiring host maintenance mode state ...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$resourceJson = $resource.Content | ConvertFrom-Json
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host maintenence mode state is &amp;#34;&lt;/span&gt; $resourceJson.resourceList[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].resourceStatusStates[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;].resourceState
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Write-Host &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Note: STARTED=Not In Maintenance | MAINTAINED_MANUAL=In Maintenance&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In order to be environmentally agnositic I have the script use Environment Variables. These can be storedm in a Kubernetes Secret resource which can be associated with the containers and available at script runtime.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;kubectl -n vmware-functions create secret generic veba-knative-mm-vrops \
   --from-literal=vropsFqdn=&amp;lt;MY VCENTER FQDN&amp;gt; \
   --from-literal=vropsUser=admin \
-  --from-literal=vropsPassword=&#39;VMware1!&#39;
+  --from-literal=vropsPassword=&amp;#39;VMware1!&amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the Dockerfile and scripts in place we can look to build the container image locally and then push this to a public container registry.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Build local image with tag for GitHub Container Registry&lt;/span&gt;
-docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0 .
-
-&lt;span style=&#34;color:#75715e&#34;&gt;# Generate GitHub Personal Access Token&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;# Connect to GitHub Container Registry&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;# Use Personal Access Token when prompted for password&lt;/span&gt;
-docker login ghcr.io -u darrylcauldwell
-
-&lt;span style=&#34;color:#75715e&#34;&gt;# Push local image to GitHub Container Registry&lt;/span&gt;
-docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the container is available in public repository I can look to create a Knative service and trigger resource which links to container image and has association with the secret:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-service&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;annotations&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/maxScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/minScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
-        - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0&lt;/span&gt;
-          &lt;span style=&#34;color:#f92672&#34;&gt;envFrom&lt;/span&gt;:
-            - &lt;span style=&#34;color:#f92672&#34;&gt;secretRef&lt;/span&gt;:
-                &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-knative-mm-vrops&lt;/span&gt;
----
-&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Trigger&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-trigger&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;broker&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;filter&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;attributes&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;com.vmware.event.router/event&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;subject&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;EnteredMaintenanceModeEvent&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;subscriber&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
-      &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
-      &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-service&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The exit function is logically laid out the same but with slightly different trigger filter and handler action. With the manifest files created both can now be applied.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-enter/main/veba-knative-mm-enter.yml
-
-service.serving.knative.dev/veba-ps-enter-mm-service created
-trigger.eventing.knative.dev/veba-ps-enter-mm-trigger created
-
-kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-exit/master/veba-knative-mm-exit.yml
-
-service.serving.knative.dev/veba-ps-exit-mm-service created
-trigger.eventing.knative.dev/veba-ps-exit-mm-trigger created
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the container image has pulled down from repository can check the created resources.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n vmware-functions get kservice | grep mm
-
-NAME                       URL                                                                LATESTCREATED                    LATESTREADY                      READY   REASON
-veba-ps-enter-mm-service   http://veba-ps-enter-mm-service.vmware-functions.veba.cork.local   veba-ps-enter-mm-service-00001   veba-ps-enter-mm-service-00001   True
-veba-ps-exit-mm-service    http://veba-ps-exit-mm-service.vmware-functions.veba.cork.local    veba-ps-exit-mm-service-00001    veba-ps-exit-mm-service-00001    True
-
-kubectl -n vmware-functions get triggers | grep mm
-
-NAME                       BROKER    SUBSCRIBER_URI                                                       AGE    READY   REASON
-veba-ps-enter-mm-trigger   default   http://veba-ps-enter-mm-service.vmware-functions.svc.cluster.local   61s    True
-veba-ps-exit-mm-trigger    default   http://veba-ps-exit-mm-service.vmware-functions.svc.cluster.local    45s    True
-
-kubectl -n vmware-functions get pods | grep mm
-
-veba-ps-enter-mm-service-00001-deployment-d689d7fbd-9gtlv   2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          87s
-veba-ps-enter-mm-trigger-dispatcher-848ff8c858-qnxg8        1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          76s
-veba-ps-exit-mm-service-00001-deployment-b98b6f795-chqpx    2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          71s
-veba-ps-exit-mm-trigger-dispatcher-5fc8cbc978-6n2nf         1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          65s
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the functions in place we can follow the logs on the container and place a host into maintenance mode to check it works.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;kubectl -n vmware-functions logs veba-ps-enter-mm-service-00001-deployment-d689d7fbd-9gtlv user-container --follow
-
-Server start listening on &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://*:8080/&amp;#39;&lt;/span&gt;
-Full contents of CloudEventData
- &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ChangeTag&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ChainId&amp;#34;&lt;/span&gt;: 8122827,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;MY HOST&amp;gt;&amp;#34;&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Value&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;host-19&amp;#34;&lt;/span&gt;,
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;HostSystem&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ComputeResource&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Virtual-SAN-Cluster-5425b3e6-6e38-4221-8804-500f1360c7a3&amp;#34;&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ComputeResource&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Value&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;domain-c9&amp;#34;&lt;/span&gt;,
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ClusterComputeResource&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Net&amp;#34;&lt;/span&gt;: null,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Value&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;datacenter-3&amp;#34;&lt;/span&gt;,
-      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Vm&amp;#34;&lt;/span&gt;: null,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Dvs&amp;#34;&lt;/span&gt;: null,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;UserName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;VSPHERE.LOCAL\\Administrator&amp;#34;&lt;/span&gt;,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CreatedTime&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;2021-05-06T16:20:05.137999Z&amp;#34;&lt;/span&gt;,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;FullFormattedMessage&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host &amp;lt;MY HOST&amp;gt; in Datacenter has entered maintenance mode&amp;#34;&lt;/span&gt;,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Key&amp;#34;&lt;/span&gt;: 8122856,
-  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Ds&amp;#34;&lt;/span&gt;: null
-&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-
-Hostname from CloudEventData esx01.cork.local
-vropsFqdn: vrops.cork.local
-vropsUser: admin
-vropsPassword: VMware1!
-Acquiring bearer token ...
-Bearer token is b3898f1c-3a94-4dff-8b80-2ab835bd53bb::1c46ab4d-0e5e-44e4-ba4b-9898811bc645
-Acquiring host ResourceID ...
-ResourceID of host is  8f07b6de-9918-4849-af0f-7a1cca3ff5c7
-Marking host as vROps maintenance mode ...
-Acquiring host maintenance mode state ...
-Host maintenence mode state is  MAINTAINED_MANUAL
-Note: STARTED&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Not In Maintenance | MAINTAINED_MANUAL&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;In Maintenance
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Build local image with tag for GitHub Container Registry&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker build --tag ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0 .
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Generate GitHub Personal Access Token&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Connect to GitHub Container Registry&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Use Personal Access Token when prompted for password&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker login ghcr.io -u darrylcauldwell
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Push local image to GitHub Container Registry&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker push ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the container is available in public repository I can look to create a Knative service and trigger resource which links to container image and has association with the secret:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;annotations&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/maxScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/minScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ghcr.io/darrylcauldwell/veba-ps-enter-mm:1.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;envFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            - &lt;span style=&#34;color:#f92672&#34;&gt;secretRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-knative-mm-vrops&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Trigger&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-trigger&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;namespace&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;vmware-functions&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;broker&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;filter&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;attributes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;com.vmware.event.router/event&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;subject&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;EnteredMaintenanceModeEvent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;subscriber&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ps-enter-mm-service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The exit function is logically laid out the same but with slightly different trigger filter and handler action. With the manifest files created both can now be applied.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-enter/main/veba-knative-mm-enter.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;service.serving.knative.dev/veba-ps-enter-mm-service created
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;trigger.eventing.knative.dev/veba-ps-enter-mm-trigger created
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-exit/master/veba-knative-mm-exit.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;service.serving.knative.dev/veba-ps-exit-mm-service created
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;trigger.eventing.knative.dev/veba-ps-exit-mm-trigger created
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the container image has pulled down from repository can check the created resources.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n vmware-functions get kservice | grep mm
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NAME                       URL                                                                LATESTCREATED                    LATESTREADY                      READY   REASON
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-enter-mm-service   http://veba-ps-enter-mm-service.vmware-functions.veba.cork.local   veba-ps-enter-mm-service-00001   veba-ps-enter-mm-service-00001   True
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-exit-mm-service    http://veba-ps-exit-mm-service.vmware-functions.veba.cork.local    veba-ps-exit-mm-service-00001    veba-ps-exit-mm-service-00001    True
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n vmware-functions get triggers | grep mm
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NAME                       BROKER    SUBSCRIBER_URI                                                       AGE    READY   REASON
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-enter-mm-trigger   default   http://veba-ps-enter-mm-service.vmware-functions.svc.cluster.local   61s    True
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-exit-mm-trigger    default   http://veba-ps-exit-mm-service.vmware-functions.svc.cluster.local    45s    True
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n vmware-functions get pods | grep mm
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-enter-mm-service-00001-deployment-d689d7fbd-9gtlv   2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          87s
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-enter-mm-trigger-dispatcher-848ff8c858-qnxg8        1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          76s
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-exit-mm-service-00001-deployment-b98b6f795-chqpx    2/2     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          71s
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;veba-ps-exit-mm-trigger-dispatcher-5fc8cbc978-6n2nf         1/1     Running   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;          65s
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the functions in place we can follow the logs on the container and place a host into maintenance mode to check it works.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;kubectl -n vmware-functions logs veba-ps-enter-mm-service-00001-deployment-d689d7fbd-9gtlv user-container --follow
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Server start listening on &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://*:8080/&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Full contents of CloudEventData
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ChangeTag&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ChainId&amp;#34;&lt;/span&gt;: 8122827,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;MY HOST&amp;gt;&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Value&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;host-19&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;HostSystem&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ComputeResource&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Virtual-SAN-Cluster-5425b3e6-6e38-4221-8804-500f1360c7a3&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ComputeResource&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Value&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;domain-c9&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ClusterComputeResource&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Net&amp;#34;&lt;/span&gt;: null,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Value&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;datacenter-3&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Type&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Datacenter&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Vm&amp;#34;&lt;/span&gt;: null,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Dvs&amp;#34;&lt;/span&gt;: null,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;UserName&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;VSPHERE.LOCAL\\Administrator&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;CreatedTime&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;2021-05-06T16:20:05.137999Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;FullFormattedMessage&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Host &amp;lt;MY HOST&amp;gt; in Datacenter has entered maintenance mode&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Key&amp;#34;&lt;/span&gt;: 8122856,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Ds&amp;#34;&lt;/span&gt;: null
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Hostname from CloudEventData esx01.cork.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vropsFqdn: vrops.cork.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vropsUser: admin
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vropsPassword: VMware1!
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Acquiring bearer token ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Bearer token is b3898f1c-3a94-4dff-8b80-2ab835bd53bb::1c46ab4d-0e5e-44e4-ba4b-9898811bc645
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Acquiring host ResourceID ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ResourceID of host is  8f07b6de-9918-4849-af0f-7a1cca3ff5c7
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Marking host as vROps maintenance mode ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Acquiring host maintenance mode state ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Host maintenence mode state is  MAINTAINED_MANUAL
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Note: STARTED&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Not In Maintenance | MAINTAINED_MANUAL&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;In Maintenance
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>
@@ -359,32 +360,32 @@ Note: STARTED&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Not In Main
 &lt;p&gt;The SDDC Manager appliance controls the Cloud Foundation deployment. To upgrade the environment(s) requires the software packages. With each Cloud Foundation release, the required software packages are formed into bundles. The bundles are made available to download to licensed users via their &amp;lsquo;My VMware&amp;rsquo; account.&lt;/p&gt;
 &lt;p&gt;There are two methods of downloading the bundles. SDDC Manager can be configured with &amp;lsquo;My VMware&amp;rsquo; account and the LCM service then polls the VMware depot to access update bundles. Alternatively, the Bundle Transfer utility can be used to manually download the bundles from the depot and then upload them to SDDC Manager.&lt;/p&gt;
 &lt;p&gt;There is little control and limited UI visibility of bundle downloads using SDDC Manager. This is fine if you advanced plan and configure the account in time to poll available bundles and initiate downloads. The LCM service writes two files that can be useful in understanding progress.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vmware/vcf/lcm/lcm.log
-/var/log/vmware/vcf/lcm/lcm-debug.log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you have multiple Cloud Foundation deployments it can be more efficient to use the Bundle Transfer utility to download once and distribute internally. The Bundle Transfer utility is also useful to gain a little more control over the download process.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vmware/vcf/lcm/lcm.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vmware/vcf/lcm/lcm-debug.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you have multiple Cloud Foundation deployments it can be more efficient to use the Bundle Transfer utility to download once and distribute internally. The Bundle Transfer utility is also useful to gain a little more control over the download process.&lt;/p&gt;
 &lt;p&gt;The LCM Bundle Transfer utility is shipped with the SDDC Manager appliance. The utility can be used to download various bundle versions. The utility has two elements, to ensure the utility downloads the appropriate bundles for your deployment the first extract environmental metadata from SDDC Manager.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC Manager&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;## Outputs required metadata in files&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;## ~/markerFile&lt;/span&gt;
-&lt;span style=&#34;color:#75715e&#34;&gt;## ~/markerFile.md5&lt;/span&gt;
-
-cd /opt/vmware/vcf/lcm/lcm-tools/bin
-./lcm-bundle-transfer-util --generateMarker
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The second step takes the metadata as input and performs the download. This step requires Java 8 (or later) to be installed but can be run on either Windows or Linux.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
-scp -rp vcf@nest-1-sddc-manager.cork.local:/opt/vmware/vcf/lcm/lcm-tools F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
-scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
-scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile.md5 F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
-cd F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\l&lt;/span&gt;cm-tools&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;in
-lcm-bundle-transfer-util --download --outputDirectory F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload -depotUser &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;your my.vmware.com username&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; --markerFile F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\m&lt;/span&gt;arkerFile --markerMd5File F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\m&lt;/span&gt;arkerFile.md5
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the bundle downloads are complete we can copy them to SDDC Manager and import them into the repository.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## From Windows device used to download&lt;/span&gt;
-scp -pr F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload vcf@Snest-1-sddc-manager.cork.local:/nfs/vmware/vcf/nfs-mount/
-&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC Manager and set permissions&lt;/span&gt;
-chmod -R &lt;span style=&#34;color:#ae81ff&#34;&gt;0777&lt;/span&gt; /nfs/vmware/vcf/nfs-mount/bundleDownload
-cd /opt/vmware/vcf/lcm/lcm-tools/bin
-./lcm-bundle-transfer-util --upload --bundleDirectory /nfs/vmware/vcf/nfs-mount/bundleDownload
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;update-pre-check&#34;&gt;Update Pre-check&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC Manager&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Outputs required metadata in files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## ~/markerFile&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## ~/markerFile.md5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd /opt/vmware/vcf/lcm/lcm-tools/bin
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;./lcm-bundle-transfer-util --generateMarker
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The second step takes the metadata as input and performs the download. This step requires Java 8 (or later) to be installed but can be run on either Windows or Linux.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;scp -rp vcf@nest-1-sddc-manager.cork.local:/opt/vmware/vcf/lcm/lcm-tools F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;scp -p vcf@nest-1-sddc-manager.cork.local:/home/vcf/markerFile.md5 F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\l&lt;/span&gt;cm-tools&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;in
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lcm-bundle-transfer-util --download --outputDirectory F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload -depotUser &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;your my.vmware.com username&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; --markerFile F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\m&lt;/span&gt;arkerFile --markerMd5File F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload&lt;span style=&#34;color:#ae81ff&#34;&gt;\m&lt;/span&gt;arkerFile.md5
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the bundle downloads are complete we can copy them to SDDC Manager and import them into the repository.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## From Windows device used to download&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;scp -pr F:&lt;span style=&#34;color:#ae81ff&#34;&gt;\3&lt;/span&gt;.5.1&lt;span style=&#34;color:#ae81ff&#34;&gt;\b&lt;/span&gt;undleDownload vcf@Snest-1-sddc-manager.cork.local:/nfs/vmware/vcf/nfs-mount/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC Manager and set permissions&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;chmod -R &lt;span style=&#34;color:#ae81ff&#34;&gt;0777&lt;/span&gt; /nfs/vmware/vcf/nfs-mount/bundleDownload
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd /opt/vmware/vcf/lcm/lcm-tools/bin
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;./lcm-bundle-transfer-util --upload --bundleDirectory /nfs/vmware/vcf/nfs-mount/bundleDownload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;update-pre-check&#34;&gt;Update Pre-check&lt;/h2&gt;
 &lt;p&gt;Once the bundles are uploaded successfully to the repository we can look towards installing them. Upgrades can fail to apply if the environment isn&amp;rsquo;t healthy. Upgrades can take a while to apply so it is better to avoid failure and rollback. A series of environmental health pre-checks are included which can be run to avoid failure to successfully deploy bundles.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Domain Manager
@@ -518,11 +519,11 @@ cd /opt/vmware/vcf/lcm/lcm-tools/bin
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Each check returns health state green, yellow or red if an issue is detected some information on impact and remediation is made available. Sometimes the information returned isn&amp;rsquo;t perfect. The LCM pre-checks output to two files which can be useful in the understanding issue.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vmware/vcf/lcm/lcm.log
-/var/log/vmware/vcf/lcm/lcm-debug.log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Not all issues require full remediation. In my nested lab environment, the vSAN HCL returns a red issue which can never be resolved. I can either just ignore the error and proceed or we can look to disable the particular check in the configuration.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;bundle-apply&#34;&gt;Bundle Apply&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vmware/vcf/lcm/lcm.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vmware/vcf/lcm/lcm-debug.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Not all issues require full remediation. In my nested lab environment, the vSAN HCL returns a red issue which can never be resolved. I can either just ignore the error and proceed or we can look to disable the particular check in the configuration.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;vi /opt/vmware/vcf/lcm/lcm-app/conf/application-prod.properties
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;bundle-apply&#34;&gt;Bundle Apply&lt;/h2&gt;
 &lt;p&gt;When you are happy with environmental health next to move to apply bundles. To move between Cloud Foundation versions can require applying multiple bundles.  For example, when moving from 3.5.1 to 3.7.1 following bundles are required.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;SDDC Manager
@@ -549,31 +550,31 @@ cd /opt/vmware/vcf/lcm/lcm-tools/bin
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Some of the bundles can take a long time to apply and the UI isn&amp;rsquo;t very verbose. It is very useful to hold an SSH session to SDDC Manager to tail the summary log file to view progress when applying bundles.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;tail -f /var/log/vmware/vcf/lcm/lcm.log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main workflow process spawns other processes so those main upgrade log files sometimes aren’t that verbose and often don’t help identify the issue. It is useful to understand that the spawned processes also log to folder UUID of the bundle apply task. The different bundles create sub-folders and write various logs examples.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vmware/vcf/lcm/upgrades/&amp;lt;upgrade_ID&amp;gt;/thirdparty/sddc-migration-app/logs
-/var/log/vmware/vcf/lcm/upgrades/&amp;lt;upgrade_ID&amp;gt;/sddcmanager-migration-app/logs/sddcmanager_migration_app_upgrade.log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;skip-level-upgrades&#34;&gt;Skip Level Upgrades&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tail -f /var/log/vmware/vcf/lcm/lcm.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The main workflow process spawns other processes so those main upgrade log files sometimes aren’t that verbose and often don’t help identify the issue. It is useful to understand that the spawned processes also log to folder UUID of the bundle apply task. The different bundles create sub-folders and write various logs examples.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vmware/vcf/lcm/upgrades/&amp;lt;upgrade_ID&amp;gt;/thirdparty/sddc-migration-app/logs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vmware/vcf/lcm/upgrades/&amp;lt;upgrade_ID&amp;gt;/sddcmanager-migration-app/logs/sddcmanager_migration_app_upgrade.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;skip-level-upgrades&#34;&gt;Skip Level Upgrades&lt;/h2&gt;
 &lt;p&gt;As we found before moving between Cloud Foundation versions can lead to applying multiple bundles to the same product. The skip-level upgrade tool was introduced to allow easier uplift to 3.10.1.2 or 3.10.2. For NSX for vSphere based workload domains can uplift to 3.10 from 3.5 and for NSX-T can uplift from 3.7.1.&lt;/p&gt;
 &lt;p&gt;Here I am using the skip level upgrade tool to uplift a 3.5.1 NSX-V environment to 3.10.2 some twenty six bundles.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vcf-lcm-skip-download.png&#34; alt=&#34;Skip Level Download&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;apache-cassandra&#34;&gt;Apache Cassandra&lt;/h2&gt;
 &lt;p&gt;The application uses a Apache Cassandra database to store data. When troubleshooting it can be useful to look through the contents.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC manager and open client&lt;/span&gt;
-cqlsh --cqlversion&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;3.4.4 127.0.0.1 &lt;span style=&#34;color:#ae81ff&#34;&gt;9042&lt;/span&gt;
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Get all keyspaces&lt;/span&gt;
-describe keyspaces;
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Change to lcmkeyspace&lt;/span&gt;
-use lcmkeyspace;
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Get all lcmkeyspace tables&lt;/span&gt;
-describe tables;
-
-&lt;span style=&#34;color:#75715e&#34;&gt;## Get all host entries from upgrade_activity_log table in json format&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; json * from upgrade_activity_log;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## SSH to SDDC manager and open client&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cqlsh --cqlversion&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;3.4.4 127.0.0.1 &lt;span style=&#34;color:#ae81ff&#34;&gt;9042&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Get all keyspaces&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;describe keyspaces;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Change to lcmkeyspace&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;use lcmkeyspace;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Get all lcmkeyspace tables&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;describe tables;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;## Get all host entries from upgrade_activity_log table in json format&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt; json * from upgrade_activity_log;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>

@@ -4,7 +4,7 @@
   <head>
 <title>Maintaining Container Images Within GitHub | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -151,116 +151,116 @@
 <p><img src="/images/git-action-container-overview.drawio.png" alt="GitHub Package Process Overview"></p>
 <h2 id="fork-and-clone-chowdown">Fork and clone chowdown</h2>
 <p>I am more interested in the process so I started by forking chowdown.  I look to automate where possible so used this opportunity to look at using the API to perform the fork.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">## Create personal access token with permissions on repo</span>
-curl -u <span style="color:#e6db74">&#39;darrylcauldwell&#39;</span> https://api.github.com/repos/clarklab/chowdown/forks -d <span style="color:#e6db74">&#39;&#39;</span>
-<span style="color:#75715e">## When promoted paste personal access token</span>
-</code></pre></div><p>With the fork in place I can look to make local clone and run the website under Jekyll.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/darrylcauldwell/chowdown.git
-cd chowdown
-<span style="color:#75715e">## if running first time from form edit _config.yml and remove the value for key baseurl: otherwise it doesn&#39;t start properly</span>
-jekyll serve
-<span style="color:#75715e">## brower to http://127.0.0.1:4000</span>
-</code></pre></div><h2 id="rename-main-branch">Rename Main Branch</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">## Create personal access token with permissions on repo</span>
+</span></span><span style="display:flex;"><span>curl -u <span style="color:#e6db74">&#39;darrylcauldwell&#39;</span> https://api.github.com/repos/clarklab/chowdown/forks -d <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## When promoted paste personal access token</span>
+</span></span></code></pre></div><p>With the fork in place I can look to make local clone and run the website under Jekyll.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/darrylcauldwell/chowdown.git
+</span></span><span style="display:flex;"><span>cd chowdown
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## if running first time from form edit _config.yml and remove the value for key baseurl: otherwise it doesn&#39;t start properly</span>
+</span></span><span style="display:flex;"><span>jekyll serve
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## brower to http://127.0.0.1:4000</span>
+</span></span></code></pre></div><h2 id="rename-main-branch">Rename Main Branch</h2>
 <p>The repository forked from looks like it is hosted from GitHub Pages and contains single gh-pages branch.  I would like  main branch to be called publish to reflect that this contains the source for current HEAD image.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch --list --all
-* gh-pages
-  remotes/origin/HEAD -&gt; origin/gh-pages
-  remotes/origin/gh-pages
-
-git branch -m gh-pages publish
-git push origin :gh-pages publish
-git push origin –u publish
-git branch --list --all
-* publish
-  remotes/origin/HEAD -&gt; origin/publish
-  remotes/origin/publish
-</code></pre></div><h2 id="static-file-web-site">Static File Web Site</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git branch --list --all
+</span></span><span style="display:flex;"><span>* gh-pages
+</span></span><span style="display:flex;"><span>  remotes/origin/HEAD -&gt; origin/gh-pages
+</span></span><span style="display:flex;"><span>  remotes/origin/gh-pages
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git branch -m gh-pages publish
+</span></span><span style="display:flex;"><span>git push origin :gh-pages publish
+</span></span><span style="display:flex;"><span>git push origin –u publish
+</span></span><span style="display:flex;"><span>git branch --list --all
+</span></span><span style="display:flex;"><span>* publish
+</span></span><span style="display:flex;"><span>  remotes/origin/HEAD -&gt; origin/publish
+</span></span><span style="display:flex;"><span>  remotes/origin/publish
+</span></span></code></pre></div><h2 id="static-file-web-site">Static File Web Site</h2>
 <p>Using &lsquo;jekyll serve&rsquo; provide UX testing during development which is useful. The chowdown docker-compose.yml builds fro jekyll/jekyll image and runs jekyll serve to host the site. I would like to generate static file website where I can choose serving engine later. I can use &lsquo;jekyll build&rsquo; which outputs the site to a folder (./_site by default). The chowdown repository lists folder /_site is in the .gitignore, this prevents the static file website being upstream. The GitHub Action will look to create docker image from upstream so I will remove /_site from the .gitignore.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">jekyll build
-git add .
-git commit -m <span style="color:#e6db74">&#34;added static file web site files&#34;</span>
-git push
-</code></pre></div><h2 id="docker-image">Docker Image</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>jekyll build
+</span></span><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;added static file web site files&#34;</span>
+</span></span><span style="display:flex;"><span>git push
+</span></span></code></pre></div><h2 id="docker-image">Docker Image</h2>
 <p>I&rsquo;ll be looking to use NGINX to serve the site and would like the image to be as slim as possible so looking Alpine Linux. Copying the contents of /_site to the NGINX default path. In case of troubleshooting Pods being able to exec bash is useful so I look to install this.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#75715e"># Dockerfile</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> nginx:1.21.1-alpine</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> _site /usr/share/nginx/html<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># COPY nginx.conf /etc/nginx/nginx.conf</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apk add --no-cache bash<span style="color:#960050;background-color:#1e0010">
-</span></code></pre></div><p>With the Dockerfile in place we can use this to build the container image locally. Once this is build we can run it and ensure that its working as we expect. When we&rsquo;re happy its working can push this to the GitHub Container Registry.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker build --tag ghcr.io/darrylcauldwell/chowdown:1.0 .
-docker run -d -p 80:80 ghcr.io/darrylcauldwell/chowdown:1.0
-<span style="color:#75715e"># browse http://127.0.0.0:80 to ensure </span>
-docker push ghcr.io/darrylcauldwell/chowdown:1.0
-</code></pre></div><h2 id="event-driven-build">Event Driven Build</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="display:flex;"><span><span style="color:#75715e"># Dockerfile</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> nginx:1.21.1-alpine</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> _site /usr/share/nginx/html<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># COPY nginx.conf /etc/nginx/nginx.conf</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apk add --no-cache bash<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>With the Dockerfile in place we can use this to build the container image locally. Once this is build we can run it and ensure that its working as we expect. When we&rsquo;re happy its working can push this to the GitHub Container Registry.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker build --tag ghcr.io/darrylcauldwell/chowdown:1.0 .
+</span></span><span style="display:flex;"><span>docker run -d -p 80:80 ghcr.io/darrylcauldwell/chowdown:1.0
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># browse http://127.0.0.0:80 to ensure </span>
+</span></span><span style="display:flex;"><span>docker push ghcr.io/darrylcauldwell/chowdown:1.0
+</span></span></code></pre></div><h2 id="event-driven-build">Event Driven Build</h2>
 <p>I would like a new version of the docker image be built every time a branch is merged to the main &lsquo;publish&rsquo; branch. GitHub Actions offer me capability on occurence of an event (merge branch) trigger an action (build image). These particular container images will be ran on Raspberry Pi so need to use docker buildx to create for Arm platform</p>
 <p>The GitHub Action is created and runs in context of the GitHub Repository,  the GitHub Container Registry is under context of user or organisation. In order the GitHub Action can write images the package needs configuring so Actions have write access.</p>
 <p><img src="/images/git-action-container-access.png" alt="GitHub Package Access Writes"></p>
 <p>Once permissions are in place create a custom action using similar yaml to this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/workflows/create.yml</span>
-<span style="color:#f92672">name</span>: <span style="color:#ae81ff">Create chowdown image</span>
-
-<span style="color:#f92672">on</span>:
-  <span style="color:#f92672">push</span>:
-    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">publish ]</span>
-
-<span style="color:#f92672">jobs</span>:
-  <span style="color:#f92672">build</span>:
-    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
-    <span style="color:#f92672">steps</span>:
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout</span>
-      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
-
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up Docker Buildx</span>
-      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/setup-buildx-action@v1</span>
-      
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Log in to the Container registry</span>
-      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9</span>
-      <span style="color:#f92672">with</span>:
-        <span style="color:#f92672">registry</span>: <span style="color:#ae81ff">ghcr.io</span>
-        <span style="color:#f92672">username</span>: <span style="color:#ae81ff">darrylcauldwell</span>
-        <span style="color:#f92672">password</span>: <span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}</span>
-          
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build and push image</span>
-      <span style="color:#f92672">id</span>: <span style="color:#ae81ff">docker_build</span>
-      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/build-push-action@v2</span>
-      <span style="color:#f92672">with</span>:
-        <span style="color:#f92672">platforms</span>: <span style="color:#ae81ff">linux/amd64,linux/arm64</span>
-        <span style="color:#f92672">push</span>: <span style="color:#66d9ef">true</span>
-        <span style="color:#f92672">tags</span>: |<span style="color:#e6db74">
-</span><span style="color:#e6db74">          ghcr.io/darrylcauldwell/chowdown:latest
-</span><span style="color:#e6db74">          ghcr.io/darrylcauldwell/chowdown:1.0</span>          
-
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Image digest</span>
-      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">echo ${{ steps.docker_build.outputs.digest }}</span>
-</code></pre></div><p>The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># .github/workflows/create.yml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Create chowdown image</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">push</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">publish ]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">build</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up Docker Buildx</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/setup-buildx-action@v1</span>
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Log in to the Container registry</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">registry</span>: <span style="color:#ae81ff">ghcr.io</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">username</span>: <span style="color:#ae81ff">darrylcauldwell</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">password</span>: <span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}</span>
+</span></span><span style="display:flex;"><span>          
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build and push image</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">id</span>: <span style="color:#ae81ff">docker_build</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/build-push-action@v2</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">platforms</span>: <span style="color:#ae81ff">linux/amd64,linux/arm64</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">push</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">tags</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          ghcr.io/darrylcauldwell/chowdown:latest
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          ghcr.io/darrylcauldwell/chowdown:1.0</span>          
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Image digest</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">echo ${{ steps.docker_build.outputs.digest }}</span>
+</span></span></code></pre></div><p>The actions workflow definitio is within the repository so upon committing the changes the action should trigger and build the image.</p>
 <h2 id="deploy-container-to-kubernetes">Deploy Container To Kubernetes</h2>
 <p>We can look to test this by creating a Kubernetes deployment and expose this as a service.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create namespace chowdown
-kubectl create deployment chowdown --image<span style="color:#f92672">=</span>ghcr.io/darrylcauldwell/chowdown:1.0 --namespace<span style="color:#f92672">=</span>chowdown
-kubectl expose deployment chowdown --port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span> --type<span style="color:#f92672">=</span>ClusterIP --namespace<span style="color:#f92672">=</span>chowdown
-</code></pre></div><p>This service will be exposed to public internet. I have a single static IP but expose multiple services to achieve this I use Kubernetes Ingress rules which allow routing based on URL and path. Save the following as file named chowdown-ingress.yaml.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">chowdown-ingress</span>
-  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">chowdown</span>
-  <span style="color:#f92672">annotations</span>:
-    <span style="color:#f92672">kubernetes.io/ingress.class</span>: <span style="color:#ae81ff">public</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">rules</span>:
-  - <span style="color:#f92672">host</span>: <span style="color:#ae81ff">www.theveggiechef.uk</span>
-    <span style="color:#f92672">http</span>:
-      <span style="color:#f92672">paths</span>:
-      - <span style="color:#f92672">backend</span>:
-          <span style="color:#f92672">service</span>:
-            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">chowdown</span>
-            <span style="color:#f92672">port</span>: 
-              <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>
-        <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
-        <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
-</code></pre></div><p>Once created apply the file to create the Ingress route and test using cURL.</p>
-<pre><code>kubectl apply -f chowdown-ingress.yaml
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create namespace chowdown
+</span></span><span style="display:flex;"><span>kubectl create deployment chowdown --image<span style="color:#f92672">=</span>ghcr.io/darrylcauldwell/chowdown:1.0 --namespace<span style="color:#f92672">=</span>chowdown
+</span></span><span style="display:flex;"><span>kubectl expose deployment chowdown --port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span> --type<span style="color:#f92672">=</span>ClusterIP --namespace<span style="color:#f92672">=</span>chowdown
+</span></span></code></pre></div><p>This service will be exposed to public internet. I have a single static IP but expose multiple services to achieve this I use Kubernetes Ingress rules which allow routing based on URL and path. Save the following as file named chowdown-ingress.yaml.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">chowdown-ingress</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">chowdown</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">annotations</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">kubernetes.io/ingress.class</span>: <span style="color:#ae81ff">public</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">rules</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">host</span>: <span style="color:#ae81ff">www.theveggiechef.uk</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">paths</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">backend</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">service</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">chowdown</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: 
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
+</span></span></code></pre></div><p>Once created apply the file to create the Ingress route and test using cURL.</p>
+<pre tabindex="0"><code>kubectl apply -f chowdown-ingress.yaml
 
 curl www.theveggiechef.uk
 </code></pre>
@@ -292,6 +292,9 @@ curl www.theveggiechef.uk
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -312,16 +315,13 @@ curl www.theveggiechef.uk
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" class="nav-link" title="Raspberry Pi Kubernetes Cluster">Raspberry Pi Kubernetes Cluster</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -410,6 +410,11 @@ curl www.theveggiechef.uk
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -417,11 +422,6 @@ curl www.theveggiechef.uk
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -435,6 +435,11 @@ curl www.theveggiechef.uk
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -442,11 +447,6 @@ curl www.theveggiechef.uk
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -497,7 +497,7 @@ curl www.theveggiechef.uk
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -645,6 +645,10 @@ curl www.theveggiechef.uk
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -697,7 +701,7 @@ curl www.theveggiechef.uk
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -825,7 +829,7 @@ curl www.theveggiechef.uk
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

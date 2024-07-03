@@ -4,7 +4,7 @@
   <head>
 <title>NSX-V Load Balancer As A Service LBaaS | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -163,18 +163,18 @@ scenario and then worked through the steps to achieve a solution to meet the des
 <p>As 192.168.2.0/24 is not a network my home router is aware of I must create a Destination NAT rule on 192.168.1.0/24 network to map to the 192.168.2.0/24 address.</p>
 <p><img src="/images/nsx-lbaas-DNAT.jpg" alt="Destination NAT"></p>
 <p>Ensure this is created by connecting SSH session to the Edge and viewing the NAT configuration by running</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">show nat
-</code></pre></div><p><img src="/images/nsx-lbaas-NAT-CLI.jpg" alt="Destination NAT"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>show nat
+</span></span></code></pre></div><p><img src="/images/nsx-lbaas-NAT-CLI.jpg" alt="Destination NAT"></p>
 <h2 id="configure-web-server-dhcp">Configure Web Server DHCP</h2>
 <p>Enable DHCP and create a DHCP scope 192.168.2.10-192.168.2.50.</p>
 <p><img src="/images/nsx-lbaas-DHCP.jpg" alt="DHCP"></p>
 <h2 id="create-web-servers">Create Web Servers</h2>
 <p>I&rsquo;ll look to create two test web servers each will host a single web page with its actual IP address on.  When I connect to load balanced IP the page contents returned will flip between the two servers.</p>
 <p>I created a <a href="/post/vsphere-vm-templates">CentOS 7 VM template</a> previously in lab and so for this test scenario I provisioned two new VMs from this named web1 and web2.  I left both as DHCP and setup the web server using following commands.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install httpd -y
-service httpd start
-ifconfig | grep <span style="color:#e6db74">&#34;inet&#34;</span> &amp;gt; /var/www/html/test.html
-</code></pre></div><h2 id="configure-load-balancer">Configure Load Balancer</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum install httpd -y
+</span></span><span style="display:flex;"><span>service httpd start
+</span></span><span style="display:flex;"><span>ifconfig | grep <span style="color:#e6db74">&#34;inet&#34;</span> &amp;gt; /var/www/html/test.html
+</span></span></code></pre></div><h2 id="configure-load-balancer">Configure Load Balancer</h2>
 <p>Enable the load balance function on the Edge.</p>
 <p><img src="/images/nsx-lbaas-LoadBalancer-Enable.jpg" alt="DHCP"></p>
 <p>Create a load balancer application profile called Web and mark is for HTTP traffic.</p>
@@ -188,11 +188,11 @@ ifconfig | grep <span style="color:#e6db74">&#34;inet&#34;</span> &amp;gt; /var/
 <p>I found when I configured this initially by selecting VM objects in the Virtual Server the loadbalancer tried to configure all IP addresses including the IPv6 addresses which are present by default in Centos7.  This caused a error in LoadBalancer and wouldn&rsquo;t allow me to proceed.</p>
 <p><img src="/images/nsx-lbaas-LoadBalance-IPv6.jpg" alt="Load Balancer Virtual Server"></p>
 <p>I disabled IPv6 on both CentOS7 VMs by adding the following to /etc/sysctl.conf:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">net.ipv6.conf.all.disable_ipv6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-</code></pre></div><p>Then run the following to commit the changes.  When VMs had only IPv4 addresses the process works without error.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sysctl -p
-</code></pre></div><h2 id="secure-solution">Secure Solution</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>net.ipv6.conf.all.disable_ipv6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>Then run the following to commit the changes.  When VMs had only IPv4 addresses the process works without error.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sysctl -p
+</span></span></code></pre></div><h2 id="secure-solution">Secure Solution</h2>
 <p>Up to now we have had the Edge firewall default rule set to allow,  one of the first tasks we would want to do once web load balancing is working is to secure the solution.</p>
 <p>To do this we create a new rule explicitly allowing HTTP traffic to the IP address it will enter the Edge on,  and once in place change default rule to Deny.</p>
 <p><img src="/images/nsx-lbaas-LB-Firewall.jpg" alt="Load Balancer Firewall"></p>
@@ -200,10 +200,10 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
 <h2 id="load-balance-monitoring">Load Balance Monitoring</h2>
 <p>When creating the Loadbalance configuration we specified to monitor port 80 was available in order to include the server in the balanced set. Before proceeding here ensure that when you connect to 192.168.1.40 and refresh load balancing is working correctly and returning IP addresses alternately.</p>
 <p>We then stop the apache service on one of the VMs using:</p>
-<pre><code>service httpd stop
+<pre tabindex="0"><code>service httpd stop
 </code></pre><p><img src="/images/nsx-lbaas-apache-stop.jpg" alt="Apache Stop"></p>
 <p>If we now go back to browser and refresh a few times it will direct all traffic to one server IP address.  If we restart apache using</p>
-<pre><code>service httpd start
+<pre tabindex="0"><code>service httpd start
 </code></pre><p>and refresh the browser we find load balancing is returned and refreshes alternate the IP addresses.</p>
 
 
@@ -234,6 +234,9 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -254,16 +257,13 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -352,6 +352,11 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -359,11 +364,6 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -377,6 +377,11 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -384,11 +389,6 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -439,7 +439,7 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -587,6 +587,10 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -639,7 +643,7 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -767,7 +771,7 @@ net.ipv6.conf.default.disable_ipv6 <span style="color:#f92672">=</span> <span st
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

@@ -4,7 +4,7 @@
   <head>
 <title>Deploying NSX-V With Ansible | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -151,50 +151,50 @@
 <p>The following assumes you have a working Ansible installation already, and a vSphere environmentto install NSX to. If you don&rsquo;t yet have these you can see how I performed my <a href="%7B%7Bsite.url%7D%7D/how-to-setup-an-ansible-test-lab-for-windows-managed-nodes-custom-windows-modules/">Ansible Installation</a> in this earlier blog post.</p>
 <h2 id="nsx-raml-specification">NSX RAML Specification</h2>
 <p>As the NSX REST API changes with each release the REST API Markup Language (RAML) specification for NSX is provided as a different branch of the GitHub repository.  In my environment I will be using NSX 6.2.2 so first I ensure the git client is installed to my Ansible server and then I use this to take a clone of the correct branch.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install git-all
-git clone -b 6.2.2 https://github.com/vmware/nsxraml.git /nsxraml
-</code></pre></div><h2 id="nsx-raml-python-client">NSX RAML Python Client</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum install git-all
+</span></span><span style="display:flex;"><span>git clone -b 6.2.2 https://github.com/vmware/nsxraml.git /nsxraml
+</span></span></code></pre></div><h2 id="nsx-raml-python-client">NSX RAML Python Client</h2>
 <p>The NSX RAML python client is series of functions which can be used standalone or in our case called by the Ansible NSX module.  To install these we need to ensure the &lsquo;Python Package Manger&rsquo; and some other tools are installed and available on our Ansible server.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install python-pip gcc libxslt-devel python-devel pyOpenSSL
-pip install --upgrade pip
-pip install lxml
-</code></pre></div><p>Once thes pre-requiste components are in place we can then install the NSX RAML python client. Similar to the RAML specification, the client functions are also dependant on version. The version which works with NSX RAML Specification 6.2.2 is Python client 1.0.4.  To install this version from Python package manager we use.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pip install nsxramlclient<span style="color:#f92672">=</span>1.0.4
-</code></pre></div><p>If you have NSX Manager already deployed you can create a session to this using the python client.  First start python by running</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">python
-</code></pre></div><p>then you can run the commands similar to this to create a session.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> nsxramlclient.client <span style="color:#f92672">import</span> NsxClient
-nsxraml_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/nsxraml/nsxvapi.raml&#39;</span>
-nsxmanager <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;nsx.darrylcauldwell.local&#39;</span>
-nsx_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;admin&#39;</span>
-nsx_password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;VMware!&#39;</span>
-client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug<span style="color:#f92672">=</span>False)
-</code></pre></div><p>you can then see the session by running the following command in python session</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">client_session
-</code></pre></div><p><img src="/images/nsx-install-ansible-RAMLclient.jpg" alt="NSX RAML Client"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum install python-pip gcc libxslt-devel python-devel pyOpenSSL
+</span></span><span style="display:flex;"><span>pip install --upgrade pip
+</span></span><span style="display:flex;"><span>pip install lxml
+</span></span></code></pre></div><p>Once thes pre-requiste components are in place we can then install the NSX RAML python client. Similar to the RAML specification, the client functions are also dependant on version. The version which works with NSX RAML Specification 6.2.2 is Python client 1.0.4.  To install this version from Python package manager we use.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install nsxramlclient<span style="color:#f92672">=</span>1.0.4
+</span></span></code></pre></div><p>If you have NSX Manager already deployed you can create a session to this using the python client.  First start python by running</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python
+</span></span></code></pre></div><p>then you can run the commands similar to this to create a session.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> nsxramlclient.client <span style="color:#f92672">import</span> NsxClient
+</span></span><span style="display:flex;"><span>nsxraml_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/nsxraml/nsxvapi.raml&#39;</span>
+</span></span><span style="display:flex;"><span>nsxmanager <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;nsx.darrylcauldwell.local&#39;</span>
+</span></span><span style="display:flex;"><span>nsx_username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;admin&#39;</span>
+</span></span><span style="display:flex;"><span>nsx_password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;VMware!&#39;</span>
+</span></span><span style="display:flex;"><span>client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxmanager, nsx_username, nsx_password, debug<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span></code></pre></div><p>you can then see the session by running the following command in python session</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>client_session
+</span></span></code></pre></div><p><img src="/images/nsx-install-ansible-RAMLclient.jpg" alt="NSX RAML Client"></p>
 <h2 id="vmware-vsphere-api-python-bindings">VMware vSphere API Python Bindings</h2>
 <p>As well as the NSX Python client the Ansible NSX Module also depends on the VMware vSphere API Python Bindings (pyVmomi. pyVmomi is the Python SDK for the VMware vSphere API that allows you to manage ESX, ESXi, and vCenter. This is similarly installed with the python package manager using command like.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pip install pyvmomi
-</code></pre></div><h2 id="ovf-tool">OVF Tool</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install pyvmomi
+</span></span></code></pre></div><h2 id="ovf-tool">OVF Tool</h2>
 <p>The final thing to be installed for the NSX Module to operate correctly is the VMware OVF Tool. The OVF tool for Linux version 4.1.0 is <a href="https://my.vmware.com/group/vmware/details?downloadGroup=OVFTOOL410&amp;productId=491#">available here</a>, please note a VMware login is required to get this.</p>
 <p>Once downloaded to the Ansbile server, we need to ensure it has execute attribute and then execute it to start the install, the commands to do this for the current version 4.1.0 are.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
-./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
-</code></pre></div><p><img src="/images/nsx-install-ansible-ovftool.jpg" alt="OVFTool"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chmod +x VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
+</span></span><span style="display:flex;"><span>./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle
+</span></span></code></pre></div><p><img src="/images/nsx-install-ansible-ovftool.jpg" alt="OVFTool"></p>
 <p>Once the install is running you have to agree to EULA, to get to the end of the text, hold down the Space bar. When prompted <em>Do you agree?</em> type yes.</p>
 <p><img src="/images/nsx-install-ansible-ovftool2.jpg" alt="OVFTool"></p>
 <p>Once OVF Tool is installed we can use SCP to copy the NSX OVA, VMware-NSX-Manager-6.2.2-3604087.ova, to Ansible server I placed this in folder named /OVAs.</p>
 <h2 id="ansible-nsx-module">Ansible NSX Module</h2>
 <p>We already have Git installed for dowlnloading the NSX RAML Specification so we can use this to clone the NSX Ansible repository.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/vmware/nsxansible.git /nsxansible
-</code></pre></div><h2 id="deploy-nsx-manager">Deploy NSX Manager</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/vmware/nsxansible.git /nsxansible
+</span></span></code></pre></div><h2 id="deploy-nsx-manager">Deploy NSX Manager</h2>
 <p>The NSX Module comes supplied with some example playbooks for performing common tasks, we’ll first take a copy of the example to deploy NSX Manager</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cp /nsxansible/test_deploynsxova.yml /nsxansible/darryl_deploynsxova.yml
-</code></pre></div><p>We can then edit the contents to match the variables we plan to deploy in environment. While most of playbook contents are environmental specific varibles its worth noting that we run this module against the Ansible server itself as this is where the OVA and ovftool are located so hosts: value will always be localhost.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp /nsxansible/test_deploynsxova.yml /nsxansible/darryl_deploynsxova.yml
+</span></span></code></pre></div><p>We can then edit the contents to match the variables we plan to deploy in environment. While most of playbook contents are environmental specific varibles its worth noting that we run this module against the Ansible server itself as this is where the OVA and ovftool are located so hosts: value will always be localhost.</p>
 <p><img src="/images/nsx-install-ansible-NSXmgr.jpg" alt="Deploy NSX Manager"></p>
 <p>Once we have our environmental specific entries set we can execute the playbook with Ansible.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ansible-playbook darryl_deploynsxova.yml
-</code></pre></div><p><img src="/images/nsx-install-ansible-playbook.jpg" alt="Deploy NSX Manager Playbook"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ansible-playbook darryl_deploynsxova.yml
+</span></span></code></pre></div><p><img src="/images/nsx-install-ansible-playbook.jpg" alt="Deploy NSX Manager Playbook"></p>
 <p>We see this deploys ‘NSX Manager’ and configures the setting specified in the playbook.</p>
 <h2 id="deploy-nsx-manager-and-register-with-vcenter-and-sso">Deploy NSX Manager and register with vCenter and SSO</h2>
 <p>As with any Ansible playbook we can put common variables in a central location and call these from playbooks. An example is provided called answerfile-deployLab.yml. Variable names are overlapped between parts of the NSX Modules, in order that they are unique in the central answer file the names vary but its very easy to match these.</p>
@@ -229,6 +229,9 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -249,16 +252,13 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -347,6 +347,11 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -354,11 +359,6 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -372,6 +372,11 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -379,11 +384,6 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -434,7 +434,7 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -582,6 +582,10 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -634,7 +638,7 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -762,7 +766,7 @@ client_session <span style="color:#f92672">=</span> NsxClient(nsxraml_file, nsxm
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

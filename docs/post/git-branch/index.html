@@ -4,7 +4,7 @@
   <head>
 <title>GitHub Pages Git Branching Workflow | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -147,172 +147,172 @@
 <p>As such I have moved to use GitHub branching in my workflow to assist meet the demands of my evolved working situation.</p>
 <h2 id="create-new-branch-for-post">Create new branch for post</h2>
 <p>First think to do is clone the existing repository from GitHub.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
-cd darrylcauldwell.github.io
-</code></pre></div><p>If I check there is single branch named &lsquo;master&rsquo;.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch
-
-* master
-</code></pre></div><p>First step is to create new branch to work in and switch to it.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git checkout -b blog-branch
-
-git branch
-
-master
-* blog-branch
-</code></pre></div><p>Add files,  make changes within branch etc, .</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git status
-
-On branch blog-branch
-Your branch is up to date with <span style="color:#e6db74">&#39;origin/blog-branch&#39;</span>.
-
-Untracked files:
-  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git add &lt;file&gt;...&#34;</span> to include in what will be committed<span style="color:#f92672">)</span>
-        content/post/git-branch.md
-
-no changes added to commit <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git add&#34;</span> and/or <span style="color:#e6db74">&#34;git commit -a&#34;</span><span style="color:#f92672">)</span>
-</code></pre></div><p>Once we&rsquo;re happy with changes to the branch approve the changes and add the files to the index.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git add content/post/git-branch.md
-
-git status                        
-On branch blog-branch
-Your branch is up to date with <span style="color:#e6db74">&#39;origin/blog-branch&#39;</span>.
-
-Changes to be committed:
-  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git restore --staged &lt;file&gt;...&#34;</span> to unstage<span style="color:#f92672">)</span>
-        modified:   content/post/git-branch.md
-</code></pre></div><p>Then commit the changes to the local repository.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git commit -m <span style="color:#e6db74">&#39;these are changes I made&#39;</span>
-
-<span style="color:#f92672">[</span>blog-branch 8b566a8<span style="color:#f92672">]</span> these are changes I made
- <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">51</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">1</span> deletion<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
-</code></pre></div><p>Once happy push the branch to remote upstream repository on GitHub.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git push origin blog-branch
-</code></pre></div><h2 id="make-changes-to-existing-branch">Make changes to existing branch</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+</span></span><span style="display:flex;"><span>cd darrylcauldwell.github.io
+</span></span></code></pre></div><p>If I check there is single branch named &lsquo;master&rsquo;.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>* master
+</span></span></code></pre></div><p>First step is to create new branch to work in and switch to it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout -b blog-branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>master
+</span></span><span style="display:flex;"><span>* blog-branch
+</span></span></code></pre></div><p>Add files,  make changes within branch etc, .</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git status
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>On branch blog-branch
+</span></span><span style="display:flex;"><span>Your branch is up to date with <span style="color:#e6db74">&#39;origin/blog-branch&#39;</span>.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Untracked files:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git add &lt;file&gt;...&#34;</span> to include in what will be committed<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        content/post/git-branch.md
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>no changes added to commit <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git add&#34;</span> and/or <span style="color:#e6db74">&#34;git commit -a&#34;</span><span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>Once we&rsquo;re happy with changes to the branch approve the changes and add the files to the index.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git add content/post/git-branch.md
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git status                        
+</span></span><span style="display:flex;"><span>On branch blog-branch
+</span></span><span style="display:flex;"><span>Your branch is up to date with <span style="color:#e6db74">&#39;origin/blog-branch&#39;</span>.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Changes to be committed:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git restore --staged &lt;file&gt;...&#34;</span> to unstage<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        modified:   content/post/git-branch.md
+</span></span></code></pre></div><p>Then commit the changes to the local repository.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#39;these are changes I made&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>blog-branch 8b566a8<span style="color:#f92672">]</span> these are changes I made
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">51</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">1</span> deletion<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>Once happy push the branch to remote upstream repository on GitHub.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git push origin blog-branch
+</span></span></code></pre></div><h2 id="make-changes-to-existing-branch">Make changes to existing branch</h2>
 <p>The workflow is slightly different if I have created a branch and want to return to work on it.  To simulate this if I delete the folder with local repository and create new clone from GitHub again.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
-
-Cloning into <span style="color:#e6db74">&#39;darrylcauldwell.github.io&#39;</span>...
-remote: Enumerating objects: 7361, <span style="color:#66d9ef">done</span>.
-remote: Counting objects: 100% <span style="color:#f92672">(</span>5996/5996<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-remote: Compressing objects: 100% <span style="color:#f92672">(</span>1761/1761<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-remote: Total <span style="color:#ae81ff">7361</span> <span style="color:#f92672">(</span>delta 2975<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">5678</span> <span style="color:#f92672">(</span>delta 2660<span style="color:#f92672">)</span>, pack-reused <span style="color:#ae81ff">1365</span>
-Receiving objects: 100% <span style="color:#f92672">(</span>7361/7361<span style="color:#f92672">)</span>, 66.43 MiB | 5.85 MiB/s, <span style="color:#66d9ef">done</span>.
-Resolving deltas: 100% <span style="color:#f92672">(</span>3667/3667<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-</code></pre></div><p>When creating new clone only the &lsquo;master&rsquo; branch, we can see the branch on remote/origin.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch -a
-
-* master
-  remotes/origin/HEAD -&gt; origin/master
-  remotes/origin/blog-branch
-  remotes/origin/master
-</code></pre></div><p>When look to switch local respository to branch with identical name the client is intelligent enough to link the local and remote and mark to track.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git checkout blog-branch
-
-Branch <span style="color:#e6db74">&#39;blog-branch&#39;</span> set up to track remote branch <span style="color:#e6db74">&#39;blog-branch&#39;</span> from <span style="color:#e6db74">&#39;origin&#39;</span>.
-Switched to a new branch <span style="color:#e6db74">&#39;blog-branch&#39;</span>
-
-git branch -a           
-
-* blog-branch
-  master
-  remotes/origin/HEAD -&gt; origin/master
-  remotes/origin/blog-branch
-  remotes/origin/master
-</code></pre></div><p>From here we can continue making changes, commit the files to local repository and then try and push them to remote as before.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Cloning into <span style="color:#e6db74">&#39;darrylcauldwell.github.io&#39;</span>...
+</span></span><span style="display:flex;"><span>remote: Enumerating objects: 7361, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>remote: Counting objects: 100% <span style="color:#f92672">(</span>5996/5996<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>remote: Compressing objects: 100% <span style="color:#f92672">(</span>1761/1761<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>remote: Total <span style="color:#ae81ff">7361</span> <span style="color:#f92672">(</span>delta 2975<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">5678</span> <span style="color:#f92672">(</span>delta 2660<span style="color:#f92672">)</span>, pack-reused <span style="color:#ae81ff">1365</span>
+</span></span><span style="display:flex;"><span>Receiving objects: 100% <span style="color:#f92672">(</span>7361/7361<span style="color:#f92672">)</span>, 66.43 MiB | 5.85 MiB/s, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>Resolving deltas: 100% <span style="color:#f92672">(</span>3667/3667<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+</span></span></code></pre></div><p>When creating new clone only the &lsquo;master&rsquo; branch, we can see the branch on remote/origin.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git branch -a
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>* master
+</span></span><span style="display:flex;"><span>  remotes/origin/HEAD -&gt; origin/master
+</span></span><span style="display:flex;"><span>  remotes/origin/blog-branch
+</span></span><span style="display:flex;"><span>  remotes/origin/master
+</span></span></code></pre></div><p>When look to switch local respository to branch with identical name the client is intelligent enough to link the local and remote and mark to track.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout blog-branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Branch <span style="color:#e6db74">&#39;blog-branch&#39;</span> set up to track remote branch <span style="color:#e6db74">&#39;blog-branch&#39;</span> from <span style="color:#e6db74">&#39;origin&#39;</span>.
+</span></span><span style="display:flex;"><span>Switched to a new branch <span style="color:#e6db74">&#39;blog-branch&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git branch -a           
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>* blog-branch
+</span></span><span style="display:flex;"><span>  master
+</span></span><span style="display:flex;"><span>  remotes/origin/HEAD -&gt; origin/master
+</span></span><span style="display:flex;"><span>  remotes/origin/blog-branch
+</span></span><span style="display:flex;"><span>  remotes/origin/master
+</span></span></code></pre></div><p>From here we can continue making changes, commit the files to local repository and then try and push them to remote as before.</p>
 <h2 id="in-branch-blog-build-and-testing">In-branch blog build and testing</h2>
 <p>So far I have been updating blog content in markdown files. The Hugo engine takes these markdown files and creates all of the pages required for static website. Prior to posting it is good to test the post formatting looks good, the image links work etc. From within the branch we can run Hugo and use browser to test.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo server
-
-Start building sites … 
-
-                   | EN   
--------------------+------
-  Pages            | <span style="color:#ae81ff">242</span>  
-  Paginator pages  |  <span style="color:#ae81ff">27</span>  
-  Non-page files   |   <span style="color:#ae81ff">0</span>  
-  Static files     | <span style="color:#ae81ff">274</span>  
-  Processed images |   <span style="color:#ae81ff">0</span>  
-  Aliases          |  <span style="color:#ae81ff">86</span>  
-  Sitemaps         |   <span style="color:#ae81ff">1</span>  
-  Cleaned          |   <span style="color:#ae81ff">0</span>  
-
-Built in <span style="color:#ae81ff">205</span> ms
-Watching <span style="color:#66d9ef">for</span> changes in /Users/darrylcauldwell/Development/darrylcauldwell.github.io/<span style="color:#f92672">{</span>archetypes,content,layouts,static,themes<span style="color:#f92672">}</span>
-Watching <span style="color:#66d9ef">for</span> config changes in /Users/darrylcauldwell/Development/darrylcauldwell.github.io/config/_default, /Users/darrylcauldwell/Development/darrylcauldwell.github.io/config/_default/menus
-Environment: <span style="color:#e6db74">&#34;development&#34;</span>
-Serving pages from memory
-Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
-Web Server is available at http://localhost:1313/ <span style="color:#f92672">(</span>bind address 127.0.0.1<span style="color:#f92672">)</span>
-Press Ctrl+C to stop
-</code></pre></div><p>In my configuration GitHub pages is configured to use the /docs folder.  When we&rsquo;ve tested and all looks good can then look to rebuild the static website files into that folder.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo --destination ~/Development/darrylcauldwell.github.io/docs
-
-Start building sites … 
-
-                   | EN   
--------------------+------
-  Pages            | <span style="color:#ae81ff">242</span>  
-  Paginator pages  |  <span style="color:#ae81ff">27</span>  
-  Non-page files   |   <span style="color:#ae81ff">0</span>  
-  Static files     | <span style="color:#ae81ff">274</span>  
-  Processed images |   <span style="color:#ae81ff">0</span>  
-  Aliases          |  <span style="color:#ae81ff">86</span>  
-  Sitemaps         |   <span style="color:#ae81ff">1</span>  
-  Cleaned          |   <span style="color:#ae81ff">0</span>  
-
-Total in <span style="color:#ae81ff">263</span> ms
-</code></pre></div><p>As we can see from the output adding a single post actually rebuilds many pages. It isn&rsquo;t really practical to add each to repository manually but we can use wildcard and add all.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git add .
-git commit -m <span style="color:#e6db74">&#39;new post on github branching&#39;</span>
-
-<span style="color:#f92672">[</span>blog-branch e202461<span style="color:#f92672">]</span> new post on github branching
- <span style="color:#ae81ff">189</span> files changed, <span style="color:#ae81ff">4147</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">2184</span> deletions<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
- create mode <span style="color:#ae81ff">100644</span> docs/post/git-branch/index.html
-
-git push origin blog-branch
-
-Enumerating objects: 646, <span style="color:#66d9ef">done</span>.
-Counting objects: 100% <span style="color:#f92672">(</span>646/646<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-Delta compression using up to <span style="color:#ae81ff">8</span> threads
-Compressing objects: 100% <span style="color:#f92672">(</span>277/277<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
-Writing objects: 100% <span style="color:#f92672">(</span>382/382<span style="color:#f92672">)</span>, 202.55 KiB | 4.71 MiB/s, <span style="color:#66d9ef">done</span>.
-Total <span style="color:#ae81ff">382</span> <span style="color:#f92672">(</span>delta 192<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>delta 0<span style="color:#f92672">)</span>, pack-reused <span style="color:#ae81ff">0</span>
-remote: Resolving deltas: 100% <span style="color:#f92672">(</span>192/192<span style="color:#f92672">)</span>, completed with <span style="color:#ae81ff">79</span> local objects.
-To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
-   da04b9c..e202461  blog-branch -&gt; blog-branch
-</code></pre></div><p>So at this stage we&rsquo;ve got out local and remote branch in sync.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch -a -v  
-
-* blog-branch                e202461 new post on github branching
-  master                     fb51479 heading formats
-  remotes/origin/HEAD        -&gt; origin/master
-  remotes/origin/blog-branch e202461 new post on github branching
-  remotes/origin/master      fb51479 heading formats
-</code></pre></div><h2 id="merge-blog-post-branch-to-master">Merge blog post branch to master</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hugo server
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Start building sites … 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                   | EN   
+</span></span><span style="display:flex;"><span>-------------------+------
+</span></span><span style="display:flex;"><span>  Pages            | <span style="color:#ae81ff">242</span>  
+</span></span><span style="display:flex;"><span>  Paginator pages  |  <span style="color:#ae81ff">27</span>  
+</span></span><span style="display:flex;"><span>  Non-page files   |   <span style="color:#ae81ff">0</span>  
+</span></span><span style="display:flex;"><span>  Static files     | <span style="color:#ae81ff">274</span>  
+</span></span><span style="display:flex;"><span>  Processed images |   <span style="color:#ae81ff">0</span>  
+</span></span><span style="display:flex;"><span>  Aliases          |  <span style="color:#ae81ff">86</span>  
+</span></span><span style="display:flex;"><span>  Sitemaps         |   <span style="color:#ae81ff">1</span>  
+</span></span><span style="display:flex;"><span>  Cleaned          |   <span style="color:#ae81ff">0</span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Built in <span style="color:#ae81ff">205</span> ms
+</span></span><span style="display:flex;"><span>Watching <span style="color:#66d9ef">for</span> changes in /Users/darrylcauldwell/Development/darrylcauldwell.github.io/<span style="color:#f92672">{</span>archetypes,content,layouts,static,themes<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>Watching <span style="color:#66d9ef">for</span> config changes in /Users/darrylcauldwell/Development/darrylcauldwell.github.io/config/_default, /Users/darrylcauldwell/Development/darrylcauldwell.github.io/config/_default/menus
+</span></span><span style="display:flex;"><span>Environment: <span style="color:#e6db74">&#34;development&#34;</span>
+</span></span><span style="display:flex;"><span>Serving pages from memory
+</span></span><span style="display:flex;"><span>Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
+</span></span><span style="display:flex;"><span>Web Server is available at http://localhost:1313/ <span style="color:#f92672">(</span>bind address 127.0.0.1<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>Press Ctrl+C to stop
+</span></span></code></pre></div><p>In my configuration GitHub pages is configured to use the /docs folder.  When we&rsquo;ve tested and all looks good can then look to rebuild the static website files into that folder.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hugo --destination ~/Development/darrylcauldwell.github.io/docs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Start building sites … 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                   | EN   
+</span></span><span style="display:flex;"><span>-------------------+------
+</span></span><span style="display:flex;"><span>  Pages            | <span style="color:#ae81ff">242</span>  
+</span></span><span style="display:flex;"><span>  Paginator pages  |  <span style="color:#ae81ff">27</span>  
+</span></span><span style="display:flex;"><span>  Non-page files   |   <span style="color:#ae81ff">0</span>  
+</span></span><span style="display:flex;"><span>  Static files     | <span style="color:#ae81ff">274</span>  
+</span></span><span style="display:flex;"><span>  Processed images |   <span style="color:#ae81ff">0</span>  
+</span></span><span style="display:flex;"><span>  Aliases          |  <span style="color:#ae81ff">86</span>  
+</span></span><span style="display:flex;"><span>  Sitemaps         |   <span style="color:#ae81ff">1</span>  
+</span></span><span style="display:flex;"><span>  Cleaned          |   <span style="color:#ae81ff">0</span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Total in <span style="color:#ae81ff">263</span> ms
+</span></span></code></pre></div><p>As we can see from the output adding a single post actually rebuilds many pages. It isn&rsquo;t really practical to add each to repository manually but we can use wildcard and add all.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#39;new post on github branching&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>blog-branch e202461<span style="color:#f92672">]</span> new post on github branching
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">189</span> files changed, <span style="color:#ae81ff">4147</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">2184</span> deletions<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span> create mode <span style="color:#ae81ff">100644</span> docs/post/git-branch/index.html
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git push origin blog-branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Enumerating objects: 646, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>Counting objects: 100% <span style="color:#f92672">(</span>646/646<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>Delta compression using up to <span style="color:#ae81ff">8</span> threads
+</span></span><span style="display:flex;"><span>Compressing objects: 100% <span style="color:#f92672">(</span>277/277<span style="color:#f92672">)</span>, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>Writing objects: 100% <span style="color:#f92672">(</span>382/382<span style="color:#f92672">)</span>, 202.55 KiB | 4.71 MiB/s, <span style="color:#66d9ef">done</span>.
+</span></span><span style="display:flex;"><span>Total <span style="color:#ae81ff">382</span> <span style="color:#f92672">(</span>delta 192<span style="color:#f92672">)</span>, reused <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>delta 0<span style="color:#f92672">)</span>, pack-reused <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>remote: Resolving deltas: 100% <span style="color:#f92672">(</span>192/192<span style="color:#f92672">)</span>, completed with <span style="color:#ae81ff">79</span> local objects.
+</span></span><span style="display:flex;"><span>To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+</span></span><span style="display:flex;"><span>   da04b9c..e202461  blog-branch -&gt; blog-branch
+</span></span></code></pre></div><p>So at this stage we&rsquo;ve got out local and remote branch in sync.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git branch -a -v  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>* blog-branch                e202461 new post on github branching
+</span></span><span style="display:flex;"><span>  master                     fb51479 heading formats
+</span></span><span style="display:flex;"><span>  remotes/origin/HEAD        -&gt; origin/master
+</span></span><span style="display:flex;"><span>  remotes/origin/blog-branch e202461 new post on github branching
+</span></span><span style="display:flex;"><span>  remotes/origin/master      fb51479 heading formats
+</span></span></code></pre></div><h2 id="merge-blog-post-branch-to-master">Merge blog post branch to master</h2>
 <p>Once we&rsquo;re happy that the new post branch is good we can look to merge that into &lsquo;master&rsquo; and be processed by GitHub Pages.</p>
 <p>As this is single user repository I could just use &lsquo;git merge&rsquo; to merge the branch. Merging branches in multi-user repository the merge might come via a merge pull request which allows for change review. In the past I&rsquo;d typically made pull requests via the web UI. I recently found the new git cli &lsquo;gh&rsquo; has capability to create pull-request.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gh pr create --title <span style="color:#e6db74">&#34;New post about github branching&#34;</span> --body <span style="color:#e6db74">&#34;New post about github branching with github pages&#34;</span> -H blog-branch
-
-Creating pull request <span style="color:#66d9ef">for</span> blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
-https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2
-</code></pre></div><p>As pull requests require independant review I cannot approve my own pull request but I can add some comments.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gh pr create --title <span style="color:#e6db74">&#34;New post about github branching&#34;</span> --body <span style="color:#e6db74">&#34;New post about github branching with github pages&#34;</span> -H blog-branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Creating pull request <span style="color:#66d9ef">for</span> blog-branch into master in darrylcauldwell/darrylcauldwell.github.io
+</span></span><span style="display:flex;"><span>https://github.com/darrylcauldwell/darrylcauldwell.github.io/pull/2
+</span></span></code></pre></div><p>As pull requests require independant review I cannot approve my own pull request but I can add some comments.</p>
 <p><img src="/images/git-branch-pr.png" alt="GitHub Pull Request Review"></p>
 <p>I can then look to merge.</p>
 <p><img src="/images/git-branch-pr.png" alt="GitHub Pull Request Merge"></p>
 <p>When we&rsquo;re merged into &lsquo;master&rsquo; branch can look to remove the branch both locally and remotely.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch -d blog-branch
-git push origin -d blog-branch
-
-To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
- - <span style="color:#f92672">[</span>deleted<span style="color:#f92672">]</span>         blog-branch
-
-git branch -a
-
-* master
-  remotes/origin/HEAD -&gt; origin/master
-  remotes/origin/master
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git branch -d blog-branch
+</span></span><span style="display:flex;"><span>git push origin -d blog-branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>To https://github.com/darrylcauldwell/darrylcauldwell.github.io.git
+</span></span><span style="display:flex;"><span> - <span style="color:#f92672">[</span>deleted<span style="color:#f92672">]</span>         blog-branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git branch -a
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>* master
+</span></span><span style="display:flex;"><span>  remotes/origin/HEAD -&gt; origin/master
+</span></span><span style="display:flex;"><span>  remotes/origin/master
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -341,6 +341,9 @@ git branch -a
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -361,16 +364,13 @@ git branch -a
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" class="nav-link" title="Raspberry Pi Kubernetes Cluster">Raspberry Pi Kubernetes Cluster</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -459,6 +459,11 @@ git branch -a
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -466,11 +471,6 @@ git branch -a
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -484,6 +484,11 @@ git branch -a
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -491,11 +496,6 @@ git branch -a
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -546,7 +546,7 @@ git branch -a
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -694,6 +694,10 @@ git branch -a
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -746,7 +750,7 @@ git branch -a
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -874,7 +878,7 @@ git branch -a
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

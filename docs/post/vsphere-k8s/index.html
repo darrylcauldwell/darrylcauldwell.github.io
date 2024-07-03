@@ -4,7 +4,7 @@
   <head>
 <title>vSphere with Kubernetes Homelab Build | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -240,41 +240,41 @@
 <p>At the end of installation message to disconnect the CD/DVD and reboot VM.  I remain connected for reboot, using remote console navigate Troubleshoot menu to enable ESXi Shall and SSH, then configure networking to reflect homelab IP allocation.</p>
 <h2 id="ensure-unique-system-uuid-and-mac-address">Ensure unique System UUID and MAC address</h2>
 <p>Once ESXi has a basic network configuration I power down the VM and move USB to the Intel NUC and power on. During installation of ESXi the System UUID and MAC address are formed from the MAC address of the NIC. When  using Fusion to create multiple ESXi VMs this scenario can lead to duplicatation of System UUID and MAC address. We can configure ESXi to move to physical NIC MAC address and form new ESXi System UUID by running commands like.</p>
-<pre><code>esxcli system settings advanced set -o /Net/FollowHardwareMac -i 1
-sed -i 's#/system/uuid.*##' /etc/vmware/esx.conf
+<pre tabindex="0"><code>esxcli system settings advanced set -o /Net/FollowHardwareMac -i 1
+sed -i &#39;s#/system/uuid.*##&#39; /etc/vmware/esx.conf
 /sbin/auto-backup.sh
 </code></pre><h2 id="add-external-usb-nic-drivers">Add external USB NIC drivers</h2>
 <p>The Intel NUC has a single onboard 1GB NIC, I add an external USB NIC to each NUC. ESXi doesn&rsquo;t ship with required drivers for these external USB NIC, for labs these are provides via <a href="https://flings.vmware.com/usb-network-native-driver-for-esxi">VMware Flings</a>. I copy the downloaded driver bundle to the /tmp folder on ESXi via an SFTP client like CyberDuck. Once the bundle is uploaded I following command to install the bundle.</p>
-<pre><code>esxcli software vib install -d /tmp/ESXi700-VMKUSB-NIC-FLING-34491022-component-15873236.zip
+<pre tabindex="0"><code>esxcli software vib install -d /tmp/ESXi700-VMKUSB-NIC-FLING-34491022-component-15873236.zip
 esxcli system maintenanceMode set --enable true
-esxcli system shutdown reboot --reason &quot;USB NIC driver&quot;
+esxcli system shutdown reboot --reason &#34;USB NIC driver&#34;
 </code></pre><h2 id="suppress-warnings">Suppress Warnings</h2>
 <p>When booting ESXi from USB the system logs and coredumps can not persist to local storage. I also prefer to leave SSH enabled in lab so get warnings. Both of these choices gives me warnings which I prefer to suppress.</p>
-<pre><code>vim-cmd hostsvc/advopt/update UserVars.SuppressShellWarning long 1
+<pre tabindex="0"><code>vim-cmd hostsvc/advopt/update UserVars.SuppressShellWarning long 1
 vim-cmd hostsvc/advopt/update UserVars.SuppressCoredumpWarning long 1
 vim-cmd hostsvc/advopt/update Syslog.global.logHost string 127.0.0.1
 </code></pre><h2 id="form-vsan-cluster">Form vSAN Cluster</h2>
 <p>Two of the Intel NUC I use each have SSD the third is used to provide compute resources only. The ESXi installation allows Management traffic only on VMkernel port so need to bind vSAN to VMkernel port. In my lab only two devices contribute disk to vSAN the default storage policy for will prevent any VM deployment. To configure this I run the following on each host in cluster.</p>
-<pre><code>esxcli system maintenanceMode set --enable false
+<pre tabindex="0"><code>esxcli system maintenanceMode set --enable false
 esxcli vsan network ip add -i vmk0
-esxcli vsan policy setdefault -c cluster -p &quot;((\&quot;hostFailuresToTolerate\&quot; i0)&quot;
-esxcli vsan policy setdefault -c vdisk -p &quot;((\&quot;hostFailuresToTolerate\&quot; i0)&quot;
-esxcli vsan policy setdefault -c vmnamespace -p &quot;((\&quot;hostFailuresToTolerate\&quot; i0)&quot;
-esxcli vsan policy setdefault -c vmswap -p &quot;((\&quot;hostFailuresToTolerate\&quot; i0) (\&quot;forceProvisioning\&quot; i1))&quot;
-esxcli vsan policy setdefault -c vmem -p &quot;((\&quot;hostFailuresToTolerate\&quot; i0) (\&quot;forceProvisioning\&quot; i1))&quot;
+esxcli vsan policy setdefault -c cluster -p &#34;((\&#34;hostFailuresToTolerate\&#34; i0)&#34;
+esxcli vsan policy setdefault -c vdisk -p &#34;((\&#34;hostFailuresToTolerate\&#34; i0)&#34;
+esxcli vsan policy setdefault -c vmnamespace -p &#34;((\&#34;hostFailuresToTolerate\&#34; i0)&#34;
+esxcli vsan policy setdefault -c vmswap -p &#34;((\&#34;hostFailuresToTolerate\&#34; i0) (\&#34;forceProvisioning\&#34; i1))&#34;
+esxcli vsan policy setdefault -c vmem -p &#34;((\&#34;hostFailuresToTolerate\&#34; i0) (\&#34;forceProvisioning\&#34; i1))&#34;
 </code></pre><p>With the pre-requists in place a new vSAN cluster can be formed on first host using command like.</p>
-<pre><code>esxcli vsan cluster new 
-esxcli vsan cluster get | grep &quot;Sub-Cluster UUID&quot;
+<pre tabindex="0"><code>esxcli vsan cluster new 
+esxcli vsan cluster get | grep &#34;Sub-Cluster UUID&#34;
     Sub-Cluster UUID: 5291783f-77a6-c1dc-2ed8-6cfc200618b1
 </code></pre><p>Add other nodes to the cluster using output of Sub-Cluster Master UUID using command like.</p>
-<pre><code>esxcli vsan cluster join -u 5291783f-77a6-c1dc-2ed8-6cfc200618b1
+<pre tabindex="0"><code>esxcli vsan cluster join -u 5291783f-77a6-c1dc-2ed8-6cfc200618b1
 </code></pre><p>At this stage vSAN cluster while nodes are looking to form the quorum cannot be formed. Prior to vSAN 6.6 the cluster can discover members using multicast. Forming cluster without vCenter requires formation of unicast networking from the command line by manually building table <a href="https://kb.vmware.com/s/article/2150303">kb2150303</a>.</p>
 <h2 id="active-directory">Active Directory</h2>
 <p>At this stage I upload Windows Server 2019 ISO to vSAN and use this to deploy a VM which acts as a environment Remote Desktop, File Store, DNS server, NTP source and Active Directory. Before proceeding create DNS A &amp; PTR records for the environment.</p>
 <h2 id="vcenter-server">vCenter Server</h2>
 <p>I use the Active Directory jump server to mount the vCenter ISO and use UI installer to deploy a &lsquo;Tiny&rsquo; sized vCenter Server to existing Datastore. This creates a cluster with the move deployed to, at this stage I attach remaining hosts to cluster.</p>
 <p>We can then pass ownership of vSAN cluster membership back to vCenter by running following on each host.</p>
-<pre><code>esxcfg-advcfg -s 0 /VSAN/IgnoreClusterMemberListupdates
+<pre tabindex="0"><code>esxcfg-advcfg -s 0 /VSAN/IgnoreClusterMemberListupdates
 </code></pre><p>The Workload Control Plane feature requires DRS and HA are required to be enabled on clusters it manages. Ensure these are enabled and HA admission control is disabled to maintain capacity.</p>
 <h2 id="default-vsan-storage-policy">Default vSAN Storage Policy</h2>
 <p>During the setup of VSAN cluster we configured the local policies to FTT=0 as I only have 2x hosts providing disk capacity. To deploy VMs and appliances via vCenter similarly need to adjust the &lsquo;vSAN Default Storage Policy&rsquo; to &lsquo;No data redundancy&rsquo;.</p>
@@ -290,7 +290,7 @@ esxcli vsan cluster get | grep &quot;Sub-Cluster UUID&quot;
 <p>Once VDS is created I add usb0 NIC from all cluster hosts to be assigned to Uplink1.  I do not migrate VMkernel or VM networking to VDS.</p>
 <h2 id="create-a-tunnel-endpoint-ip-address-pool">Create a Tunnel Endpoint IP Address Pool</h2>
 <p>System &gt; Networking &gt; IP Management &gt; IP Address Pools &gt; Add IP Address Pool</p>
-<pre><code>Name:             tep-pool
+<pre tabindex="0"><code>Name:             tep-pool
 IP Range:         192.168.1.20-192.168.1.24
 CIDR:             192.168.1.0/24
 Gateway IP:       192.168.1.254
@@ -298,7 +298,7 @@ DNS Server:       192.168.1.10
 DNS Suffix:       darrylcauldwell.com
 </code></pre><h2 id="configure-esxi-hosts-as-transport-nodes">Configure ESXi hosts as Transport Nodes</h2>
 <p>To consistently configure ESXi hosts as NSX Transport Nodes I create a Transport Node Profile.</p>
-<pre><code>Name                           Host Transport Node Profile
+<pre tabindex="0"><code>Name                           Host Transport Node Profile
 Host Switch - Type             VDS
 Host Switch - Mode             Standard
 Host Switch - Name             vCenter \ DSwitch
@@ -307,12 +307,12 @@ Host Switch - Uplink Profile   nsx-default-uplink-hostswitch-profile
 Host Switch - IP Assignment    IP Pool - tep-pool
 Host Switch - Teaming Policy   uplink1 (active)= Uplink 1
 </code></pre><p>Once created using Host Transport Nodes menu select cluster and apply profile. Once completed it is possible to view the NSX components installed on all ESXi hosts using:</p>
-<pre><code>esxcli software vib list | grep nsx
+<pre tabindex="0"><code>esxcli software vib list | grep nsx
 </code></pre><h2 id="configure-nsx-edge">Configure NSX Edge</h2>
 <p>The NSX Edge provides a Layer 3 routing capability the NSX Container Plugin requires at least a medium sized Edge to deploy a small loadbalancer.</p>
 <p>Deploy a medium sized Edge node</p>
 <p>System &gt; Fabric &gt;  Nodes &gt; Edge Transport Nodes &gt; Add Edge VM</p>
-<pre><code>Name:                   nsxEdge
+<pre tabindex="0"><code>Name:                   nsxEdge
 FQDN:                   edge
 Size:                   Large
 Shares:                 Normal
@@ -320,7 +320,7 @@ Memory Reservation:     0
 IP Assignment:          Static
 Management Interface:   VM Network
 </code></pre><p>Node Switch</p>
-<pre><code>Name:                       nvds1
+<pre tabindex="0"><code>Name:                       nvds1
 Transport Zone:             nsx-overlay-transportzone
 Uplink Profile:             nsx-edge-single-nic-uplink-profile
 IP Pool:                    tep-pool
@@ -333,12 +333,12 @@ DPDK Fastpath Interfaces:   VM Network
 </code></pre><h2 id="configure-edge-cluster">Configure Edge Cluster</h2>
 <p>When Edge has fully deployed create Edge Cluster</p>
 <p>System &gt; Fabric &gt; Nodes &gt; Edge Clusters &gt; Add</p>
-<pre><code>Name:                       edgeCluster
+<pre tabindex="0"><code>Name:                       edgeCluster
 Transport Nodes:            nsxEdge
 </code></pre><h2 id="uplink-network-segment">Uplink Network Segment</h2>
 <p>A network segment is required to to connect Tier0 router uplink to VLAN</p>
 <p>Networking &gt; Segments &gt;  Add Segment</p>
-<pre><code>Segment Name:               edgeUplink
+<pre tabindex="0"><code>Segment Name:               edgeUplink
 Connectivity:               None
 Transport Zone:             nsx-vlan-transportzone
 VLAN:                       0
@@ -346,19 +346,19 @@ Multicast:                  Disabled
 </code></pre><h2 id="tier0-router">Tier0 Router</h2>
 <p>A logical router is required I create one like:</p>
 <p>Networking &gt; Tier-0 Gateways &gt; Add Gateway &gt; Tier0</p>
-<pre><code>Name:                       tier0
+<pre tabindex="0"><code>Name:                       tier0
 HA Mode:                    Active-Standby
 Failover:                   non preemptive
 Edge Cluster:               edgeCluster
 </code></pre><p>Add Interface</p>
-<pre><code>Name:                       tier0uplink
+<pre tabindex="0"><code>Name:                       tier0uplink
 Type:                       External
 IP Address:                 192.168.1.17/24
 Connected To:               edgeUplink
 Edge Node:                  nsxEdge
 </code></pre><p>Once interface is added you can test it works as it will now be able to ping.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ping 192.168.1.17 -c <span style="color:#ae81ff">1</span>
-</code></pre></div><h2 id="enable-a-cluster-as-workload-control-plane-wcp">Enable a cluster as Workload Control Plane (WCP)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ping 192.168.1.17 -c <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><h2 id="enable-a-cluster-as-workload-control-plane-wcp">Enable a cluster as Workload Control Plane (WCP)</h2>
 <p>With all of the pre-requists in place we can now use wizard to enable integrated Kubernetes.</p>
 <p>[EDIT 4th May] since initial publication I found another <a href="https://www.virtuallyghetto.com/2020/04/deploying-a-minimal-vsphere-with-kubernetes-environment.html">blog post</a> around deploying minimal lab. By default when enabling Workload Control Plane this deploys a 3x VMs which form the Kubernetes supervisor cluster. This can be reduced to 2x by updating <code>/etc/vmware/wcp/wcpsvc.yaml</code> on the VCSA and changing the minmasters and maxmasters properties from 3 to 2. Then restarting the wcp service <code>service-control --restart wcp</code></p>
 <p>Menu &gt; Workload Management &gt; Enable</p>
@@ -366,18 +366,18 @@ Edge Node:                  nsxEdge
 <li>Select a Cluster</li>
 </ol>
 <p>If cluster does not show available check reason via GUI and or these vCenter logs for clues.</p>
-<pre><code>/var/log/vmware/wcp/wcpsvc.log
+<pre tabindex="0"><code>/var/log/vmware/wcp/wcpsvc.log
 /var/log/vmware/wcp/nsxd.log
 </code></pre><ol start="2">
 <li>Cluster Settings</li>
 </ol>
-<pre><code>Cluster Size:                  Tiny
+<pre tabindex="0"><code>Cluster Size:                  Tiny
 </code></pre><ol start="3">
 <li>Network</li>
 </ol>
 <p>The management network refers to the control plane needs to communicate with vCenter and NSX.  The workload network will come from the RFC1918 addressable space. Enter network details</p>
 <p>Workload Control Plane Networking</p>
-<pre><code>Network:                        VM Network
+<pre tabindex="0"><code>Network:                        VM Network
 Starting IP Address:            192.168.1.30
 Subnet Mask:                    255.255.255.0
 Gateway:                        192.168.1.254
@@ -385,7 +385,7 @@ DNS Server:                     192.168.1.10
 NTP Server:                     192.168.1.10
 DNS Search Domains:             darrylcauldwell.com
 </code></pre><p>Workload Network</p>
-<pre><code>vDS:                            DSwitch
+<pre tabindex="0"><code>vDS:                            DSwitch
 Edge Cluster:                   edgeCluster
 DNS Server:                     192.168.1.10
 Pod CIDRs:                      10.244.0.0/21 (default)
@@ -395,7 +395,7 @@ Egress CIDR:                    192.168.1.64/28
 </code></pre><ol start="4">
 <li>Configure storage to use</li>
 </ol>
-<pre><code>Control Plane Node              vSAN Default Storage Policy
+<pre tabindex="0"><code>Control Plane Node              vSAN Default Storage Policy
 Ephemeral Disks                 vSAN Default Storage Policy
 Image Cache                     vSAN Default Storage Policy
 </code></pre><ol start="5">
@@ -403,7 +403,7 @@ Image Cache                     vSAN Default Storage Policy
 </ol>
 <p>Once submitted we see in vCenter a resource pool named Namespaces and three virtual appliances named WcpAPIServerAgent each is allocated 2CPU and 8GB RAM.  An installation occurs on the three virtual appliances which,  these attempt to run before appliances deploy it is normal to see install failures during this phase.</p>
 <p>The progress messages available via UI aren&rsquo;t superb its useful to SSH to VCSA and tail the log:</p>
-<pre><code>tail -f /var/log/vmware/wcp/wcpsvc.logtail -f /var/log/vmware/wcp/wcpsvc.log
+<pre tabindex="0"><code>tail -f /var/log/vmware/wcp/wcpsvc.logtail -f /var/log/vmware/wcp/wcpsvc.log
 </code></pre><p>If all has goes to plan an hour and a half or so later and if all gone to plan.</p>
 <p><img src="/images/tanzu-wcp.png" alt="WCP Success"></p>
 <p>From here I can begin to create and consume native Kubernetes namespaces and resources.</p>
@@ -436,6 +436,9 @@ Image Cache                     vSAN Default Storage Policy
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -456,16 +459,13 @@ Image Cache                     vSAN Default Storage Policy
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -554,6 +554,11 @@ Image Cache                     vSAN Default Storage Policy
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -561,11 +566,6 @@ Image Cache                     vSAN Default Storage Policy
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -579,6 +579,11 @@ Image Cache                     vSAN Default Storage Policy
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -586,11 +591,6 @@ Image Cache                     vSAN Default Storage Policy
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -641,7 +641,7 @@ Image Cache                     vSAN Default Storage Policy
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -789,6 +789,10 @@ Image Cache                     vSAN Default Storage Policy
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -841,7 +845,7 @@ Image Cache                     vSAN Default Storage Policy
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -969,7 +973,7 @@ Image Cache                     vSAN Default Storage Policy
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

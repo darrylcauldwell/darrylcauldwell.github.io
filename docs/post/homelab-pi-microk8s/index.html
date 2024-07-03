@@ -4,7 +4,7 @@
   <head>
 <title>Raspberry Pi Kubernetes Cluster | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -180,7 +180,7 @@
 <p>I want my four node cluster to be highly available as easily as possible so for this deployment I chose Microk8s.</p>
 <h2 id="microk8s-pre-requisit">Microk8s Pre-requisit</h2>
 <p>Some Raspberry Pis have limited RAM so cgroup memory support is disabled by default. We can update all of the Pi&rsquo;s to enable cgroup memory during bootstrap.</p>
-<pre><code>vi `/boot/firmware/cmdline.txt`
+<pre tabindex="0"><code>vi `/boot/firmware/cmdline.txt`
 
 ## Add the following options
 cgroup_enable=memory cgroup_memory=1
@@ -191,7 +191,7 @@ sudo reboot
 </code></pre><p><img src="/images/homelab-pi-microk8s-cgroup.png" alt="Microk8s cgroup"></p>
 <h2 id="install-microk8s">Install Microk8s</h2>
 <p>MicroK8s is supplied as a snap, there are various Kubernetes releases these are available as snap channels.  To see all available versions we can query what channels are available. When I&rsquo;m running this the current Kubernetes version is 1.21 and I filter results on this we can see all.</p>
-<pre><code>snap info microk8s | grep 1.21
+<pre tabindex="0"><code>snap info microk8s | grep 1.21
 
 latest/stable:    v1.21.1  2021-05-17 (2215) 168MB classic
 latest/candidate: v1.21.1  2021-05-13 (2214) 168MB classic
@@ -203,22 +203,22 @@ latest/edge:      v1.21.1  2021-05-19 (2227) 168MB classic
 1.21/edge:        v1.21.1  2021-05-20 (2232) 168MB classic
 1.14/stable:      v1.14.10 2019-12-20 (1121) 164MB classic
 </code></pre><p>I&rsquo;ll look to install the stable release of 1.21 and add ubuntu user to microk8s group on each using:</p>
-<pre><code>sudo snap install microk8s --classic --channel=1.21/stable
+<pre tabindex="0"><code>sudo snap install microk8s --classic --channel=1.21/stable
 sudo usermod -a -G microk8s ubuntu
 newgrp microk8s
 </code></pre><p>When the snap is loaded and running on all nodes we can look to form them into a cluster.  On first node run following and it will generate a token to run on remote node to add it.</p>
-<pre><code>## From first node in cluster generate token  
+<pre tabindex="0"><code>## From first node in cluster generate token  
 sudo microk8s add-node
 
 From the node you wish to join to this cluster, run the following:
 microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
 </code></pre><p>Then on remote node run command with generated token.</p>
-<pre><code>sudo microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
+<pre tabindex="0"><code>sudo microk8s join 192.168.1.100:25000/73d707e38ddb7c7bbcf29a328a505179/7e8d2c9a15af
 
 Contacting cluster at 192.168.1.100
 Waiting for this node to finish joining the cluster. ..  
 </code></pre><p>Repeat this process (generate a token, run it from the joining node) for the third and forth nodes.  When all done from any node we can query the cluster state see all four nodes and check high availability status.</p>
-<pre><code>sudo microk8s status
+<pre tabindex="0"><code>sudo microk8s status
 
 microk8s is running
 high-availability: yes
@@ -245,7 +245,7 @@ addons:
     traefik              # traefik Ingress controller for external access
 </code></pre><h2 id="install-kubectl">Install kubectl</h2>
 <p>The Microk8s install deploys its own client and to execute have to remember to prefix everything with microk8s. I have to switch between systems often and to avoid confusion prefer to install normal kubectl. Again this is available as a snap in multiple versions.</p>
-<pre><code>snap info kubectl | grep 1.21
+<pre tabindex="0"><code>snap info kubectl | grep 1.21
 
 latest/stable:    1.21.1         2021-05-14 (1970)  9MB classic
 latest/candidate: 1.21.1         2021-05-14 (1970)  9MB classic
@@ -256,114 +256,114 @@ latest/edge:      1.21.1         2021-05-14 (1970)  9MB classic
 1.21/beta:        1.21.1         2021-05-13 (1970)  9MB classic
 1.21/edge:        1.21.1         2021-05-13 (1970)  9MB classic
 </code></pre><p>We want to install version to match Kubernetes and copy the Microk8s kubectl config to be kubectl default config.</p>
-<pre><code>sudo snap install kubectl --classic --channel=1.21/stable
+<pre tabindex="0"><code>sudo snap install kubectl --classic --channel=1.21/stable
 mkdir ~/.kube
 sudo microk8s config &gt; ~/.kube/config
 </code></pre><h2 id="cluster-networking">Cluster Networking</h2>
 <p>The base cluster networking provides communication between different Pods within the cluster. A kubernetes service resource is an abstraction which defines a logical set of Pods. The service can be defined as type ClusterIP, NodePort or LoadBalancer. The type:ClusterIP is only available between pods. The easiest way to expose externally is via type:NodePort this allocates a high port, between 30,000 to 32,767 and provides external port mapping on every host.</p>
 <h2 id="nodeport">NodePort</h2>
 <p>Microk8s provides this out of the box. We can test this is working by first creating a web server which itself listens on port 80. Then create a service of type:NodePort. We can then view the service details to obtain port allocation and either run curl localhost or off-host to IP via external web browser.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create namespace net-test
-kubectl config set-context --current --namespace<span style="color:#f92672">=</span>net-test
-kubectl create deployment nginx --image<span style="color:#f92672">=</span>nginx --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> --port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span>
-kubectl get deployments -o wide
-
-NAME    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES   SELECTOR
-nginx   2/2     <span style="color:#ae81ff">2</span>            <span style="color:#ae81ff">2</span>           65s   nginx        nginx    app<span style="color:#f92672">=</span>nginx
-
-kubectl expose deployment nginx --type<span style="color:#f92672">=</span>NodePort
-kubectl get service -o wide
-
-NAME    TYPE       CLUSTER-IP       EXTERNAL-IP   PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>        AGE
-nginx   NodePort   10.152.183.212   &lt;none&gt;        80:31508/TCP   9s
-
-curl localhost:31508
-kubectl delete service nginx
-</code></pre></div><h2 id="cluster-ingress">Cluster Ingress</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create namespace net-test
+</span></span><span style="display:flex;"><span>kubectl config set-context --current --namespace<span style="color:#f92672">=</span>net-test
+</span></span><span style="display:flex;"><span>kubectl create deployment nginx --image<span style="color:#f92672">=</span>nginx --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> --port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>kubectl get deployments -o wide
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES   SELECTOR
+</span></span><span style="display:flex;"><span>nginx   2/2     <span style="color:#ae81ff">2</span>            <span style="color:#ae81ff">2</span>           65s   nginx        nginx    app<span style="color:#f92672">=</span>nginx
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl expose deployment nginx --type<span style="color:#f92672">=</span>NodePort
+</span></span><span style="display:flex;"><span>kubectl get service -o wide
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME    TYPE       CLUSTER-IP       EXTERNAL-IP   PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>        AGE
+</span></span><span style="display:flex;"><span>nginx   NodePort   10.152.183.212   &lt;none&gt;        80:31508/TCP   9s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl localhost:31508
+</span></span><span style="display:flex;"><span>kubectl delete service nginx
+</span></span></code></pre></div><h2 id="cluster-ingress">Cluster Ingress</h2>
 <p>Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. To configure Ingress requires an Ingress Controller, Microk8s offers choice of two addons namely NGINX or Traefik. I looked to install NGINX with the Microk8s ingress addon.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">microk8s enable dns ingress
-</code></pre></div><h2 id="cluster-load-balancer">Cluster Load Balancer</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>microk8s enable dns ingress
+</span></span></code></pre></div><h2 id="cluster-load-balancer">Cluster Load Balancer</h2>
 <p>A virtual IP is provided by load-lalancer, private and public cloud platforms typically provide an external layer 4 load-balancer. For bare metal there is no external load-balancer, instead we can look to <a href="https://metallb.org/">MetalLB</a>.</p>
 <p>Usefully Microk8s ships a MetalLB addon option, the installation takes parameter of address range of IPs to issue. When we pass the parameter the installer created the MetalLB ConfigMap.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">microk8s enable metallb:192.168.1.104-192.168.1.110
-kubectl expose deployment nginx --port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span> --type<span style="color:#f92672">=</span>LoadBalancer
-kubectl get service
-
-NAME    TYPE           CLUSTER-IP       EXTERNAL-IP     PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>        AGE   SELECTOR
-nginx   LoadBalancer   10.152.183.132   192.168.1.104   80:30461/TCP   6s    app<span style="color:#f92672">=</span>nginx
-
-kubectl delete service nginx
-</code></pre></div><h2 id="load-balanced-ingress">Load Balanced Ingress</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>microk8s enable metallb:192.168.1.104-192.168.1.110
+</span></span><span style="display:flex;"><span>kubectl expose deployment nginx --port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span> --type<span style="color:#f92672">=</span>LoadBalancer
+</span></span><span style="display:flex;"><span>kubectl get service
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME    TYPE           CLUSTER-IP       EXTERNAL-IP     PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>        AGE   SELECTOR
+</span></span><span style="display:flex;"><span>nginx   LoadBalancer   10.152.183.132   192.168.1.104   80:30461/TCP   6s    app<span style="color:#f92672">=</span>nginx
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl delete service nginx
+</span></span></code></pre></div><h2 id="load-balanced-ingress">Load Balanced Ingress</h2>
 <p>The ingress controller is deployed as a DaemonSet which creates a ingress controller pod on each host in the cluster. Each pod listens has a containerPort 80 for http,  443 for https and 10254 which is a health probe.</p>
 <p>We can look to create a service resource type:LoadBalancer which re-directs and balances traffic across the cluster.</p>
 <p>Save the following as file named ingress-service.yaml</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">ingress</span>
-  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">ingress</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">selector</span>:
-    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-ingress-microk8s</span>
-  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">LoadBalancer</span>
-  <span style="color:#f92672">ports</span>:
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">http</span>
-      <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
-      <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">80</span>
-    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">https</span>
-      <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">443</span>
-      <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">443</span>
-</code></pre></div><p>Apply the file to create the service</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f ingress-service.yaml
-kubectl -n ingress get svc -o wide
-
-NAME      TYPE           CLUSTER-IP      EXTERNAL-IP     PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>                      AGE   SELECTOR
-ingress   LoadBalancer   10.152.183.54   192.168.1.104   80:31707/TCP,443:31289/TCP   7s    name<span style="color:#f92672">=</span>nginx-ingress-microk8s
-</code></pre></div><p>With this in place we can look to create a Ingress.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">ingress</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">ingress</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-ingress-microk8s</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">LoadBalancer</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">http</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">https</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">port</span>: <span style="color:#ae81ff">443</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">443</span>
+</span></span></code></pre></div><p>Apply the file to create the service</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f ingress-service.yaml
+</span></span><span style="display:flex;"><span>kubectl -n ingress get svc -o wide
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME      TYPE           CLUSTER-IP      EXTERNAL-IP     PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>                      AGE   SELECTOR
+</span></span><span style="display:flex;"><span>ingress   LoadBalancer   10.152.183.54   192.168.1.104   80:31707/TCP,443:31289/TCP   7s    name<span style="color:#f92672">=</span>nginx-ingress-microk8s
+</span></span></code></pre></div><p>With this in place we can look to create a Ingress.</p>
 <p>Save the following as file named nginx-ingress.yaml</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-ingress</span>
-  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">net-test</span>
-  <span style="color:#f92672">annotations</span>:
-    <span style="color:#f92672">kubernetes.io/ingress.class</span>: <span style="color:#ae81ff">public</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">rules</span>:
-  - <span style="color:#f92672">http</span>:
-      <span style="color:#f92672">paths</span>:
-      - <span style="color:#f92672">backend</span>:
-          <span style="color:#f92672">service</span>:
-            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx</span>
-            <span style="color:#f92672">port</span>: 
-              <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>
-        <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
-        <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
-</code></pre></div><p>Apply the file to create the service and we can use cURL to get nginx homepage.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f nginx-ingress.yaml
-kubectl -n net-test get ingress -o wide
-
-NAME            CLASS    HOSTS   ADDRESS   PORTS   AGE
-nginx-ingress   &lt;none&gt;   *                 <span style="color:#ae81ff">80</span>      4s
-
-curl 192.168.1.104
-</code></pre></div><h2 id="web-ui-dashboard">Web UI (Dashboard)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-ingress</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">net-test</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">annotations</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">kubernetes.io/ingress.class</span>: <span style="color:#ae81ff">public</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">rules</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">http</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">paths</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">backend</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">service</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: 
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">number</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
+</span></span></code></pre></div><p>Apply the file to create the service and we can use cURL to get nginx homepage.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f nginx-ingress.yaml
+</span></span><span style="display:flex;"><span>kubectl -n net-test get ingress -o wide
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME            CLASS    HOSTS   ADDRESS   PORTS   AGE
+</span></span><span style="display:flex;"><span>nginx-ingress   &lt;none&gt;   *                 <span style="color:#ae81ff">80</span>      4s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl 192.168.1.104
+</span></span></code></pre></div><h2 id="web-ui-dashboard">Web UI (Dashboard)</h2>
 <p>The Kubernetes web UI is a convenient way to view the cluster. This is supplied as a microk8s addon so simple to install.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo microk8s enable dashboard
-</code></pre></div><p>This creates a deployment exposed as a service type:ClusterIP on port 8443. We can edit the service and change to type:LoadBalancer so we can easier consume.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl -n kube-system get service kubernetes-dashboard -o wide
-
-NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>   AGE     SELECTOR
-kubernetes-dashboard   ClusterIP   10.152.183.172   &lt;none&gt;        443/TCP   4m14s   k8s-app<span style="color:#f92672">=</span>kubernetes-dashboard
-
-kubectl -n kube-system edit service kubernetes-dashboard
-kubectl -n kube-system get service kubernetes-dashboard -o wide
-
-NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP     PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>         AGE     SELECTOR
-kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093/TCP   5m39s   k8s-app<span style="color:#f92672">=</span>kubernetes-dashboard
-</code></pre></div><p><img src="/images/homelab-pi-microk8s-dashboard.png" alt="Microk8s Dashboard"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo microk8s enable dashboard
+</span></span></code></pre></div><p>This creates a deployment exposed as a service type:ClusterIP on port 8443. We can edit the service and change to type:LoadBalancer so we can easier consume.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl -n kube-system get service kubernetes-dashboard -o wide
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>   AGE     SELECTOR
+</span></span><span style="display:flex;"><span>kubernetes-dashboard   ClusterIP   10.152.183.172   &lt;none&gt;        443/TCP   4m14s   k8s-app<span style="color:#f92672">=</span>kubernetes-dashboard
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl -n kube-system edit service kubernetes-dashboard
+</span></span><span style="display:flex;"><span>kubectl -n kube-system get service kubernetes-dashboard -o wide
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP     PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>         AGE     SELECTOR
+</span></span><span style="display:flex;"><span>kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093/TCP   5m39s   k8s-app<span style="color:#f92672">=</span>kubernetes-dashboard
+</span></span></code></pre></div><p><img src="/images/homelab-pi-microk8s-dashboard.png" alt="Microk8s Dashboard"></p>
 
 
   </article>
@@ -393,6 +393,9 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -413,16 +416,13 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -511,6 +511,11 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -518,11 +523,6 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -536,6 +536,11 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -543,11 +548,6 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -598,7 +598,7 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -746,6 +746,10 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -798,7 +802,7 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -926,7 +930,7 @@ kubernetes-dashboard   LoadBalancer   10.152.183.172   192.168.1.105   443:31093
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

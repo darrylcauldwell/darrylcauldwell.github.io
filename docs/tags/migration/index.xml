@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/migration/</link>
     <description>Recent content in migration on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Tue, 01 Nov 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/migration/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Migrate VMware VMs to AWS EC2 using Server Migration Services (SMS)</title>
@@ -40,9 +41,9 @@
 &lt;p&gt;In order to create the first replication job we need to import the list of vCenter VMs by using the &amp;lsquo;Import server catalog&amp;rsquo; function.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-import.jpeg&#34; alt=&#34;AWS Server Migration Service Import Server Catalog&#34;&gt;&lt;/p&gt;
 &lt;p&gt;There is not a default role supplied which the SMS services can use to form AMI&amp;rsquo;s from the uploaded VMware snapshots. To do this download this file &lt;a href=&#34;https://darrylcauldwell.github.io/attachments/trust-policy.json&#34;&gt;trust-policy.json&lt;/a&gt; and this file &lt;a href=&#34;https://darrylcauldwell.github.io/attachments/role-policy.json&#34;&gt;role-policy.json&lt;/a&gt;. Then at a command prompt, go to the directory where you stored the two JSON files, and run the following commands to create the SMS service role:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws iam create-role --role-name sms --assume-role-policy-document file://trust-policy.json
-aws iam put-role-policy --role-name sms --policy-name sms --policy-document file://role-policy.json
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;how-to-migrate-virtual-machine&#34;&gt;How To: Migrate Virtual Machine&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws iam create-role --role-name sms --assume-role-policy-document file://trust-policy.json
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws iam put-role-policy --role-name sms --policy-name sms --policy-document file://role-policy.json
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;how-to-migrate-virtual-machine&#34;&gt;How To: Migrate Virtual Machine&lt;/h2&gt;
 &lt;p&gt;Once the vCenter Server Inventory is imported to AWS SMS, and the role is created we can create our first replication job by using the SMS service wizard.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Step 1: Select the servers&lt;/li&gt;
@@ -62,11 +63,11 @@ aws iam put-role-policy --role-name sms --policy-name sms --policy-document file
 &lt;p&gt;Once the job schedules,  the first task the job performs is to create a VMware snapshot, it&amp;rsquo;s important to remember to have enough disk capacity to hold snapshots.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-seed-snapshot.jpeg&#34; alt=&#34;AWS Server Migration Service Seeding Snapshot&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The AWS console doesn&amp;rsquo;t update very well, so its best to view the progress via the AWS CLI. First list all of the replication jobs and from this you can find the JobID then to make it easier to read target the output to the specific JobID.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-jobs  
-aws sms get-replication-jobs --replication-job-id sms-job-2ca54045  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A replication job refers to the server being migrated,  as we mentioned earlier multiple replications can occur for example the initial seed and an incremental.  Therefore within a replication job there might be various replication runs.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;aws sms get-replication-runs --replication-job-id sms-job-2ca54045  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following example we can see this has three runs in the runlist, the initial seed which has completed, an incrememental which has completed, it also has a pending job as I had left the default replication job values to schedule a daily incremental.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws sms get-replication-jobs  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws sms get-replication-jobs --replication-job-id sms-job-2ca54045  
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A replication job refers to the server being migrated,  as we mentioned earlier multiple replications can occur for example the initial seed and an incremental.  Therefore within a replication job there might be various replication runs.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;aws sms get-replication-runs --replication-job-id sms-job-2ca54045  
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the following example we can see this has three runs in the runlist, the initial seed which has completed, an incrememental which has completed, it also has a pending job as I had left the default replication job values to schedule a daily incremental.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/aws-sms-repl-runs.jpeg&#34; alt=&#34;AWS Server Migration Service Replication Runs&#34;&gt;&lt;/p&gt;
 &lt;p&gt;When a job is running you would see the state roll through the various stages&lt;/p&gt;
 &lt;ul&gt;

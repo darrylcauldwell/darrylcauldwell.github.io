@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/vcix/</link>
     <description>Recent content in vcix on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Mon, 23 May 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/vcix/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Configuring NSX Edge to DLR OSPF</title>
@@ -134,18 +135,18 @@ scenario and then worked through the steps to achieve a solution to meet the des
 &lt;p&gt;As 192.168.2.0/24 is not a network my home router is aware of I must create a Destination NAT rule on 192.168.1.0/24 network to map to the 192.168.2.0/24 address.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-DNAT.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Ensure this is created by connecting SSH session to the Edge and viewing the NAT configuration by running&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;show nat
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-NAT-CLI.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;show nat
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-NAT-CLI.jpg&#34; alt=&#34;Destination NAT&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;configure-web-server-dhcp&#34;&gt;Configure Web Server DHCP&lt;/h2&gt;
 &lt;p&gt;Enable DHCP and create a DHCP scope 192.168.2.10-192.168.2.50.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-DHCP.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;create-web-servers&#34;&gt;Create Web Servers&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ll look to create two test web servers each will host a single web page with its actual IP address on.  When I connect to load balanced IP the page contents returned will flip between the two servers.&lt;/p&gt;
 &lt;p&gt;I created a &lt;a href=&#34;https://darrylcauldwell.github.io/post/vsphere-vm-templates&#34;&gt;CentOS 7 VM template&lt;/a&gt; previously in lab and so for this test scenario I provisioned two new VMs from this named web1 and web2.  I left both as DHCP and setup the web server using following commands.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;yum install httpd -y
-service httpd start
-ifconfig | grep &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;inet&amp;#34;&lt;/span&gt; &amp;amp;gt; /var/www/html/test.html
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configure-load-balancer&#34;&gt;Configure Load Balancer&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install httpd -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;service httpd start
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ifconfig | grep &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;inet&amp;#34;&lt;/span&gt; &amp;amp;gt; /var/www/html/test.html
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configure-load-balancer&#34;&gt;Configure Load Balancer&lt;/h2&gt;
 &lt;p&gt;Enable the load balance function on the Edge.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-LoadBalancer-Enable.jpg&#34; alt=&#34;DHCP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Create a load balancer application profile called Web and mark is for HTTP traffic.&lt;/p&gt;
@@ -159,11 +160,11 @@ ifconfig | grep &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;inet&amp;#34;
 &lt;p&gt;I found when I configured this initially by selecting VM objects in the Virtual Server the loadbalancer tried to configure all IP addresses including the IPv6 addresses which are present by default in Centos7.  This caused a error in LoadBalancer and wouldn&amp;rsquo;t allow me to proceed.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-LoadBalance-IPv6.jpg&#34; alt=&#34;Load Balancer Virtual Server&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I disabled IPv6 on both CentOS7 VMs by adding the following to /etc/sysctl.conf:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;net.ipv6.conf.all.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then run the following to commit the changes.  When VMs had only IPv4 addresses the process works without error.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;sysctl -p
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;secure-solution&#34;&gt;Secure Solution&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;net.ipv6.conf.all.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then run the following to commit the changes.  When VMs had only IPv4 addresses the process works without error.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sysctl -p
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;secure-solution&#34;&gt;Secure Solution&lt;/h2&gt;
 &lt;p&gt;Up to now we have had the Edge firewall default rule set to allow,  one of the first tasks we would want to do once web load balancing is working is to secure the solution.&lt;/p&gt;
 &lt;p&gt;To do this we create a new rule explicitly allowing HTTP traffic to the IP address it will enter the Edge on,  and once in place change default rule to Deny.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-LB-Firewall.jpg&#34; alt=&#34;Load Balancer Firewall&#34;&gt;&lt;/p&gt;
@@ -171,10 +172,10 @@ net.ipv6.conf.default.disable_ipv6 &lt;span style=&#34;color:#f92672&#34;&gt;=&l
 &lt;h2 id=&#34;load-balance-monitoring&#34;&gt;Load Balance Monitoring&lt;/h2&gt;
 &lt;p&gt;When creating the Loadbalance configuration we specified to monitor port 80 was available in order to include the server in the balanced set. Before proceeding here ensure that when you connect to 192.168.1.40 and refresh load balancing is working correctly and returning IP addresses alternately.&lt;/p&gt;
 &lt;p&gt;We then stop the apache service on one of the VMs using:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;service httpd stop
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;service httpd stop
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/nsx-lbaas-apache-stop.jpg&#34; alt=&#34;Apache Stop&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If we now go back to browser and refresh a few times it will direct all traffic to one server IP address.  If we restart apache using&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;service httpd start
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;service httpd start
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and refresh the browser we find load balancing is returned and refreshes alternate the IP addresses.&lt;/p&gt;
 
         

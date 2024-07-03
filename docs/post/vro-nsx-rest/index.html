@@ -4,7 +4,7 @@
   <head>
 <title>Calling the NSX REST API with vRO and Navigating The XML Response | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -146,24 +146,24 @@
 
     
     <p>While the NSX for vSphere plugin for vRealize Orchestrator is useful, occasionally there are limitations. For example when creating an NSX Edge Services Gateway we use this method.</p>
-<pre><code>NSXEdgeTrinityBasicController.createEdgeV4
+<pre tabindex="0"><code>NSXEdgeTrinityBasicController.createEdgeV4
 </code></pre><p>That method returns void,  so next you need to make a second method call using filter by name to get the object and obtain object ID which is typically the input to other methods.</p>
-<pre><code>NSXEdgeTrinityBasicController.getAllEdgeSummariesV4
+<pre tabindex="0"><code>NSXEdgeTrinityBasicController.getAllEdgeSummariesV4
 </code></pre><p>When creating NSX Distributed Logical Router it is the same method to create. However the second method to get the object fails as it cannot handle the additional property LogicalRouterScope which DLRs have, so throws an error.</p>
-<pre><code>java.lang.NoSuchMethodException:com.vmware.vshield.edge.dto.trinity.LogicalRouterScope.&lt;init&gt;()
+<pre tabindex="0"><code>java.lang.NoSuchMethodException:com.vmware.vshield.edge.dto.trinity.LogicalRouterScope.&lt;init&gt;()
 </code></pre><p>After trying various other NSX plugin methods all have same issue so I changed approach. NSX offers all its capabilities via <a href="https://docs.vmware.com/en/VMware-NSX-for-vSphere/6.4/nsx_64_api.pdf">REST API</a>. vRealize Orchestrator comes with a HTTP-REST plugin, so in theory we can add NSX Managers as HTTP-REST endpoint and call everything direct.</p>
 <p>If you have multiple REST HTTP hosts added you would want to bring back a list of these.</p>
-<pre><code>restHosts = RESTHostManager.getHosts();
+<pre tabindex="0"><code>restHosts = RESTHostManager.getHosts();
 </code></pre><p>This returns an array of UUIDs of each REST host, we can use these UUIDs to get the REST host objects. We could normally loop to find the specific <a href="http://www.vroapi.com/Class/REST/2.2.2/RESTHost">RESThost</a> object we are looking for, but for ease here we would use the first item from array.</p>
-<pre><code>host = RESTHostManager.getHost(restHosts[0]);
+<pre tabindex="0"><code>host = RESTHostManager.getHost(restHosts[0]);
 </code></pre><p>So we have the target <a href="http://www.vroapi.com/Class/REST/2.2.2/RESTHost">RESThost</a> object look at forming the request using the <a href="http://www.vroapi.com/Method/REST/2.2.2/RESTHost/createRequest">createRequest</a> method.</p>
-<pre><code>request = host.createRequest('GET','/api/4.0/edges','');
+<pre tabindex="0"><code>request = host.createRequest(&#39;GET&#39;,&#39;/api/4.0/edges&#39;,&#39;&#39;);
 </code></pre><p>Once we have our request formed we can look to make the call using the <a href="http://www.vroapi.com/Method/REST/2.2.2/RESTHost/executeRequestWithCredentials">executeRequestWithCredentials</a> method. Here I store username and password as Secure String variables.</p>
-<pre><code>responseStr = request.executeWithCredentials(username,password);
+<pre tabindex="0"><code>responseStr = request.executeWithCredentials(username,password);
 </code></pre><p>This returns a <a href="http://www.vroapi.com/Class/REST/2.2.2/RESTResponse">RESTResponse</a> object, this has attribute contentAsString to navigate this XML we first convert this string to a <a href="https://www.w3schools.com/XML/dom_document.asp">XML DOM Document Object</a>. vRealize Orchestrator comes with a <a href="http://www.vroapi.com/Plugin/XML/7.0.1">XML plugin</a> we can use the <a href="http://www.vroapi.com/Method/XML/7.0.1/XMLManager/fromString">XMLManager.fromString</a> method to perform this converstion.</p>
-<pre><code>responseXml = XMLManager.fromString(responseStr.contentAsString);
+<pre tabindex="0"><code>responseXml = XMLManager.fromString(responseStr.contentAsString);
 </code></pre><p>If we look inside of the XML which is returned from /api/4.0/edges we can see each the hierachy that each NSX Edge is a XML Node called edgeSummary and within that Node are child nodes for all of its attributes.</p>
-<pre><code>&lt;pagedEdgeList&gt;
+<pre tabindex="0"><code>&lt;pagedEdgeList&gt;
     &lt;edgePage&gt;
         &lt;edgeSummary&gt;
             &lt;objectId&gt;
@@ -184,14 +184,14 @@
             &lt;name&gt;
             ...
 </code></pre><p>So we need to bring back all the edgeSummary Nodes and create a <a href="http://www.vroapi.com/Class/XML/7.0.1/XMLNodeList">XMLNodeList</a> object containing all of out Edges.</p>
-<pre><code>edgeNodeList = responseXml.getElementsByTagName(&quot;edgeSummary&quot;);
+<pre tabindex="0"><code>edgeNodeList = responseXml.getElementsByTagName(&#34;edgeSummary&#34;);
 </code></pre><p>Once we have this we can loop around the children of this and find the correct Edge entry and then get the objectId. We know the child order is always the same so we can choose data from positon in list and output the text content of Node.</p>
-<pre><code>for (var i = 0 ; i &lt; edgeNodeList.length ; i++) {
+<pre tabindex="0"><code>for (var i = 0 ; i &lt; edgeNodeList.length ; i++) {
     var node = edgeNodeList.item(i) ;
     edgeChildNodeList = node.getChildNodes();
     if (edgeChildNodeList.item(6).textContent == edgeName) {
         var objectId = edgeChildNodeList.item(0).textContent ;
-        System.log(&quot;Edge named &quot; + edgeName + &quot; has objectId &quot; + objectId) ;
+        System.log(&#34;Edge named &#34; + edgeName + &#34; has objectId &#34; + objectId) ;
     }
 }
 </code></pre><p>With this technique we should be able to get around any vRealize Orchestrator NSX Plugin limitation. This would also be useful for calling other RESTful APIs in absence of a specific vRealize Orchestrator plugin.</p>
@@ -224,6 +224,9 @@
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -244,16 +247,13 @@
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -342,6 +342,11 @@
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -349,11 +354,6 @@
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -367,6 +367,11 @@
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -374,11 +379,6 @@
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -429,7 +429,7 @@
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -577,6 +577,10 @@
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -629,7 +633,7 @@
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -757,7 +761,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

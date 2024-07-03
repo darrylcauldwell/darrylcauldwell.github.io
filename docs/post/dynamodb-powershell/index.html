@@ -4,7 +4,7 @@
   <head>
 <title>DynamoDB With Powershell | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -148,79 +148,79 @@
     <p>AWS dynamoDB is a really useful key-value store which is really easy to consume from scripts. However while the AWS Powershell module contains functions for &lsquo;Managing Tables&rsquo; it does not contain functions for &lsquo;Reading Data&rsquo; or &lsquo;Modifying Data&rsquo;.  I had found Julian Biddle had written a <a href="https://anoriginalidea.wordpress.com/2015/01/20/using-amazon-aws-dynamodb-from-powershell/">blog post</a> about how this might be done by making direct calls to AWS AmazonDynamoDBClient SDK for .net. While this was a useful starting point I had to read around this alot to get it to work how I needed, this post is an explaination of my understanding.</p>
 <p>The script this blog post documents is stored <a href="https://github.com/darrylcauldwell/dynamoDB-powershell/blob/master/dynamoDB.ps1">here</a>.</p>
 <p>The first thing to do is setup your Powershell session with credentials which have permissions to Read and Write AWS dynamoDB. Here we create a profile and then set this as the default profile to be used.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">Import-Module AWSPowershell
-Set-AWSCredentials -AccessKey &lt;my-access-key&gt; -SecretKey &lt;my-access-key-secret&gt; -StoreAs DynamoDB
-Initialize-AWSDefaults -ProfileName DynamoDB -Region eu-west-1
-</code></pre></div><p>We can then use the AWS cmdlets to create a test dynamoDB table.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$exampleSchema = New-DDBTableSchema | Add-DDBKeySchema -KeyName <span style="color:#e6db74">&#34;Name&#34;</span> -KeyDataType <span style="color:#e6db74">&#34;S&#34;</span>
-$exampleTable = New-DDBTable <span style="color:#e6db74">&#34;myExample&#34;</span> -Schema $exampleSchema -ReadCapacity 5 -WriteCapacity 5
-</code></pre></div><p>Then within our script we add the AmazonDynamoDB .net framework class.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">Add-Type -Path (${env<span style="color:#960050;background-color:#1e0010">:</span>ProgramFiles(x86)}+<span style="color:#e6db74">&#34;\AWS SDK for .NET\bin\Net45\AWSSDK.DynamoDBv2.dll&#34;</span>)
-</code></pre></div><p>We then create a session to dynamoDB, in this example script we are running from within a Powershell session which already has permissions to DynamoDB. As such we need to specify which region our tables are in so we form a RegionEndpoint object for Ireland and pass this to form a session to that region.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$regionName = <span style="color:#e6db74">&#39;eu-west-1&#39;</span>
-$regionEndpoint=<span style="color:#66d9ef">[Amazon.RegionEndPoint]</span>::GetBySystemName($regionName)
-$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($regionEndpoint)
-</code></pre></div><p>If we wanted to authenticate within script we would form a credential object and pass that to the command to create the session for example.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($creds, $regionEndpoint).
-</code></pre></div><p>As we would typically make various put operations to DynamoDB we create a reuable function which takes parameters. In this example we have a function creating a single Item with two key-value pairs.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">function</span> putDDBItem{
-    <span style="color:#66d9ef">param</span> (
-        <span style="color:#66d9ef">[string]</span>$tableName,
-        <span style="color:#66d9ef">[string]</span>$key,
-        <span style="color:#66d9ef">[string]</span>$val,
-        <span style="color:#66d9ef">[string]</span>$key1,
-        <span style="color:#66d9ef">[string]</span>$val1
-        )
-</code></pre></div><p>We create an object for the PutItemRequest operation, we then assign our tableName parameter as the string value for the TableName property.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$req = New-Object Amazon.DynamoDBv2.Model.PutItemRequest
-$req.TableName = $tableName
-</code></pre></div><p>We also need to populate the Item property, this is a dictionary which requires both a string value for the key name and an AttributeValue object. Here we add two key-value pairs to the item object request.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$req.Item = New-Object <span style="color:#e6db74">&#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&#39;</span>
-$valObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
-$valObj.S = $val
-$req.Item.Add($key, $valObj)
-$val1Obj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
-$val1Obj.S = $val1
-$req.Item.Add($key1, $val1Obj)
-</code></pre></div><p>Once our object item request is formed we run this against the PutItem method of our dynamoDB database connection</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$dbClient.PutItem($req)
-}
-</code></pre></div><p>As we would typically make various read operations to DynamoDB we create a reuable function which takes parameters.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">function</span> getDDBItem{
-    <span style="color:#66d9ef">param</span> (
-            <span style="color:#66d9ef">[string]</span>$tableName,
-            <span style="color:#66d9ef">[string]</span>$key,
-            <span style="color:#66d9ef">[string]</span>$keyAttrStr
-            )
-
-<span style="color:#75715e">## We create an object for the GetItemRequest operation, we then assign our tableName parameter as the string value for the TableName property. </span>
-
-$req = New-Object Amazon.DynamoDBv2.Model.GetItemRequest
-$req.TableName = $tableName
-
-<span style="color:#75715e">## We also need to populate the Key property, this is a dictionary which requires both a string value for the key name and an AttributeValue object for the value matching the Item we want to extract. The full command syntax can be found [here](http://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/DynamoDBv2/TDynamoDBv2GetItemRequest.html).</span>
-
-$req.Key = New-Object <span style="color:#e6db74">&#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&#39;</span>
-$keyAttrObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
-$keyAttrObj.S = $keyAttrStr
-$req.Key.Add($key, $keyAttrObj.S)
-
-<span style="color:#75715e">## Once we have our request object populated we then run the GetItem method and pass it the object we have formed. Here I adjust the scope of the object to script so this can be used within the script outside of the function.</span>
-
-$script:resp = $dbClient.GetItem($req)
-}
-</code></pre></div><p>If we now call the set function and ask it to create an item,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -val <span style="color:#e6db74">&#39;Bob&#39;</span> -key1 <span style="color:#e6db74">&#39;Age&#39;</span> -val1 <span style="color:#e6db74">&#39;21&#39;</span>
-</code></pre></div><p>We can repeat this to populate a little more data into the table.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -val <span style="color:#e6db74">&#39;Bert&#39;</span> -key1 <span style="color:#e6db74">&#39;Age&#39;</span> -val1 <span style="color:#e6db74">&#39;22&#39;</span>
-putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -val <span style="color:#e6db74">&#39;Sid&#39;</span> -key1 <span style="color:#e6db74">&#39;Age&#39;</span> -val1 <span style="color:#e6db74">&#39;23&#39;</span>
-</code></pre></div><p>Oncew we have some data in we can then call the query function to pull back the the Item where Name matches Bob.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">getDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -keyAttrStr <span style="color:#e6db74">&#39;Bob&#39;</span>
-</code></pre></div><p>The item is returned as an object, we can then display the contents of any key value pair such as Hugh&rsquo;s age,  note the key value pair are also objects so we view the .S string attribute.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$script:resp.Item.<span style="color:#e6db74">&#39;Age&#39;</span>.S
-</code></pre></div><p>As for this example I scoped the object to script it will not be cleaned so we reset this to $null once we have consumed it.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$script:resp = $null
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Import-Module AWSPowershell
+</span></span><span style="display:flex;"><span>Set-AWSCredentials -AccessKey &lt;my-access-key&gt; -SecretKey &lt;my-access-key-secret&gt; -StoreAs DynamoDB
+</span></span><span style="display:flex;"><span>Initialize-AWSDefaults -ProfileName DynamoDB -Region eu-west-<span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>We can then use the AWS cmdlets to create a test dynamoDB table.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$exampleSchema = New-DDBTableSchema | Add-DDBKeySchema -KeyName <span style="color:#e6db74">&#34;Name&#34;</span> -KeyDataType <span style="color:#e6db74">&#34;S&#34;</span>
+</span></span><span style="display:flex;"><span>$exampleTable = New-DDBTable <span style="color:#e6db74">&#34;myExample&#34;</span> -Schema $exampleSchema -ReadCapacity <span style="color:#ae81ff">5</span> -WriteCapacity <span style="color:#ae81ff">5</span>
+</span></span></code></pre></div><p>Then within our script we add the AmazonDynamoDB .net framework class.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Add-Type -Path (${env<span style="color:#960050;background-color:#1e0010">:</span>ProgramFiles(x86)}+<span style="color:#e6db74">&#34;\AWS SDK for .NET\bin\Net45\AWSSDK.DynamoDBv2.dll&#34;</span>)
+</span></span></code></pre></div><p>We then create a session to dynamoDB, in this example script we are running from within a Powershell session which already has permissions to DynamoDB. As such we need to specify which region our tables are in so we form a RegionEndpoint object for Ireland and pass this to form a session to that region.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$regionName = <span style="color:#e6db74">&#39;eu-west-1&#39;</span>
+</span></span><span style="display:flex;"><span>$regionEndpoint=[<span style="color:#66d9ef">Amazon.RegionEndPoint</span>]::GetBySystemName($regionName)
+</span></span><span style="display:flex;"><span>$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($regionEndpoint)
+</span></span></code></pre></div><p>If we wanted to authenticate within script we would form a credential object and pass that to the command to create the session for example.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$dbClient = New-Object Amazon.DynamoDBv2.AmazonDynamoDBClient($creds, $regionEndpoint).
+</span></span></code></pre></div><p>As we would typically make various put operations to DynamoDB we create a reuable function which takes parameters. In this example we have a function creating a single Item with two key-value pairs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> putDDBItem{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">param</span> (
+</span></span><span style="display:flex;"><span>        [<span style="color:#66d9ef">string</span>]$tableName,
+</span></span><span style="display:flex;"><span>        [<span style="color:#66d9ef">string</span>]$key,
+</span></span><span style="display:flex;"><span>        [<span style="color:#66d9ef">string</span>]$val,
+</span></span><span style="display:flex;"><span>        [<span style="color:#66d9ef">string</span>]$key1,
+</span></span><span style="display:flex;"><span>        [<span style="color:#66d9ef">string</span>]$val1
+</span></span><span style="display:flex;"><span>        )
+</span></span></code></pre></div><p>We create an object for the PutItemRequest operation, we then assign our tableName parameter as the string value for the TableName property.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$req = New-Object Amazon.DynamoDBv2.Model.PutItemRequest
+</span></span><span style="display:flex;"><span>$req.TableName = $tableName
+</span></span></code></pre></div><p>We also need to populate the Item property, this is a dictionary which requires both a string value for the key name and an AttributeValue object. Here we add two key-value pairs to the item object request.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$req.Item = New-Object <span style="color:#e6db74">&#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&#39;</span>
+</span></span><span style="display:flex;"><span>$valObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+</span></span><span style="display:flex;"><span>$valObj.S = $val
+</span></span><span style="display:flex;"><span>$req.Item.Add($key, $valObj)
+</span></span><span style="display:flex;"><span>$val1Obj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+</span></span><span style="display:flex;"><span>$val1Obj.S = $val1
+</span></span><span style="display:flex;"><span>$req.Item.Add($key1, $val1Obj)
+</span></span></code></pre></div><p>Once our object item request is formed we run this against the PutItem method of our dynamoDB database connection</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$dbClient.PutItem($req)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>As we would typically make various read operations to DynamoDB we create a reuable function which takes parameters.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> getDDBItem{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">param</span> (
+</span></span><span style="display:flex;"><span>            [<span style="color:#66d9ef">string</span>]$tableName,
+</span></span><span style="display:flex;"><span>            [<span style="color:#66d9ef">string</span>]$key,
+</span></span><span style="display:flex;"><span>            [<span style="color:#66d9ef">string</span>]$keyAttrStr
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## We create an object for the GetItemRequest operation, we then assign our tableName parameter as the string value for the TableName property. </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$req = New-Object Amazon.DynamoDBv2.Model.GetItemRequest
+</span></span><span style="display:flex;"><span>$req.TableName = $tableName
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## We also need to populate the Key property, this is a dictionary which requires both a string value for the key name and an AttributeValue object for the value matching the Item we want to extract. The full command syntax can be found [here](http://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/DynamoDBv2/TDynamoDBv2GetItemRequest.html).</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$req.Key = New-Object <span style="color:#e6db74">&#39;system.collections.generic.dictionary[string,Amazon.DynamoDBv2.Model.AttributeValue]&#39;</span>
+</span></span><span style="display:flex;"><span>$keyAttrObj = New-Object Amazon.DynamoDBv2.Model.AttributeValue
+</span></span><span style="display:flex;"><span>$keyAttrObj.S = $keyAttrStr
+</span></span><span style="display:flex;"><span>$req.Key.Add($key, $keyAttrObj.S)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## Once we have our request object populated we then run the GetItem method and pass it the object we have formed. Here I adjust the scope of the object to script so this can be used within the script outside of the function.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$script:resp = $dbClient.GetItem($req)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>If we now call the set function and ask it to create an item,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -val <span style="color:#e6db74">&#39;Bob&#39;</span> -key1 <span style="color:#e6db74">&#39;Age&#39;</span> -val1 <span style="color:#e6db74">&#39;21&#39;</span>
+</span></span></code></pre></div><p>We can repeat this to populate a little more data into the table.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -val <span style="color:#e6db74">&#39;Bert&#39;</span> -key1 <span style="color:#e6db74">&#39;Age&#39;</span> -val1 <span style="color:#e6db74">&#39;22&#39;</span>
+</span></span><span style="display:flex;"><span>putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -val <span style="color:#e6db74">&#39;Sid&#39;</span> -key1 <span style="color:#e6db74">&#39;Age&#39;</span> -val1 <span style="color:#e6db74">&#39;23&#39;</span>
+</span></span></code></pre></div><p>Oncew we have some data in we can then call the query function to pull back the the Item where Name matches Bob.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>getDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -key <span style="color:#e6db74">&#39;Name&#39;</span> -keyAttrStr <span style="color:#e6db74">&#39;Bob&#39;</span>
+</span></span></code></pre></div><p>The item is returned as an object, we can then display the contents of any key value pair such as Hugh&rsquo;s age,  note the key value pair are also objects so we view the .S string attribute.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$script:resp.Item.<span style="color:#e6db74">&#39;Age&#39;</span>.S
+</span></span></code></pre></div><p>As for this example I scoped the object to script it will not be cleaned so we reset this to $null once we have consumed it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$script:resp = $null
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -249,6 +249,9 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -269,16 +272,13 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -367,6 +367,11 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -374,11 +379,6 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -392,6 +392,11 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -399,11 +404,6 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -454,7 +454,7 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -602,6 +602,10 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -654,7 +658,7 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -782,7 +786,7 @@ putDDBItem -tableName <span style="color:#e6db74">&#39;myExample&#39;</span> -ke
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

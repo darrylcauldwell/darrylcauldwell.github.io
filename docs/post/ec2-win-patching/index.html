@@ -4,7 +4,7 @@
   <head>
 <title>Patching Windows EC2 Instances | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -149,31 +149,31 @@
 <h2 id="how-to">How To</h2>
 <p>The guest agent requires permissions to connect to EC2 Systems Manager, we give these rights by create an EC2 Service role with the policy document &lsquo;AmazonEC2RoleforSSM&rsquo; attached. We then provision the EC2 instance to be patched with this role attached. If you have instance already deployed you can add the policy document to a role which is added already,  or clone the instance to a new AMI attach role and power on.</p>
 <p>Here I create a new role named &lsquo;EC2-Systems-Manager-Role&rsquo; with the policy document &lsquo;AmazonEC2RoleforSSM&rsquo; attached, attached it to a new test Windows 2016 EC2 instance.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws iam create-role --role-name EC2-Systems-Manager-Role --assume-role-policy-document <span style="color:#e6db74">&#39;{&#34;Version&#34;:&#34;2012-10-17&#34;,&#34;Statement&#34;:[{&#34;Effect&#34;:&#34;Allow&#34;,&#34;Principal&#34;:{&#34;Service&#34;:[&#34;ssm.amazonaws.com&#34;]},&#34;Action&#34;:[&#34;sts:AssumeRole&#34;]}]}&#39;</span>
-
-aws iam create-instance-profile --instance-profile-name EC2-Systems-Manager-Profile
-
-aws iam add-role-to-instance-profile --instance-profile-name EC2-Systems-Manager-Profile --role-name EC2-Systems-Manager-Role
-
-aws ec2 create-security-group --group-name systemsManagerTest --description <span style="color:#e6db74">&#34;EC2 Systems Manager Test Security Group&#34;</span>
-
-aws ec2 run-instances --image-id ami-771b4504 --count <span style="color:#ae81ff">1</span> --instance-type t2.micro --key-name MyEC2 --security-groups systemsManagerTest --iam-instance-profile Name<span style="color:#f92672">=</span>EC2-Systems-Manager-Profile
-</code></pre></div><p>The &lsquo;Systems Manager Service&rsquo; requires a Patch Group tag adding to the EC2 instances to patch,  so here we add a tag to the instance we just created.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws ec2 create-tags --resources &lt;ec2-instance-id&gt; --tags Key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Patch Group&#39;</span>,Value<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Test-Patch&#39;</span>
-</code></pre></div><p>The &lsquo;Systems Manager Service - Maintenance Window&rsquo; task requires rights on the EC2 instances to apply patches and also to task to the &lsquo;Systems Manager Service&rsquo;.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws iam create-user --user-name ssmPatchUser
-aws iam create-policy --policy-name ssmPassRole --policy-document <span style="color:#e6db74">&#39;{&#34;Version&#34;: &#34;2012-10-17&#34;,&#34;Statement&#34;: [{&#34;Effect&#34;: &#34;Allow&#34;,&#34;Action&#34;: [&#34;iam:PassRole&#34;],&#34;Resource&#34;: &#34;*&#34;}]}&#39;</span>
-aws iam attach-user-policy --policy-arn arn:aws:iam::&lt;your-acc-number&gt;:policy/ssmPassRole  --user-name ssmPatchUser
-aws iam attach-user-policy --policy-arn arn:aws:iam::aws:policy/AmazonSSMFullAccess --user-name ssmPatchUser
-</code></pre></div><p>We can then setup a patch baseline, this baseline auto approves all Critical, Important and Moderate patches of all classifications to be deployed seven days after they released.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws ssm create-patch-baseline --name <span style="color:#e6db74">&#34;testBaseline&#34;</span> --approval-rules <span style="color:#e6db74">&#34;PatchRules=[{PatchFilterGroup={PatchFilters=[{Key=MSRC_SEVERITY,Values=[Critical,Important,Moderate]},{Key=CLASSIFICATION,Values=[SecurityUpdates,Updates,UpdateRollups,CriticalUpdates]}]},ApproveAfterDays=7}]&#34;</span> --description <span style="color:#e6db74">&#34;myBaseline&#34;</span>
-</code></pre></div><p>We then take the baseline ID output and link the patch baseline with the patch group.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws ssm register-patch-baseline-for-patch-group --baseline-id &lt;baseline-id&gt; --patch-group <span style="color:#e6db74">&#34;Test-Patch&#34;</span>
-</code></pre></div><p>Once the baseline and patch groups are created and linked,  we create a SSM Maintenance Window with a task to deploy.  Here we create a schedule which starts every week day 6pm to midnight and stops scheduling tasks at 11pm. To format the cron expression is a little complex but its documented <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sysman-maintenance-cron.html?icmpid=docs_ec2_console">here</a> in my example we have a window at 6pm for six hours Monday through Friday.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">aws ssm create-maintenance-window --name myFirstMaintenanceWindow --schedule <span style="color:#e6db74">&#34;cron(0 00 18 ? * MON-FRI)&#34;</span> --duration <span style="color:#ae81ff">6</span> --cutoff <span style="color:#ae81ff">1</span> --allow-unassociated-targets
-aws ssm register-target-with-maintenance-window --window-id &lt;maint-window-id&gt; --targets <span style="color:#e6db74">&#34;Key=tag:Patch Group,Values=Test-Patch&#34;</span> --owner-information <span style="color:#e6db74">&#34;Test server&#34;</span> --resource-type <span style="color:#e6db74">&#34;INSTANCE&#34;</span> 
-aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-window-id&gt; --targets <span style="color:#e6db74">&#34;Key=WindowTargetIds,Values=&lt;your-target-group-id&gt;&#34;</span> --task-arn <span style="color:#e6db74">&#34;AWS-ApplyPatchBaseline&#34;</span> --service-role-arn <span style="color:#e6db74">&#34;arn:aws:iam::&lt;your-acc-id&gt;:policy/ssmPassRole&#34;</span> --task-type <span style="color:#e6db74">&#34;RUN_COMMAND&#34;</span> --max-concurrency <span style="color:#ae81ff">2</span> --max-errors <span style="color:#ae81ff">1</span> --priority <span style="color:#ae81ff">1</span> --task-parameters <span style="color:#e6db74">&#34;{\&#34;Operation\&#34;:{\&#34;Values\&#34;:[\&#34;Install\&#34;]}}&#34;</span>
-</code></pre></div><p>Another useful little tool for making operating EC2 instances that little bit easier.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam create-role --role-name EC2-Systems-Manager-Role --assume-role-policy-document <span style="color:#e6db74">&#39;{&#34;Version&#34;:&#34;2012-10-17&#34;,&#34;Statement&#34;:[{&#34;Effect&#34;:&#34;Allow&#34;,&#34;Principal&#34;:{&#34;Service&#34;:[&#34;ssm.amazonaws.com&#34;]},&#34;Action&#34;:[&#34;sts:AssumeRole&#34;]}]}&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aws iam create-instance-profile --instance-profile-name EC2-Systems-Manager-Profile
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aws iam add-role-to-instance-profile --instance-profile-name EC2-Systems-Manager-Profile --role-name EC2-Systems-Manager-Role
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aws ec2 create-security-group --group-name systemsManagerTest --description <span style="color:#e6db74">&#34;EC2 Systems Manager Test Security Group&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aws ec2 run-instances --image-id ami-771b4504 --count <span style="color:#ae81ff">1</span> --instance-type t2.micro --key-name MyEC2 --security-groups systemsManagerTest --iam-instance-profile Name<span style="color:#f92672">=</span>EC2-Systems-Manager-Profile
+</span></span></code></pre></div><p>The &lsquo;Systems Manager Service&rsquo; requires a Patch Group tag adding to the EC2 instances to patch,  so here we add a tag to the instance we just created.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws ec2 create-tags --resources &lt;ec2-instance-id&gt; --tags Key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Patch Group&#39;</span>,Value<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Test-Patch&#39;</span>
+</span></span></code></pre></div><p>The &lsquo;Systems Manager Service - Maintenance Window&rsquo; task requires rights on the EC2 instances to apply patches and also to task to the &lsquo;Systems Manager Service&rsquo;.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam create-user --user-name ssmPatchUser
+</span></span><span style="display:flex;"><span>aws iam create-policy --policy-name ssmPassRole --policy-document <span style="color:#e6db74">&#39;{&#34;Version&#34;: &#34;2012-10-17&#34;,&#34;Statement&#34;: [{&#34;Effect&#34;: &#34;Allow&#34;,&#34;Action&#34;: [&#34;iam:PassRole&#34;],&#34;Resource&#34;: &#34;*&#34;}]}&#39;</span>
+</span></span><span style="display:flex;"><span>aws iam attach-user-policy --policy-arn arn:aws:iam::&lt;your-acc-number&gt;:policy/ssmPassRole  --user-name ssmPatchUser
+</span></span><span style="display:flex;"><span>aws iam attach-user-policy --policy-arn arn:aws:iam::aws:policy/AmazonSSMFullAccess --user-name ssmPatchUser
+</span></span></code></pre></div><p>We can then setup a patch baseline, this baseline auto approves all Critical, Important and Moderate patches of all classifications to be deployed seven days after they released.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws ssm create-patch-baseline --name <span style="color:#e6db74">&#34;testBaseline&#34;</span> --approval-rules <span style="color:#e6db74">&#34;PatchRules=[{PatchFilterGroup={PatchFilters=[{Key=MSRC_SEVERITY,Values=[Critical,Important,Moderate]},{Key=CLASSIFICATION,Values=[SecurityUpdates,Updates,UpdateRollups,CriticalUpdates]}]},ApproveAfterDays=7}]&#34;</span> --description <span style="color:#e6db74">&#34;myBaseline&#34;</span>
+</span></span></code></pre></div><p>We then take the baseline ID output and link the patch baseline with the patch group.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws ssm register-patch-baseline-for-patch-group --baseline-id &lt;baseline-id&gt; --patch-group <span style="color:#e6db74">&#34;Test-Patch&#34;</span>
+</span></span></code></pre></div><p>Once the baseline and patch groups are created and linked,  we create a SSM Maintenance Window with a task to deploy.  Here we create a schedule which starts every week day 6pm to midnight and stops scheduling tasks at 11pm. To format the cron expression is a little complex but its documented <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sysman-maintenance-cron.html?icmpid=docs_ec2_console">here</a> in my example we have a window at 6pm for six hours Monday through Friday.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws ssm create-maintenance-window --name myFirstMaintenanceWindow --schedule <span style="color:#e6db74">&#34;cron(0 00 18 ? * MON-FRI)&#34;</span> --duration <span style="color:#ae81ff">6</span> --cutoff <span style="color:#ae81ff">1</span> --allow-unassociated-targets
+</span></span><span style="display:flex;"><span>aws ssm register-target-with-maintenance-window --window-id &lt;maint-window-id&gt; --targets <span style="color:#e6db74">&#34;Key=tag:Patch Group,Values=Test-Patch&#34;</span> --owner-information <span style="color:#e6db74">&#34;Test server&#34;</span> --resource-type <span style="color:#e6db74">&#34;INSTANCE&#34;</span> 
+</span></span><span style="display:flex;"><span>aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-window-id&gt; --targets <span style="color:#e6db74">&#34;Key=WindowTargetIds,Values=&lt;your-target-group-id&gt;&#34;</span> --task-arn <span style="color:#e6db74">&#34;AWS-ApplyPatchBaseline&#34;</span> --service-role-arn <span style="color:#e6db74">&#34;arn:aws:iam::&lt;your-acc-id&gt;:policy/ssmPassRole&#34;</span> --task-type <span style="color:#e6db74">&#34;RUN_COMMAND&#34;</span> --max-concurrency <span style="color:#ae81ff">2</span> --max-errors <span style="color:#ae81ff">1</span> --priority <span style="color:#ae81ff">1</span> --task-parameters <span style="color:#e6db74">&#34;{\&#34;Operation\&#34;:{\&#34;Values\&#34;:[\&#34;Install\&#34;]}}&#34;</span>
+</span></span></code></pre></div><p>Another useful little tool for making operating EC2 instances that little bit easier.</p>
 
 
   </article>
@@ -203,6 +203,9 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -223,16 +226,13 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -321,6 +321,11 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -328,11 +333,6 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -346,6 +346,11 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -353,11 +358,6 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -408,7 +408,7 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -556,6 +556,10 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -608,7 +612,7 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -736,7 +740,7 @@ aws ssm register-task-with-maintenance-window --window-id &lt;your-maintenance-w
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

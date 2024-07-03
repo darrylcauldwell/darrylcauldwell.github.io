@@ -4,7 +4,7 @@
   <head>
 <title>Raspberry Pi Cluster Ubuntu Base | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -147,9 +147,9 @@
 <p>The image is configured with DHCP client, <a href="https://maclookup.app/macaddress/DCA632">Pi device MAC addresses are prefixed DC:A6:32</a>. I connected to my router which acts as DHCP server and found the four leases sorting by MAC. With the DHCP addresses can connect via SSH, the Ubuntu image has default username of <code>ubuntu</code> and password <code>ubuntu</code>. You&rsquo;re prompted to change password at first connect.</p>
 <p><img src="/images/pi/ubuntu-pw.png" alt="Ubuntu Password"></p>
 <p>I want to reliably know how to connect to these and like to change from dynamic to a staticly asssigned IP address. To do this for Ubuntu 20.10 we update Netplan configuration.</p>
-<pre><code>sudo vi /etc/netplan/50-cloud-init.yaml
+<pre tabindex="0"><code>sudo vi /etc/netplan/50-cloud-init.yaml
 </code></pre><p>Here is example of how I update this to reflect static IP.</p>
-<pre><code>network:
+<pre tabindex="0"><code>network:
     ethernets:
         eth0:
             addresses: [192.168.1.100/24]
@@ -163,33 +163,33 @@
             set-name: eth0
     version: 2
 </code></pre><p>With the configuration file updated can have netplan load the config.</p>
-<pre><code>sudo netplan --debug apply
+<pre tabindex="0"><code>sudo netplan --debug apply
 </code></pre><p>With any new install its useful to apply latest patches.</p>
-<pre><code>sudo apt update
+<pre tabindex="0"><code>sudo apt update
 sudo apt upgrade -y
 </code></pre><h2 id="install-tools">Install Tools</h2>
 <p>The VideoCore packages provide command line utilities that can get various pieces of information from the VideoCore GPU on the Raspberry Pi. The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.</p>
-<pre><code>sudo apt install -y libraspberrypi-bin
+<pre tabindex="0"><code>sudo apt install -y libraspberrypi-bin
 </code></pre><h2 id="disable-red-led">Disable Red LED</h2>
-<pre><code>sudo su
+<pre tabindex="0"><code>sudo su
 echo none &gt; /sys/class/leds/led1/trigger
 </code></pre><h2 id="storage-performance">Storage Performance</h2>
 <p>The linux flexible I/O tester tool is  easy to use and useful for understanding storage sub-system performance.</p>
-<pre><code>sudo apt install -y fio
+<pre tabindex="0"><code>sudo apt install -y fio
 </code></pre><h2 id="usb-flash-disk">USB Flash Disk</h2>
 <p>The SD card on the Pi will normally show as /dev/mmcblk0. The USB drive will normally show as /dev/sda. The following could be data destructive so check the enumeration before proceeding.</p>
-<pre><code>sudo fdisk -l
+<pre tabindex="0"><code>sudo fdisk -l
 </code></pre><p><img src="/images/pi/usb_dev.png" alt="USB Device"></p>
 <p>Then create primary partition on USB device</p>
-<pre><code>sudo sfdisk /dev/sda &lt;&lt; EOF
+<pre tabindex="0"><code>sudo sfdisk /dev/sda &lt;&lt; EOF
 ;
 EOF
 </code></pre><p><img src="/images/pi/usb_dev.png" alt="USB Partition"></p>
 <p>Then format and label the partition then mount and set permissions for the parition</p>
-<pre><code>sudo mkfs.ext4 -L SSD /dev/sda1
+<pre tabindex="0"><code>sudo mkfs.ext4 -L SSD /dev/sda1
 sudo mkdir /mnt/ssd
 sudo mount /dev/sda1 /mnt/ssd
-echo &quot;LABEL=SSD  /mnt/ssd  ext4  defaults 0 2&quot; | sudo cat /etc/fstab -
+echo &#34;LABEL=SSD  /mnt/ssd  ext4  defaults 0 2&#34; | sudo cat /etc/fstab -
 sudo chmod 777 .
 </code></pre><p><img src="/images/pi/usb_ext4.png" alt="USB Mount"></p>
 
@@ -221,6 +221,9 @@ sudo chmod 777 .
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -241,16 +244,13 @@ sudo chmod 777 .
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -339,6 +339,11 @@ sudo chmod 777 .
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -346,11 +351,6 @@ sudo chmod 777 .
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -364,6 +364,11 @@ sudo chmod 777 .
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -371,11 +376,6 @@ sudo chmod 777 .
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -426,7 +426,7 @@ sudo chmod 777 .
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -574,6 +574,10 @@ sudo chmod 777 .
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -626,7 +630,7 @@ sudo chmod 777 .
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -754,7 +758,7 @@ sudo chmod 777 .
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

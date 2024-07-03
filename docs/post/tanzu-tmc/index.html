@@ -4,7 +4,7 @@
   <head>
 <title>Managing Tanzu for vSphere Clusters Using Tanzu Misson Control | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -161,10 +161,10 @@
 <p>anzu Misson Control does not need to connect inwards to the cluster to be managed.  Instead agents are deployed and configured on the cluster which initiate outbound connection to Tanzu Misson Control. Outbound internet communications are sometimes via proxy, if required add proxy details next.</p>
 <p><img src="/images/tanzu-tmc-cluster-proxy.png" alt="Tanzu Mission Control Cluster Proxy"></p>
 <p>When the deployed agents initiate communications with TMC they require to advertise who they are and be associated with the right objects. The agent configuration is supplied via UI as YAML. A URL is supplied to the configuration on internet. The administrator of this cluster is Hermione so I connect with her credentials and apply the yaml file to deploy and configure the agents.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
-
-kubectl create -f <span style="color:#e6db74">&#34;https://tanzuemea.tmc.cloud.vmware.com/installer?id=f1d706f38d6f3ad834314a941831b190e18508468ade1adf2e105a822c8c0b49&amp;source=attach&#34;</span>
-</code></pre></div><p><img src="/images/tanzu-tmc-cluster-kubectl.png" alt="Tanzu Mission Control Cluster kubectl"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --tanzu-kubernetes-cluster-name hogwarts-cluster01 --tanzu-kubernetes-cluster-namespace hogwarts --vsphere-username hermione@vsphere.local --insecure-skip-tls-verify
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl create -f <span style="color:#e6db74">&#34;https://tanzuemea.tmc.cloud.vmware.com/installer?id=f1d706f38d6f3ad834314a941831b190e18508468ade1adf2e105a822c8c0b49&amp;source=attach&#34;</span>
+</span></span></code></pre></div><p><img src="/images/tanzu-tmc-cluster-kubectl.png" alt="Tanzu Mission Control Cluster kubectl"></p>
 <p>Once the agent has be deployed can move back to TMC. The agents take a couple of minutes to initialize and gather data but in very short order can then view the cluster and extension health in TMC.</p>
 <p><img src="/images/tanzu-tmc-cluster-health.png" alt="Tanzu Mission Control Cluster Health"></p>
 <p>To unlock more power of TMC we can register the TKG management cluster. The process is similar to attaching subordinate cluster but is slightly different as before we start with adding some metadata.</p>
@@ -174,35 +174,35 @@ kubectl create -f <span style="color:#e6db74">&#34;https://tanzuemea.tmc.cloud.v
 <p>Rather than being presented with a yaml file to apply with kubectl cmd here the wizard outputs a URL link which contains config.</p>
 <p><img src="/images/tanzu-tmc-cluster-sup-URL.png" alt="Tanzu Mission Control Supervisor Cluster Config URL"></p>
 <p>We then have to create environmentally specific yaml file which includes namespace and the supplied URL. This needs to be ran in the context of the cluster itself so we switch to that and then get the namespace name prefixed with svc-tmc.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify
-Logged in successfully.
-You have access to the following contexts:
-   172.16.1.2
-   hogsmead
-   hogwarts
-If the context you wish to use is not in this list, you may need to try
-logging in again later, or contact your cluster administrator.
-To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
-
-kubectl config use-context 172.16.1.2
-Switched to context <span style="color:#e6db74">&#34;172.16.1.2&#34;</span>.
-
-kubectl get ns | grep svc-tmc
-NAME                                        STATUS   AGE
-svc-tmc-c34                                 Active   11d
-</code></pre></div><p>With the namespace name and URL we can populate the yaml file to apply agent and config.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">installers.tmc.cloud.vmware.com/v1alpha1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">AgentInstall</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tmc-agent-installer-config</span>
-  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">svc-tmc-c34 </span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">operation</span>: <span style="color:#ae81ff">INSTALL</span>
-  <span style="color:#f92672">registrationLink</span>: <span style="color:#ae81ff">https://tanzuemea.tmc.cloud.vmware.com/installer?id=0f25b71394ac623867f64138ed9d27bb0db5e8d0436e874e4f65ff179e7be807&amp;source=registration&amp;type=tkgs</span>
-</code></pre></div><p>We can then apply the configuration using kubectl and the agents get created with correct configuration.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create -f tmc-registration.yaml
-agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
-</code></pre></div><p><img src="/images/tanzu-tmc-cluster-sup-kubectl.png" alt="Tanzu Mission Control Supervisor Cluster kubectl"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl vsphere login --server<span style="color:#f92672">=</span>172.16.1.2 --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify
+</span></span><span style="display:flex;"><span>Logged in successfully.
+</span></span><span style="display:flex;"><span>You have access to the following contexts:
+</span></span><span style="display:flex;"><span>   172.16.1.2
+</span></span><span style="display:flex;"><span>   hogsmead
+</span></span><span style="display:flex;"><span>   hogwarts
+</span></span><span style="display:flex;"><span>If the context you wish to use is not in this list, you may need to try
+</span></span><span style="display:flex;"><span>logging in again later, or contact your cluster administrator.
+</span></span><span style="display:flex;"><span>To change context, use <span style="color:#e6db74">`</span>kubectl config use-context &lt;workload name&gt;<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl config use-context 172.16.1.2
+</span></span><span style="display:flex;"><span>Switched to context <span style="color:#e6db74">&#34;172.16.1.2&#34;</span>.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>kubectl get ns | grep svc-tmc
+</span></span><span style="display:flex;"><span>NAME                                        STATUS   AGE
+</span></span><span style="display:flex;"><span>svc-tmc-c34                                 Active   11d
+</span></span></code></pre></div><p>With the namespace name and URL we can populate the yaml file to apply agent and config.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">installers.tmc.cloud.vmware.com/v1alpha1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">AgentInstall</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tmc-agent-installer-config</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">svc-tmc-c34 </span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">operation</span>: <span style="color:#ae81ff">INSTALL</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">registrationLink</span>: <span style="color:#ae81ff">https://tanzuemea.tmc.cloud.vmware.com/installer?id=0f25b71394ac623867f64138ed9d27bb0db5e8d0436e874e4f65ff179e7be807&amp;source=registration&amp;type=tkgs</span>
+</span></span></code></pre></div><p>We can then apply the configuration using kubectl and the agents get created with correct configuration.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create -f tmc-registration.yaml
+</span></span><span style="display:flex;"><span>agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
+</span></span></code></pre></div><p><img src="/images/tanzu-tmc-cluster-sup-kubectl.png" alt="Tanzu Mission Control Supervisor Cluster kubectl"></p>
 <p>After a couple of minutes when the agents have started and have reported back we can get a view of supervisor cluster health.</p>
 <p><img src="/images/tanzu-tmc-cluster-sup-health.png" alt="Tanzu Mission Control Supervisor Cluster Health"></p>
 <p>With the supervisor cluster registered we can start to some interesting things from TMC like provision a new cluster. To recap at this stage my deployment has two namespaces configured. Only Hogwarts has a workload cluster deployed.</p>
@@ -261,6 +261,9 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -281,16 +284,13 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/homelab-pi-microk8s/" class="nav-link" title="Raspberry Pi Kubernetes Cluster">Raspberry Pi Kubernetes Cluster</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -379,6 +379,11 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -386,11 +391,6 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -404,6 +404,11 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -411,11 +416,6 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -466,7 +466,7 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -614,6 +614,10 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -666,7 +670,7 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -794,7 +798,7 @@ agentinstall.installers.tmc.cloud.vmware.com/tmc-agent-installer-config created
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

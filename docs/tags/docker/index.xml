@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/docker/</link>
     <description>Recent content in docker on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Tue, 22 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Creating A Knative Function Using Buildpacks</title>
@@ -17,98 +18,98 @@
           &lt;p&gt;I&amp;rsquo;m looking at event-based architectures as a method for building loosely coupled relationships between products. To this end I am creating various functions which I&amp;rsquo;d like to trigger on an event in a product. Knative is an extension of Kubernetes which enables serverless workloads to run on Kubernetes. Knative is made of various components Knative Eventing provides tools for routing events from event producers to sinks. Eventing uses standard HTTP POST requests to send and receive events between event producers and sinks. The event layouts conform to the CloudEvents specifications. Brokers and Triggers provide an &amp;ldquo;event mesh&amp;rdquo; model, which allows an event producer to deliver events to a Broker, which then distributes them uniformly to consumers by using Triggers. In this article, we start from the point where our Knative deployment already has a Broker connected to an event producer. The Knative function we are looking to create will require at least two resources, a trigger and a service.&lt;/p&gt;
 &lt;h2 id=&#34;knative-trigger-filter&#34;&gt;Knative Trigger Filter&lt;/h2&gt;
 &lt;p&gt;The &lt;a href=&#34;https://knative.dev/docs/eventing/broker/triggers/#trigger-filtering&#34;&gt;Knative trigger&lt;/a&gt; resource can be configured with a filter so it only fires when a specific CloudEvent with a specific attribute is received by the Broker. This is also configured with an association to the Knative service resource.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Trigger&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-py-cb-trigger&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;broker&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;filter&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;attributes&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;com.vmware.event.router/event&lt;/span&gt;
-      &lt;span style=&#34;color:#f92672&#34;&gt;subject&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;VmCreatedEvent&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;subscriber&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
-      &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
-      &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kn-py-cb&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;knative-service-resource&#34;&gt;Knative Service Resource&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;eventing.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Trigger&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-py-cb-trigger&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;broker&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;filter&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;attributes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;type&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;com.vmware.event.router/event&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;subject&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;VmCreatedEvent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;subscriber&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;ref&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kn-py-cb&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;knative-service-resource&#34;&gt;Knative Service Resource&lt;/h2&gt;
 &lt;p&gt;When a &lt;a href=&#34;https://github.com/knative/specs/blob/main/specs/serving/knative-api-specification-1.0.md#service&#34;&gt;Knative service&lt;/a&gt; is called by a trigger it executes a container image.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kn-py-cb&lt;/span&gt;
-  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
-  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
-    &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;annotations&lt;/span&gt;:
-        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/maxScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/minScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
-      &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
-        - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ghcr.io/darrylcauldwell/kn-py-cb:1.0&lt;/span&gt;
-          &lt;span style=&#34;color:#f92672&#34;&gt;envFrom&lt;/span&gt;:
-            - &lt;span style=&#34;color:#f92672&#34;&gt;secretRef&lt;/span&gt;:
-                &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kn-py-cb-secret&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;python-flask&#34;&gt;Python Flask&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;apiVersion&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;serving.knative.dev/v1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;kind&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Service&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kn-py-cb&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;labels&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;app&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;veba-ui&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;template&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;metadata&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;annotations&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/maxScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;autoscaling.knative.dev/minScale&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;spec&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;containers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        - &lt;span style=&#34;color:#f92672&#34;&gt;image&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;ghcr.io/darrylcauldwell/kn-py-cb:1.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          &lt;span style=&#34;color:#f92672&#34;&gt;envFrom&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            - &lt;span style=&#34;color:#f92672&#34;&gt;secretRef&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;kn-py-cb-secret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;python-flask&#34;&gt;Python Flask&lt;/h2&gt;
 &lt;p&gt;The Knative serving component references a container image that executes the code. Knative Eventing makes standard HTTP POST requests to the service. The container image must run a web service to receive the POST. Flask is a lightweight WSGI web application framework written in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications. It is a good candidate to present our function logic from.&lt;/p&gt;
 &lt;h2 id=&#34;container-image-development-using-buildpacks&#34;&gt;Container Image Development Using Buildpacks&lt;/h2&gt;
 &lt;p&gt;Creating container images can be handcrafted artisanal creations. Buildpacks look to simplify container creation and target developers that have source code and simply wish to turn that into a container image.&lt;/p&gt;
 &lt;p&gt;The Google Cloud Buildpacks project is a language family implementation on top of the Cloud Native Buildpack specification. Google Cloud Buildpacks support Go, Java, Node, Python, and .Net applications. Here I am using this as our practical example of developing our Python Flask Knative service image using a Google Cloud Buildpack.&lt;/p&gt;
 &lt;h3 id=&#34;install-pack-cli-tool&#34;&gt;Install Pack CLI Tool&lt;/h3&gt;
 &lt;p&gt;Pack is a CLI tool maintained by the Cloud Native Buildpacks project to support the use of buildpacks. The following command will download the latest version of pack from GitHub and install it in /usr/local/bin/.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;curl -sSL &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://github.com/buildpacks/pack/releases/download/v0.24.0/pack-v0.24.0-linux.tgz&amp;#34;&lt;/span&gt; | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;define-the-container-entrypoint&#34;&gt;Define The Container Entrypoint&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;curl -sSL &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://github.com/buildpacks/pack/releases/download/v0.24.0/pack-v0.24.0-linux.tgz&amp;#34;&lt;/span&gt; | sudo tar -C /usr/local/bin/ --no-same-owner -xzv pack&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;define-the-container-entrypoint&#34;&gt;Define The Container Entrypoint&lt;/h3&gt;
 &lt;p&gt;Buildpacks allow applications to define process types using a special file named Procfile located at the root of the application. The Procfile specifies the commands that are executed by the app on startup.&lt;/p&gt;
 &lt;p&gt;While developing the function logic I&amp;rsquo;d like to run Flask in DEBUG mode so I specify the FLASK_ENV environment variable as development. I also define the FLASK_APP to be a file named &amp;lsquo;handler.py&amp;rsquo; and bind this locally to the port defined at container runtime.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-Procfile&#34; data-lang=&#34;Procfile&#34;&gt;web: FLASK_ENV=development FLASK_APP=handler.py python3 -m flask run --host=0.0.0.0 --port=$PORT
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-Procfile&#34; data-lang=&#34;Procfile&#34;&gt;web: FLASK_ENV=development FLASK_APP=handler.py python3 -m flask run --host=0.0.0.0 --port=$PORT
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;function-logic&#34;&gt;Function Logic&lt;/h2&gt;
 &lt;p&gt;The Buildpack Procfile in our example runs a Python Flask application &amp;lsquo;handler.py&amp;rsquo;. The Flask framework uses simple syntax and here we listen for HTTP POST made to the website /. The CloudEvent data is passed the POST body so we can get this as an object and use it as input to our logic.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# handler.py&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; flask &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; Flask, request
-&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; cloudevents.http &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; from_http
-&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; logging&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;json&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;os&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;time
-logging&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;basicConfig(level&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;logging&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;DEBUG,format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(asctime)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(levelname)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(name)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(threadName)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; : &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(message)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)
-
-app &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Flask(__name__)
-&lt;span style=&#34;color:#a6e22e&#34;&gt;@app.route&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, methods&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;])
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;home&lt;/span&gt;():
-    &lt;span style=&#34;color:#75715e&#34;&gt;# Extract  VM Name From CloudEvent Data&lt;/span&gt;
-    event &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; from_http(request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;headers, request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get_data(),None)
-    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;debug(f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full event contents {event}&amp;#34;&lt;/span&gt;)
-    data  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;data
-    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;info(f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Found event ID {event[&amp;#39;id&amp;#39;]} triggered by {event[&amp;#39;subject&amp;#39;]} event for VM {data[&amp;#39;Vm&amp;#39;][&amp;#39;Name&amp;#39;]}&amp;#34;&lt;/span&gt;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A Python application typically builds upon existing packages. To ensure the packages within the image the dependant packages and versions should be defined in &amp;lsquo;requirements.txt&amp;rsquo;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# requirements.txt&lt;/span&gt;
-flask&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2.0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;
-cloudevents&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;create-container-image&#34;&gt;Create Container Image&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# handler.py&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; flask &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; Flask, request
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; cloudevents.http &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; from_http
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; logging&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;json&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;os&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;time
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;logging&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;basicConfig(level&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;logging&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;DEBUG,format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(asctime)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(levelname)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(name)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(threadName)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; : &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%(message)s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;app &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Flask(__name__)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;@app.route&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, methods&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;POST&amp;#34;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;home&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Extract  VM Name From CloudEvent Data&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    event &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; from_http(request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;headers, request&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;get_data(),&lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;debug(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Full event contents &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;event&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    data  &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; event&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;data
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    app&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;logger&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;info(&lt;span style=&#34;color:#e6db74&#34;&gt;f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Found event ID &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;id&amp;#39;&lt;/span&gt;]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; triggered by &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;event[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;subject&amp;#39;&lt;/span&gt;]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; event for VM &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;{&lt;/span&gt;data[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Vm&amp;#39;&lt;/span&gt;][&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Name&amp;#39;&lt;/span&gt;]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A Python application typically builds upon existing packages. To ensure the packages within the image the dependant packages and versions should be defined in &amp;lsquo;requirements.txt&amp;rsquo;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# requirements.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;flask&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2.0.3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cloudevents&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1.2.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;create-container-image&#34;&gt;Create Container Image&lt;/h3&gt;
 &lt;p&gt;With the required Buildpack components in place ensure that local docker can pull the buildpack. Set variable for the container image and then use pack CLI to build the container image and which base to build from.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker pull gcr.io/buildpacks/builder:v1
-IMAGE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ghcr.io/darrylcauldwell/kn-py-cb:1.0
-pack build -B gcr.io/buildpacks/builder:v1 &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;IMAGE&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;environmental-specific-variables&#34;&gt;Environmental Specific Variables&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker pull gcr.io/buildpacks/builder:v1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;IMAGE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ghcr.io/darrylcauldwell/kn-py-cb:1.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;pack build -B gcr.io/buildpacks/builder:v1 &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;IMAGE&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;environmental-specific-variables&#34;&gt;Environmental Specific Variables&lt;/h2&gt;
 &lt;p&gt;The created container likely needs to be portable between deployments and any environmentally specific configuration passed at runtime. Here I use a file &amp;lsquo;function.env&amp;rsquo; to define all environment variables.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# function.env&lt;/span&gt;
-ENV1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; VALUE1
-ENV2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; VALUE2
-ENV3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; VALUE3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This file can be passed to the container at runtime which means these can be consumed by the code.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-env&#34; data-lang=&#34;env&#34;&gt;app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV1 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV1&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
-app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV2 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV2&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
-app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV3 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV3&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
-app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV4 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV4&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;rapid-iteration-development-and-testing&#34;&gt;Rapid Iteration Development And Testing&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# function.env&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ENV1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; VALUE1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ENV2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; VALUE2
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ENV3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; VALUE3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This file can be passed to the container at runtime which means these can be consumed by the code.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-env&#34; data-lang=&#34;env&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV1 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV1&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV2 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV2&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV3 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV3&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Environment variable ENV4 value is &amp;#34;&lt;/span&gt; + os.environ&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ENV4&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;rapid-iteration-development-and-testing&#34;&gt;Rapid Iteration Development And Testing&lt;/h2&gt;
 &lt;p&gt;Before deploying as Knative serving function it is possible to simulate how it will behave once triggered. We know that Knative is making an HTTP POST with CloudEvent data body which executes the container image. Once the container image is created using pack cli we can simply start the docker image and pass it a valid port to listen on and any environment variables it requires.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -e PORT&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt; -it --env-file ./function.env --rm -p 8080:8080 &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;IMAGE&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When the container image with function is running. Create a file with CloudEvent formatted JSON body and use curl to make the post to the locally running container image.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;curl -i -d@testevent.json localhost:8080
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In case the function does not behave in the expected way and you wish to iterate the logic simply:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run -e PORT&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt; -it --env-file ./function.env --rm -p 8080:8080 &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;IMAGE&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When the container image with function is running. Create a file with CloudEvent formatted JSON body and use curl to make the post to the locally running container image.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -i -d@testevent.json localhost:8080
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In case the function does not behave in the expected way and you wish to iterate the logic simply:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Stop the container image&lt;/li&gt;
 &lt;li&gt;Edit the function logic eg &amp;lsquo;handler.py&amp;rsquo;&lt;/li&gt;
@@ -136,15 +137,15 @@ app.logger.debug&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;f&lt;spa
           &lt;p&gt;When developing a cloud native application using Docker containers understanding network connectivity between containers and non-Docker workloads such as other servers and cloud APIs is essential. Docker’s networking subsystem is pluggable using drivers, several drivers exist by default, and others can be added easily.&lt;/p&gt;
 &lt;h2 id=&#34;linking-containers-legacy&#34;&gt;Linking Containers (legacy)&lt;/h2&gt;
 &lt;p&gt;Linking containers by name is a simple method of enabling communications between containers. To link a an app server to a DB we simply reference the db container name in the command we execute to run app server container.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker run -d --name my_mongodb mongo
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker run -d --name my_mongodb mongo
 docker run -d --link my_mongodb --name my_nodeapp -it node
 docker ps -l
 
     CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
-    5dc2aa4d8542        node                &amp;quot;docker-entrypoint.s…&amp;quot;   7 seconds ago       Up 6 seconds                            my_nodeapp
+    5dc2aa4d8542        node                &amp;#34;docker-entrypoint.s…&amp;#34;   7 seconds ago       Up 6 seconds                            my_nodeapp
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In order to facilitate communications Docker automatically creates environment variables in the target container. It also exposes all environment variables originating from Docker from the source container. If we view the IP address of the two containers and then view the environment variables of the app server we can see the details for the db server.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker inspect --format &#39;{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}&#39; my_mongodb
-docker inspect --format &#39;{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}&#39; my_nodeapp
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker inspect --format &amp;#39;{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}&amp;#39; my_mongodb
+docker inspect --format &amp;#39;{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}&amp;#39; my_nodeapp
 
 docker exec my_nodeapp env
 
@@ -170,93 +171,92 @@ docker exec my_nodeapp env
 &lt;h2 id=&#34;container-networking-with-a-bridge-driver&#34;&gt;Container Networking With A Bridge Driver&lt;/h2&gt;
 &lt;p&gt;A bridge network can be used on Docker host to enable communications between containers. The first step is to create a custom bridge network on the Docker host which the containers will connect to. Each Docker network gets assigned a CIDR range and has a IPAM capability, we can view these by inspecting the network.&lt;/p&gt;
 &lt;p&gt;The default bridge network is present on all Docker hosts, if you do not specify a different network, new containers are automatically connected to the default bridge network. More than likely you will want to separate containers to different networks and so will want to create multiple networks and attach different containers to each.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker network create --driver bridge my_isolated_network
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker network create --driver bridge my_isolated_network
 docker network ls
 docker network inspect my_isolated_network
 
     [
         {
-            &amp;quot;Name&amp;quot;: &amp;quot;my_isolated_network&amp;quot;,
-            &amp;quot;Id&amp;quot;: &amp;quot;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&amp;quot;,
-            &amp;quot;Created&amp;quot;: &amp;quot;2019-11-18T09:59:09.8310474Z&amp;quot;,
-            &amp;quot;Scope&amp;quot;: &amp;quot;local&amp;quot;,
-            &amp;quot;Driver&amp;quot;: &amp;quot;bridge&amp;quot;,
-            &amp;quot;EnableIPv6&amp;quot;: false,
-            &amp;quot;IPAM&amp;quot;: {
-                &amp;quot;Driver&amp;quot;: &amp;quot;default&amp;quot;,
-                &amp;quot;Options&amp;quot;: {},
-                &amp;quot;Config&amp;quot;: [
+            &amp;#34;Name&amp;#34;: &amp;#34;my_isolated_network&amp;#34;,
+            &amp;#34;Id&amp;#34;: &amp;#34;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&amp;#34;,
+            &amp;#34;Created&amp;#34;: &amp;#34;2019-11-18T09:59:09.8310474Z&amp;#34;,
+            &amp;#34;Scope&amp;#34;: &amp;#34;local&amp;#34;,
+            &amp;#34;Driver&amp;#34;: &amp;#34;bridge&amp;#34;,
+            &amp;#34;EnableIPv6&amp;#34;: false,
+            &amp;#34;IPAM&amp;#34;: {
+                &amp;#34;Driver&amp;#34;: &amp;#34;default&amp;#34;,
+                &amp;#34;Options&amp;#34;: {},
+                &amp;#34;Config&amp;#34;: [
                     {
-                        &amp;quot;Subnet&amp;quot;: &amp;quot;172.18.0.0/16&amp;quot;,
-                        &amp;quot;Gateway&amp;quot;: &amp;quot;172.18.0.1&amp;quot;
+                        &amp;#34;Subnet&amp;#34;: &amp;#34;172.18.0.0/16&amp;#34;,
+                        &amp;#34;Gateway&amp;#34;: &amp;#34;172.18.0.1&amp;#34;
                     }
                 ]
             },
-            &amp;quot;Internal&amp;quot;: false,
-            &amp;quot;Attachable&amp;quot;: false,
-            &amp;quot;Ingress&amp;quot;: false,
-            &amp;quot;ConfigFrom&amp;quot;: {
-                &amp;quot;Network&amp;quot;: &amp;quot;&amp;quot;
+            &amp;#34;Internal&amp;#34;: false,
+            &amp;#34;Attachable&amp;#34;: false,
+            &amp;#34;Ingress&amp;#34;: false,
+            &amp;#34;ConfigFrom&amp;#34;: {
+                &amp;#34;Network&amp;#34;: &amp;#34;&amp;#34;
             },
-            &amp;quot;ConfigOnly&amp;quot;: false,
-            &amp;quot;Containers&amp;quot;: {},
-            &amp;quot;Options&amp;quot;: {},
-            &amp;quot;Labels&amp;quot;: {}
+            &amp;#34;ConfigOnly&amp;#34;: false,
+            &amp;#34;Containers&amp;#34;: {},
+            &amp;#34;Options&amp;#34;: {},
+            &amp;#34;Labels&amp;#34;: {}
         }
     ]
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When networks are created you can start containers in those bridge networks.  The containers in same isolated network can then communicate by referencing name. When containers are running and connected we can inspect the network again and get the container IP address assignments etc.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker run -d --net=my_isolated_network --name my_mongodb mongo
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker run -d --net=my_isolated_network --name my_mongodb mongo
 docker run -d --net=my_isolated_network --name my_nodeapp -it node
 docker network inspect my_isolated_network
 
     [
         {
-            &amp;quot;Name&amp;quot;: &amp;quot;my_isolated_network&amp;quot;,
-            &amp;quot;Id&amp;quot;: &amp;quot;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&amp;quot;,
-            &amp;quot;Created&amp;quot;: &amp;quot;2019-11-18T09:59:09.8310474Z&amp;quot;,
-            &amp;quot;Scope&amp;quot;: &amp;quot;local&amp;quot;,
-            &amp;quot;Driver&amp;quot;: &amp;quot;bridge&amp;quot;,
-            &amp;quot;EnableIPv6&amp;quot;: false,
-            &amp;quot;IPAM&amp;quot;: {
-                &amp;quot;Driver&amp;quot;: &amp;quot;default&amp;quot;,
-                &amp;quot;Options&amp;quot;: {},
-                &amp;quot;Config&amp;quot;: [
+            &amp;#34;Name&amp;#34;: &amp;#34;my_isolated_network&amp;#34;,
+            &amp;#34;Id&amp;#34;: &amp;#34;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&amp;#34;,
+            &amp;#34;Created&amp;#34;: &amp;#34;2019-11-18T09:59:09.8310474Z&amp;#34;,
+            &amp;#34;Scope&amp;#34;: &amp;#34;local&amp;#34;,
+            &amp;#34;Driver&amp;#34;: &amp;#34;bridge&amp;#34;,
+            &amp;#34;EnableIPv6&amp;#34;: false,
+            &amp;#34;IPAM&amp;#34;: {
+                &amp;#34;Driver&amp;#34;: &amp;#34;default&amp;#34;,
+                &amp;#34;Options&amp;#34;: {},
+                &amp;#34;Config&amp;#34;: [
                     {
-                        &amp;quot;Subnet&amp;quot;: &amp;quot;172.18.0.0/16&amp;quot;,
-                        &amp;quot;Gateway&amp;quot;: &amp;quot;172.18.0.1&amp;quot;
+                        &amp;#34;Subnet&amp;#34;: &amp;#34;172.18.0.0/16&amp;#34;,
+                        &amp;#34;Gateway&amp;#34;: &amp;#34;172.18.0.1&amp;#34;
                     }
                 ]
             },
-            &amp;quot;Internal&amp;quot;: false,
-            &amp;quot;Attachable&amp;quot;: false,
-            &amp;quot;Ingress&amp;quot;: false,
-            &amp;quot;ConfigFrom&amp;quot;: {
-                &amp;quot;Network&amp;quot;: &amp;quot;&amp;quot;
+            &amp;#34;Internal&amp;#34;: false,
+            &amp;#34;Attachable&amp;#34;: false,
+            &amp;#34;Ingress&amp;#34;: false,
+            &amp;#34;ConfigFrom&amp;#34;: {
+                &amp;#34;Network&amp;#34;: &amp;#34;&amp;#34;
             },
-            &amp;quot;ConfigOnly&amp;quot;: false,
-            &amp;quot;Containers&amp;quot;: {
-                &amp;quot;996b590f206dded3db3a653e554167e046fe3852f55a78d6d983eaa0f7f7fc3d&amp;quot;: {
-                    &amp;quot;Name&amp;quot;: &amp;quot;my_mongodb&amp;quot;,
-                    &amp;quot;EndpointID&amp;quot;: &amp;quot;e78b23529f29b2a6f5291f06fb1875cac9958888ca0eb95cae814dc8b631613a&amp;quot;,
-                    &amp;quot;MacAddress&amp;quot;: &amp;quot;02:42:ac:12:00:02&amp;quot;,
-                    &amp;quot;IPv4Address&amp;quot;: &amp;quot;172.18.0.2/16&amp;quot;,
-                    &amp;quot;IPv6Address&amp;quot;: &amp;quot;&amp;quot;
+            &amp;#34;ConfigOnly&amp;#34;: false,
+            &amp;#34;Containers&amp;#34;: {
+                &amp;#34;996b590f206dded3db3a653e554167e046fe3852f55a78d6d983eaa0f7f7fc3d&amp;#34;: {
+                    &amp;#34;Name&amp;#34;: &amp;#34;my_mongodb&amp;#34;,
+                    &amp;#34;EndpointID&amp;#34;: &amp;#34;e78b23529f29b2a6f5291f06fb1875cac9958888ca0eb95cae814dc8b631613a&amp;#34;,
+                    &amp;#34;MacAddress&amp;#34;: &amp;#34;02:42:ac:12:00:02&amp;#34;,
+                    &amp;#34;IPv4Address&amp;#34;: &amp;#34;172.18.0.2/16&amp;#34;,
+                    &amp;#34;IPv6Address&amp;#34;: &amp;#34;&amp;#34;
                 },
-                &amp;quot;eebe0a3bf7116eab4731ef68da445f24c15b185efc8d7cea20937736702b93f8&amp;quot;: {
-                    &amp;quot;Name&amp;quot;: &amp;quot;my_nodeapp&amp;quot;,
-                    &amp;quot;EndpointID&amp;quot;: &amp;quot;6903d08b5942c71b5afd09caf535d4abb818ded97742fe324d54bb6396b595a5&amp;quot;,
-                    &amp;quot;MacAddress&amp;quot;: &amp;quot;02:42:ac:12:00:03&amp;quot;,
-                    &amp;quot;IPv4Address&amp;quot;: &amp;quot;172.18.0.3/16&amp;quot;,
-                    &amp;quot;IPv6Address&amp;quot;: &amp;quot;&amp;quot;
+                &amp;#34;eebe0a3bf7116eab4731ef68da445f24c15b185efc8d7cea20937736702b93f8&amp;#34;: {
+                    &amp;#34;Name&amp;#34;: &amp;#34;my_nodeapp&amp;#34;,
+                    &amp;#34;EndpointID&amp;#34;: &amp;#34;6903d08b5942c71b5afd09caf535d4abb818ded97742fe324d54bb6396b595a5&amp;#34;,
+                    &amp;#34;MacAddress&amp;#34;: &amp;#34;02:42:ac:12:00:03&amp;#34;,
+                    &amp;#34;IPv4Address&amp;#34;: &amp;#34;172.18.0.3/16&amp;#34;,
+                    &amp;#34;IPv6Address&amp;#34;: &amp;#34;&amp;#34;
                 }
             },
-            &amp;quot;Options&amp;quot;: {},
-            &amp;quot;Labels&amp;quot;: {}
+            &amp;#34;Options&amp;#34;: {},
+            &amp;#34;Labels&amp;#34;: {}
         }
     ]
-
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The docker daemon implements an embedded DNS server (127.0.0.11) which provides built-in service discovery for any container created with a valid name. The containers are able to use this by docker overlay three crucial /etc files inside the container with virtual files. This arrangement allows Docker to do clever things like keep resolv.conf up to date across all containers.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker exec my_nodeapp mount
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker exec my_nodeapp mount
 
     ...
     /dev/sda1 on /etc/resolv.conf type ext4 (rw,relatime,data=ordered)
@@ -264,12 +264,12 @@ docker network inspect my_isolated_network
     /dev/sda1 on /etc/hosts type ext4 (rw,relatime,data=ordered)
     ...
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If we view the DNS settings of one of the containers we see that it is set by default to 127.0.0.11.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker exec -it my_nodeapp cat /etc/resolv.conf
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker exec -it my_nodeapp cat /etc/resolv.conf
 
     nameserver 127.0.0.11
     options ndots:0
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can therefore ping the database container by using its container name from the app server.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker exec -it my_nodeapp ping -c 1 my_mongodb
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker exec -it my_nodeapp ping -c 1 my_mongodb
 
     PING my_mongodb (172.18.0.2) 56(84) bytes of data.
     64 bytes from my_mongodb.my_isolated_network (172.18.0.2): icmp_seq=1 ttl=64 time=0.177 ms
@@ -279,7 +279,7 @@ docker network inspect my_isolated_network
     rtt min/avg/max/mdev = 0.177/0.177/0.177/0.000 ms
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It can be a relatively common requirement for me to have different container names for same application function in different environments e.g. dev_mongodb, qa_mongodb, prod_mongodb. While I could configuring connection strings in the app server it might be more useful to give the database a connection alias e.g. mongodb. Docker run command has flag &amp;ndash;network-alias so we can use a common alias between environments.&lt;/p&gt;
 &lt;p&gt;If we run the two containers and specify an alias for the database we can see we can ping the alias name from app container.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker run -d --net=my_isolated_network --name my_mongodb --network-alias mongodb mongo 
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker run -d --net=my_isolated_network --name my_mongodb --network-alias mongodb mongo 
 docker run -d --net=my_isolated_network --name my_nodeapp -it node
 docker exec -it my_nodeapp ping -c 1 mongodb
 
@@ -304,134 +304,134 @@ docker exec -it my_nodeapp ping -c 1 mongodb
         
           &lt;p&gt;Hear I describe Docker networking from the very basic through to extending it by pluggin in alternative drivers. In order to follow along with this post you will require Docker capability on your laptop to do this follow &lt;a href=&#34;https://docs.docker.com/engine/installation/&#34;&gt;these instructions&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Mostly will be using &lt;a href=&#34;https://www.alpinelinux.org/&#34;&gt;Alpine Linux&lt;/a&gt; as it is very small so downloads quickly and doesn&amp;rsquo;t consume many resources.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker pull alpine
-docker images
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output from images command should list all images you hold locally including Alpine Linux&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;REPOSITORY  TAG     IMAGE ID        CREATED         SIZE
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker pull alpine
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker images
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output from images command should list all images you hold locally including Alpine Linux&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;REPOSITORY  TAG     IMAGE ID        CREATED         SIZE
 alpine      latest  baa5d63471ea    2 weeks ago     4.803 MB
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once we have the Alpine Linux image local we can then launch it,  if we do this with interactive and simulated TTY options we get presented with the Linux shell&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run --interactive --tty alpine sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From here we can view the docker containers view of the networking,  we see here it has allocated an rfc1918 address and that it can ping outbound.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# ip addr&lt;/span&gt;
-1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt; qdisc noqueue state UNKNOWN qlen &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-    valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host 
-    valid_lft forever preferred_lft forever
-16: eth0@if17: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;1500&lt;/span&gt; qdisc noqueue state UP 
-    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
-    inet 172.17.0.2/16 scope global eth0
-    valid_lft forever preferred_lft forever
-    inet6 fe80::42:acff:fe11:2/64 scope link 
-    valid_lft forever preferred_lft forever
-/ &lt;span style=&#34;color:#75715e&#34;&gt;# ping 8.8.8.8&lt;/span&gt;
-PING 8.8.8.8 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;8.8.8.8&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;56&lt;/span&gt; data bytes
-&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt; bytes from 8.8.8.8: seq&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; ttl&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;61&lt;/span&gt; time&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;43.770 ms
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q more details &lt;a href=&#34;https://docs.docker.com/engine/reference/commandline/attach/&#34;&gt;here&lt;/a&gt;.  Once exited you should still be able to see the container in the running state.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker ps -a
-
-CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
-5099910cc9d0    alpine  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sh&amp;#34;&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; minutes ago       Up &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; minutes            elegant_torvalds
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you need to get back to the running shell you can use either the container id or the name, these two commands are equivelant.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker attach 5099910cc9d0
-docker attach elegant_torvalds
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now if we start a second instance of Apline Linux in container&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run --interactive --tty alpine sh
-docker ps -a
-
-CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
-e96c3e67410c    alpine  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sh&amp;#34;&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; seconds ago       Up &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; seconds            suspicious_pare
-5099910cc9d0    alpine  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sh&amp;#34;&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt; minutes ago       Up &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt; minutes            elegant_torvalds
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can attach and detach to each,  we notice that the second instance has been assigned next IP 172.17.0.3 and that it can ping the first instance 172.17.0.2.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run --interactive --tty alpine sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From here we can view the docker containers view of the networking,  we see here it has allocated an rfc1918 address and that it can ping outbound.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# ip addr&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt; qdisc noqueue state UNKNOWN qlen &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet 127.0.0.1/8 scope host lo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet6 ::1/128 scope host 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;16: eth0@if17: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;1500&lt;/span&gt; qdisc noqueue state UP 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet 172.17.0.2/16 scope global eth0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet6 fe80::42:acff:fe11:2/64 scope link 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# ping 8.8.8.8&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;PING 8.8.8.8 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;8.8.8.8&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;56&lt;/span&gt; data bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt; bytes from 8.8.8.8: seq&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; ttl&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;61&lt;/span&gt; time&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;43.770 ms
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To detach the tty without exiting the shell, use the escape sequence Ctrl+p + Ctrl+q more details &lt;a href=&#34;https://docs.docker.com/engine/reference/commandline/attach/&#34;&gt;here&lt;/a&gt;.  Once exited you should still be able to see the container in the running state.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker ps -a
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;5099910cc9d0    alpine  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sh&amp;#34;&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; minutes ago       Up &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; minutes            elegant_torvalds
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you need to get back to the running shell you can use either the container id or the name, these two commands are equivelant.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker attach 5099910cc9d0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker attach elegant_torvalds
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now if we start a second instance of Apline Linux in container&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run --interactive --tty alpine sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker ps -a
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;CONTAINER ID    IMAGE   COMMAND     CREATED             STATUS          PORTS   NAMES
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;e96c3e67410c    alpine  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sh&amp;#34;&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; seconds ago       Up &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; seconds            suspicious_pare
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;5099910cc9d0    alpine  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;sh&amp;#34;&lt;/span&gt;        &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt; minutes ago       Up &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt; minutes            elegant_torvalds
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can attach and detach to each,  we notice that the second instance has been assigned next IP 172.17.0.3 and that it can ping the first instance 172.17.0.2.&lt;/p&gt;
 &lt;p&gt;If we then detach the containers and view what docker networking shows, we see that Docker uses the concept of Drivers and that we are using the default bridge driver.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker network ls
-
-NETWORK ID          NAME                DRIVER
-64481f7454d1        bridge              bridge              
-a8f3b81d9991        host                host                
-6ccbf074e447        none                null         
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can explore the properties of the bridge network a little more, and see the IP addresses it has issued to the containers.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker network inspect bridge
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bridge&amp;#34;&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;64481f7454d138e43558359d1e41bb96564769bfcccc547b42b2a37b873c3a73&amp;#34;&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Scope&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bridge&amp;#34;&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EnableIPv6&amp;#34;&lt;/span&gt;: false,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IPAM&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: null,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Config&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Subnet&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.17.0.0/16&amp;#34;&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Internal&amp;#34;&lt;/span&gt;: false,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Containers&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.default_bridge&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.enable_icc&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.enable_ip_masquerade&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.host_binding_ipv4&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0.0.0.0&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;docker0&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.driver.mtu&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1500&amp;#34;&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
-    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Labels&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So we can see that docker created a shared bridge, but what happens if you want to isolate containers on the same host well we can create a different bridge network we see it allocates the 172.18.0.0/16 CIDR.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker network create --driver bridge my-bridge-network
-docker network inspect my-bridge-network
-
-&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;my-bridge-network&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;5fec8c172a6c323a616c54938815b42d6baab04e816d7a5bb9113a0e914c52a4&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Scope&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bridge&amp;#34;&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EnableIPv6&amp;#34;&lt;/span&gt;: false,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IPAM&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
-            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;,
-            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Config&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
-                &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
-                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Subnet&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.18.0.0/16&amp;#34;&lt;/span&gt;,
-                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Gateway&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.18.0.1/16&amp;#34;&lt;/span&gt;
-                &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-            &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Internal&amp;#34;&lt;/span&gt;: false,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Containers&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;,
-        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Labels&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;
-    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So if we create a new container now on this new network, we see it gets IP address on 172.18.0.0/16 and it cannot ping containers on 172.17.0.0/16.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run --interactive --tty --net&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;my-bridge-network alpine sh
-/ &lt;span style=&#34;color:#75715e&#34;&gt;# ipaddr&lt;/span&gt;
-1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt; qdisc noqueue state UNKNOWN qlen &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-    valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host 
-    valid_lft forever preferred_lft forever
-25: eth0@if26: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;1500&lt;/span&gt; qdisc noqueue state UP 
-    link/ether 02:42:ac:12:00:02 brd ff:ff:ff:ff:ff:ff
-    inet 172.18.0.2/16 scope global eth0
-    valid_lft forever preferred_lft forever
-    inet6 fe80::42:acff:fe12:2/64 scope link 
-    valid_lft forever preferred_lft forever
-/ &lt;span style=&#34;color:#75715e&#34;&gt;# ping 172.17.0.3&lt;/span&gt;
-PING 172.17.0.3 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;172.17.0.3&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;56&lt;/span&gt; data bytes
-^C
---- 172.17.0.3 ping statistics ---
-&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; packets transmitted, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; packets received, 100% packet loss
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We have focussed on the shipped bridge driver, however since &lt;a href=&#34;https://github.com/docker/libnetwork&#34;&gt;LibNetwork project&lt;/a&gt; got integrated into docker the driver became plugable. Some of the Docker networking ecosystems, include Weave, Nuage, Cisco, Microsoft, Calico, Midokura, and VMware.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker network ls
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;NETWORK ID          NAME                DRIVER
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;64481f7454d1        bridge              bridge              
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a8f3b81d9991        host                host                
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;6ccbf074e447        none                null         
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can explore the properties of the bridge network a little more, and see the IP addresses it has issued to the containers.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker network inspect bridge
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bridge&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;64481f7454d138e43558359d1e41bb96564769bfcccc547b42b2a37b873c3a73&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Scope&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bridge&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EnableIPv6&amp;#34;&lt;/span&gt;: false,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IPAM&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: null,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Config&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Subnet&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.17.0.0/16&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Internal&amp;#34;&lt;/span&gt;: false,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Containers&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.default_bridge&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.enable_icc&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.enable_ip_masquerade&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.host_binding_ipv4&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0.0.0.0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.bridge.name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;docker0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;com.docker.network.driver.mtu&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1500&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Labels&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So we can see that docker created a shared bridge, but what happens if you want to isolate containers on the same host well we can create a different bridge network we see it allocates the 172.18.0.0/16 CIDR.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker network create --driver bridge my-bridge-network
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker network inspect my-bridge-network
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Name&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;my-bridge-network&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Id&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;5fec8c172a6c323a616c54938815b42d6baab04e816d7a5bb9113a0e914c52a4&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Scope&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;local&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bridge&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;EnableIPv6&amp;#34;&lt;/span&gt;: false,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IPAM&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Driver&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Config&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Subnet&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.18.0.0/16&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Gateway&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;172.18.0.1/16&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Internal&amp;#34;&lt;/span&gt;: false,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Containers&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Labels&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;{}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So if we create a new container now on this new network, we see it gets IP address on 172.18.0.0/16 and it cannot ping containers on 172.17.0.0/16.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run --interactive --tty --net&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;my-bridge-network alpine sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# ipaddr&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt; qdisc noqueue state UNKNOWN qlen &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet 127.0.0.1/8 scope host lo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet6 ::1/128 scope host 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;25: eth0@if26: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;1500&lt;/span&gt; qdisc noqueue state UP 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    link/ether 02:42:ac:12:00:02 brd ff:ff:ff:ff:ff:ff
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet 172.18.0.2/16 scope global eth0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet6 fe80::42:acff:fe12:2/64 scope link 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/ &lt;span style=&#34;color:#75715e&#34;&gt;# ping 172.17.0.3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;PING 172.17.0.3 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;172.17.0.3&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;56&lt;/span&gt; data bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;^C
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;--- 172.17.0.3 ping statistics ---
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; packets transmitted, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; packets received, 100% packet loss
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We have focussed on the shipped bridge driver, however since &lt;a href=&#34;https://github.com/docker/libnetwork&#34;&gt;LibNetwork project&lt;/a&gt; got integrated into docker the driver became plugable. Some of the Docker networking ecosystems, include Weave, Nuage, Cisco, Microsoft, Calico, Midokura, and VMware.&lt;/p&gt;
 &lt;p&gt;Upto now we have looked at networking between containers on the same host by bridging to the network interface card. You will probably want to extend the layer 2 networking capacibility so containers on different hosts can communicate. To do this we would use &lt;a href=&#34;https://docs.docker.com/swarm/networking/&#34;&gt;Docker Swarm&lt;/a&gt; which includes the multi-host networking feature and allows the creation of custom container networks which span multiple Docker hosts. By default it does this by use of the &amp;lsquo;overlay&amp;rsquo; network driver&lt;/p&gt;
 &lt;p&gt;An interesting option to use as a Docker networking driver is &lt;a href=&#34;https://github.com/projectcalico/calico-containers&#34;&gt;Project Calico for Containers&lt;/a&gt; as the overlay networking expands across more and more hosts it can experience performance issues. Project Calico aims to over come this issue but allow container connectivity across hosts by having each container route directly at Layer 3 rather than Layer 2.  It does this by having a calico-node container installed and running on each host which manages the network routing etc.&lt;/p&gt;
 &lt;p&gt;As in my previous post about &lt;a href=&#34;https://darrylcauldwell.github.io/install-vic/&#34;&gt;vSphere Integrated Containers&lt;/a&gt; its interesting to see VMware integrating with Docker and I&amp;rsquo;d expect it won&amp;rsquo;t be too long until we discover how NSX will plug into Docker Networking.&lt;/p&gt;
@@ -475,35 +475,35 @@ PING 172.17.0.3 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;172.17.0
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;My homelab is vCenter, single cluster of two ESX hosts, storage VSAN and networking NSX. Security is not important in my homelab and TLS adds complication so I chose not to add this. There are great syntaxt examples to follow in the documentation, but here are options I used.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;./vic-machine-darwin create --target 192.168.1.13 --user Administrator@vsphere.local --password VMware1! --compute-resource ElectricChair --image-datastore vsanDatastore --bridge-network DPortGroup --name vch
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;./vic-machine-darwin create --target 192.168.1.13 --user Administrator@vsphere.local --password VMware1! --compute-resource ElectricChair --image-datastore vsanDatastore --bridge-network DPortGroup --name vch
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-install.jpg&#34; alt=&#34;vSphere Integrated Containers Install&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order to use vSphere Integrated Containers you&amp;rsquo;ll need a Docker client, for Mac there is the choice of &lt;a href=&#34;https://www.docker.com/products/docker-toolbox&#34;&gt;Docker Toolbox&lt;/a&gt; or the newer &lt;a href=&#34;https://docs.docker.com/docker-for-mac/&#34;&gt;Beta Docker for Mac&lt;/a&gt;. I had the beta installed, and found I needed to remove this and replace with Docker Toolbox.&lt;/p&gt;
 &lt;p&gt;The first thing to do is ensure that you can connect and that it looks healthy, to do this run&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker -H ipaddress-vch:2375 info
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-info.jpg&#34; alt=&#34;vSphere Integrated Containers Info&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker -H ipaddress-vch:2375 info
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-info.jpg&#34; alt=&#34;vSphere Integrated Containers Info&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Its always useful to look in the log files when your setting something up for the first time, however SSH is disabled on the VCH host so I enabled SSH for current session.  Logon via console using &lt;em&gt;root&lt;/em&gt; with password of &lt;em&gt;password&lt;/em&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;systemctl start sshd
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are five log files I found so far&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;/var/log/vic/docker-personality.log
-/var/log/vic/imagec.log
-/var/log/vic/init.log
-/var/log/vic/port-layer.log
-/var/log/vic/vicadmin.log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now we&amp;rsquo;re running and can access logs the next thing to do is pull a container&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker -H paddress-vch:2375 pull vmwarecna/nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-nginx.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl start sshd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are five log files I found so far&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vic/docker-personality.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vic/imagec.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vic/init.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vic/port-layer.log
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/var/log/vic/vicadmin.log
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So now we&amp;rsquo;re running and can access logs the next thing to do is pull a container&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker -H paddress-vch:2375 pull vmwarecna/nginx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-nginx.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once its local we can start it up,  we&amp;rsquo;ll start it in the background and put a port mapping of port 80 in place and then view it.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker -H ipaddress-vch:2375 run -d -p 80:80 vmwarecna/nginx
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker -H ipaddress-vch:2375 run -d -p 80:80 vmwarecna/nginx
 docker -H ipaddress-vch:2375 ps
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-nginx-go.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX Go&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then also see that a new VM has been created in vCenter with VM name matching the UID of the docker container.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-nginx-vm.jpg&#34; alt=&#34;vSphere Integrated Containers NGINX VM&#34;&gt;&lt;/p&gt;
 &lt;p&gt;We can then stop this and tidy up our test container&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker -H ipaddress-vch:2375 stop container-id
-docker -H ipaddress-vch:2375 rm container-id
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As its so easy to install and configure its probably worth while removing VCH and when you come to use it pull the latest to remove is as easy as installing.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./vic-machine-darwin delete --target vcenter.darrylcauldwell.local --user Administrator@vsphere.local --password VMware1! --name vch --force
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-bye.jpg&#34; alt=&#34;vSphere Integrated Containers Bye!&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker -H ipaddress-vch:2375 stop container-id
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker -H ipaddress-vch:2375 rm container-id
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As its so easy to install and configure its probably worth while removing VCH and when you come to use it pull the latest to remove is as easy as installing.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;./vic-machine-darwin delete --target vcenter.darrylcauldwell.local --user Administrator@vsphere.local --password VMware1! --name vch --force
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/vic-bye.jpg&#34; alt=&#34;vSphere Integrated Containers Bye!&#34;&gt;&lt;/p&gt;
 &lt;p&gt;There is a little bug just now and the image files don&amp;rsquo;t seem to get removed by uninstall process but these are easy enough to delete along with the VIC folder from the datatore.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m disappointed in myself for waiting so long to look at this, what was putting me off was the thought it might be complex but it proved to be very much straight forwards.&lt;/p&gt;
 

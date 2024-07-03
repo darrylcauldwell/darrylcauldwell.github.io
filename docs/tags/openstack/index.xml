@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/openstack/</link>
     <description>Recent content in openstack on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Thu, 23 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/openstack/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Log Insight for VMware Integrated OpenStack</title>
@@ -96,21 +97,21 @@ itself,  this is is surprisingly easy.  Simply obtain a copy of the vRealize L
 &lt;p&gt;If your Image is to go to a VSAN datastore and your using OpenStack Havana the above method will fail, this is because VSAN introduces a new disk type [streamOptimized] (&lt;a href=&#34;http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html&#34;&gt;http://specs.openstack.org/openstack/nova-specs/specs/kilo/approved/vmware-vsan-support.html&lt;/a&gt;) which the UI is not aware of (this is fixed in Icehouse and later).&lt;/p&gt;
 &lt;p&gt;In order to import these images you would need to use the OpenStack command line interface.  First open WebUI then  &amp;ldquo;Project -&amp;gt; Manage Compute -&amp;gt; Access &amp;amp; Security&amp;rdquo; and click Download OpenStack RC File.&lt;/p&gt;
 &lt;p&gt;SCP the RC file to your Linux jump box /var/tmp and then use&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;source /var/tmp/&amp;lt;filename&amp;gt;.rc
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enter password when prompted.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;source /var/tmp/&amp;lt;filename&amp;gt;.rc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enter password when prompted.&lt;/p&gt;
 &lt;p&gt;Once you have authenticated,  run script like (substituting name and filename as required.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glance --insecure --os-endpoint-type internalURL image-create &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--name Windows2008R2-VM10 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_adaptertype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;lsiLogic &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--container-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;bare --disk-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;vmdk &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--is-public&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;True &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/var/tmp/Windows2008R2-VM10-disk1.vmdk&amp;lt;/code&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should get output like&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;glance --insecure --os-endpoint-type internalURL image-create &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--name Windows2008R2-VM10 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--property vmware_adaptertype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;lsiLogic &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--container-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;bare --disk-format&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;vmdk &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--is-public&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;True &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;--file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/var/tmp/Windows2008R2-VM10-disk1.vmdk&amp;lt;/code&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should get output like&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openstack-glance-win-streamOptimized2.png&#34; alt=&#34;Stream Optimized&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If you have uploaded an image already and found that its not streamOptimized you can change the attribute.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;glance image-update &amp;lt;image_name or uuid&amp;gt; --property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;glance image-update &amp;lt;image_name or uuid&amp;gt; --property vmware_disktype&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;streamOptimized
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>

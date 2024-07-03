@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/categories/handy-hacks/</link>
     <description>Recent content in handy-hacks on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Thu, 13 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/categories/handy-hacks/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>VSCode Remote SSH</title>
@@ -32,7 +33,7 @@
         
           &lt;p&gt;macOS 10.15 Catalina changed default Terminal from bash to zsh. When I first moved I tried Powerline extension but it was always a bit slow and really I all I need is a custom prompt. So today I revisited this and created a custom prompt for Zsh and learned a little along the way.&lt;/p&gt;
 &lt;p&gt;First I create an empty ~/.hushlogin to suppress the status message at the start of each Terminal session.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;touch ~/.hushlogin
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;touch ~/.hushlogin
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html&#34;&gt;Prompt expansion&lt;/a&gt; can be used to customize the experience. The default prompt in zsh is %n%m%#.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;%n username&lt;/li&gt;
@@ -40,7 +41,7 @@
 &lt;li&gt;%# shell state, # when privileges, otherwise %&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;So my default login prompt would show&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;dcauldwell@dcauldwell-a01 ~ %
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;dcauldwell@dcauldwell-a01 ~ %
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;PROMPT is variable so can be be set interactively give you immediate feedback and when you&amp;rsquo;re happy add to a startup script like ~/.zshrc so it loads automagically every time.&lt;/p&gt;
 &lt;p&gt;The options I choose to set:&lt;/p&gt;
 &lt;ul&gt;
@@ -52,19 +53,19 @@
 &lt;/ul&gt;
 &lt;p&gt;Zsh ships with a framework for getting information from version control systems, called vcs_info. When working within Git repositories in Terminal its useful to know which is active branch your editing.&lt;/p&gt;
 &lt;p&gt;We make the vcs_info framework by loading it:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;autoload -Uz vcs_info
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;autoload -Uz vcs_info
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Run vcs_info just before a prompt is displayed (precmd)&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;precmd_vcs_info() { vcs_info }
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Enable option for PROMPT_SUBST which turns on command substitution in the prompt:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;setopt prompt_subst
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;setopt prompt_subst
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then call its methods and consume within prompt, my new ~/.zshrc file looks like:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cat ~/.zshrc
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat ~/.zshrc
 autoload -Uz vcs_info
 precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
 setopt prompt_subst
-PROMPT=&#39;%(?.%F{green}√.%F{red}?%?)%F{blue} %/ %F{yellow}${vcs_info_msg_0_}%F{magenta} %# &#39;
+PROMPT=&amp;#39;%(?.%F{green}√.%F{red}?%?)%F{blue} %/ %F{yellow}${vcs_info_msg_0_}%F{magenta} %# &amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/zsh-profile.jpg&#34; alt=&#34;This is the end state&#34;&gt;&lt;/p&gt;
 
         
@@ -81,22 +82,22 @@ PROMPT=&#39;%(?.%F{green}√.%F{red}?%?)%F{blue} %/ %F{yellow}${vcs_info_msg_0_}
         
           &lt;p&gt;iSH is a &lt;a href=&#34;https://github.com/ish-app/ish&#34;&gt;project&lt;/a&gt; which offers a Linux shell environment on iOS using a usermode x86 emulator.&lt;/p&gt;
 &lt;p&gt;The emulator is based on Alpine Linux but does not ship with SSH or APK the Alpine Linux package manager. To install the package manager with iSH and ultimately other tools we can download this with Safari from following URL.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86/apk-tools-static-2.10.5-r1.apk
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/x86/apk-tools-static-2.10.5-r1.apk
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The emulator does not by default have access to iCloud Drive files, but this can be mounted by running following.  Note when mounting iCloud Drive you get prompted which folder,  you can select root or Downloads folder where APK install file would be located.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;mount -t ios . /mnt
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mount -t ios . /mnt
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the iCloud Drive mounted to emulator we can look to unpack and then create a symbolic link.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd /mnt/Downloads
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /mnt/Downloads
 tar xvzf apk-tools-static-2.10.5-r1.apk -C /
 ln -s /sbin/apk.static /sbin/apk
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With the package manager client installed we can install things like OpenSSH.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;apk add --no-cache openssh 
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;apk add --no-cache openssh 
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then use the SSH client to connect to any network reachable IP running SSH server.&lt;/p&gt;
 &lt;p&gt;While exploring iSH I found another interesting thing is that it seems to share the network stack.  So if you run a web server within iSH like:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;apk add --no-cache python3
-echo &#39;Hello from iSH&#39; &amp;gt;&amp;gt; index.html
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;apk add --no-cache python3
+echo &amp;#39;Hello from iSH&amp;#39; &amp;gt;&amp;gt; index.html
 python3 -m http.server
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When you see the ‘Serving HTTP on 0.0.0.0 port 8000’ message, you can then switch to safari and browse localhost.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;http://127.0.0.1:8000
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;http://127.0.0.1:8000
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pretty cool.&lt;/p&gt;
 
         
@@ -151,12 +152,12 @@ python3 -m http.server
 &lt;p&gt;Around ten years ago I moved to be a remote worker based at home. During the years I&amp;rsquo;ve had many learning opportunities for how best to work and get into a routine where I am equally as productive as I was when based in the office. As more people are now forced to become remote workers ( at least temporarily ) it seemed a good time to write out my thoughts.&lt;/p&gt;
 &lt;h2 id=&#34;my-perception-of-what-others-think&#34;&gt;My Perception Of What Others Think&lt;/h2&gt;
 &lt;p&gt;When I first moved to remote working I felt being out of physical sight of colleagues they would think I was slacking off. I thought my work was less visible so I looked to increase my output by piling on the hours, a typical day would be something like.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;06:30 - 07:00   Turn laptop on in kitchen while making coffee, read emails over coffee
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;06:30 - 07:00   Turn laptop on in kitchen while making coffee, read emails over coffee
 07:00 - 07:30   Breakfast while thinking about replies for emails
 07:30 - 08:30   Reclocate laptop to dinning room table write replies for emails and form daily to do list
 08:30 - 09:00   Wash, brush teeth etc
 09:00 - 17:00   Laptop in spare bedroom, work tasks
-17:00 - 19:00   Dinner with my wife I&#39;d try and switch off but typically would have something work related going on so would be maybe only 80-90% present
+17:00 - 19:00   Dinner with my wife I&amp;#39;d try and switch off but typically would have something work related going on so would be maybe only 80-90% present
 19:00 - 22:00   Spending maybe 50% of time catching up on tech news or personal projects
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I quickly recognised that being at work to some extent every waking hour was unhealthy. I&amp;rsquo;d never had to speak about topics like this with my manager or colleagues, so I was unsure how to even raise the topic.  I gradually tried to introduce exploratory questions when we were talking about other things. Talking around the subject with my colleagues and manager I found cathartic for me and I soon realized this whole thing I had constructed in in my mind only. Becoming aware of this allowed me to proceed without guilt towards a much more normal working life remotely. If I had not done this one thing, I would have certainly needed to have moved back to a co-location workspace.&lt;/p&gt;
 &lt;h2 id=&#34;separating-home-and-work&#34;&gt;Separating Home and Work&lt;/h2&gt;
@@ -168,7 +169,7 @@ python3 -m http.server
 &lt;p&gt;A friend recommended I explore the pomodoro technique, at a high level you break your workday into 25minutes intervals separated by short breaks. The premise didn’t seem like it would be right for me. But I was wrong I actually ended up really liking this and was very productive. It does become difficult to do every day to do planning correctly especially when attending calls and meetings.&lt;/p&gt;
 &lt;p&gt;The biggest drawback I found of the pomodoro technique is that my concentration capabilities vary through the day. I have various types of tasks I need to complete during the day which for me require different approaches. When I am doing a complex task such as writing software or deeply thinking about design it takes me 20-30minutes to get into a rhythm and I can only sustain that for maybe an hour and a half. I need to spend the time immediately before and after these two hours doing work which doesn&amp;rsquo;t require as much deep concentration. I don&amp;rsquo;t always have concentration work for two blocks every day, personally I feel more effective in a morning so where possible use the morning time block over the afternoon.&lt;/p&gt;
 &lt;p&gt;When external actors allow a home office day optimized for high performance for me looks like:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;06:30 - 07:00   coffee and drive to gym
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;06:30 - 07:00   coffee and drive to gym
 07:00 - 07:30   HIIT session at gym
 07:30 - 08:30   family breakfast then walk my daughter to school with dog
 09:00 - 10:00   process email, schedule meetings, scrum team stand-up
@@ -199,7 +200,7 @@ python3 -m http.server
 &lt;h2 id=&#34;pandemic-adjustments&#34;&gt;Pandemic Adjustments&lt;/h2&gt;
 &lt;p&gt;Since the global pandemic our now seven year old daughter school has closed, my wife has been furloughed from her job and the gym has closed. We always spoke to our daughter about school, approached homework and read books together. As the situation developed and we faced with this unexpected home schooling opportunity my wife and I realized we really didn&amp;rsquo;t know what she did for the 7hours of the day she is at school. My wife and I were apprehensive at first as how to home school our daughter.&lt;/p&gt;
 &lt;p&gt;Having both my wife and daughter off at the same time has meant his has affected my schedule too much. Becoming a teacher is a challenge for my wife so I&amp;rsquo;ve try and give her as much personal time as possible. I do an lesson first thing in morning before I start work which gives my wife an hour to walk dog and get ready. The lessons aren&amp;rsquo;t back to back, so this also allows a good transition for us both. We also take advantage of them being around by taking breaks together.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;06:30 - 07:00   Coffee
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;06:30 - 07:00   Coffee
 07:00 - 08:00   Family breakfast
 08:00 - 09:00   Home school while wife walks the dog
 09:00 - 10:00   Process email, schedule meetings, scrum team stand-up

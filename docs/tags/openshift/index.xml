@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/openshift/</link>
     <description>Recent content in openshift on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Sat, 28 Jul 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/openshift/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>NSX-T for OpenShift</title>
@@ -76,14 +77,14 @@
 &lt;p&gt;In order to create an overlay network we need an NSX Controller to manage the hosts. NSX Controllers serve as the central control point got all hosts, logical switches, and logical routers.&lt;/p&gt;
 &lt;p&gt;While NSX Manager can deploy and configure NSX Controllers the size cannot be selected. As lab is resource constrained I only want a small NSX Controller, the &amp;lsquo;NSX Controller for VMware ESXi&amp;rsquo; is a separate OVA download where size can be selected.&lt;/p&gt;
 &lt;p&gt;Once the controller appliance is deployed we need to facilitate communications between it and nsx manager.  To do this open an SSH session with admin user to NSX Manager and run&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;get certificate api thumbprint
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Open an SSH session to NSX Controller with admin user and run&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;join management-plane &amp;lt;NSX-Manager&amp;gt; username admin thumbprint &amp;lt;NSX-Managers-thumbprint&amp;gt;
-
-set control-cluster security-model shared-secret
-
-initialize control-cluster
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;get certificate api thumbprint
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Open an SSH session to NSX Controller with admin user and run&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;join management-plane &amp;lt;NSX-Manager&amp;gt; username admin thumbprint &amp;lt;NSX-Managers-thumbprint&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;set control-cluster security-model shared-secret
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;initialize control-cluster
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-nsx-mgr-ctrl-thumb.jpeg&#34; alt=&#34;NSX-T Controller&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This should then be viewable in NSX Manager&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-nsx-control-cluster.jpeg&#34; alt=&#34;NSX-T Controller Cluster&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;overlay-transport-zone&#34;&gt;Overlay Transport Zone&lt;/h2&gt;
@@ -94,7 +95,7 @@ initialize control-cluster
 &lt;p&gt;Change to N-VDS tab, create N-VDS for openshift, select default NIOC, select default hostswitch Uplink profile, select transport IP Pool and enter Physical NIC identifier for Uplink-1.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-nsx-host-vds.jpeg&#34; alt=&#34;NSX-T Transport Zone N-VDS&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In order that the NSX Container Plugin can find the correct NSX objects all of the NSX objects created require a tag applying. For this lab build I am using tag dc-openshift. Navigate within NSX Manager to Fabric &amp;gt; Transport Zones, select overlay network then Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Openshift Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;vlan-transport-zone&#34;&gt;VLAN Transport Zone&lt;/h2&gt;
 &lt;p&gt;As well as connecting to the overlay network the Edges running Tier-0 routing functions also needs to be able to connect to the physical network. This connectivity is achieved by using a Transport Zone of type VLAN.&lt;/p&gt;
@@ -153,7 +154,7 @@ initialize control-cluster
 &lt;p&gt;We can now configure the Router Port,  selecting the Transport Node and Logical Switch.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-nsx-tier0-route-port.jpeg&#34; alt=&#34;NSX-T Add Tier-0 Router Port&#34;&gt;&lt;/p&gt;
 &lt;p&gt;This will be used by OpenShift to once created navigate to Actions &amp;gt; Manage Tags and apply tag.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-ncp-tags.jpeg&#34; alt=&#34;NSX-T Add NCP Tags&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip-block-kubernetes-pods&#34;&gt;IP Block Kubernetes Pods&lt;/h2&gt;
 &lt;p&gt;In order to create the topology we are aiming for we need to create an IP Blocks for each of our two namespaces.  Within each IP Block we need to create the three subnets. In the end you should end up with something which looks like this, and all IP Block needs to have the ncp/cluster tag.&lt;/p&gt;
@@ -162,7 +163,7 @@ initialize control-cluster
 &lt;p&gt;We create an IP pool for the tier-0 router to issue SNAT and provide external (floating) IPs to OpenShift.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/openshift-nsx-snat-pool.jpeg&#34; alt=&#34;NSX-T SNAT Pool&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Once created add the following two tags,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Scope = ncp/cluster and Tag = dc-openshift
 Scope = ncp/external and Tag = true
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;red-hat-openshift-origin&#34;&gt;Red Hat OpenShift Origin&lt;/h2&gt;
 &lt;p&gt;OpenShift Origin is a computer software product from Red Hat for container-based software deployment and management. It is a supported distribution of Kubernetes using Docker containers and DevOps tools for accelerated application development.&lt;/p&gt;
@@ -173,7 +174,7 @@ Scope = ncp/external and Tag = true
 &lt;p&gt;The OpenShift Container Platform is Red Hat Enterprise Linux based, I don&amp;rsquo;t have a Red Hat Enterprise Linux subscription license. As such I created a CentOS 7 (64-bit) virtual machine, as the library versions are the same, so binaries that work on one will work on the other.&lt;/p&gt;
 &lt;p&gt;Each OpenShift node needs to be managed and also provide connectivity to NSX, it is possible to perform these two functions on same vNIC however, I give my VM two vNICs one for management on VLAN backed dvPortgroup and one for NSX on VXLAN backed dvPortgroup. I used the CentOS minimal installation ISO set static IP address on management vNIC, and create DNS A &amp;amp; PTR records for this.&lt;/p&gt;
 &lt;p&gt;Once built I run following commands to install Docker, some other basic tools and apply latest patches.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cat &amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt; &#39;__EOF__&#39;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat &amp;gt; /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt; &amp;#39;__EOF__&amp;#39;
 [docker]
 name=Docker Repository
 baseurl=https://yum.dockerproject.org/repo/main/centos/7/
@@ -189,12 +190,12 @@ yum update -y
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;default-kubernetes-service-addresses&#34;&gt;Default Kubernetes Service Addresses&lt;/h2&gt;
 &lt;p&gt;OpenShift leverages the Kubernetes concept of a pod, which is one or more containers deployed together on one host, and the smallest compute unit that can be defined, deployed, and managed. A Kubernetes service address serves as an internal load balancer. It identifies a set of replicated pods in order to proxy the connections it receives to them. Services are assigned an IP address and port pair that, when accessed, proxy to an appropriate backing pod. These service addresses are assigned and managed by OpenShift. By default they are assigned out of the 172.30.0.0/16 network.&lt;/p&gt;
 &lt;p&gt;To setup our environment we can configure the Docker daemon with an insecure registry parameter of 172.30.0.0/16.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;systemctl start docker
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;systemctl start docker
 touch /etc/docker/daemon.json
-cat &amp;gt; /etc/docker/daemon.json &amp;lt;&amp;lt; &#39;__EOF__&#39;
+cat &amp;gt; /etc/docker/daemon.json &amp;lt;&amp;lt; &amp;#39;__EOF__&amp;#39;
 {
-&amp;quot;insecure-registries&amp;quot;: [
-    &amp;quot;172.30.0.0/16&amp;quot;
+&amp;#34;insecure-registries&amp;#34;: [
+    &amp;#34;172.30.0.0/16&amp;#34;
     ]
 }
 __EOF__
@@ -202,18 +203,18 @@ systemctl daemon-reload
 systemctl restart docker
 &lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;add-openshift-client&#34;&gt;Add OpenShift Client&lt;/h1&gt;
 &lt;p&gt;The OpenShift client is used to manage the OpenShift installation and configuration it is supplied as a package. Download this, unpack and add to runtime path.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd /tmp
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /tmp
 wget https://github.com/openshift/origin/releases/download/v3.10.0-rc.0/openshift-origin-client-tools-v3.10.0-rc.0-c20e215-linux-64bit.tar.gz
 tar -xvf /tmp/openshift-origin-client-tools-v3.10.0-rc.0-c20e215-linux-64bit.tar.gz -C /bin
 mv /bin/openshift* /home/openshift
-echo &#39;PATH=$PATH:/home/openshift&#39; &amp;gt; /etc/profile.d/oc-path.sh
+echo &amp;#39;PATH=$PATH:/home/openshift&amp;#39; &amp;gt; /etc/profile.d/oc-path.sh
 chmod +x /etc/profile.d/oc-path.sh
 . /etc/profile
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;start-openshift-origin-as-all-in-one-cluster&#34;&gt;Start OpenShift Origin as all-in-one Cluster&lt;/h2&gt;
 &lt;p&gt;For next steps we need a basic OpenShift stack. Rather than build something custom we can simply start a local OpenShift all-in-one cluster with a configured registry, router, image streams, and default templates, by running the following command (where openshift.darrylcauldwell.com is the FQDN which points to IP address of management interface of your VM),&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc cluster up --public-hostname=openshift.darrylcauldwell.com
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc cluster up --public-hostname=openshift.darrylcauldwell.com
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should also be able to logon and see all of the OpenShift services listed&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc login -u system:admin
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc login -u system:admin
 oc get services --all-namespaces
 &lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
 &lt;thead&gt;
@@ -285,7 +286,7 @@ oc get services --all-namespaces
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;We should also be able to see all of the OpenShift pods listed&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc get pod --all-namespaces
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc get pod --all-namespaces
 &lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -410,43 +411,43 @@ oc get services --all-namespaces
 &lt;p&gt;Default credentials username &amp;lsquo;system&amp;rsquo; password &amp;lsquo;admin&amp;rsquo;&lt;/p&gt;
 &lt;h2 id=&#34;nsx-t-open-vswitch&#34;&gt;NSX-T Open vSwitch&lt;/h2&gt;
 &lt;p&gt;The NSX-T Container Plug-in (NCP) relies on Open vSwitch (OVS) providing a bridge to the NSX Logical Switch. VMware provide an Open vSwitch (OVS)  in the &lt;a href=&#34;https://my.vmware.com/web/vmware/details?downloadGroup=NSX-T-PKS-220&amp;amp;productId=673&#34;&gt;NSX Container Plugin 2.2.0&lt;/a&gt;, package.  Download expand and copy to OpenShift VM /tmp folder. Once uploaded install the following packages.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;yum install -y /tmp/nsx-container-2.2.0.8740202/OpenvSwitch/rhel74_x86_64/kmod-openvswitch-2.9.1.8614397.rhel74-1.el7.x86_64.rpm
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;yum install -y /tmp/nsx-container-2.2.0.8740202/OpenvSwitch/rhel74_x86_64/kmod-openvswitch-2.9.1.8614397.rhel74-1.el7.x86_64.rpm
 yum install -y /tmp/nsx-container-2.2.0.8740202/OpenvSwitch/rhel74_x86_64/openvswitch-2.9.1.8614397.rhel74-1.x86_64.rpm
 yum install -y /tmp/nsx-container-2.2.0.8740202/OpenvSwitch/rhel74_x86_64/openvswitch-kmod-2.9.1.8614397.rhel74-1.el7.x86_64.rpm
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once installed start the Open vSwitch&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;service openvswitch start
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;service openvswitch start
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the Open vSwitch is running we can create a bridge network interface, and then connect this to the VM network interface located on the NSX-T Logical Switch. You can do this by running the following command (where eno33559296 is the devicename of NIC on NSX Logical Switch),&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ovs-vsctl add-br br-int
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ovs-vsctl add-br br-int
 ovs-vsctl add-port br-int eno33559296 -- set Interface eno33559296 ofport_request=1
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These connections are created with link state DOWN in order to use them we need to set link status is up for both,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ip link set br-int up
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ip link set br-int up
 ip link set eno33559296 up
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Update the network configuration file to ensure that the network interface is up after a reboot.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;vi /etc/sysconfig/network-scripts/ifcfg-eno33559296
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;vi /etc/sysconfig/network-scripts/ifcfg-eno33559296
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensure has a line reading,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ONBOOT=yes
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ONBOOT=yes
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-t-container-network-interface-cni&#34;&gt;NSX-T Container Network Interface (CNI)&lt;/h2&gt;
 &lt;p&gt;The NSX-T Container Plug-in (NCP) provides integration between NSX-T and container orchestrators such as Kubernetes. The installation files are in same package as the NSX Open vSwitch (OVS). Install using command.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;yum install -y /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-cni-2.2.0.8740202-1.x86_64.rpm
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;yum install -y /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-cni-2.2.0.8740202-1.x86_64.rpm
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-t-container-plug-in-ncp-replicationcontroller-rc&#34;&gt;NSX-T Container Plug-in (NCP) ReplicationController (RC)&lt;/h2&gt;
 &lt;p&gt;There are a few accounts used for rights assignments, the project, users and roles are defined in NCP RBAC file. To create the users within the project run,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc login -u system:admin
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc login -u system:admin
 oc create -f /tmp/nsx-container-2.2.0.8740202/nsx-ncp-rbac.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The RBAC creates two service account users, the tokens for these are required by NCP in folder /etc/nsx-ujo. This gets mounted as config-volume and these tokens used for authentication.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc project nsx-system
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc project nsx-system
 mkdir -p /etc/nsx-ujo
-SVC_TOKEN_NAME=&amp;quot;$(oc get serviceaccount ncp-svc-account -o yaml | grep -A1 secrets | tail -n1 | awk {&#39;print $3&#39;})&amp;quot;
-oc get secret $SVC_TOKEN_NAME -o yaml | grep &#39;token:&#39; | awk {&#39;print $2&#39;} | base64 -d &amp;gt; /etc/nsx-ujo/ncp_token
-NODE_TOKEN_NAME=&amp;quot;$(oc get serviceaccount nsx-node-agent-svc-account -o yaml | grep -A1 secrets | tail -n1 | awk {&#39;print $3&#39;})&amp;quot;
-oc get secret $NOD_TOKEN_NAME -o yaml | grep &#39;token:&#39; | awk {&#39;print $2&#39;} | base64 -d &amp;gt; /etc/nsx-ujo/node_agent_token
+SVC_TOKEN_NAME=&amp;#34;$(oc get serviceaccount ncp-svc-account -o yaml | grep -A1 secrets | tail -n1 | awk {&amp;#39;print $3&amp;#39;})&amp;#34;
+oc get secret $SVC_TOKEN_NAME -o yaml | grep &amp;#39;token:&amp;#39; | awk {&amp;#39;print $2&amp;#39;} | base64 -d &amp;gt; /etc/nsx-ujo/ncp_token
+NODE_TOKEN_NAME=&amp;#34;$(oc get serviceaccount nsx-node-agent-svc-account -o yaml | grep -A1 secrets | tail -n1 | awk {&amp;#39;print $3&amp;#39;})&amp;#34;
+oc get secret $NOD_TOKEN_NAME -o yaml | grep &amp;#39;token:&amp;#39; | awk {&amp;#39;print $2&amp;#39;} | base64 -d &amp;gt; /etc/nsx-ujo/node_agent_token
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The pods which NSX-T Container Plug-in (NCP) ReplicationController (RC) run in need to use the host networking so we need to allow then this right by loading the NCP Security Context Constraints for NCP and NSX Node Agent.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc apply -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/ncp-os-scc.yml
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc apply -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/ncp-os-scc.yml
 oc adm policy add-scc-to-user ncp-scc -z ncp-svc-account
 oc adm policy add-scc-to-user ncp-scc -z nsx-node-agent-svc-account
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Edit the ReplicationController (RC) YML file,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;vi /tmp/nsx-container-2.2.0.8740202/Kubernetes/ncp-rc.yml
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;vi /tmp/nsx-container-2.2.0.8740202/Kubernetes/ncp-rc.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensure the following lines are configured thus,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;serviceAccountName: ncp-svc-account
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;serviceAccountName: ncp-svc-account
 apiserver_host_port = 8443
 apiserver_host_ip = 192.168.1.20
 nsx_api_managers = 192.168.1.15
@@ -461,32 +462,32 @@ overlay_tz = 5eeefd4c-bd7d-4871-9eba-d7ed02394dec
 container_ip_blocks = 562c85de-8675-4bb2-b211-3f95a6342e0e, f225d518-2fe3-4f8d-a476-a4697bff3ea6
 external_ip_pools = d5095d53-c7f8-4fcd-9fad-3032afd080a4
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The NSX-T Container Plug-in (NCP) is a docker image which we import into the local registry.  The image is referenced by later script by different tag name so we add an additional tag.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;docker load -i /tmp/nsx-container-2.2.0.8740202/Kubernetes/nsx-ncp-rhel-2.2.0.8740202.tar
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker load -i /tmp/nsx-container-2.2.0.8740202/Kubernetes/nsx-ncp-rhel-2.2.0.8740202.tar
 docker image tag registry.local/2.2.0.8740202/nsx-ncp-rhel nsx-ncp
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then we can create NSX ReplicationController&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc project nsx-system
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc project nsx-system
 oc create -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/ncp-rc.yml
 oc describe rc/nsx-ncp
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should now see the container running within pod namespace nsx-system.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc get pod --all-namespaces
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc get pod --all-namespaces
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If all has gone well we can now connect to the NCP container and use the &lt;a href=&#34;https://docs.vmware.com/en/VMware-NSX-T/2.2/com.vmware.nsxt.ncp_openshift.doc/GUID-12F44CD5-0518-41C3-BB14-5507224A5D60.html&#34;&gt;nsxcli&lt;/a&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc exec -it nsx-ncp-6k5t2 nsxcli
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc exec -it nsx-ncp-6k5t2 nsxcli
 get ncp-nsx status
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;nsx-t-container-plug-in-ncp-node-agent-daemonset-ds&#34;&gt;NSX-T Container Plug-in (NCP) Node Agent DaemonSet (DS)&lt;/h2&gt;
 &lt;p&gt;Edit the nsx-node-agent-ds.yml file,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;vi /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-node-agent-ds.yml
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;vi /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-node-agent-ds.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ensure the following is set,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;serviceAccountName: nsx-node-agent-svc-account
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;serviceAccountName: nsx-node-agent-svc-account
 cluster = dc-openshift
 apiserver_host_port = 8443
 apiserver_host_ip = 192.168.1.20
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once updated create the Node Agent Daemonset (DS),&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc login -u system:admin
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc login -u system:admin
 oc apply -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-node-agent-ds.yml
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Check the Node Agent Daemonset is there,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc describe daemonset.apps/nsx-node-agent
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc describe daemonset.apps/nsx-node-agent
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We should also be able to see all of the OpenShift pods listed including our two NSX ones.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;oc get pod --all-namespaces
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc get pod --all-namespaces
 &lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -622,7 +623,7 @@ oc apply -f /tmp/nsx-container-2.2.0.8740202/Kubernetes/rhel_x86_64/nsx-node-age
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id=&#34;testing&#34;&gt;Testing&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;oc create namespace my-first
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;oc create namespace my-first
 oc logs nsx-ncp-9m2jl | grep ERROR
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;nsx_ujo.k8s.ns_watcher Failed to create NSX topology for project my-first: Unexpected error from backend manager ([&amp;lsquo;192.168.1.15&amp;rsquo;]) for Allocate subnet from IP block&lt;/p&gt;
 &lt;p&gt;more commands for working OpenShift here&lt;/p&gt;

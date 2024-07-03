@@ -4,7 +4,7 @@
   <head>
 <title>Installing vSphere Integrated Containers In Five Minutes | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -170,35 +170,35 @@
 </tbody>
 </table>
 <p>My homelab is vCenter, single cluster of two ESX hosts, storage VSAN and networking NSX. Security is not important in my homelab and TLS adds complication so I chose not to add this. There are great syntaxt examples to follow in the documentation, but here are options I used.</p>
-<pre><code>./vic-machine-darwin create --target 192.168.1.13 --user Administrator@vsphere.local --password VMware1! --compute-resource ElectricChair --image-datastore vsanDatastore --bridge-network DPortGroup --name vch
+<pre tabindex="0"><code>./vic-machine-darwin create --target 192.168.1.13 --user Administrator@vsphere.local --password VMware1! --compute-resource ElectricChair --image-datastore vsanDatastore --bridge-network DPortGroup --name vch
 </code></pre><p><img src="/images/vic-install.jpg" alt="vSphere Integrated Containers Install"></p>
 <p>In order to use vSphere Integrated Containers you&rsquo;ll need a Docker client, for Mac there is the choice of <a href="https://www.docker.com/products/docker-toolbox">Docker Toolbox</a> or the newer <a href="https://docs.docker.com/docker-for-mac/">Beta Docker for Mac</a>. I had the beta installed, and found I needed to remove this and replace with Docker Toolbox.</p>
 <p>The first thing to do is ensure that you can connect and that it looks healthy, to do this run</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker -H ipaddress-vch:2375 info
-</code></pre></div><p><img src="/images/vic-info.jpg" alt="vSphere Integrated Containers Info"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker -H ipaddress-vch:2375 info
+</span></span></code></pre></div><p><img src="/images/vic-info.jpg" alt="vSphere Integrated Containers Info"></p>
 <p>Its always useful to look in the log files when your setting something up for the first time, however SSH is disabled on the VCH host so I enabled SSH for current session.  Logon via console using <em>root</em> with password of <em>password</em>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl start sshd
-</code></pre></div><p>There are five log files I found so far</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/var/log/vic/docker-personality.log
-/var/log/vic/imagec.log
-/var/log/vic/init.log
-/var/log/vic/port-layer.log
-/var/log/vic/vicadmin.log
-</code></pre></div><p>So now we&rsquo;re running and can access logs the next thing to do is pull a container</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker -H paddress-vch:2375 pull vmwarecna/nginx
-</code></pre></div><p><img src="/images/vic-nginx.jpg" alt="vSphere Integrated Containers NGINX"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>systemctl start sshd
+</span></span></code></pre></div><p>There are five log files I found so far</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>/var/log/vic/docker-personality.log
+</span></span><span style="display:flex;"><span>/var/log/vic/imagec.log
+</span></span><span style="display:flex;"><span>/var/log/vic/init.log
+</span></span><span style="display:flex;"><span>/var/log/vic/port-layer.log
+</span></span><span style="display:flex;"><span>/var/log/vic/vicadmin.log
+</span></span></code></pre></div><p>So now we&rsquo;re running and can access logs the next thing to do is pull a container</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker -H paddress-vch:2375 pull vmwarecna/nginx
+</span></span></code></pre></div><p><img src="/images/vic-nginx.jpg" alt="vSphere Integrated Containers NGINX"></p>
 <p>Once its local we can start it up,  we&rsquo;ll start it in the background and put a port mapping of port 80 in place and then view it.</p>
-<pre><code>docker -H ipaddress-vch:2375 run -d -p 80:80 vmwarecna/nginx
+<pre tabindex="0"><code>docker -H ipaddress-vch:2375 run -d -p 80:80 vmwarecna/nginx
 docker -H ipaddress-vch:2375 ps
 </code></pre><p><img src="/images/vic-nginx-go.jpg" alt="vSphere Integrated Containers NGINX Go"></p>
 <p>We can then also see that a new VM has been created in vCenter with VM name matching the UID of the docker container.</p>
 <p><img src="/images/vic-nginx-vm.jpg" alt="vSphere Integrated Containers NGINX VM"></p>
 <p>We can then stop this and tidy up our test container</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker -H ipaddress-vch:2375 stop container-id
-docker -H ipaddress-vch:2375 rm container-id
-</code></pre></div><p>As its so easy to install and configure its probably worth while removing VCH and when you come to use it pull the latest to remove is as easy as installing.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./vic-machine-darwin delete --target vcenter.darrylcauldwell.local --user Administrator@vsphere.local --password VMware1! --name vch --force
-</code></pre></div><p><img src="/images/vic-bye.jpg" alt="vSphere Integrated Containers Bye!"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker -H ipaddress-vch:2375 stop container-id
+</span></span><span style="display:flex;"><span>docker -H ipaddress-vch:2375 rm container-id
+</span></span></code></pre></div><p>As its so easy to install and configure its probably worth while removing VCH and when you come to use it pull the latest to remove is as easy as installing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./vic-machine-darwin delete --target vcenter.darrylcauldwell.local --user Administrator@vsphere.local --password VMware1! --name vch --force
+</span></span></code></pre></div><p><img src="/images/vic-bye.jpg" alt="vSphere Integrated Containers Bye!"></p>
 <p>There is a little bug just now and the image files don&rsquo;t seem to get removed by uninstall process but these are easy enough to delete along with the VIC folder from the datatore.</p>
 <p>I&rsquo;m disappointed in myself for waiting so long to look at this, what was putting me off was the thought it might be complex but it proved to be very much straight forwards.</p>
 
@@ -230,6 +230,9 @@ docker -H ipaddress-vch:2375 rm container-id
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -250,16 +253,13 @@ docker -H ipaddress-vch:2375 rm container-id
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -348,6 +348,11 @@ docker -H ipaddress-vch:2375 rm container-id
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -355,11 +360,6 @@ docker -H ipaddress-vch:2375 rm container-id
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -373,6 +373,11 @@ docker -H ipaddress-vch:2375 rm container-id
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -380,11 +385,6 @@ docker -H ipaddress-vch:2375 rm container-id
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -435,7 +435,7 @@ docker -H ipaddress-vch:2375 rm container-id
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -583,6 +583,10 @@ docker -H ipaddress-vch:2375 rm container-id
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -635,7 +639,7 @@ docker -H ipaddress-vch:2375 rm container-id
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -763,7 +767,7 @@ docker -H ipaddress-vch:2375 rm container-id
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

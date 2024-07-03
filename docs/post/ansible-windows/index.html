@@ -4,7 +4,7 @@
   <head>
 <title>Ansible For Windows Managed Nodes | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -146,97 +146,97 @@
     <p>On starting to look at learning using Ansible to manage Windows hosts, first step was to setup a test lab.</p>
 <p>Setup an Ubuntu 14.04 or CentOS 7 and a Windows 2008 R2 virtual machines.</p>
 <h2 id="install-ansible-ubuntu">Install Ansible (Ubuntu)</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">apt-get install software-properties-common
-apt-add-repository ppa:ansible/ansible
-apt-get update
-apt-get install ansible
-sudo pip install http://github.com/diyan/pywinrm/archive/master.zip#egg<span style="color:#f92672">=</span>pywinrm
-</code></pre></div><h2 id="install-ansible-centos-7-minimal">Install Ansible (CentOS 7 Minimal)</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum update
-yum install net-tools
-yum install epel-release
-yum install ansible
-</code></pre></div><h2 id="configure-winrm-on-windows-2008-r2-guest">Configure WinRM On Windows 2008 R2 Guest</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt-get install software-properties-common
+</span></span><span style="display:flex;"><span>apt-add-repository ppa:ansible/ansible
+</span></span><span style="display:flex;"><span>apt-get update
+</span></span><span style="display:flex;"><span>apt-get install ansible
+</span></span><span style="display:flex;"><span>sudo pip install http://github.com/diyan/pywinrm/archive/master.zip#egg<span style="color:#f92672">=</span>pywinrm
+</span></span></code></pre></div><h2 id="install-ansible-centos-7-minimal">Install Ansible (CentOS 7 Minimal)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>yum update
+</span></span><span style="display:flex;"><span>yum install net-tools
+</span></span><span style="display:flex;"><span>yum install epel-release
+</span></span><span style="display:flex;"><span>yum install ansible
+</span></span></code></pre></div><h2 id="configure-winrm-on-windows-2008-r2-guest">Configure WinRM On Windows 2008 R2 Guest</h2>
 <p>The configuration of Windows managed guests WinRM is automated and available in
 <a href="https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1">this</a> powershell script.</p>
 <h2 id="create-a-working-space-test-your-connectivity">Create A Working Space Test Your Connectivity</h2>
 <p>Ansible is file based,  so here I create a folder underneath my home directory to store my lab configuration</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir -p ~/ansible_test/group_vars
-</code></pre></div><p>We then create a file for holding hosts in lab and begin editing it</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi ~/ansible_test/host
-</code></pre></div><p>Add the contents of this in the following format,  adding extra lines with extra IPs as needed</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">[<span style="color:#ae81ff">windows]</span>
-<span style="color:#ae81ff">&lt;windows server ip address&gt;</span>
-</code></pre></div><p>We then create a file for holding WinRM connectivity hosts in lab and begin editing it</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi /home/&lt;user&gt;/ansible_test/group_vars/windows.yml
-</code></pre></div><p>Add the contents of this in the following format,  adding extra lines with username and password as needed</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># it is suggested that these be encrypted with ansible-vault:</span>
-<span style="color:#75715e"># ansible-vault edit group_vars/windows.yml</span>
-ansible_ssh_user: &lt;admin user&gt;
-ansible_ssh_pass: &lt;admin user password&gt;
-ansible_ssh_port: <span style="color:#ae81ff">5986</span>
-ansible_connection: winrm
-</code></pre></div><p>Once we have these two files setup,  we can look to test connectivity</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /home/dcauldwell/ansible_test
-ansible windows -i host -m win_ping
-</code></pre></div><p>Debugging is not enabled by default,  you might want to append -vvvvv to enable this if you have issue on first connect.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p ~/ansible_test/group_vars
+</span></span></code></pre></div><p>We then create a file for holding hosts in lab and begin editing it</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vi ~/ansible_test/host
+</span></span></code></pre></div><p>Add the contents of this in the following format,  adding extra lines with extra IPs as needed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span>[<span style="color:#ae81ff">windows]</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">&lt;windows server ip address&gt;</span>
+</span></span></code></pre></div><p>We then create a file for holding WinRM connectivity hosts in lab and begin editing it</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vi /home/&lt;user&gt;/ansible_test/group_vars/windows.yml
+</span></span></code></pre></div><p>Add the contents of this in the following format,  adding extra lines with username and password as needed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># it is suggested that these be encrypted with ansible-vault:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ansible-vault edit group_vars/windows.yml</span>
+</span></span><span style="display:flex;"><span>ansible_ssh_user: &lt;admin user&gt;
+</span></span><span style="display:flex;"><span>ansible_ssh_pass: &lt;admin user password&gt;
+</span></span><span style="display:flex;"><span>ansible_ssh_port: <span style="color:#ae81ff">5986</span>
+</span></span><span style="display:flex;"><span>ansible_connection: winrm
+</span></span></code></pre></div><p>Once we have these two files setup,  we can look to test connectivity</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /home/dcauldwell/ansible_test
+</span></span><span style="display:flex;"><span>ansible windows -i host -m win_ping
+</span></span></code></pre></div><p>Debugging is not enabled by default,  you might want to append -vvvvv to enable this if you have issue on first connect.</p>
 <p>If you still have issues you can test connectivity using cURL</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl -vk -d <span style="color:#e6db74">&#34;&#34;</span> -u <span style="color:#e6db74">&#34;user:pass&#34;</span> https://&lt;windows server ip address&gt;:5986/wsman<span style="color:#e6db74">&#34;
-</span></code></pre></div><p>When you havethe win_ping module working,  you can look at running the other modules shipped with the core product a full list can be found here.  Maybe you might gather the Ansible facts using.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ansible &lt;windows server ip address&gt; -m setup
-</code></pre></div><h2 id="create-a-custom-powershell-module">Create A Custom Powershell Module</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -vk -d <span style="color:#e6db74">&#34;&#34;</span> -u <span style="color:#e6db74">&#34;user:pass&#34;</span> https://&lt;windows server ip address&gt;:5986/wsman<span style="color:#e6db74">&#34;
+</span></span></span></code></pre></div><p>When you havethe win_ping module working,  you can look at running the other modules shipped with the core product a full list can be found here.  Maybe you might gather the Ansible facts using.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ansible &lt;windows server ip address&gt; -m setup
+</span></span></code></pre></div><h2 id="create-a-custom-powershell-module">Create A Custom Powershell Module</h2>
 <p>On looking at the core modules you might think your a bit limited but its easy to wrapper your existing Powershell logic as an Ansible module.</p>
 <p>I decided to keep all my custom modules in the lab in there own folder and change the module path.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir -p ~/ansible_test/group_vars/library
-export ANSIBLE_LIBRARY<span style="color:#f92672">=</span>~/ansible_test/library/
-</code></pre></div><p>An Ansible Powershell module is made up of two files,  one is the ps1 with the script contents and one is py which has description and examples.  The main difference appears to be to get the Powershell console output back to Ansible you need to form as object and convert that object to JSON.  It also appears not required but good practice to set an object to be returned with a changed flag to true or false unsure but believe this logic might be used at runtime to decide whether to call the handler.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p ~/ansible_test/group_vars/library
+</span></span><span style="display:flex;"><span>export ANSIBLE_LIBRARY<span style="color:#f92672">=</span>~/ansible_test/library/
+</span></span></code></pre></div><p>An Ansible Powershell module is made up of two files,  one is the ps1 with the script contents and one is py which has description and examples.  The main difference appears to be to get the Powershell console output back to Ansible you need to form as object and convert that object to JSON.  It also appears not required but good practice to set an object to be returned with a changed flag to true or false unsure but believe this logic might be used at runtime to decide whether to call the handler.</p>
 <p>An easy way to create a new module,  is to copy an existing one and rename it this way you get the supporting text and structure.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cp /usr/share/pyshared/ansible/modules/core/windows/win_ping* ~/ansible_test/library/
-mv ~/ansible_test/library/win_ping.ps1 ~/ansible_test/library/&lt;new module name&gt;.ps1
-mv ~/ansible_test/library/win_ping.py ~/ansible_test/library/&lt;new module name&gt;.py
-</code></pre></div><p>A simple example use case might be if you wanted to call the Get-Host cmdlet to gather Powershell version your ps1 might read.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e">#!powershell</span>
-<span style="color:#75715e"># WANT_JSON</span>
-<span style="color:#75715e"># POWERSHELL_COMMON</span>
-$data = Get-Host | Select Version
-$result = New-Object psobject @{
-get_host_version = $data
-changed = $false
-};
-Exit-Json $result;
-</code></pre></div><p>Using the same example your py might read</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">DOCUMENTATION <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;&#39;
-</span><span style="color:#e6db74">---
-</span><span style="color:#e6db74">module: get_host
-</span><span style="color:#e6db74">version_added: &#34;0.1&#34;
-</span><span style="color:#e6db74">short_description: Call Get-Host cmdlet.
-</span><span style="color:#e6db74">description:
-</span><span style="color:#e6db74">- Call Get-Host cmdlet
-</span><span style="color:#e6db74">&#39;&#39;&#39;</span>
-EXAMPLES <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;&#39;
-</span><span style="color:#e6db74"># Test connectivity to a windows host
-</span><span style="color:#e6db74">ansible winserver -m get_host
-</span><span style="color:#e6db74"># Example from an Ansible Playbook
-</span><span style="color:#e6db74">- action: get_host
-</span><span style="color:#e6db74">&#39;&#39;&#39;</span>
-</code></pre></div><p>Once we have these two module files,  we can look to test the new module</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /home/dcauldwell/ansible_test
-ansible windows -i host -m get_host
-</code></pre></div><p>If its working you should get returned the output from Get-Host command</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">dcauldwell@ansible-server:~/ansible_test$ ansible windows -i host -m get_host
-192.128.0.60 | success &gt;&gt; <span style="color:#f92672">{</span>
-<span style="color:#e6db74">&#34;changed&#34;</span>: false,
-<span style="color:#e6db74">&#34;get_host_version&#34;</span>: <span style="color:#f92672">{</span>
-<span style="color:#e6db74">&#34;Version&#34;</span>: <span style="color:#f92672">{</span>
-<span style="color:#e6db74">&#34;Build&#34;</span>: -1,
-<span style="color:#e6db74">&#34;Major&#34;</span>: 4,
-<span style="color:#e6db74">&#34;MajorRevision&#34;</span>: -1,
-<span style="color:#e6db74">&#34;Minor&#34;</span>: 0,
-<span style="color:#e6db74">&#34;MinorRevision&#34;</span>: -1,
-<span style="color:#e6db74">&#34;Revision&#34;</span>: -1
-<span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>With this technique you should be able to form some simple modules.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cp /usr/share/pyshared/ansible/modules/core/windows/win_ping* ~/ansible_test/library/
+</span></span><span style="display:flex;"><span>mv ~/ansible_test/library/win_ping.ps1 ~/ansible_test/library/&lt;new module name&gt;.ps1
+</span></span><span style="display:flex;"><span>mv ~/ansible_test/library/win_ping.py ~/ansible_test/library/&lt;new module name&gt;.py
+</span></span></code></pre></div><p>A simple example use case might be if you wanted to call the Get-Host cmdlet to gather Powershell version your ps1 might read.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e">#!powershell</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># WANT_JSON</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># POWERSHELL_COMMON</span>
+</span></span><span style="display:flex;"><span>$data = Get-Host | Select Version
+</span></span><span style="display:flex;"><span>$result = New-Object psobject @{
+</span></span><span style="display:flex;"><span>get_host_version = $data
+</span></span><span style="display:flex;"><span>changed = $false
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>Exit-Json $result;
+</span></span></code></pre></div><p>Using the same example your py might read</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>DOCUMENTATION <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">---
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">module: get_host
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">version_added: &#34;0.1&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">short_description: Call Get-Host cmdlet.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">description:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">- Call Get-Host cmdlet
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>EXAMPLES <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># Test connectivity to a windows host
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">ansible winserver -m get_host
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># Example from an Ansible Playbook
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">- action: get_host
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;&#39;&#39;</span>
+</span></span></code></pre></div><p>Once we have these two module files,  we can look to test the new module</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /home/dcauldwell/ansible_test
+</span></span><span style="display:flex;"><span>ansible windows -i host -m get_host
+</span></span></code></pre></div><p>If its working you should get returned the output from Get-Host command</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>dcauldwell@ansible-server:~/ansible_test$ ansible windows -i host -m get_host
+</span></span><span style="display:flex;"><span>192.128.0.60 | success &gt;&gt; <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;changed&#34;</span>: false,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;get_host_version&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Version&#34;</span>: <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Build&#34;</span>: -1,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Major&#34;</span>: 4,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;MajorRevision&#34;</span>: -1,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Minor&#34;</span>: 0,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;MinorRevision&#34;</span>: -1,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Revision&#34;</span>: -1
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>With this technique you should be able to form some simple modules.</p>
 
 
   </article>
@@ -266,6 +266,9 @@ ansible windows -i host -m get_host
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -286,16 +289,13 @@ ansible windows -i host -m get_host
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -384,6 +384,11 @@ ansible windows -i host -m get_host
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -391,11 +396,6 @@ ansible windows -i host -m get_host
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -409,6 +409,11 @@ ansible windows -i host -m get_host
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -416,11 +421,6 @@ ansible windows -i host -m get_host
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -471,7 +471,7 @@ ansible windows -i host -m get_host
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -619,6 +619,10 @@ ansible windows -i host -m get_host
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -671,7 +675,7 @@ ansible windows -i host -m get_host
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -799,7 +803,7 @@ ansible windows -i host -m get_host
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

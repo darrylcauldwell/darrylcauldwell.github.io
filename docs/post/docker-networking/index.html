@@ -4,7 +4,7 @@
   <head>
 <title>Introduction To Docker Container Networking | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -144,15 +144,15 @@
     <p>When developing a cloud native application using Docker containers understanding network connectivity between containers and non-Docker workloads such as other servers and cloud APIs is essential. Docker’s networking subsystem is pluggable using drivers, several drivers exist by default, and others can be added easily.</p>
 <h2 id="linking-containers-legacy">Linking Containers (legacy)</h2>
 <p>Linking containers by name is a simple method of enabling communications between containers. To link a an app server to a DB we simply reference the db container name in the command we execute to run app server container.</p>
-<pre><code>docker run -d --name my_mongodb mongo
+<pre tabindex="0"><code>docker run -d --name my_mongodb mongo
 docker run -d --link my_mongodb --name my_nodeapp -it node
 docker ps -l
 
     CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
-    5dc2aa4d8542        node                &quot;docker-entrypoint.s…&quot;   7 seconds ago       Up 6 seconds                            my_nodeapp
+    5dc2aa4d8542        node                &#34;docker-entrypoint.s…&#34;   7 seconds ago       Up 6 seconds                            my_nodeapp
 </code></pre><p>In order to facilitate communications Docker automatically creates environment variables in the target container. It also exposes all environment variables originating from Docker from the source container. If we view the IP address of the two containers and then view the environment variables of the app server we can see the details for the db server.</p>
-<pre><code>docker inspect --format '{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}' my_mongodb
-docker inspect --format '{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}' my_nodeapp
+<pre tabindex="0"><code>docker inspect --format &#39;{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}&#39; my_mongodb
+docker inspect --format &#39;{{ .ID }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}&#39; my_nodeapp
 
 docker exec my_nodeapp env
 
@@ -178,93 +178,92 @@ docker exec my_nodeapp env
 <h2 id="container-networking-with-a-bridge-driver">Container Networking With A Bridge Driver</h2>
 <p>A bridge network can be used on Docker host to enable communications between containers. The first step is to create a custom bridge network on the Docker host which the containers will connect to. Each Docker network gets assigned a CIDR range and has a IPAM capability, we can view these by inspecting the network.</p>
 <p>The default bridge network is present on all Docker hosts, if you do not specify a different network, new containers are automatically connected to the default bridge network. More than likely you will want to separate containers to different networks and so will want to create multiple networks and attach different containers to each.</p>
-<pre><code>docker network create --driver bridge my_isolated_network
+<pre tabindex="0"><code>docker network create --driver bridge my_isolated_network
 docker network ls
 docker network inspect my_isolated_network
 
     [
         {
-            &quot;Name&quot;: &quot;my_isolated_network&quot;,
-            &quot;Id&quot;: &quot;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&quot;,
-            &quot;Created&quot;: &quot;2019-11-18T09:59:09.8310474Z&quot;,
-            &quot;Scope&quot;: &quot;local&quot;,
-            &quot;Driver&quot;: &quot;bridge&quot;,
-            &quot;EnableIPv6&quot;: false,
-            &quot;IPAM&quot;: {
-                &quot;Driver&quot;: &quot;default&quot;,
-                &quot;Options&quot;: {},
-                &quot;Config&quot;: [
+            &#34;Name&#34;: &#34;my_isolated_network&#34;,
+            &#34;Id&#34;: &#34;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&#34;,
+            &#34;Created&#34;: &#34;2019-11-18T09:59:09.8310474Z&#34;,
+            &#34;Scope&#34;: &#34;local&#34;,
+            &#34;Driver&#34;: &#34;bridge&#34;,
+            &#34;EnableIPv6&#34;: false,
+            &#34;IPAM&#34;: {
+                &#34;Driver&#34;: &#34;default&#34;,
+                &#34;Options&#34;: {},
+                &#34;Config&#34;: [
                     {
-                        &quot;Subnet&quot;: &quot;172.18.0.0/16&quot;,
-                        &quot;Gateway&quot;: &quot;172.18.0.1&quot;
+                        &#34;Subnet&#34;: &#34;172.18.0.0/16&#34;,
+                        &#34;Gateway&#34;: &#34;172.18.0.1&#34;
                     }
                 ]
             },
-            &quot;Internal&quot;: false,
-            &quot;Attachable&quot;: false,
-            &quot;Ingress&quot;: false,
-            &quot;ConfigFrom&quot;: {
-                &quot;Network&quot;: &quot;&quot;
+            &#34;Internal&#34;: false,
+            &#34;Attachable&#34;: false,
+            &#34;Ingress&#34;: false,
+            &#34;ConfigFrom&#34;: {
+                &#34;Network&#34;: &#34;&#34;
             },
-            &quot;ConfigOnly&quot;: false,
-            &quot;Containers&quot;: {},
-            &quot;Options&quot;: {},
-            &quot;Labels&quot;: {}
+            &#34;ConfigOnly&#34;: false,
+            &#34;Containers&#34;: {},
+            &#34;Options&#34;: {},
+            &#34;Labels&#34;: {}
         }
     ]
 </code></pre><p>When networks are created you can start containers in those bridge networks.  The containers in same isolated network can then communicate by referencing name. When containers are running and connected we can inspect the network again and get the container IP address assignments etc.</p>
-<pre><code>docker run -d --net=my_isolated_network --name my_mongodb mongo
+<pre tabindex="0"><code>docker run -d --net=my_isolated_network --name my_mongodb mongo
 docker run -d --net=my_isolated_network --name my_nodeapp -it node
 docker network inspect my_isolated_network
 
     [
         {
-            &quot;Name&quot;: &quot;my_isolated_network&quot;,
-            &quot;Id&quot;: &quot;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&quot;,
-            &quot;Created&quot;: &quot;2019-11-18T09:59:09.8310474Z&quot;,
-            &quot;Scope&quot;: &quot;local&quot;,
-            &quot;Driver&quot;: &quot;bridge&quot;,
-            &quot;EnableIPv6&quot;: false,
-            &quot;IPAM&quot;: {
-                &quot;Driver&quot;: &quot;default&quot;,
-                &quot;Options&quot;: {},
-                &quot;Config&quot;: [
+            &#34;Name&#34;: &#34;my_isolated_network&#34;,
+            &#34;Id&#34;: &#34;76e440d68a136ffe1ab9a4dd4977a7dc0499167814de14bf4bedfaffb646197b&#34;,
+            &#34;Created&#34;: &#34;2019-11-18T09:59:09.8310474Z&#34;,
+            &#34;Scope&#34;: &#34;local&#34;,
+            &#34;Driver&#34;: &#34;bridge&#34;,
+            &#34;EnableIPv6&#34;: false,
+            &#34;IPAM&#34;: {
+                &#34;Driver&#34;: &#34;default&#34;,
+                &#34;Options&#34;: {},
+                &#34;Config&#34;: [
                     {
-                        &quot;Subnet&quot;: &quot;172.18.0.0/16&quot;,
-                        &quot;Gateway&quot;: &quot;172.18.0.1&quot;
+                        &#34;Subnet&#34;: &#34;172.18.0.0/16&#34;,
+                        &#34;Gateway&#34;: &#34;172.18.0.1&#34;
                     }
                 ]
             },
-            &quot;Internal&quot;: false,
-            &quot;Attachable&quot;: false,
-            &quot;Ingress&quot;: false,
-            &quot;ConfigFrom&quot;: {
-                &quot;Network&quot;: &quot;&quot;
+            &#34;Internal&#34;: false,
+            &#34;Attachable&#34;: false,
+            &#34;Ingress&#34;: false,
+            &#34;ConfigFrom&#34;: {
+                &#34;Network&#34;: &#34;&#34;
             },
-            &quot;ConfigOnly&quot;: false,
-            &quot;Containers&quot;: {
-                &quot;996b590f206dded3db3a653e554167e046fe3852f55a78d6d983eaa0f7f7fc3d&quot;: {
-                    &quot;Name&quot;: &quot;my_mongodb&quot;,
-                    &quot;EndpointID&quot;: &quot;e78b23529f29b2a6f5291f06fb1875cac9958888ca0eb95cae814dc8b631613a&quot;,
-                    &quot;MacAddress&quot;: &quot;02:42:ac:12:00:02&quot;,
-                    &quot;IPv4Address&quot;: &quot;172.18.0.2/16&quot;,
-                    &quot;IPv6Address&quot;: &quot;&quot;
+            &#34;ConfigOnly&#34;: false,
+            &#34;Containers&#34;: {
+                &#34;996b590f206dded3db3a653e554167e046fe3852f55a78d6d983eaa0f7f7fc3d&#34;: {
+                    &#34;Name&#34;: &#34;my_mongodb&#34;,
+                    &#34;EndpointID&#34;: &#34;e78b23529f29b2a6f5291f06fb1875cac9958888ca0eb95cae814dc8b631613a&#34;,
+                    &#34;MacAddress&#34;: &#34;02:42:ac:12:00:02&#34;,
+                    &#34;IPv4Address&#34;: &#34;172.18.0.2/16&#34;,
+                    &#34;IPv6Address&#34;: &#34;&#34;
                 },
-                &quot;eebe0a3bf7116eab4731ef68da445f24c15b185efc8d7cea20937736702b93f8&quot;: {
-                    &quot;Name&quot;: &quot;my_nodeapp&quot;,
-                    &quot;EndpointID&quot;: &quot;6903d08b5942c71b5afd09caf535d4abb818ded97742fe324d54bb6396b595a5&quot;,
-                    &quot;MacAddress&quot;: &quot;02:42:ac:12:00:03&quot;,
-                    &quot;IPv4Address&quot;: &quot;172.18.0.3/16&quot;,
-                    &quot;IPv6Address&quot;: &quot;&quot;
+                &#34;eebe0a3bf7116eab4731ef68da445f24c15b185efc8d7cea20937736702b93f8&#34;: {
+                    &#34;Name&#34;: &#34;my_nodeapp&#34;,
+                    &#34;EndpointID&#34;: &#34;6903d08b5942c71b5afd09caf535d4abb818ded97742fe324d54bb6396b595a5&#34;,
+                    &#34;MacAddress&#34;: &#34;02:42:ac:12:00:03&#34;,
+                    &#34;IPv4Address&#34;: &#34;172.18.0.3/16&#34;,
+                    &#34;IPv6Address&#34;: &#34;&#34;
                 }
             },
-            &quot;Options&quot;: {},
-            &quot;Labels&quot;: {}
+            &#34;Options&#34;: {},
+            &#34;Labels&#34;: {}
         }
     ]
-
 </code></pre><p>The docker daemon implements an embedded DNS server (127.0.0.11) which provides built-in service discovery for any container created with a valid name. The containers are able to use this by docker overlay three crucial /etc files inside the container with virtual files. This arrangement allows Docker to do clever things like keep resolv.conf up to date across all containers.</p>
-<pre><code>docker exec my_nodeapp mount
+<pre tabindex="0"><code>docker exec my_nodeapp mount
 
     ...
     /dev/sda1 on /etc/resolv.conf type ext4 (rw,relatime,data=ordered)
@@ -272,12 +271,12 @@ docker network inspect my_isolated_network
     /dev/sda1 on /etc/hosts type ext4 (rw,relatime,data=ordered)
     ...
 </code></pre><p>If we view the DNS settings of one of the containers we see that it is set by default to 127.0.0.11.</p>
-<pre><code>docker exec -it my_nodeapp cat /etc/resolv.conf
+<pre tabindex="0"><code>docker exec -it my_nodeapp cat /etc/resolv.conf
 
     nameserver 127.0.0.11
     options ndots:0
 </code></pre><p>We can therefore ping the database container by using its container name from the app server.</p>
-<pre><code>docker exec -it my_nodeapp ping -c 1 my_mongodb
+<pre tabindex="0"><code>docker exec -it my_nodeapp ping -c 1 my_mongodb
 
     PING my_mongodb (172.18.0.2) 56(84) bytes of data.
     64 bytes from my_mongodb.my_isolated_network (172.18.0.2): icmp_seq=1 ttl=64 time=0.177 ms
@@ -287,7 +286,7 @@ docker network inspect my_isolated_network
     rtt min/avg/max/mdev = 0.177/0.177/0.177/0.000 ms
 </code></pre><p>It can be a relatively common requirement for me to have different container names for same application function in different environments e.g. dev_mongodb, qa_mongodb, prod_mongodb. While I could configuring connection strings in the app server it might be more useful to give the database a connection alias e.g. mongodb. Docker run command has flag &ndash;network-alias so we can use a common alias between environments.</p>
 <p>If we run the two containers and specify an alias for the database we can see we can ping the alias name from app container.</p>
-<pre><code>docker run -d --net=my_isolated_network --name my_mongodb --network-alias mongodb mongo 
+<pre tabindex="0"><code>docker run -d --net=my_isolated_network --name my_mongodb --network-alias mongodb mongo 
 docker run -d --net=my_isolated_network --name my_nodeapp -it node
 docker exec -it my_nodeapp ping -c 1 mongodb
 
@@ -326,6 +325,9 @@ docker exec -it my_nodeapp ping -c 1 mongodb
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -346,16 +348,13 @@ docker exec -it my_nodeapp ping -c 1 mongodb
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -444,6 +443,11 @@ docker exec -it my_nodeapp ping -c 1 mongodb
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -451,11 +455,6 @@ docker exec -it my_nodeapp ping -c 1 mongodb
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -469,6 +468,11 @@ docker exec -it my_nodeapp ping -c 1 mongodb
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -476,11 +480,6 @@ docker exec -it my_nodeapp ping -c 1 mongodb
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -531,7 +530,7 @@ docker exec -it my_nodeapp ping -c 1 mongodb
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -679,6 +678,10 @@ docker exec -it my_nodeapp ping -c 1 mongodb
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -731,7 +734,7 @@ docker exec -it my_nodeapp ping -c 1 mongodb
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -859,7 +862,7 @@ docker exec -it my_nodeapp ping -c 1 mongodb
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

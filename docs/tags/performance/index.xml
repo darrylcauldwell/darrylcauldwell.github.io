@@ -5,6 +5,7 @@
     <link>https://darrylcauldwell.github.io/tags/performance/</link>
     <description>Recent content in performance on </description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     <lastBuildDate>Tue, 30 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/performance/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Pi Supercomputer</title>
@@ -18,32 +19,32 @@
 &lt;h2 id=&#34;parrallel-programming&#34;&gt;Parrallel Programming&lt;/h2&gt;
 &lt;p&gt;Each Raspberry Pi is a small unit of compute, one of my goals is to understand how operating many in a cluster. There are various approaches to parallel computational models, message-passing has proven to be an effective one. MPI the Message Passing Interface, is a standardized and portable message-passing system designed to function on a wide variety of parallel computers.&lt;/p&gt;
 &lt;p&gt;My prefered language is Python and usefully there is &lt;a href=&#34;https://mpi4py.readthedocs.io/en/stable/install.html&#34;&gt;MPI for Python&lt;/a&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;sudo apt-get install -y libopenmpi-dev python-dev pip
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo apt-get install -y libopenmpi-dev python-dev pip
 sudo pip install mpi4py
 mpirun --version
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;All the RPIs in the cluster will access each other via SSH, this communication needs to be passwordless. The first thing you need to do is generate an SSH key pair on first host.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ssh-keygen -t rsa -b 4096
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ssh-keygen -t rsa -b 4096
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once key generated to enable passwordless access, upload a copy of the public key to the other three servers.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ssh-copy-id ubuntu@[server_ip_address]
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ssh-copy-id ubuntu@[server_ip_address]
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Repeat keygen and copy public key process on all four hosts.&lt;/p&gt;
 &lt;p&gt;In order for mpi to distribute workload the node where execution occurs needs to understand which nodes are available.  The machinename parameter can be used to point to a text file containing list of nodes.&lt;/p&gt;
 &lt;p&gt;In order name we can use names we can add entries to hosts file.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;sudo sh -c &#39;echo &amp;quot;192.168.1.100 rpi-0&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
-sudo sh -c &#39;echo &amp;quot;192.168.1.101 rpi-1&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
-sudo sh -c &#39;echo &amp;quot;192.168.1.102 rpi-2&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
-sudo sh -c &#39;echo &amp;quot;192.168.1.103 rpi-3&amp;quot; &amp;gt;&amp;gt; /etc/hosts&#39;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo sh -c &amp;#39;echo &amp;#34;192.168.1.100 rpi-0&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#39;
+sudo sh -c &amp;#39;echo &amp;#34;192.168.1.101 rpi-1&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#39;
+sudo sh -c &amp;#39;echo &amp;#34;192.168.1.102 rpi-2&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#39;
+sudo sh -c &amp;#39;echo &amp;#34;192.168.1.103 rpi-3&amp;#34; &amp;gt;&amp;gt; /etc/hosts&amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can then create a file in home directory listing nodes.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/machinefile
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/machinefile
 rpi-0
 rpi-1
 rpi-2
 rpi-3
 EOF
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The easiest way to run commands or code is with the mpirun command. This command, run in a shell, will launch multiple copies of your code, and set up communications between them. As each Pi has four cores and we have four we can specify number of processors to run as sixteen.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile vcgencmd measure_temp
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/mpirun_temp.png&#34; alt=&#34;MPIRUN Measure Temparature&#34;&gt;&lt;/p&gt;
 &lt;p&gt;While its interesting running individual commands across nodes the MPI for Python module exposes options for programs to spread load.  A simple test of this is where we scatter a bunch of elements, like those in a list, to processing nodes.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/scatter.py
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cat &amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; ~/scatter.py
 from mpi4py import MPI
 
 comm = MPI.COMM_WORLD
@@ -52,80 +53,80 @@ rank = comm.Get_rank()
 
 if rank == 0:
    data = [(x+1)**x for x in range(size)]
-   print (&#39;we will be scattering:&#39;,data)
+   print (&amp;#39;we will be scattering:&amp;#39;,data)
 else:
    data = None
    
 data = comm.scatter(data, root=0)
-print (&#39;rank&#39;,rank,&#39;has data:&#39;,data)
+print (&amp;#39;rank&amp;#39;,rank,&amp;#39;has data:&amp;#39;,data)
 EOF
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once script created execute:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 ~/scatter.py
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/mpirun_scatter.png&#34; alt=&#34;MPIRUN Scatter&#34;&gt;&lt;/p&gt;
 &lt;p&gt;While scattering elements of a list is interesting splitting up a processing problem and distributing to multiple processing nodes is more fun.  Calculating Pi is a nice example of this,  and its nice for a Pi cluster to calculate Pi with MPI.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#pi.py&lt;/span&gt;
-&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; mpi4py &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; MPI
-
-comm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;COMM_WORLD
-rank &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_rank()
-size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_size()
-
-slice_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000000&lt;/span&gt;
-total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;
-
-&lt;span style=&#34;color:#75715e&#34;&gt;# This is the controller node.&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; rank &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
-    pi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-    slice &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-    process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (size)
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the first batch of processes to the nodes.&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
-        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
-        slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-        process &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;# Wait for the data to come back&lt;/span&gt;
-    received_processes &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; received_processes &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
-        pi &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-        process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Recieved data from process&amp;#34;&lt;/span&gt;, process)
-        received_processes &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
-            comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
-            slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the shutdown signal&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,size):
-        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;print&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pi is&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pi)
-
-&lt;span style=&#34;color:#75715e&#34;&gt;# These are the worker nodes, where rank &amp;gt; 0. They do the real work&lt;/span&gt;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; True:
-        start &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; start &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
-
-        i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-        slice_value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; slice_size:
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
-                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
-                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-            i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
-
-        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice_value, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
-        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(rank, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execute script with mpi and watch it distribute the calculation around the nodes and aggregate these to final answer.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 pi.py
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#pi.py&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; mpi4py &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; MPI
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;comm &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;COMM_WORLD
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;rank &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_rank()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Get_size()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;slice_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# This is the controller node.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; rank &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    pi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    slice &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    print (size)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the first batch of processes to the nodes.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;and&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        process &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Wait for the data to come back&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    received_processes &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; received_processes &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        pi &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        process &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;MPI&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ANY_SOURCE, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Recieved data from process&amp;#34;&lt;/span&gt;, process)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        received_processes &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; slice &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; total_slices:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sending slice&amp;#34;&lt;/span&gt;,slice,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;to process&amp;#34;&lt;/span&gt;,process)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            slice &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;# Send the shutdown signal&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; process &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,size):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;process, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Pi is&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; pi)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# These are the worker nodes, where rank &amp;gt; 0. They do the real work&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        start &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;recv(source&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; start &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        slice_value &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; slice_size:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; i&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                slice_value &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(start&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;slice_size&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i)&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(slice_value, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        comm&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;send(rank, dest&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tag&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Execute script with mpi and watch it distribute the calculation around the nodes and aggregate these to final answer.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;mpirun -np 16 -machinefile ~/machinefile python3 pi.py
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/pi_with_mpi_on_pi.png&#34; alt=&#34;Pi with MPI on Pi&#34;&gt;&lt;/p&gt;
 
         
@@ -143,7 +144,7 @@ total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
           &lt;p&gt;Following on from &lt;a href=&#34;https://darrylcauldwell.github.io/post/homelab-pi&#34;&gt;base Ubuntu build&lt;/a&gt; here I look at the comparing the storage performance of SD and USB.&lt;/p&gt;
 &lt;h2 id=&#34;sd-card-performance&#34;&gt;SD Card Performance&lt;/h2&gt;
 &lt;p&gt;Linux FIO tool will be used to measure sequential write performance of a 4GB file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/sd_reads.png&#34; alt=&#34;SD Card Read Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
 &lt;ol&gt;
@@ -153,7 +154,7 @@ total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
 &lt;li&gt;IOPS=10.1k, BW=39.3MiB/s&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Similarly, the tool will be used to measure sequential read performance of a 4GB file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=read
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/sd_writes.png&#34; alt=&#34;SD Card Write Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
 &lt;ol&gt;
@@ -174,7 +175,7 @@ total_slices &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span s
 &lt;h2 id=&#34;usb-flash-performance&#34;&gt;USB Flash Performance&lt;/h2&gt;
 &lt;p&gt;The USB flash drive should deliver improved performance, first check it can be seen by the system and note its device.&lt;/p&gt;
 &lt;p&gt;Then repeated the same performance tests using fio on the SSD. Linux FIO tool will be used to measure sequential write/read performance of a 4GB file:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /mnt/ssd
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=test --bs=4k --iodepth=64 --size=4G --readwrite=write
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/usb_writes.png&#34; alt=&#34;USB Write Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential write rate:&lt;/p&gt;
@@ -184,7 +185,7 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
 &lt;li&gt;IOPS=14.4k, BW=56.2MiB/s&lt;/li&gt;
 &lt;li&gt;IOPS=11.9k, BW=46.6MiB/s&lt;/li&gt;
 &lt;/ol&gt;
-&lt;pre&gt;&lt;code&gt;cd /mnt/ssd
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;cd /mnt/ssd
 fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --filename=/mnt/ssd/test --bs=4k --iodepth=64 --size=4G --readwrite=read
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/pi/usb_reads.png&#34; alt=&#34;USB Read Performance&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The tool output shows sequential read rate:&lt;/p&gt;
@@ -229,15 +230,15 @@ fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --fi
           &lt;p&gt;In a newly deployed Windows Server 2012 HyperV environment with around sixty nodes, running a couple of hundred Windows Server 2012 virtual machines running various applications.  We found the EMC VMX storage which underpinned this became massively busy with Write IO at around 3am,  the Write IO was mostly coming from TRIM and Unmap commands,  the amount has a dramatic impact and leads to lots of 153 errors on the server estate,  after one to two hours the Write IO subsided. I wrote a script to audit the estate to identify if there was any pattern to the errors. We found the errors correlated to the 3am Window also.&lt;/p&gt;
 &lt;p&gt;EMC initially said the cause of this was the way the VNX was interpreting ODX command and they asked if we disable ODX on all HyperV servers. I used a PowerShell command to extract out all servers in AD with a ServiceConnection point of HyperV,  then looked to audit ODX on these and then disable.&lt;/p&gt;
 &lt;p&gt;Since disabling the problem persisted second thoughts were that there was some tasks scheduled within the applications running on the VMs which was triggering this event,  after speaking to the product groups they said nothing was scheduled at this time. We continued our search within the HyperV communities and found &lt;a href=&#34;http://larsjoergensen.net/windows/windows-server/windows-server-2012/server-2012-automatic-maintenance-killed-san&#34;&gt;this article&lt;/a&gt; which suggested some scheduled tasks are now enabled by default within Windows Server 2012.  On looking there appear two&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Regular Maintenance
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Regular Maintenance
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 03:00 (if 2012 R2 this would be 2am as the default time changed) and&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Maintenance Configurator
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;\Microsoft\Windows\TaskScheduler\Maintenance Configurator
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which has a Trigger Daily At 01:00.&lt;/p&gt;
 &lt;p&gt;The Action for these tasks is “Custom Handler”, Microsoft publish no details on what these tasks do. We logged a call with Microsoft and they also did not know what these, but they did say that tasks with a “Custom Handler” are umbrella’s for other tasks.&lt;/p&gt;
 &lt;p&gt;As Regular Maintenance appeared to be the most likely due to execution time, I viewed its Last Run Time.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://darrylcauldwell.github.io/images/win2012-san-perf-tshed.png&#34; alt=&#34;Task Scheduler&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I then manually worked through each Windows task in Task Scheduler and took note of which Tasks had Last Run Time which matched that of “Regular Maintenance”.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;\Microsoft\Windows\.NET Framework\.Net Framework NGEN v4.0.30319
 \Microsoft\Windows\.NET Framework.Net Framework NGEN v4.0.30319 64
 \Microsoft\Windows\Application Experience\AitAgent
 \Microsoft\Windows\Application Experience\ProgramDataUpdater

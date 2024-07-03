@@ -4,7 +4,7 @@
   <head>
 <title>Programaticly configuring VMware Storage Profile API with Python | </title>
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.82.0" />
+<meta name="generator" content="Hugo 0.119.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-65170021-1"></script>
@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity = "sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" as="script" integrity=
-    "sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous">
+    <link rel="preload" href="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" as="script" integrity=
+    "sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://darrylcauldwell.github.io/css/styles.782bf96a82b3cc5b3cee4c47a42cc81321f16960a6d41fab3277c4abe047bc7ae044ea1bb7ae4d237c12baa0143e02f95969e5e8b6e68d9dcfd14158cfa244ac.css" integrity="sha512-eCv5aoKzzFs87kxHpCzIEyHxaWCm1B&#43;rMnfEq&#43;BHvHrgROobt65NI3wSuqAUPgL5WWnl6LbmjZ3P0UFYz6JErA==" crossorigin="anonymous">
@@ -148,9 +148,9 @@
     <p>I was looking to programaticly configuring VMware Storage Profile recently. My scripting language of choice is Python, VMware maintain <a href="https://github.com/vmware/pyvmomi">pyVmomi</a> is which is the Python SDK for the VMware vSphere API. pyVmomi can be used to form binding and configure the <a href="https://code.vmware.com/apis/968/vsphere">vSphere Web Services API</a> and the <a href="https://code.vmware.com/apis/971">VMware Storage Policy API</a>.</p>
 <p>The Storage Policy API is exposed as a Web service, running on VMware vCenter server systems.  When I approached the requirement it wasn&rsquo;t clear to me how to connect to the Storage Policy API Web service. I read the <a href="https://code.vmware.com/docs/11900/vmware-storage-policy-sdk-programming-guide">VMware Storage Policy SDK Programming Guide</a> section on forming connection which describes using the session cookie from a vCenter Server session to establish the Storage Policy session.</p>
 <p>pyVim is a client-side Python API which wraps pvVmomi these are made available as a package.  These are published to PyPI repository and as such can be installed easily with pip.</p>
-<pre><code>pip install --upgrade pyvmomi
+<pre tabindex="0"><code>pip install --upgrade pyvmomi
 </code></pre><p>It we look at pyVmomi in GitHub we can see that <a href="https://github.com/vmware/pyvmomi/blob/master/pyVim/connect.py">pyVim.connect</a> defines a function SmartConnect which can be used to form connection to the vSphere Web Services API.</p>
-<pre><code>#!/usr/bin/env python3
+<pre tabindex="0"><code>#!/usr/bin/env python3
 # Connect to a VMOMI ServiceInstance.
 
 import ssl argparse atexit getpass
@@ -158,43 +158,43 @@ from pyVim.connect import SmartConnect
 
 def get_args():
     parser = argparse.ArgumentParser(
-        description='Arguments for talking to vCenter')
+        description=&#39;Arguments for talking to vCenter&#39;)
 
-    parser.add_argument('-s', '--host',
+    parser.add_argument(&#39;-s&#39;, &#39;--host&#39;,
                         required=True,
-                        action='store',
-                        help='vCenter Server FQDN or IP address')
+                        action=&#39;store&#39;,
+                        help=&#39;vCenter Server FQDN or IP address&#39;)
 
-    parser.add_argument('-o', '--port',
+    parser.add_argument(&#39;-o&#39;, &#39;--port&#39;,
                         type=int,
                         default=443,
-                        action='store',
-                        help='vCenter Server TCP port')
+                        action=&#39;store&#39;,
+                        help=&#39;vCenter Server TCP port&#39;)
 
-    parser.add_argument('-u', '--user',
+    parser.add_argument(&#39;-u&#39;, &#39;--user&#39;,
                         required=True,
-                        action='store',
-                        help='Username to login to vCenter Server')
+                        action=&#39;store&#39;,
+                        help=&#39;Username to login to vCenter Server&#39;)
 
-    parser.add_argument('-p', '--password',
+    parser.add_argument(&#39;-p&#39;, &#39;--password&#39;,
                         required=False,
-                        action='store',
-                        help='Password to login to vCenter Server')
+                        action=&#39;store&#39;,
+                        help=&#39;Password to login to vCenter Server&#39;)
 
     args = parser.parse_args()
 
     if not args.password:
-        args.password = getpass.getpass(prompt='Enter password:')
+        args.password = getpass.getpass(prompt=&#39;Enter password:&#39;)
 
     return args
 
 def main():
     args = get_args()
 
-    &quot;&quot;&quot; connect to vcenter service instance &quot;&quot;&quot;
+    &#34;&#34;&#34; connect to vcenter service instance &#34;&#34;&#34;
 
     context = None
-    if hasattr(ssl, &quot;_create_unverified_context&quot;):
+    if hasattr(ssl, &#34;_create_unverified_context&#34;):
         context = ssl._create_unverified_context()
 
     serviceInstance = SmartConnect(
@@ -206,27 +206,27 @@ def main():
 
     atexit.register(Disconnect, serviceInstance)
 </code></pre><p>To connect to the VMware Storage Policy API we need to get the session cookie. The <a href="https://github.com/vmware/pyvmomi/blob/master/pyVmomi/VmomiSupport.py">VmomiSupport</a> provides us helper functions to do things like gather the context which includes session cookie details. With this we can form a stub session to the Storage Policy API.</p>
-<pre><code>    &quot;&quot;&quot; connect to pbm service instance &quot;&quot;&quot;
+<pre tabindex="0"><code>    &#34;&#34;&#34; connect to pbm service instance &#34;&#34;&#34;
 
-    VmomiSupport.GetRequestContext()[&quot;vcSessionCookie&quot;] = \
-    serviceInstance._stub.cookie.split('&quot;')[1]
-    hostname = serviceInstance._stub.host.split(&quot;:&quot;)[0]
+    VmomiSupport.GetRequestContext()[&#34;vcSessionCookie&#34;] = \
+    serviceInstance._stub.cookie.split(&#39;&#34;&#39;)[1]
+    hostname = serviceInstance._stub.host.split(&#34;:&#34;)[0]
     pbmStub = SoapStubAdapter(
         host=hostname,
-        version=&quot;pbm.version.version1&quot;,
-        path=&quot;/pbm/sdk&quot;,
+        version=&#34;pbm.version.version1&#34;,
+        path=&#34;/pbm/sdk&#34;,
         poolSize=0,
         sslContext=ssl._create_unverified_context())
-    pbmServiceInstance = pbm.ServiceInstance(&quot;ServiceInstance&quot;, pbmStub)
+    pbmServiceInstance = pbm.ServiceInstance(&#34;ServiceInstance&#34;, pbmStub)
 </code></pre><p>With this connection in place we can make our request, in this example pull back all of the Storage Profiles.</p>
-<pre><code>
-    &quot;&quot;&quot; get profiles &quot;&quot;&quot;
+<pre tabindex="0"><code>
+    &#34;&#34;&#34; get profiles &#34;&#34;&#34;
 
     profileManager = pbmServiceInstance.RetrieveContent().profileManager
-    profiles = profileManager.PbmQueryProfile(resourceType=pbm.profile.ResourceType(resourceType=&quot;STORAGE&quot;))
+    profiles = profileManager.PbmQueryProfile(resourceType=pbm.profile.ResourceType(resourceType=&#34;STORAGE&#34;))
     print(profiles)
 
-if __name__ == '__main__':
+if __name__ == &#39;__main__&#39;:
     main()
 </code></pre>
 
@@ -257,6 +257,9 @@ if __name__ == '__main__':
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
+        <a href="https://darrylcauldwell.github.io/post/aria-cfg/" class="nav-link" title="Get Up and Running With Aria Automation Config">Get Up and Running With Aria Automation Config</a>
+      </li>
+      <li>
         <a href="https://darrylcauldwell.github.io/post/vra-api-svc-acc/" class="nav-link" title="Service accounts with VMware Aria Automation API">Service accounts with VMware Aria Automation API</a>
       </li>
       <li>
@@ -277,16 +280,13 @@ if __name__ == '__main__':
       <li>
         <a href="https://darrylcauldwell.github.io/post/git-action-container/" class="nav-link" title="Maintaining Container Images Within GitHub">Maintaining Container Images Within GitHub</a>
       </li>
-      <li>
-        <a href="https://darrylcauldwell.github.io/post/git-branch/" class="nav-link" title="GitHub Pages Git Branching Workflow">GitHub Pages Git Branching Workflow</a>
-      </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
         <a href='https://darrylcauldwell.github.io/categories/automation/' class="post_tag button button_translucent" title="automation">
           AUTOMATION
-          <span class="button_tally">36</span>
+          <span class="button_tally">37</span>
         </a>
         
         <a href='https://darrylcauldwell.github.io/categories/networking/' class="post_tag button button_translucent" title="networking">
@@ -375,6 +375,11 @@ if __name__ == '__main__':
           <span class="button_tally">9</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
+          DEVOPS
+          <span class="button_tally">7</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/docker/' class="post_tag button button_translucent" title="docker">
           DOCKER
           <span class="button_tally">7</span>
@@ -382,11 +387,6 @@ if __name__ == '__main__':
         
         <a href='https://darrylcauldwell.github.io/tags/ansible/' class="post_tag button button_translucent" title="ansible">
           ANSIBLE
-          <span class="button_tally">6</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/devops/' class="post_tag button button_translucent" title="devops">
-          DEVOPS
           <span class="button_tally">6</span>
         </a>
         
@@ -400,6 +400,11 @@ if __name__ == '__main__':
           <span class="button_tally">5</span>
         </a>
         
+        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
+          VM-GUEST-CUSTOMIZATION
+          <span class="button_tally">5</span>
+        </a>
+        
         <a href='https://darrylcauldwell.github.io/tags/performance/' class="post_tag button button_translucent" title="performance">
           PERFORMANCE
           <span class="button_tally">4</span>
@@ -407,11 +412,6 @@ if __name__ == '__main__':
         
         <a href='https://darrylcauldwell.github.io/tags/vcix/' class="post_tag button button_translucent" title="vcix">
           VCIX
-          <span class="button_tally">4</span>
-        </a>
-        
-        <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class="post_tag button button_translucent" title="vm-guest-customization">
-          VM-GUEST-CUSTOMIZATION
           <span class="button_tally">4</span>
         </a>
         
@@ -462,7 +462,7 @@ if __name__ == '__main__':
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=6 title="devops">DEVOPS<span class="button_tally">6</span>
+            <a href='https://darrylcauldwell.github.io/tags/devops/' class=" post_tag button button_translucent" data-position=7 title="devops">DEVOPS<span class="button_tally">7</span>
             </a>
             
             
@@ -610,6 +610,10 @@ if __name__ == '__main__':
             </a>
             
             
+            <a href='https://darrylcauldwell.github.io/tags/salt-stack/' class=" post_tag button button_translucent" data-position=1 title="salt-stack">SALT-STACK<span class="button_tally">1</span>
+            </a>
+            
+            
             <a href='https://darrylcauldwell.github.io/tags/sustainability/' class=" post_tag button button_translucent" data-position=2 title="sustainability">SUSTAINABILITY<span class="button_tally">2</span>
             </a>
             
@@ -662,7 +666,7 @@ if __name__ == '__main__':
             </a>
             
             
-            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=4 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">4</span>
+            <a href='https://darrylcauldwell.github.io/tags/vm-guest-customization/' class=" post_tag button button_translucent" data-position=5 title="vm-guest-customization">VM-GUEST-CUSTOMIZATION<span class="button_tally">5</span>
             </a>
             
             
@@ -790,7 +794,7 @@ if __name__ == '__main__':
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.024a2fc542b4a3eee2eff8acd9ab404b00a2ba3e58c601f901b177e704d954b3ee22be5030ab107d9a83c72cb10b81b139ab67098f40e1bcb3b1d1e280b8abe4.js" integrity="sha512-AkovxUK0o&#43;7i7/is2atASwCiuj5YxgH5AbF35wTZVLPuIr5QMKsQfZqDxyyxC4GxOatnCY9A4byzsdHigLir5A==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://darrylcauldwell.github.io/js/bundle.min.c35b4bb36fa900f8911969f4ae64941280b021ed2d48143067a352b571a53b269c502fb39ec022f5320baa2d9d84ad57c7156340d26c4c0307d12bc4d02b7827.js" integrity="sha512-w1tLs2&#43;pAPiRGWn0rmSUEoCwIe0tSBQwZ6NStXGlOyacUC&#43;znsAi9TILqi2dhK1XxxVjQNJsTAMH0SvE0Ct4Jw==" crossorigin="anonymous"></script>
     
   </body>
 </html>
