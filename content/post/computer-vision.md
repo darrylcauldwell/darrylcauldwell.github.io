@@ -1,6 +1,6 @@
 +++
 title = "Building a Portable Real-Time Face Detection Web App with OpenCV, Flask, and Docker"
-date = 2024-10-02
+date = "2024-10-01"
 description = "Learn how to create a face recognition web application using Python Flask, OpenCV, and package it as a portal Docker image."
 tags = [
     "python",
