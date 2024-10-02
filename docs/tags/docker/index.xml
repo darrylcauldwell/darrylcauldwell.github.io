@@ -6,7 +6,58 @@
     <description>Recent content in docker on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 22 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building a Portable Real-Time Face Detection Web App with OpenCV, Flask, and Docker</title>
+      <link>https://darrylcauldwell.github.io/post/computer-vision/</link>
+      <pubDate>Tue, 01 Oct 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/computer-vision/</guid>
+      <description>
+        
+          &lt;p&gt;Face detection is a powerful computer vision capability with wide-ranging applications across industries. In this post, I&amp;rsquo;ll describe how I built a demo application which performs real-time face detection on a video stream. This application is a flexible platform for demonstrating AI inference capabilities across diverse deployment scenarios, from edge devices to cloud environments. To ensure this broad compatibility and ease of deployment, I packaged the application into a portable Docker image that runs on ARM64 and AMD64 architectures.&lt;/p&gt;
+&lt;h2 id=&#34;project-overview&#34;&gt;Project Overview&lt;/h2&gt;
+&lt;p&gt;The key components of this application are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;OpenCV for face detection using Haar cascades&lt;/li&gt;
+&lt;li&gt;Python Flask web framework to serve the application&lt;/li&gt;
+&lt;li&gt;RTSP video stream as the input source&lt;/li&gt;
+&lt;li&gt;Docker for containerization and cross-platform compatibility&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;implementing-the-application&#34;&gt;Implementing the Application&lt;/h2&gt;
+&lt;p&gt;The web application is built using Flask, a lightweight Python web framework. I selected Flask due to its simplicity and the widespread familiarity of Python, making it accessible to a broader audience. My goal is to ensure that the application is easy to understand and engage with for users of varying technical backgrounds.&lt;/p&gt;
+&lt;p&gt;The latest version of the application code can be found &lt;a href=&#34;https://github.com/darrylcauldwell/keswick/blob/main/face-detector/app.py&#34;&gt;here app.py&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The first function detect_faces does the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Takes input of a frame of video&lt;/li&gt;
+&lt;li&gt;Uses OpenCV to load the face detection classifier&lt;/li&gt;
+&lt;li&gt;Uses OpenCV to convert the frame from colour to grayscale for face detection&lt;/li&gt;
+&lt;li&gt;Detects faces in the grayscale frame&lt;/li&gt;
+&lt;li&gt;Draw a green rectangle around the detected face&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The second function generate_frames does the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Gets the URL of the RTSP stream from environment variable&lt;/li&gt;
+&lt;li&gt;For each frame call the detect_faces function&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Flask application uses a template to format the webpage which can be found &lt;a href=&#34;https://github.com/darrylcauldwell/keswick/blob/main/face-detector/templates/index.html&#34;&gt;here index.html&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To demonstrate a simple change to the application it is each to change either the:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;background-colour attribute of the index.html template to another colour&lt;/li&gt;
+&lt;li&gt;cv2.data.haarcascades attribute of the app.py application to another pre-build haar cascades model&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;building-for-multiple-architectures&#34;&gt;Building for Multiple Architectures&lt;/h2&gt;
+&lt;p&gt;I chose Ubuntu to develop the Docker container images due to its official support for both amd64 and arm64. It has broad software compatibility, ensuring that most tools and libraries should be available and should work. It also has a vast user base and extensive documentation, which can be helpful when troubleshooting.&lt;/p&gt;
+&lt;p&gt;As this is a demo application I wanted any changes I make to the application to be applied quickly. To do this I created a base ubuntu image with OpenCV, Python3 and other tools I depend upon later.&lt;/p&gt;
+&lt;p&gt;The latest versions of Dockerfile and Python requirements.txt can be found &lt;a href=&#34;https://github.com/darrylcauldwell/keswick/tree/main/opencv&#34;&gt;here&lt;/a&gt;.  I used docker buildx to create arm64 and amd64 images, the latest version can be found &lt;a href=&#34;ghcr.io/darrylcauldwell/opencv:latest&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;With the base opencv container image in place I then have a second Dockerfile which layers on the Flask application. The latest versions of Dockerfile can be found &lt;a href=&#34;https://github.com/darrylcauldwell/keswick/blob/main/face-detector/Dockerfile&#34;&gt;here&lt;/a&gt; and latest images can be found &lt;a href=&#34;https://github.com/users/darrylcauldwell/packages/container/keswick/282184304?tag=latest&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;This project demonstrates how to combine OpenCV&amp;rsquo;s powerful computer vision capabilities with Flask&amp;rsquo;s web serving to create a real-time face detection application. By packaging it as a multi-architecture Docker image, we&amp;rsquo;ve made it highly portable and easy to deploy on a wide range of systems. The use of Docker not only simplifies deployment but also makes the application more accessible to users and developers working with different hardware architectures. This approach showcases how modern development practices can be applied to computer vision projects to increase their reach and usability.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
     <item>
       <title>Creating A Knative Function Using Buildpacks</title>
       <link>https://darrylcauldwell.github.io/post/knative-buildpacks/</link>
