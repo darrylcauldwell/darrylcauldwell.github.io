@@ -6,7 +6,114 @@
     <description>Recent content in devops on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 02 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://darrylcauldwell.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Orchestrating AI Deployment: Azure Pipelines Meets VMware ECS</title>
+      <link>https://darrylcauldwell.github.io/post/azure-pipeline-ecs/</link>
+      <pubDate>Wed, 02 Oct 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://darrylcauldwell.github.io/post/azure-pipeline-ecs/</guid>
+      <description>
+        
+          &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;kkk&lt;/p&gt;
+&lt;h2 id=&#34;edge-ai-challenge&#34;&gt;Edge AI Challenge&lt;/h2&gt;
+&lt;p&gt;AI applications at the edge offer significant advantages, including local data processing for real-time analysis, reduced latency, offline operation, and scalability without overwhelming central infrastructure. Regular retraining of models allows contiunal incremental accuracy improvements. Regular quantization, pruning, and knowledge distillation also helps reduce model size without loss and improve model performance. However the software lifecycle management of applications across a large estate of distributed edge compute environments presents several significant challenges:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ensuring compatibility across different operating systems and software environments is challenging.&lt;/li&gt;
+&lt;li&gt;Edge environments can have limited or unreliable network connectivity.&lt;/li&gt;
+&lt;li&gt;There&amp;rsquo;s a shortage of IT expertise in edge sites.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To address these challenges, organizations are turning to specialized edge platforms and tools that offer features like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pull-based architectures for efficient management of distributed sites.&lt;/li&gt;
+&lt;li&gt;Zero-touch provisioning and lifecycle management.&lt;/li&gt;
+&lt;li&gt;Edge-optimized runtimes for both virtualized and containerized applications.&lt;/li&gt;
+&lt;li&gt;Integrated telemetry for visibility into application and platform behaviors.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It is a risk to deploy large-scale AI model updates to thousands of edge sites in an uncontrolled fashion. Potential widespread system failures or performance degradation if the updates contain bugs. Without proper testing, updates could introduce new biases or errors in AI decision-making. Without rollback capabilities in an uncontrolled process makes it difficult to quickly address problems. To address these challenges, organizations are looking to deploy continous delivery pipelines and employing testing stage gates.&lt;/p&gt;
+&lt;h2 id=&#34;gitops&#34;&gt;GitOps&lt;/h2&gt;
+&lt;p&gt;GitOps is an operational model for cloud-native applications that uses Git as the single source of truth for declarative infrastructure and applications its principles:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Infrastructure-as-Code (IaC) stored in Git repositories&lt;/li&gt;
+&lt;li&gt;Automated synchronization between Git state and cluster state&lt;/li&gt;
+&lt;li&gt;Declarative descriptions of the desired system state&lt;/li&gt;
+&lt;li&gt;Continuous deployment and reconciliation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;azure-devops-pipeline&#34;&gt;Azure DevOps Pipeline&lt;/h2&gt;
+&lt;p&gt;Azure &lt;a href=&#34;https://azure.microsoft.com/en-us/products/devops/pipelines/&#34;&gt;Pipelines&lt;/a&gt; is a cloud-based service provided by Microsoft as part of the Azure DevOps suite. It is designed to automate the building, testing, and deployment of code projects. It enables controlled, stagegated deployments with approvals and gates allowing thorough testing in controlled environments before wider rollout. It provides visibility into the deployment process, which is essential for managing and troubleshooting across distributed edge sites.&lt;/p&gt;
+&lt;h2 id=&#34;vmware-edge-compute-stack-ecs&#34;&gt;VMware Edge Compute Stack (ECS)&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.vmware.com/products/software-defined-edge/edge-compute/stack&#34;&gt;VMware Edge Compute Stack (ECS)&lt;/a&gt; is an edge-optimized runtime and orchestration platform designed for managing edge applications and infrastructure across multiple distributed sites. The edge-optimized runtime is managed by VMware Edge Cloud Orchestrator (VECO). VECO enables a GitOps approach to managing edge infrastructure and applications. This approach enables version control and auditing of changes to edge environments. VECO implements a zero-touch provisioning with a pull-based model suitable for edge sites with limited IT skills and intermittent connectivity.&lt;/p&gt;
+&lt;p&gt;In VECO sites can be used to manage a number of edge hosts in the same location, these hosts can share a common set of configuration files and also be visualized and troubleshooted as a single location. A site can be associated with a GitHub repository, branch and or folder. In my environment I associate each site with a site folder one each for qa, uat and production environments. Within each folder I have:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;configureHost.yaml - Defines the configuration to be applied to the ESXi host&lt;/li&gt;
+&lt;li&gt;face-detector.yaml - Defines the configuration of the AI inference application&lt;/li&gt;
+&lt;li&gt;vm.yaml - Defines the configuration of other VM workload to be deployed to the site&lt;/li&gt;
+&lt;li&gt;metallb.yaml - Defines the configuration of load balancer to expose AI inference application kubernetes service to the outside network&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The file and folder structure for the sites and associated declarative configuration files looks something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;├── sites
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ├── qa
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   ├── configureHost.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   ├── face-detector.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   ├── vm.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   └── metallb.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ├── uat
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   ├── configureHost.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   ├── face-detector.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   ├── vm.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    │   └── metallb.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    └── production
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ├── configureHost.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ├── face-detector.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        ├── vm.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        └── metallb.yaml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;computer-vision-pipeline&#34;&gt;Computer Vision Pipeline&lt;/h2&gt;
+&lt;p&gt;A while ago I created a computer vision demonstration application the approach is documented &lt;a href=&#34;https://darrylcauldwell.github.io/post/computer-vision/&#34;&gt;here&lt;/a&gt;. This was designed to make simple changes to the code which reflected visually in the running application. There is the ability to simulate a change the AI model to detect a draw a green box around either full face or just the eyes. There is also the ability to simulate other changes to the app such as changing web app background colour or text.  The source code for this application is stored in a &lt;a href=&#34;https://github.com/darrylcauldwell/keswick&#34;&gt;GitHub repository&lt;/a&gt;. There are various other assets in this repository,  all face detector application files are within folder &lt;a href=&#34;https://github.com/darrylcauldwell/keswick/tree/main/face-detector&#34;&gt;face-detector&lt;/a&gt;. As such the first part of the pipeline watches for commits to files in the face-detector folder in the main repository branch.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;trigger&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;include&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;paths&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;include&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;face-detector/*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;An Azure Pipeline agent is a software component that runs on virtual server in Azure cloud or on a physical device. The agent is responsible for executing the tasks defined in an Azure DevOps pipeline. There is a cost to using Azure cloud agents and I have perfectly good laptop which could run the pipeline agent software.&lt;/p&gt;
+&lt;p&gt;Any software required by the pipeline to run needs to be available on the agent. I need my pipeline to build docker imaages and so I need to have the Docker Desktop engine running. I have an Arm based Mac in which the docker engine socket location changes from standard. In this standard configuration the Azure pipeline fails as it cannot find docker engine socket.  In this case it is possible to set environment variable to its correct location before starting the agent.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;export DOCKER_HOST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;unix://$HOME/.docker/run/docker.sock
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;yq is a lightweight and portable command-line tool for processing YAML, JSON, XML, CSV, and other structured data formats. It is particularly useful for updating YAML files. My pipeline uses yq to update the infrastructure as code yaml files. As such I needed to install this on MacOS using command like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;brew install yq
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The next section of the pipeline defines agent pool to use my laptop rather than a cloud instance.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;pool&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;Default&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;demands&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    - &lt;span style=&#34;color:#ae81ff&#34;&gt;agent.name -equals Darryls-MacBook-Pro&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With the base pipeline attributes defined we can look at the stages. A stage is a logical boundary in an Azure DevOps pipeline. Stages can be used to group actions, each stage contains one or more jobs. In this pipeline I have the following stages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Build and push multi-arch docker image&lt;/li&gt;
+&lt;li&gt;Update the QA environment&lt;/li&gt;
+&lt;li&gt;Approval stagegate for QA&lt;/li&gt;
+&lt;li&gt;Update the UAT environment&lt;/li&gt;
+&lt;li&gt;Approval stagegate for UAT&lt;/li&gt;
+&lt;li&gt;Update the production environment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Introduce your approach using Azure Pipelines to manage VMware ECS site YAML files&lt;/p&gt;
+&lt;p&gt;Emphasize the benefits of this method (automation, consistency, control)&lt;/p&gt;
+&lt;p&gt;Azure Pipelines: Explain its role in orchestrating the deployment process&lt;/p&gt;
+&lt;p&gt;VMware ECS: Briefly describe how it&amp;rsquo;s used as the deployment target&lt;/p&gt;
+&lt;p&gt;YAML Configuration: Discuss the importance of YAML files in defining ECS site configurations&lt;/p&gt;
+&lt;p&gt;Stage Gates: Explain how these control the flow between environments&lt;/p&gt;
+&lt;h2 id=&#34;pipeline-structure&#34;&gt;Pipeline Structure&lt;/h2&gt;
+&lt;p&gt;Describe the overall structure of your pipeline&lt;/p&gt;
+&lt;p&gt;Explain the stages: QA, UAT, and Production&lt;/p&gt;
+&lt;p&gt;Discuss how you implemented stage gates between environments&lt;/p&gt;
+&lt;h2 id=&#34;desired-state---yaml-configuration-management&#34;&gt;Desired State - YAML Configuration Management&lt;/h2&gt;
+&lt;p&gt;Explain how you manage different YAML configurations for each environment&lt;/p&gt;
+&lt;p&gt;Discuss any templating or parameterization techniques used&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
     <item>
       <title>Get Up and Running With Aria Automation Config</title>
       <link>https://darrylcauldwell.github.io/post/aria-cfg/</link>
